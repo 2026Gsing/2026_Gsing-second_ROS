@@ -1,0 +1,17 @@
+# Build files
+build/
+install/
+log/
+*.pyc
+__pycache__/
+*.bak
+*.orig
+
+# IDE
+.vscode/
+.idea/
+
+# Local files
+*.local
+*.user
+*.DS_Store

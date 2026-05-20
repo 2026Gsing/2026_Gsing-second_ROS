@@ -1,0 +1,6 @@
+image: task_field_map.pgm
+resolution: 0.01
+origin: [-1.0, 8.0, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

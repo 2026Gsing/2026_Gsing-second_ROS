@@ -1,0 +1,67 @@
+/**:
+  ros__parameters:
+    # ================== Global Settings ==================
+    feature_extract_enable: false
+    max_iteration: 3
+    filter_size_surf: 0.5
+    filter_size_map: 0.5
+    cube_side_length: 1000.0
+    runtime_pos_log_enable: false
+    map_file_path: ""
+
+    # ================== Sensor Topics ==================
+    common:
+        lid_topic: "/unilidar/cloud"
+        imu_topic: "/unilidar/imu"
+        time_sync_en: false
+        time_offset_lidar_to_imu: 0.0
+        map_frame: "odom"
+        body_frame: "base_link"
+
+    # ================== LiDAR预处理 ==================
+    preprocess:
+        lidar_type: 5
+        scan_line: 18
+        point_filter_num: 1
+        blind: 0.1
+        timestamp_unit: 0
+
+    # ================== SLAM核心参数 ==================
+    mapping:
+        imu_en: true
+        imu_time_inte: 0.004
+        acc_cov: 0.1
+        gyr_cov: 0.1
+        b_acc_cov: 0.0001
+        b_gyr_cov: 0.0001
+        extrinsic_est_en: false
+        extrinsic_T: [0.007698, 0.014655, -0.00667]
+        extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+        fov_degree: 180.0
+        det_range: 100.0
+        plane_thr: 0.1
+        gravity_align: true
+        gravity: [0.0, 0.0, -9.810]
+
+    # ================== TF发布配置（新增关键部分）==================
+    tf:
+        tf_enable: true                    # 启用TF发布
+        world_frame: "odom"               # 世界坐标系
+        base_frame: "base_link"           # 机器人基座坐标系
+        lidar_frame: "unilidar_lidar"     # 雷达坐标系
+        imu_frame: "unilidar_imu"         # IMU坐标系
+
+    # ================== 输出设置 ==================
+    publish:
+        path_en: true
+        scan_publish_en: true
+        scan_bodyframe_pub_en: true
+        dense_publish_en: false
+        publish_tf: true                  # 确保TF发布开启
+        tf_frame: "odom"                  # TF父坐标系
+        tf_child_frame: "base_link"       # TF子坐标系
+
+    # ================== 地图保存 ==================
+    pcd_save:
+        pcd_save_en: true                 # 建议开启以便调试
+        interval: -1

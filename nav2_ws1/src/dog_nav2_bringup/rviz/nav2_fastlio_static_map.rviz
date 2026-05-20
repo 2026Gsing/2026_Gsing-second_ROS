@@ -1,0 +1,57 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: StaticMap
+      Topic: /map
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: TF
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: GlobalPath
+      Topic: /plan
+      Line Style: Billboards
+      Line Width: 0.15
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: LocalPath
+      Topic: /local_plan
+      Line Style: Billboards
+      Line Width: 0.20
+    - Class: rviz_default_plugins/Map
+      Enabled: true
+      Name: GlobalCostmapInflated
+      Topic: /global_costmap/costmap
+      Alpha: 0.45
+    - Class: rviz_default_plugins/Map
+      Enabled: false
+      Name: LocalCostmapInflated
+      Topic: /local_costmap/costmap
+      Alpha: 0.60
+  Global Options:
+    Fixed Frame: map
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: nav2_rviz_plugins/GoalTool
+    - Class: rviz_default_plugins/SetGoal
+      Topic: goal_pose
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 20
+      Pitch: 0.7
+      Yaw: 0.0
+

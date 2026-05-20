@@ -1,0 +1,7 @@
+*.pcd
+build/
+install/
+log/
+__pycache__/
+*.pyc
+fastlio2_v2/src/unilidar_fastlio_ros2-ros2/Log/mat_pre.txt

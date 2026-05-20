@@ -1,0 +1,14 @@
+material instrument/Instrument
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        // 使用 model:// 协议
+        texture model://instrument/materials/textures/instrument.png
+      }
+    }
+  }
+}

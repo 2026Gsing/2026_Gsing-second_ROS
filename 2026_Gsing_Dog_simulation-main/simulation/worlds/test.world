@@ -1,0 +1,361 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <world name="robocon_task_arena">
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- 地面 -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 围墙 - 整体上移3米，让启动区在原点 -->
+    <model name="arena_walls">
+      <static>true</static>
+      <pose>0 0 0.4 0 0 0</pose>
+      
+      <!-- 后墙 (原 y=3.05 -> 现 y=6.05) -->
+      <link name="wall_back">
+        <pose>0 6.05 0 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>4.0 0.1 0.8</size></box></geometry>
+          <material>
+            <ambient>0.8745 0.4588 0 1</ambient>
+            <diffuse>0.8745 0.4588 0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>4.0 0.1 0.8</size></box></geometry>
+        </collision>
+      </link>
+      
+      <!-- 前墙左段 (原 y=-3.05 -> 现 y=-0.05) -->
+      <link name="wall_front_left">
+        <pose>-1.275 -0.05 0 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>1.55 0.1 0.8</size></box></geometry>
+          <material>
+            <ambient>0.8745 0.4588 0 1</ambient>
+            <diffuse>0.8745 0.4588 0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1.55 0.1 0.8</size></box></geometry>
+        </collision>
+      </link>
+      
+      <!-- 前墙右段 (原 y=-3.05 -> 现 y=-0.05) -->
+      <link name="wall_front_right">
+        <pose>1.275 -0.05 0 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>1.55 0.1 0.8</size></box></geometry>
+          <material>
+            <ambient>0.8745 0.4588 0 1</ambient>
+            <diffuse>0.8745 0.4588 0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1.55 0.1 0.8</size></box></geometry>
+        </collision>
+      </link>
+      
+      <!-- 左墙 (原中心 y=0 -> 现中心 y=3.0，长度6.2米覆盖 -0.1 到 6.1) -->
+      <link name="wall_left">
+        <pose>-2.05 3.0 0 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.1 6.2 0.8</size></box></geometry>
+          <material>
+            <ambient>0.8745 0.4588 0 1</ambient>
+            <diffuse>0.8745 0.4588 0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.1 6.2 0.8</size></box></geometry>
+        </collision>
+      </link>
+      
+      <!-- 右墙 (原中心 y=0 -> 现中心 y=3.0，长度6.2米覆盖 -0.1 到 6.1) -->
+      <link name="wall_right">
+        <pose>2.05 3.0 0 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.1 6.2 0.8</size></box></geometry>
+          <material>
+            <ambient>0.8745 0.4588 0 1</ambient>
+            <diffuse>0.8745 0.4588 0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.1 6.2 0.8</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- 减速带 (原 y=0.5 -> 现 y=3.5) - 移除物理碰撞，只留视觉标记 -->
+    <model name="speed_bump_marker">
+      <static>true</static>
+      <pose>0 3.5 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>4.0 0.3 0.001</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+        <!-- 移除 collision 标签，没有物理碰撞 -->
+      </link>
+    </model>
+
+    <!-- 归位区 (原 y=2.4 -> 现 y=5.4) -->
+    <model name="return_zone_green_food">
+      <static>true</static>
+      <pose>1.2 5.4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+    
+    <model name="return_zone_gray_tools">
+      <static>true</static>
+      <pose>0.4 5.4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+    
+    <model name="return_zone_blue_instrument">
+      <static>true</static>
+      <pose>-0.4 5.4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 0.0 1.0 1</ambient>
+            <diffuse>0.0 0.0 1.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+    
+    <model name="return_zone_red_medicine">
+      <static>true</static>
+      <pose>-1.2 5.4 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+          <material>
+            <ambient>1.0 0.0 0.0 1</ambient>
+            <diffuse>1.0 0.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.4 0.4 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- 启动区 - 现在在原点 (原 y=-3.0 -> 现 y=0) -->
+    <model name="start_zone">
+      <static>true</static>
+      <pose>0 0 0.001 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1.0 1.0 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 1.0 1.0 0.5</ambient>
+            <diffuse>0.0 1.0 1.0 0.5</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1.0 1.0 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- 物资箱存放区 - 换成同色地板标记 (移除所有物资箱模型) -->
+    <model name="supply_zones_colored">
+      <static>true</static>
+      
+      <!-- 第一排 (近排 y=2.05) - 同色地板标记 -->
+      <link name="supply_1_1_green">
+        <pose>-1.2 2.05 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_1_2_gray">
+        <pose>-0.4 2.05 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_1_3_blue">
+        <pose>0.4 2.05 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 0.0 1.0 1</ambient>
+            <diffuse>0.0 0.0 1.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_1_4_red">
+        <pose>1.2 2.05 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>1.0 0.0 0.0 1</ambient>
+            <diffuse>1.0 0.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <!-- 第二排 (远排 y=1.45) - 同色地板标记 -->
+      <link name="supply_2_1_green">
+        <pose>-1.2 1.45 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_2_2_gray">
+        <pose>-0.4 1.45 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_2_3_blue">
+        <pose>0.4 1.45 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>0.0 0.0 1.0 1</ambient>
+            <diffuse>0.0 0.0 1.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+      
+      <link name="supply_2_4_red">
+        <pose>1.2 1.45 0.001 0 0 0</pose>
+        <visual name="visual">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+          <material>
+            <ambient>1.0 0.0 0.0 1</ambient>
+            <diffuse>1.0 0.0 0.0 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>0.25 0.25 0.002</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- 移除所有物资箱模型 (food_box_1, tool_box_1, instrument_box_1, medicine_box_1, 
+         food_box_2, tool_box_2, instrument_box_2, medicine_box_2 全部删除) -->
+
+    <!-- 智力题目显示区 (原 y=3.5 -> 现 y=6.5) -->
+    <model name="display_area">
+      <static>true</static>
+      <pose>0 6.5 1.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1.6 0.1 0.9</size></box></geometry>
+          <material>
+            <ambient>1.0 1.0 1.0 1</ambient>
+            <diffuse>1.0 1.0 1.0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

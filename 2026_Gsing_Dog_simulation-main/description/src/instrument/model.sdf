@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="instrument">
+    <static>false</static>
+    <pose>0 0 0 0 0 0</pose>
+    <link name="link">
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.0052</ixx>
+          <iyy>0.0052</iyy>
+          <izz>0.0052</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <!-- 使用 model:// 协议相对路径 -->
+            <uri>model://instrument/meshes/instrument.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://instrument/meshes/instrument.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://instrument/materials/scripts/instrument.material</uri>
+            <name>instrument/Instrument</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,8 @@
+# 这是一个 YAML 列表，定义了所有要桥接的话题
+# 这个配置被 ros_gz_bridge 节点的 "bridges" 参数所读取
+-
+  gz_topic_name: "/camera/image"
+  ros_topic_name: "/my_camera/image_raw"
+  gz_type_name: "gz.msgs.Image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  direction: "GZ_TO_ROS"
