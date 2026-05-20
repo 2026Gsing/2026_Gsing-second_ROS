@@ -1,6 +1,6 @@
 # ROS
 
-hyper 的 ROS2 Jazzy 工作空间整合仓库。
+Gsing二队 的 ROS2 Jazzy 工作空间整合仓库。
 
 ## 目录结构
 
