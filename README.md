@@ -13,7 +13,7 @@ hyper 的 ROS2 Jazzy 工作空间整合仓库。
 | `ros2_jazzy_venv/` | Python 虚拟环境 |
 
 
-ROS/
+2026_Gsing-second_ROS/
 ├── fastlio2_v2/                    # 主工作空间 (SLAM + 雷达 + 定位)
 │   └── src/
 │       ├── unilidar_fastlio_ros2-ros2/   FAST-LIO2 核心
@@ -26,27 +26,3 @@ ROS/
 ├── 2026_Gsing_Dog_simulation-main/ # 仿真
 ├── py/                             # 独立工具脚本
 └── ros2_jazzy_venv/                # Python 虚拟环境
-
-## 快速开始
-
-```bash
-# 激活环境
-source /home/hyper/program/ROS/ros2_jazzy_venv/bin/activate
-source /opt/ros/jazzy/setup.bash
-
-# 构建 FAST-LIO2 工作空间
-cd ~/program/ROS/fastlio2_v2
-colcon build --symlink-install
-source install/setup.bash
-
-# 启动雷达驱动
-ros2 launch unitree_lidar_ros2 launch.py &
-
-# 启动 FAST-LIO2 建图
-ros2 run fast_lio fastlio_mapping --ros-args \
-  -p common.lid_topic:=/unilidar/cloud \
-  -p common.imu_topic:=/unilidar/imu \
-  ...
-```
-
-详见 `run.md`。
