@@ -15,9 +15,7 @@ source /home/hyper/program/ROS/ros2_jazzy_venv/bin/activate
 
 ##   启动雷达驱动（先开雷达电源）
 
-首次需要编译，之后直接启动：
-
-# 首次
+# 首次编译
 cd ~/program/ROS/fastlio2_v2
 colcon build --symlink-install --packages-select unitree_lidar_ros2
 source install/setup.bash
@@ -52,9 +50,7 @@ python3 ~/program/ROS/py/catch.py
 
 ##   Nav2 导航
 
-首次需要编译，之后直接启动：
-
-# 首次
+# 首次编译
 cd ~/program/ROS/nav2_ws1
 colcon build --symlink-install
 source install/setup.bash
