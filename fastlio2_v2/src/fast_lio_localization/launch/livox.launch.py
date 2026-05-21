@@ -14,12 +14,11 @@ data_src      = 0    # 0-lidar, others-Invalid data src
 publish_freq  = 10.0 # freqency of publish, 5.0, 10.0, 20.0, 50.0, etc.
 output_type   = 0
 frame_id      = 'livox_frame'
-lvx_file_path = '/home/livox/livox_test.lvx'
 cmdline_bd_code = 'livox0000000001'
 
-# package_path = get_package_share_directory("livox_ros_driver2"
-package_path = "/home/zhanghangming//ws_livox/src/livox_ros_driver2"   # replace with your own path
+package_path = get_package_share_directory("livox_ros_driver2")
 cur_config_path = package_path + '/config'
+lvx_file_path = os.path.join(cur_config_path, 'livox_test.lvx')
 user_config_path = os.path.join(cur_config_path, 'MID360_config.json')
 rviz_config_path = os.path.join(cur_config_path, 'display_point_cloud_ROS2.rviz')
 ################### user configure parameters for ros2 end #####################

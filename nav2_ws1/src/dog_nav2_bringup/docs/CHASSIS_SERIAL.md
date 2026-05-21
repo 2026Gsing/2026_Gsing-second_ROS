@@ -33,7 +33,7 @@ sudo apt install python3-serial
 ## 编译与运行
 
 ```bash
-cd ~/nav2_ws
+cd ./nav2_ws1
 colcon build --packages-select dog_nav2_bringup
 source install/setup.bash
 ```

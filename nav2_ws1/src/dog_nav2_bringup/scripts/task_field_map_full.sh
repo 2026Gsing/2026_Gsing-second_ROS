@@ -1,6 +1,8 @@
 #!/bin/bash
 # 修正版：任务赛单场地地图一键生成+Nav2启动脚本
 # 解决convert命令换行和依赖安装问题
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # ====================== 第一步：环境准备 ======================
 echo -e "\033[32m【1/6】环境准备中...\033[0m"
@@ -15,11 +17,11 @@ pkill -f "nav2" > /dev/null 2>&1
 pkill -f "map_server" > /dev/null 2>&1
 
 # 创建目录
-mkdir -p ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/{maps,config,scripts}
+mkdir -p "$NAV2_DIR"/{maps,config,scripts}
 
 # ====================== 第二步：生成精准栅格地图 ======================
 echo -e "\033[32m【2/6】生成6m×4m单场地栅格地图...\033[0m"
-cd ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/
+cd "$NAV2_DIR/maps/"
 rm -f task_field_map.pgm task_field_map.yaml
 
 # 生成基础图（400×600像素）
@@ -62,7 +64,7 @@ fi
 
 # ====================== 第三步：生成Nav2配置 ======================
 echo -e "\033[32m【3/6】生成Nav2适配配置文件...\033[0m"
-cd ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/config/
+cd "$NAV2_DIR/config/"
 
 cat > nav2_task_params.yaml << EOF_CONFIG
 amcl:
@@ -159,7 +161,7 @@ source /opt/ros/jazzy/setup.bash
 
 # 先等待前一个map_server退出
 sleep 2
-ros2 run nav2_map_server map_server --ros-args -p yaml_filename:="~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/task_field_map.yaml" &
+ros2 run nav2_map_server map_server --ros-args -p yaml_filename:="$NAV2_DIR/maps/task_field_map.yaml" &
 sleep 4
 
 # 重试激活地图服务器
@@ -185,8 +187,8 @@ echo -e "\033[32m【5/6】启动Nav2核心...\033[0m"
 ros2 launch nav2_bringup bringup_launch.py \
   use_sim_time:=False \
   autostart:=True \
-  params_file:=~/program/ROS/nav2_ws1/src/dog_nav2_bringup/config/nav2_task_params.yaml \
-  map:=~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/task_field_map.yaml &
+  params_file:="$NAV2_DIR/config/nav2_task_params.yaml" \
+  map:="$NAV2_DIR/maps/task_field_map.yaml" &
 sleep 5
 
 # ====================== 第六步：验证 ======================

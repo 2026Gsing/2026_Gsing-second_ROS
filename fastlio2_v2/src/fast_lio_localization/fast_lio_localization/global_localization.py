@@ -192,7 +192,7 @@ class FastLIOLocalization(Node):
         # self.global_map.points = o3d.utility.Vector3dVector(self.msg_to_array(pc_msg)[:, :3])
         self.global_map = o3d.io.read_point_cloud(self.get_parameter("pcd_map_path").value)
         self.global_map = self.voxel_down_sample(self.global_map, self.get_parameter("map_voxel_size").value)
-        # o3d.io.write_point_cloud("/home/wheelchair2/laksh_ws/pcds/lab_map_with_outside_corridor (with ground pcd)_downsampled.pcd", self.global_map)
+        # o3d.io.write_point_cloud("./pcds/lab_map_with_outside_corridor_downsampled.pcd", self.global_map)
         self.get_logger().info("Global map received.")
 
     def cb_initialize_pose(self, msg):

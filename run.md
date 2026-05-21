@@ -1,61 +1,127 @@
-# 运行流程
+# 运行流程（按顺序）
 
-##   配置网卡（雷达通信）
+## 0) 进入仓库根目录
 
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS"
+```
+
+## 1) 配置网卡（雷达通信）
+
+```bash
 sudo nmcli device set enp129s0 managed no
 sudo ip addr add 192.168.1.2/24 dev enp129s0
+```
 
-##   ROS2 环境
+## 2) 进入 FAST-LIO 工作空间并编译必要包
 
+```bash
+cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
-
-##   激活 Python 虚拟环境
-
-source /home/hyper/program/ROS/ros2_jazzy_venv/bin/activate
-
-##   启动雷达驱动（先开雷达电源）
-
-# 首次编译
-cd ~/program/ROS/fastlio2_v2
-colcon build --symlink-install --packages-select unitree_lidar_ros2
+colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
 source install/setup.bash
-ros2 launch unitree_lidar_ros2 launch.py &
+```
 
-# 之后只需
+## 3) 启动雷达驱动（终端A）
+
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-ros2 launch unitree_lidar_ros2 launch.py &
+ros2 launch unitree_lidar_ros2 launch.py
+```
 
-##   启动 FAST-LIO2 建图
+## 4) 启动 FAST-LIO 建图（终端B）
 
-cd ~/program/ROS/fastlio2_v2
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-
 ros2 run fast_lio fastlio_mapping --ros-args \
   --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
+```
 
+## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
-# 另一个终端：RViz
+先确认 `src/pcd2pgm/config/pcd.yaml` 中 `file_directory` 与 `file_name` 指向你的 PCD（默认 `scans.pcd`）。
+
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
 source /opt/ros/jazzy/setup.bash
-source ~/program/ROS/fastlio2_v2/install/setup.bash
-rviz2 -d ROS/fastlio2_v2/src/fast_lio_config.rviz
+source install/setup.bash
 
-##   立方体检测
+# 把生成的地图直接保存到 nav2_ws1 的 maps 目录
+ros2 launch pcd2pgm pcd2pgm.launch.py \
+  save_prefix:=../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d \
+  save_delay:=8.0
+```
 
+生成结果会在：
+- `../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.pgm`
+- `../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.yaml`
+
+## 6) 启动 fast_lio_localization 的 `1.launch.py`（终端D）
+
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
 source /opt/ros/jazzy/setup.bash
-python3 ~/program/ROS/py/cube_detector.py
+source install/setup.bash
+ros2 launch fast_lio_localization 1.launch.py \
+  map:=src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd \
+  config_file:=unilidar_l2.yaml \
+  rviz:=true
+```
 
-##   机械臂抓取
+## 7) 启动 nav2_ws1 导航（终端E）
 
-python3 ~/program/ROS/py/catch.py
-
-##   Nav2 导航
-
-# 首次编译
-cd ~/program/ROS/nav2_ws1
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
 source install/setup.bash
-ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py
 
-# 之后只需
+ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
+  map:=src/dog_nav2_bringup/maps/scans_2d.yaml
+```
+
+如果你想继续用已有任务地图，把 `map:=.../scans_2d.yaml` 换成 `map:=src/dog_nav2_bringup/maps/task_field_map.yaml`。
+
+## 8) 底盘数据传输指令（cmd_vel -> 串口，终端F）
+
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py
+sudo apt install -y python3-serial
+
+# 串口桥：把 /cmd_vel 按协议发给 STM32（0x55 0xAA 0x10）
+ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
+  serial_port:=/dev/ttyACM0 \
+  baud_rate:=115200 \
+  cmd_vel_topic:=/cmd_vel \
+  send_rate_hz:=50.0 \
+  active_state:=1 \
+  idle_state:=0
+```
+
+如果串口权限不足：
+
+```bash
+sudo usermod -aG dialout $USER
+# 重新登录生效；临时可用 sudo chmod 666 /dev/ttyACM0
+```
+
+## 9) 不启动 Nav2 时，直接发送测试串口帧（可选）
+
+```bash
+cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+python3 src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
+  --port /dev/ttyACM0 \
+  --baud 115200 \
+  --vx 0.10 \
+  --wz 0.00 \
+  --state 1 \
+  --rate 50 \
+  --duration 2 \
+  --send-stop-on-exit
+```

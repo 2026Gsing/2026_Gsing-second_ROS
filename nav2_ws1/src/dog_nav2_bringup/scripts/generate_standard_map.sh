@@ -3,7 +3,8 @@
 # 解决格式错乱/EOF不匹配/map_server状态异常问题
 
 # ====================== 环境初始化 ======================
-NAV2_DIR=~/program/ROS/nav2_ws1/src/dog_nav2_bringup
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # 终止旧进程
 pkill -f "map_server" > /dev/null 2>&1

@@ -3,6 +3,8 @@
 # 功能：一键生成符合任务赛规则的6m×4m单场地栅格地图 + 启动Nav2
 # 适配规则：物资箱存放/归位区、减速带可通行、智力题显示区、启动区
 # 分辨率：0.01m/像素（1像素=10mm）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # ====================== 第一步：环境准备 ======================
 echo -e "\033[32m【1/7】环境准备中...\033[0m"
@@ -17,7 +19,7 @@ pkill -f "nav2" > /dev/null 2>&1
 pkill -f "map_server" > /dev/null 2>&1
 
 # 创建标准化目录
-mkdir -p ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/{maps,config,scripts}
+mkdir -p "$NAV2_DIR"/{maps,config,scripts}
 
 # ====================== 第二步：参数定义（贴合赛事规则） ======================
 # 物理尺寸（mm）→ 像素（1像素=10mm）
@@ -36,7 +38,7 @@ STORE_ZONE_GAP=60
 
 # ====================== 第三步：生成精准栅格地图 (.pgm) ======================
 echo -e "\033[32m【2/7】生成符合赛事规则的6m×4m单场地地图...\033[0m"
-cd ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/
+cd "$NAV2_DIR/maps/"
 rm -f task_field_map.pgm task_field_map.yaml
 
 # 1. 生成400×600全白基础图（可通行区域）
@@ -101,7 +103,7 @@ fi
 
 # ====================== 第五步：生成Nav2配置 ======================
 echo -e "\033[32m【4/7】生成Nav2赛事适配配置...\033[0m"
-cd ~/program/ROS/nav2_ws1/src/dog_nav2_bringup/config/
+cd "$NAV2_DIR/config/"
 
 cat > nav2_task_params.yaml << EOF_CONFIG
 amcl:
@@ -198,7 +200,7 @@ source /opt/ros/jazzy/setup.bash
 
 # 启动地图服务器
 ros2 run nav2_map_server map_server --ros-args \
-  -p yaml_filename:="~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/task_field_map.yaml" &
+  -p yaml_filename:="$NAV2_DIR/maps/task_field_map.yaml" &
 sleep 5
 
 # 激活地图服务器
@@ -218,8 +220,8 @@ echo -e "\033[32m【7/7】启动Nav2赛事核心...\033[0m"
 ros2 launch nav2_bringup bringup_launch.py \
   use_sim_time:=False \
   autostart:=True \
-  params_file:=~/program/ROS/nav2_ws1/src/dog_nav2_bringup/config/nav2_task_params.yaml \
-  map:=~/program/ROS/nav2_ws1/src/dog_nav2_bringup/maps/task_field_map.yaml &
+  params_file:="$NAV2_DIR/config/nav2_task_params.yaml" \
+  map:="$NAV2_DIR/maps/task_field_map.yaml" &
 sleep 5
 
 # 验证地图加载

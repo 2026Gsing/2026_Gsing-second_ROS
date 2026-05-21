@@ -1,6 +1,7 @@
 #!/bin/bash
 # 启动 Nav2（无仿真）+ 加载任务场地地图
-NAV2_DIR=~/program/ROS/nav2_ws1/src/dog_nav2_bringup
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 unset PYTHONPATH
 source /opt/ros/jazzy/setup.bash
 

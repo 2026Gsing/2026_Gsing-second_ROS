@@ -5,10 +5,9 @@ import yaml
 import os
 
 if __name__ == "__main__":
-    pcd_path = (
-        "/home/laksh/wheelchair-camera-lidar/workspace/src/FAST_LIO_LOCALIZATION/PCD/lab_map_with_outside_corridor.pcd"
-    )
-    out_path = "/home/laksh/wheelchair-camera-lidar/workspace/src/FAST_LIO_LOCALIZATION/maps"
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    pcd_path = os.path.join(base_dir, "PCD", "lab_map_with_outside_corridor.pcd")
+    out_path = os.path.join(base_dir, "maps")
     z_range = [-1.0, 0.3]
     res = 0.05
     map_name = "lab_map_with_outside_corridor"

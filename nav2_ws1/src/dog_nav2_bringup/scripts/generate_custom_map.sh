@@ -2,7 +2,8 @@
 # 任务赛场地地图生成脚本（无固定像素限制，超出区域设为不可通行）
 # 包含：围墙（不可通行）、存放区（不可通行）、归位区（可通行）、减速带（可通行）、启动区（可通行）
 
-NAV2_DIR=~/program/ROS/nav2_ws1/src/dog_nav2_bringup
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # 1. 进入地图目录，清理旧文件
 cd $NAV2_DIR/maps/

@@ -1,6 +1,6 @@
 from setuptools import setup
-import os
 import glob
+import os
 
 package_name = "fast_lio_localization"
 
@@ -22,6 +22,10 @@ setup(
         ],
     },
     data_files=[
+        (
+            os.path.join("share", "ament_index", "resource_index", "packages"),
+            [os.path.join("resource", package_name)],
+        ),
         (os.path.join("share", package_name), ["package.xml"]),
         (os.path.join("share", package_name, "launch"), glob.glob("launch/*.py")),
         (os.path.join("share", package_name, "config"), glob.glob("config/*.yaml")),
