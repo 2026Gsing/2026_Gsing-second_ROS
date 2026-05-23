@@ -3,7 +3,7 @@
 ## 0) 进入仓库根目录
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS"
+cd .
 ```
 
 ## 1) 配置网卡（雷达通信）
@@ -25,7 +25,7 @@ source install/setup.bash
 ## 3) 启动雷达驱动（终端A）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
@@ -34,7 +34,7 @@ ros2 launch unitree_lidar_ros2 launch.py
 ## 4) 启动 FAST-LIO 建图（终端B）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 ros2 run fast_lio fastlio_mapping --ros-args \
@@ -46,7 +46,7 @@ ros2 run fast_lio fastlio_mapping --ros-args \
 先确认 `src/pcd2pgm/config/pcd.yaml` 中 `file_directory` 与 `file_name` 指向你的 PCD（默认 `scans.pcd`）。
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 
@@ -63,7 +63,7 @@ ros2 launch pcd2pgm pcd2pgm.launch.py \
 ## 6) 启动 fast_lio_localization 的 `1.launch.py`（终端D）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/fastlio2_v2"
+cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 ros2 launch fast_lio_localization 1.launch.py \
@@ -75,7 +75,7 @@ ros2 launch fast_lio_localization 1.launch.py \
 ## 7) 启动 nav2_ws1 导航（终端E）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+cd nav2_ws1
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
 source install/setup.bash
@@ -89,7 +89,7 @@ ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
 ## 8) 底盘数据传输指令（cmd_vel -> 串口，终端F）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+cd nav2_ws1
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 sudo apt install -y python3-serial
@@ -114,7 +114,7 @@ sudo usermod -aG dialout $USER
 ## 9) 不启动 Nav2 时，直接发送测试串口帧（可选）
 
 ```bash
-cd "/home/zhanghangming/二队视觉整体方案/2026_Gsing-second_ROS/nav2_ws1"
+cd nav2_ws1
 python3 src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
   --port /dev/ttyACM0 \
   --baud 115200 \
@@ -124,4 +124,12 @@ python3 src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
   --rate 50 \
   --duration 2 \
   --send-stop-on-exit
+```
+
+## 10) 立方体检测以及通信
+
+```bash
+python py\cube_detector.py
+
+python py\catch.py
 ```
