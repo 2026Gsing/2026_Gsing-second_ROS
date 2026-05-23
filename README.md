@@ -6,7 +6,7 @@ Gsing 二队竞赛用 ROS2 Jazzy 整合仓库，包含 FAST-LIO2 SLAM、Unitree 
 
 - **OS**: Ubuntu 24.04
 - **ROS2**: Jazzy
-- **Python**: 3.12（虚拟环境位于 `ros2_jazzy_venv/`）
+- **Python**: 3.12
 
 ## 目录结构
 
@@ -23,7 +23,6 @@ Gsing 二队竞赛用 ROS2 Jazzy 整合仓库，包含 FAST-LIO2 SLAM、Unitree 
 ├── nav2_ws1/                     # Nav2 导航（含竞赛地图与脚本）
 ├── 2026_Gsing_Dog_simulation-main/ 四足狗 Gazebo 仿真
 ├── py/                           # 工具脚本（机械臂控制、立方体检测等）
-└── ros2_jazzy_venv/              # Python 虚拟环境
 ```
 
 
