@@ -1,6 +1,13 @@
 # nav2_fastlio_static_map_params.yaml
-# 静态2D栅格地图（map_server + static_layer）用于全局规划
-# Fast-LIO localization 提供 TF/位姿（不使用 AMCL）
+# Nav2 参数配置（静态地图 + FAST-LIO2 定位模式）
+#
+# 工作模式说明：
+#   使用 map_server 加载预存 2D 栅格地图，global_costmap 通过 static_layer
+#   引用该地图。定位由 FAST-LIO2 localization 提供（ICP 配准），不使用 AMCL。
+#   controller_server 使用 DWB 局部规划器，odom_topic 指向 /localization。
+#
+# 适用场景：
+#   竞赛或实地运行时，地图已预先构建，使用 FAST-LIO2 进行全局定位。
 
 amcl:
   ros__parameters:

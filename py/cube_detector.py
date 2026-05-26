@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+cube_detector.py — 3D OBB 立方体检测节点
+
+功能：
+  使用 FAST-LIO2 的雷达点云，通过 DBSCAN 聚类 + PCA 主成分分析，
+  实时检测前方 25cm 立方体物块，输出位置（x, y, z）、边长和朝向。
+
+算法流程：
+  1. 接收 /unilidar/cloud 点云
+  2. 空间范围过滤（前方 0~0.8m，左右 ±0.8m，高度 0~0.6m）
+  3. 去地面（去除 z 轴最低 5% 分位以下的点）
+  4. 半径滤波去除离群点
+  5. 体素下采样（8mm）
+  6. DBSCAN 聚类（eps=4cm, min_samples=20）
+  7. 每个聚类执行 3D PCA → 得到 OBB 包围盒三个主轴
+  8. 边长校验：均值在 25cm ± 5cm 范围内接受
+  9. 发布 /detected_cube (Marker) 供 catch.py 使用
+
+坐标系：unilidar_lidar（雷达坐标系，x=前进方向）
+"""
 
 import rclpy
 from rclpy.node import Node
@@ -13,28 +33,33 @@ from sklearn.neighbors import BallTree
 import math
 
 class CubeDetector(Node):
+    """3D OBB 立方体检测器：从雷达点云中检测 25cm 立方体物块"""
+
     def __init__(self):
         super().__init__('cube_detector')
 
+        # 订阅雷达点云（FAST-LIO2 配准后的 /unilidar/cloud）
         self.subscription = self.create_subscription(
             PointCloud2, '/unilidar/cloud', self.cloud_callback, 10)
 
+        # 发布检测到的立方体 Marker（供 catch.py 机械臂控制节点订阅）
         self.marker_pub = self.create_publisher(Marker, '/detected_cube', 10)
 
-        # --- 核心参数 ---
-        self.x_range = (-0.2, 0.8)
-        self.y_range = (-0.8, 0.8)
-        self.z_range = (0, 0.6)
-        self.z_keep_percent = 2  # 取低 5% 分位 = 去地面（保留该值以上的点）
-        self.voxel_size = 0.008
+        # ============ 点云预处理参数 ============
+        self.x_range = (-0.2, 0.8)    # X 范围（雷达前方 0~80cm）
+        self.y_range = (-0.8, 0.8)    # Y 范围（左右 ±80cm）
+        self.z_range = (0, 0.6)       # Z 范围（高度 0~60cm）
+        self.voxel_size = 0.008       # 体素下采样大小（8mm）
 
-        self.cluster_eps = 0.04  # 聚类紧密，点间距稍大就不算同一个物体
-        self.cluster_min_samples = 20  # 每个聚类至少 x 个点才接受，排除稀疏噪点
+        # ============ DBSCAN 聚类参数 ============
+        self.cluster_eps = 0.04       # 聚类邻域半径（4cm）
+        self.cluster_min_samples = 20 # 最小聚类点数
 
-        self.edge_target = 0.25
-        self.edge_tol = 0.05     # 25cm ±0.05m
+        # ============ 立方体边长校验 ============
+        self.edge_target = 0.25       # 目标边长 25cm
+        self.edge_tol = 0.05          # 容差 ±5cm
 
-        # 半径滤波参数
+        # ============ 半径滤波参数 ============
         self.radius = 0.04
         self.min_neighbors = 5
 
@@ -44,6 +69,7 @@ class CubeDetector(Node):
         self.get_logger().info('=' * 60)
 
     def pc2_to_np(self, msg):
+        """ROS PointCloud2 → numpy (N×3) 数组"""
         gen = pc2.read_points(msg, field_names=("x", "y", "z"), skip_nans=True)
         arr = np.array(list(gen))
         if arr.size == 0:
@@ -51,6 +77,7 @@ class CubeDetector(Node):
         return np.column_stack((arr['x'], arr['y'], arr['z'])).astype(np.float32)
 
     def remove_statistical_outliers(self, pts, radius=0.03, min_neighbors=3):
+        """半径统计滤波：移除周围邻域点过少的离群点"""
         if len(pts) < min_neighbors:
             return pts
         tree = BallTree(pts, metric='euclidean')
@@ -58,6 +85,17 @@ class CubeDetector(Node):
         return pts[counts >= min_neighbors]
 
     def cloud_callback(self, msg):
+        """
+        点云回调：预处理 → 聚类 → OBB 分析 → 发布最佳立方体
+
+        步骤：
+        1. 空间裁剪（保留前方感兴趣区域）
+        2. 去地面（移除 z 轴最低 5% 以下的点）
+        3. 半径滤波 + 体素下采样
+        4. DBSCAN 聚类
+        5. 对每个聚类做 OBB 分析
+        6. 选择边长最接近 25cm 的立方体发布 Marker
+        """
         try:
             pts_raw = self.pc2_to_np(msg)
             if pts_raw.shape[0] < 100:
@@ -199,7 +237,13 @@ class CubeDetector(Node):
         }
 
     def voxel_downsample(self, pts, size):
-        """体素重心下采样"""
+        """
+        体素重心下采样（比体素中心下采样更准）
+
+        将空间划分为 size×size×size 的体素网格，
+        每个体素内取所有点的重心代替体素中心，
+        保留更准确的几何信息。
+        """
         if pts.shape[0] == 0:
             return pts
         idx = np.floor(pts / size).astype(np.int32)

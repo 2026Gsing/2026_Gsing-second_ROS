@@ -1,8 +1,17 @@
 #!/bin/bash
-# 文件名：task_field_competition.sh
-# 功能：一键生成符合任务赛规则的6m×4m单场地栅格地图 + 启动Nav2
-# 适配规则：物资箱存放/归位区、减速带可通行、智力题显示区、启动区
-# 分辨率：0.01m/像素（1像素=10mm）
+# task_field_competition.sh — 竞赛场地一站式启动脚本
+#
+# 功能：
+#   一键完成以下操作：
+#   1. 环境检查与依赖安装（imagemagick, nav2-map-server 等）
+#   2. 生成 6m×4m 竞赛场地栅格地图（包含围墙、存放区、归位区、智力题区、启动区）
+#   3. 生成 Nav2 适配参数
+#   4. 启动 map_server 并激活
+#   5. 启动 Nav2 核心
+#   6. 验证地图加载状态
+#
+# 使用方式：
+#   ./task_field_competition.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 

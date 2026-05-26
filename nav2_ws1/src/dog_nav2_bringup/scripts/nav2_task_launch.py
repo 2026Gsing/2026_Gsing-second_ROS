@@ -1,3 +1,17 @@
+"""
+nav2_task_launch.py — 竞赛任务 Nav2 启动（AMCL + 地图服务器版）
+
+功能：
+  启动 Nav2 全套节点：map_server、AMCL、controller_server、planner_server、
+  bt_navigator、lifecycle_manager。适用于有激光雷达但未使用 FAST-LIO2
+  全局定位的场景。
+
+与 nav2_fastlio_static_map.launch.py 的区别：
+  - 使用 AMCL 粒子滤波定位（非 FAST-LIO2 ICP 重定位）
+  - 手动内联生成 Nav2 参数配置
+  - 不依赖 FAST-LIO2 节点
+"""
+
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -7,7 +21,6 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     package_dir = get_package_share_directory("dog_nav2_bringup")
-    # 地图文件路径
     map_yaml_path = os.path.join(package_dir, "maps", "task_field_map.yaml")
 
     # Nav2参数文件路径
@@ -107,13 +120,11 @@ lifecycle_manager:
       - amcl
 """)
 
-    # 定义启动参数
     use_sim_time = LaunchConfiguration('use_sim_time', default='False')
-    
-    # 构建启动描述
+
     ld = LaunchDescription()
-    
-    # 启动map_server
+
+    # map_server: 加载预存 2D 栅格地图
     ld.add_action(Node(
         package='nav2_map_server',
         executable='map_server',
@@ -121,8 +132,8 @@ lifecycle_manager:
         output='screen',
         parameters=[{'yaml_filename': map_yaml_path}, {'use_sim_time': use_sim_time}]
     ))
-    
-    # 启动amcl
+
+    # AMCL: 自适应蒙特卡洛定位（粒子滤波），基于激光雷达与里程计进行定位
     ld.add_action(Node(
         package='nav2_amcl',
         executable='amcl',
@@ -130,8 +141,8 @@ lifecycle_manager:
         output='screen',
         parameters=[params_path, {'use_sim_time': use_sim_time}]
     ))
-    
-    # 启动controller_server
+
+    # controller_server: 局部路径跟踪（Regulated Pure Pursuit 控制器）
     ld.add_action(Node(
         package='nav2_controller',
         executable='controller_server',
@@ -139,8 +150,8 @@ lifecycle_manager:
         output='screen',
         parameters=[params_path, {'use_sim_time': use_sim_time}]
     ))
-    
-    # 启动planner_server
+
+    # planner_server: 全局路径规划（Navfn / A*）
     ld.add_action(Node(
         package='nav2_planner',
         executable='planner_server',
@@ -148,8 +159,8 @@ lifecycle_manager:
         output='screen',
         parameters=[params_path, {'use_sim_time': use_sim_time}]
     ))
-    
-    # 启动bt_navigator
+
+    # bt_navigator: 行为树导航器（规划→控制→恢复行为编排）
     ld.add_action(Node(
         package='nav2_bt_navigator',
         executable='bt_navigator',
@@ -157,8 +168,8 @@ lifecycle_manager:
         output='screen',
         parameters=[params_path, {'use_sim_time': use_sim_time}]
     ))
-    
-    # 启动lifecycle_manager（关键：自动激活所有节点）
+
+    # lifecycle_manager: 统一管理所有 Nav2 节点的生命周期
     ld.add_action(Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
@@ -166,5 +177,5 @@ lifecycle_manager:
         output='screen',
         parameters=[params_path, {'use_sim_time': use_sim_time}]
     ))
-    
+
     return ld

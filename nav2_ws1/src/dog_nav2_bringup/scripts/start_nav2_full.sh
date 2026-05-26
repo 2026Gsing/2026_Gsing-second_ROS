@@ -1,5 +1,13 @@
 #!/bin/bash
-# 完整启动：地图服务器 + Nav2 核心
+# start_nav2_full.sh — 完整启动脚本：地图服务器 + Nav2 核心
+#
+# 功能：
+#   1. 启动 map_server 加载任务场地地图
+#   2. 激活 map_server 生命周期
+#   3. 启动 Nav2 核心（planner、controller、bt_navigator 等）
+#
+# 使用方式：
+#   ./start_nav2_full.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 unset PYTHONPATH

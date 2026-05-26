@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 """
-按下位机协议发送底盘测试帧（无需启动 Nav2）。
+send_chassis_test_serial.py — 底盘串口通信测试工具（无需启动 Nav2）
+
+功能：
+  直接通过串口向 STM32 发送底盘控制帧，用于测试串口通信链路
+  和底盘运动功能是否正常。
 
 协议帧:
   [0x55][0xAA][0x10][0x09][vx(float32)][wz(float32)][state(uint8)][checksum]
   checksum = sum(前面所有字节) & 0xFF
+
+使用示例:
+  # 前进 0.1m/s，持续 2 秒
+  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.10 --wz 0.00 --state 1 --rate 50 --duration 2 --send-stop-on-exit
+
+  # 原地旋转
+  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.00 --wz 0.50 --state 1 --rate 50 --duration 3 --send-stop-on-exit
 """
 
 import argparse
@@ -19,6 +30,7 @@ except ImportError as e:
     raise e
 
 
+# ============ 协议常量 ============
 HEAD1 = 0x55
 HEAD2 = 0xAA
 FUNC_CHASSIS_MOVE = 0x10
@@ -27,6 +39,7 @@ PACK_FMT = "<2fB"  # vx(float32), wz(float32), state(uint8)
 
 
 def build_packet(vx: float, wz: float, state: int) -> bytes:
+    """组装串口协议帧"""
     payload = struct.pack(PACK_FMT, float(vx), float(wz), int(state) & 0xFF)
     frame_wo_checksum = bytes([HEAD1, HEAD2, FUNC_CHASSIS_MOVE, PAYLOAD_LEN]) + payload
     checksum = sum(frame_wo_checksum) & 0xFF
@@ -34,11 +47,12 @@ def build_packet(vx: float, wz: float, state: int) -> bytes:
 
 
 def to_hex(data: bytes) -> str:
+    """将字节流转为十六进制显示"""
     return " ".join(f"{b:02X}" for b in data)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="发送底盘串口测试帧（vx,wz,state）")
+    parser = argparse.ArgumentParser(description="发送底盘串口测试帧（vx, wz, state）")
     parser.add_argument("--port", type=str, default="/dev/ttyUSB0", help="串口设备，例如 /dev/ttyUSB0 或 /dev/ttyACM0")
     parser.add_argument("--baud", type=int, default=115200, help="波特率")
     parser.add_argument("--vx", type=float, default=0.0, help="线速度 m/s")
@@ -47,7 +61,7 @@ def parse_args():
     parser.add_argument("--rate", type=float, default=50.0, help="发送频率 Hz")
     parser.add_argument("--duration", type=float, default=2.0, help="发送时长（秒），<0 表示一直发")
     parser.add_argument("--print-every", type=int, default=20, help="每 N 帧打印一次十六进制，0 不打印")
-    parser.add_argument("--send-stop-on-exit", action="store_true", help="退出前发送一帧停止包(vx=0,wz=0,state=0)")
+    parser.add_argument("--send-stop-on-exit", action="store_true", help="退出前发送一帧停止包(vx=0, wz=0, state=0)")
     return parser.parse_args()
 
 
@@ -84,6 +98,7 @@ def main():
     except KeyboardInterrupt:
         print("\n收到 Ctrl+C，停止发送")
     finally:
+        # 退出前发送停止包，确保底盘停止运动
         if args.send_stop_on_exit:
             try:
                 ser.write(stop_pkt)
