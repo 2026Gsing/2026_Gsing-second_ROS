@@ -11,7 +11,7 @@ sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
 ### 克隆 pcd2pgm（点云转栅格地图工具）
 
 ```bash
-cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src
+cd fastlio2_v2/src
 git clone https://github.com/liuscn/pcd2pgm.git
 ```
 
@@ -24,7 +24,7 @@ pip install open3d tf_transformations
 ### 设置脚本执行权限
 
 ```bash
-find /home/hyper/program/2026_Gsing-second_ROS -name "*.py" -path "*/scripts/*" -exec chmod +x {} +
+find . -name "*.py" -path "*/scripts/*" -exec chmod +x {} +
 ```
 
 ---
@@ -84,13 +84,13 @@ ros2 run fast_lio fastlio_mapping --ros-args \
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/setup.bash
-rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_config.rviz
+source fastlio2_v2/install/setup.bash
+rviz2 -d fastlio2_v2/src/fast_lio_config.rviz
 ```
 
 ## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
-先确认 `src/pcd2pgm/config/pcd2pgm.yaml` 中 `pcd_file` 指向你的 PCD 文件。
+先确认 `fastlio2_v2/src/pcd2pgm/config/pcd2pgm.yaml` 中 `pcd_file` 指向你的 PCD 文件。
 
 ```bash
 cd fastlio2_v2

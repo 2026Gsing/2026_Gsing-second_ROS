@@ -2,9 +2,9 @@
     ros__parameters:
         # ================== Global Settings ==================
         feature_extract_enable: false  # 关闭特征提取，使用原始点云直接配准
-        max_iteration: 10              # 迭代次数
+        max_iteration: 20              # 增加到20次迭代，提升收敛稳定性
         filter_size_surf: 0.15         # 面特征体素滤波
-        filter_size_map: 0.15          # 地图体素滤波
+        filter_size_map: 0.1           # 缩小地图体素滤波，提升点面匹配精度
         cube_side_length: 300.0        # 局部地图立方体边长（米）：维护的局部地图范围，可根据场景增大
         runtime_pos_log_enable: false  # 运行时位置日志开关：是否记录实时位姿日志
         map_file_path: "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd"  # 预加载地图路径
@@ -32,13 +32,13 @@
             # IMU参数
             imu_en: true                 # IMU启用开关：true=使用IMU预积分，false=纯激光SLAM
             imu_time_inte: 0.004         # IMU采样间隔（秒）：250Hz对应0.004秒
-            acc_cov: 0.05                # 适度提高IMU约束权重，改善动态建图稳定性
-            gyr_cov: 0.05                # 适度提高IMU约束权重，改善动态建图稳定性
+            acc_cov: 0.02                # 降低IMU协方差，增加IMU约束权重，抑制帧间抖动
+            gyr_cov: 0.02                # 降低IMU协方差，增加IMU约束权重，抑制帧间抖动
             b_acc_cov: 0.0001            # 加速度计零偏噪声：IMU零偏的随机游走噪声
             b_gyr_cov: 0.0001            # 陀螺仪零偏噪声：IMU零偏的随机游走噪声
             
             # 外参标定
-            extrinsic_est_en: true      # 使能在线外参标定
+            extrinsic_est_en: false     # 关闭在线外参标定（外参已标定，避免运行时漂移）
             extrinsic_T: [0.007698, 0.014655, -0.00667]  # 平移外参：IMU到雷达的平移向量（x,y,z）米
             extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]  # 外参旋转矩阵（单位阵：与标定结果一致，安装无倒装）
             
