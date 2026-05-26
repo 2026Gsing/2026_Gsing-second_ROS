@@ -1,5 +1,34 @@
 # 运行流程（按顺序）
 
+## 前置准备（仅首次）
+
+### 安装系统依赖
+
+```bash
+sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
+```
+
+### 克隆 pcd2pgm（点云转栅格地图工具）
+
+```bash
+cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src
+git clone https://github.com/liuscn/pcd2pgm.git
+```
+
+### 安装 Python 依赖
+
+```bash
+pip install open3d tf_transformations
+```
+
+### 设置脚本执行权限
+
+```bash
+find /home/hyper/program/2026_Gsing-second_ROS -name "*.py" -path "*/scripts/*" -exec chmod +x {} +
+```
+
+---
+
 ## 0) 进入仓库根目录
 
 ```bash
@@ -24,7 +53,11 @@ cd fastlio2_v2
 rm -rf build/ install/
 
 source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio fast_lio_localization
+colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
+
+# 修复 ament_python 包的索引（colcon 不自动注册纯 Python 包）
+bash src/fast_lio_localization/scripts/hook_fix.sh
+
 source install/setup.bash
 ```
 
@@ -46,32 +79,34 @@ source install/setup.bash
 ros2 run fast_lio fastlio_mapping --ros-args \
   --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
 ```
+
 ### 可视化（终端 B2，可选）
 
+```bash
 source /opt/ros/jazzy/setup.bash
 source /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/setup.bash
 rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_config.rviz
+```
 
 ## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
-先确认 `src/pcd2pgm/config/pcd.yaml` 中 `file_directory` 与 `file_name` 指向你的 PCD（默认 `scans.pcd`）。
+先确认 `src/pcd2pgm/config/pcd2pgm.yaml` 中 `pcd_file` 指向你的 PCD 文件。
 
 ```bash
 cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 
-# 把生成的地图直接保存到 nav2_ws1 的 maps 目录
-ros2 launch pcd2pgm pcd2pgm.launch.py \
-  save_prefix:=../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d \
-  save_delay:=8.0
+ros2 launch pcd2pgm pcd2pgm_launch.py
 ```
 
-生成结果会在：
-- `../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.pgm`
-- `../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.yaml`
+生成结果（默认与 PCD 同目录）：
+- `pgm_map.pgm`
+- `pgm_map.yaml`
 
-## 6) 启动 fast_lio_localization 的 `1.launch.py`（终端D）
+## 6) 启动全局定位（fast_lio_localization，终端D）
+
+在已建好的 PCD 地图中定位机器人位姿。
 
 ```bash
 cd fastlio2_v2
@@ -83,7 +118,7 @@ ros2 launch fast_lio_localization 1.launch.py \
   rviz:=true
 ```
 
-## 7) 启动 nav2_ws1 导航（终端E）
+## 7) 启动 Nav2 导航（终端E）
 
 首次编译：
 
@@ -108,13 +143,12 @@ ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
 
 如果你想继续用已有任务地图，把 `map:=.../scans_2d.yaml` 换成 `map:=src/dog_nav2_bringup/maps/task_field_map.yaml`。
 
-## 8) 底盘数据传输指令（cmd_vel -> 串口，终端F）
+## 8) 底盘串口桥接（cmd_vel → STM32，终端F）
 
 ```bash
 cd nav2_ws1
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-sudo apt install -y python3-serial
 
 # 串口桥：把 /cmd_vel 按协议发给 STM32（0x55 0xAA 0x10）
 ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \

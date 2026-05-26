@@ -98,7 +98,7 @@ def generate_launch_description():
     # 2. 全局重定位节点
     global_localization_node = Node(
         package="fast_lio_localization",
-        executable="global_localization.py",
+        executable="global_localization",
         name="global_localization",
         output="screen",
         prefix="env PATH=/usr/bin:/bin:/usr/sbin:/sbin",
@@ -118,7 +118,7 @@ def generate_launch_description():
     # 3. 变换融合节点
     transform_fusion_node = Node(
         package="fast_lio_localization",
-        executable="transform_fusion.py",
+        executable="transform_fusion",
         name="transform_fusion",
         prefix="env PATH=/usr/bin:/bin:/usr/sbin:/sbin",
         output="screen",

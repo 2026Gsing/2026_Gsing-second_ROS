@@ -31,5 +31,8 @@ setup(
         (os.path.join("share", package_name, "config"), glob.glob("config/*.yaml")),
         (os.path.join("share", package_name, "rviz"), glob.glob("rviz/*.rviz")),
         (os.path.join("share", package_name, "maps"), glob.glob("maps/*")),
+        (os.path.join("share", package_name, "hook"), glob.glob("hook/*")),
+        (os.path.join("share", package_name, "scripts"), glob.glob("scripts/*")),
+        (os.path.join("lib", package_name), glob.glob("lib/fast_lio_localization/*")),
     ],
 )
