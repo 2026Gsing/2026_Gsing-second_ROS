@@ -1,6 +1,6 @@
 pcd2pgm:
   ros__parameters:
-    pcd_file: /home/lihanchen/NAVIGATION_WS/pcd2pgm/rmuc_2025.pcd
+    pcd_file: /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd
     odom_to_lidar_odom: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     # odom_to_lidar_odom: [-0.16, 0.0, -0.18, -0.523599, 0.0, -1.5707963]
     flag_pass_through: false
