@@ -119,6 +119,8 @@
 | 底盘 | STM32 串口控制 |
 | 建图 | FAST-LIO2 |
 | 导航 | Nav2 (Planner + Controller + BT) |
+| 依赖包 | nav2-bringup, nav2-msgs |
+| Python 依赖 | open3d, tf_transformations |
 
 ---
 
@@ -143,14 +145,31 @@ sudo ip addr add 192.168.1.2/24 dev enp129s0
 ### 步骤 1：编译工作空间
 
 ```bash
+# 安装系统依赖（首次）
+sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
+pip install open3d tf_transformations
+
+# 克隆 pcd2pgm（首次）
+cd fastlio2_v2/src
+git clone https://github.com/liuscn/pcd2pgm.git
+cd ../..
+
+# 设置脚本执行权限（首次）
+find ../nav2_ws1/src/dog_nav2_bringup/scripts -name "*.py" -exec chmod +x {} +
+
 # 编译 FAST-LIO2 工作空间
 cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
+
+# 修复 am ent_python 包的索引
+bash src/fast_lio_localization/scripts/hook_fix.sh
+
 source install/setup.bash
 
 # 编译 Nav2 工作空间
 cd ../nav2_ws1
+rm -rf build/ install/
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
 source install/setup.bash
@@ -175,18 +194,18 @@ ros2 run fast_lio fastlio_mapping --ros-args \
 
 ### 步骤 4：生成 2D 栅格地图（首次建图时需要）
 
+先确认 `src/pcd2pgm/config/pcd2pgm.yaml` 中 `pcd_file` 指向你的 PCD 文件。
+
 ```bash
 cd fastlio2_v2
 source install/setup.bash
 
-ros2 launch pcd2pgm pcd2pgm.launch.py \
-  save_prefix:=../nav2_ws1/src/dog_nav2_bringup/maps/scans_2d \
-  save_delay:=8.0
+ros2 launch pcd2pgm pcd2pgm_launch.py
 ```
 
-生成结果：
-- `nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.pgm`
-- `nav2_ws1/src/dog_nav2_bringup/maps/scans_2d.yaml`
+生成结果（默认与 PCD 同目录）：
+- `pgm_map.pgm`
+- `pgm_map.yaml`
 
 ### 步骤 5：启动全局定位（fast_lio_localization）
 
@@ -355,20 +374,20 @@ final_z = -radar_x - 0.15
 
 ```bash
 # 启动立方体检测（需要 FAST-LIO2 雷达点云）
-cd py
-python3 cube_detector.py
+source /opt/ros/jazzy/setup.bash
+python3 py/cube_detector.py
 
 # 启动机械臂控制（需要 cube_detector 正在运行）
-python3 catch.py
+python3 py/catch.py
 
 # 颜色检测调参（需要 USB 摄像头）
-python3 test_dog.py
+python3 py/test_dog.py
 
 # 底盘运动测试
-python3 move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
+python3 py/move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
 
 # 监听串口数据
-python3 listen_serial.py
+python3 py/listen_serial.py
 ```
 
 ---
@@ -423,6 +442,24 @@ sudo apt install python3-serial
 ### ImageMagick 未安装（地图生成需要）
 ```bash
 sudo apt install imagemagick
+```
+
+### `package 'fast_lio_localization' not found`
+
+`fast_lio_localization` 是纯 Python 包，colcon 不会自动注册到 `AMENT_PREFIX_PATH`。编译后需运行：
+
+```bash
+cd fastlio2_v2
+bash src/fast_lio_localization/scripts/hook_fix.sh
+source install/setup.bash
+```
+
+### `executable not found on the libexec directory`
+
+Python 脚本缺少执行权限。`--symlink-install` 模式下软链接继承源文件权限：
+
+```bash
+find . -name "*.py" -path "*/scripts/*" -exec chmod +x {} +
 ```
 
 ### RViz2 没有显示地图
