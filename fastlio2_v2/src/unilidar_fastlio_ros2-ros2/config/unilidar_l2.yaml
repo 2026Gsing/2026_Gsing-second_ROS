@@ -5,9 +5,9 @@
         max_iteration: 10              # 迭代次数
         filter_size_surf: 0.15         # 面特征体素滤波
         filter_size_map: 0.15          # 地图体素滤波
-        cube_side_length: 1200.0       # 局部地图立方体边长（米）：维护的局部地图范围
+        cube_side_length: 300.0        # 局部地图立方体边长（米）：维护的局部地图范围，可根据场景增大
         runtime_pos_log_enable: false  # 运行时位置日志开关：是否记录实时位姿日志
-        map_file_path: "/home/zhanghangming/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd"  # 预加载地图路径
+        map_file_path: "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd"  # 预加载地图路径
 
         # ================== Sensor Topics ==================
         common:
@@ -40,11 +40,11 @@
             # 外参标定
             extrinsic_est_en: true      # 使能在线外参标定
             extrinsic_T: [0.007698, 0.014655, -0.00667]  # 平移外参：IMU到雷达的平移向量（x,y,z）米
-            extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]  # 倒装补偿：绕X轴旋转180度（roll=pi）
+            extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]  # 外参旋转矩阵（单位阵：与标定结果一致，安装无倒装）
             
             # 环境参数
             fov_degree: 180.0            # 有效视场角度：雷达的有效扫描角度范围
-            det_range: 100.0               # 最大探测半径10m
+            det_range: 100.0             # 最大探测半径（米）
             plane_thr: 0.02              # 稍严格平面阈值，提升边缘清晰度
             
             # 重力对齐
@@ -66,4 +66,4 @@
             sor_mean_k: 12               # 保留更多边缘点，轻度去噪
             sor_stddev_mul: 2.0          # 放宽离群点阈值，避免过度删点
             flip_z: false                # 排查阶段关闭Z翻转，避免导图与定位坐标系不一致
-            max_radius: 100.0              # 导出PCD时按XY半径裁剪为2m圆形范围
+            max_radius: 20.0              # 导出PCD时按XY半径裁剪为20m圆形范围

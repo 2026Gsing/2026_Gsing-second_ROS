@@ -3,7 +3,7 @@
 ## 0) 进入仓库根目录
 
 ```bash
-cd .
+cd /home/hyper/program/2026_Gsing-second_ROS
 ```
 
 ## 1) 配置网卡（雷达通信）
@@ -13,12 +13,18 @@ sudo nmcli device set enp129s0 managed no
 sudo ip addr add 192.168.1.2/24 dev enp129s0
 ```
 
-## 2) 进入 FAST-LIO 工作空间并编译必要包
+## 2) 编译 FAST-LIO 工作空间
+
+首次或有缓存冲突时，先清理再编译：
 
 ```bash
 cd fastlio2_v2
+
+# 首次 / 路径变更时清理旧缓存
+rm -rf build/ install/
+
 source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
+colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio fast_lio_localization
 source install/setup.bash
 ```
 
@@ -40,6 +46,11 @@ source install/setup.bash
 ros2 run fast_lio fastlio_mapping --ros-args \
   --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
 ```
+### 可视化（终端 B2，可选）
+
+source /opt/ros/jazzy/setup.bash
+source /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/setup.bash
+rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_config.rviz
 
 ## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
@@ -74,10 +85,21 @@ ros2 launch fast_lio_localization 1.launch.py \
 
 ## 7) 启动 nav2_ws1 导航（终端E）
 
+首次编译：
+
+```bash
+cd nav2_ws1
+rm -rf build/ install/
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+之后直接启动：
+
 ```bash
 cd nav2_ws1
 source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install
 source install/setup.bash
 
 ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
@@ -114,8 +136,7 @@ sudo usermod -aG dialout $USER
 ## 9) 不启动 Nav2 时，直接发送测试串口帧（可选）
 
 ```bash
-cd nav2_ws1
-python3 src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
+python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
   --port /dev/ttyACM0 \
   --baud 115200 \
   --vx 0.10 \
@@ -135,9 +156,7 @@ python3 src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
 ```bash
 # 终端 G：启动 3D OBB 立方体检测
 source /opt/ros/jazzy/setup.bash
-cd fastlio2_v2
-source install/setup.bash
-python3 ../py/cube_detector.py
+python3 py/cube_detector.py
 ```
 
 - 订阅 `/unilidar/cloud`（FAST-LIO2 配准点云）
@@ -150,7 +169,7 @@ python3 ../py/cube_detector.py
 ```bash
 # 终端 H：启动机械臂控制节点
 source /opt/ros/jazzy/setup.bash
-python3 ../py/catch.py
+python3 py/catch.py
 ```
 
 - 订阅 `/detected_cube` 获取立方体位置
@@ -163,7 +182,7 @@ python3 ../py/catch.py
 ```bash
 # 终端 I：启动点云保存
 source /opt/ros/jazzy/setup.bash
-python3 ../py/pointcloud_saver.py
+python3 py/pointcloud_saver.py
 # 按空格键保存当前帧点云，按 Q 退出
 ```
 
@@ -171,7 +190,8 @@ python3 ../py/pointcloud_saver.py
 
 ```bash
 # 终端 J：启动颜色检测调参
-python3 ../py/test_dog.py
+source /opt/ros/jazzy/setup.bash
+python3 py/test_dog.py
 # 按 1-4 切换颜色类别，s 保存配置，q 退出
 ```
 
@@ -179,10 +199,11 @@ python3 ../py/test_dog.py
 
 ```bash
 # 底盘运动测试
-python3 ../py/move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
+source /opt/ros/jazzy/setup.bash
+python3 py/move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
 
 # 监听 STM32 串口返回数据
-python3 ../py/listen_serial.py
+python3 py/listen_serial.py
 ```
 
 ### py/ 目录文件说明
