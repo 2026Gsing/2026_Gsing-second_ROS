@@ -79,7 +79,7 @@ class FastLIOLocalization(Node):
         self.get_logger().info("Global map received.")
 
         # ============ 订阅器 ============
-        self.create_subscription(PointCloud2, "/cloud_registered", self.cb_save_cur_scan, 10)
+        self.create_subscription(PointCloud2, "/unilidar/cloud", self.cb_save_cur_scan, 10)
         self.create_subscription(Odometry, "/Odometry", self.cb_save_cur_odom, 10)
         self.create_subscription(PoseWithCovarianceStamped, "/initialpose", self.cb_initialize_pose, 10)
 
@@ -127,7 +127,7 @@ class FastLIOLocalization(Node):
         result_icp = o3d.pipelines.registration.registration_icp(
             self.voxel_down_sample(scan, self.get_parameter("scan_voxel_size").value * scale),
             self.voxel_down_sample(map, self.get_parameter("map_voxel_size").value * scale),
-            1.0 * scale,
+            0.5 * scale,
             initial,
             o3d.pipelines.registration.TransformationEstimationPointToPoint(),
             o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=50),
@@ -225,9 +225,13 @@ class FastLIOLocalization(Node):
         # 清空缓存，开始下一轮累积
         self.scan_buffer = []
 
-        global_map_in_FOV = self.crop_global_map_in_FOV(pose_estimation)
-
         n_scan = len(np.array(scan_tobe_mapped.points))
+        # 跳过单帧（< 5000 点），点数太少 ICP 不可靠
+        if n_scan < 5000:
+            self.get_logger().warn(f"Skipping ICP: only {n_scan} pts, need >= 5000")
+            return
+
+        global_map_in_FOV = self.crop_global_map_in_FOV(pose_estimation)
         n_map = len(np.array(global_map_in_FOV.points))
         self.get_logger().info(
             f"ICP input: scan={n_scan} pts, map_FOV={n_map} pts"
@@ -249,7 +253,6 @@ class FastLIOLocalization(Node):
         )
 
         if fitness > self.get_parameter("localization_threshold").value:
-            # 打印变换值排查抖动
             x, y, z = transformation[:3, 3]
             self.get_logger().info(
                 f"map→odom: x={x:.3f} y={y:.3f} z={z:.3f}"
@@ -286,8 +289,10 @@ class FastLIOLocalization(Node):
         self.cur_odom = msg
 
     def cb_save_cur_scan(self, msg):
-        """保存最新的 FAST-LIO2 配准点云，累积到缓存中"""
+        """保存原始雷达点云，累积到缓存中。对 raw scan 做 Y/Z 翻转以匹配地图坐标系"""
         pc = self.msg_to_array(msg)
+        # Y/Z 翻转：匹配 fastlio preprocess 的 default_handler 坐标系
+        pc = pc * [1.0, -1.0, -1.0]
         self.cur_scan = o3d.geometry.PointCloud()
         self.cur_scan.points = o3d.utility.Vector3dVector(pc)
         # 累积多帧到缓存（上限 10 帧 ≈ 1 秒 @ 10Hz，避免淹没稀疏地图）
@@ -297,7 +302,7 @@ class FastLIOLocalization(Node):
         # 使用当前时间戳发布点云，避免 RViz TF 滤波器因传感器时间戳滞后而丢弃消息
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
-        header.frame_id = msg.header.frame_id
+        header.frame_id = "map"
         self.publish_point_cloud(self.pub_pc_in_map, header, pc)
 
     def initialize_global_map(self):

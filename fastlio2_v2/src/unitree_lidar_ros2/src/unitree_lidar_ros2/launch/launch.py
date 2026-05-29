@@ -21,7 +21,7 @@ def generate_launch_description():
                 # 以下是您原有的参数
                 {'initialize_type': 2},
                 {'work_mode': 0},
-                {'use_system_timestamp': True},
+                {'use_system_timestamp': False},
                 {'range_min': 0.0},
                 {'range_max': 100.0},
                 {'cloud_scan_num': 18},

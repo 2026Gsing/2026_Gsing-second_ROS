@@ -13,13 +13,13 @@
         common:
             lid_topic: "/unilidar/cloud"  # 激光雷达话题：宇树L2雷达发布的原始点云话题
             imu_topic: "/unilidar/imu"    # IMU话题：惯性测量单元话题
-            time_sync_en: true            # 开启时间同步
+            time_sync_en: false           # 先关闭时间同步，排除时间戳不匹配导致丢点
             time_offset_lidar_to_imu: 0.0 # 时间偏移补偿：雷达和IMU之间的硬件时间差补偿（秒）
 
         # ================== LiDAR预处理 ==================
         preprocess:
-            lidar_type: 4                # 雷达类型：4=MID360（宇树L2兼容类型）
-            scan_line: 16                # 扫描线数：宇树L2的实际扫描线数
+            lidar_type: 5                # 雷达类型：5=MID360（宇树L2兼容类型）
+            scan_line: 18                # 扫描线数：宇树L2的实际扫描线数
             point_filter_num: 1          # 点云抽稀
             blind: 0.15                  # 近场盲区（米）
             z_limit_enable: false        # 关闭z裁剪，避免大量点被截掉
@@ -57,12 +57,13 @@
             scan_publish_en: true        # 原始点云发布开关：true=发布原始扫描点云
             scan_bodyframe_pub_en: true  # 机体坐标系点云开关：true=发布机体坐标系下的点云
             dense_publish_en: true       # 稠密地图发布开关：true=发布累积的稠密地图
+            map_en: true                 # 地图发布开关：true=发布累积地图到/pcl_wait_pub（必须开启，否则地图保存会为空）
 
         # ================== 地图保存 ==================
         pcd_save:
             pcd_save_en: true            # PCD保存开关：true=保存地图为PCD文件（但代码被注释需取消）
             interval: -1                 # 保存间隔：-1=仅结束时保存，>0=每N帧保存一次（建议100避免内存溢出）
-            voxel_size: 0.01             # 保存时更小体素，提升PCD点密度
+            voxel_size: 0.003             # 体素滤波大小（米）：0.05m 保留更多细节
             sor_mean_k: 12               # 保留更多边缘点，轻度去噪
             sor_stddev_mul: 2.0          # 放宽离群点阈值，避免过度删点
             flip_z: false                # 排查阶段关闭Z翻转，避免导图与定位坐标系不一致
