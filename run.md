@@ -14,7 +14,10 @@ sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
 cd fastlio2_v2/src
 git clone https://github.com/liuscn/pcd2pgm.git
 ```
-
+### 查看点云地图
+```bash
+pcl_viewer scans.pcd
+```
 ### 安装 Python 依赖
 
 ```bash
@@ -87,6 +90,19 @@ source /opt/ros/jazzy/setup.bash
 source fastlio2_v2/install/setup.bash
 rviz2 -d fastlio2_v2/src/fast_lio_config.rviz
 ```
+
+### 保存 PCD 地图（终端 B3）
+
+建图运行一段时间后，另开终端触发保存：
+
+```bash
+cd fastlio2_v2
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 service call /map_save std_srvs/srv/Trigger
+```
+
+保存路径由 `unilidar_l2.yaml` 中的 `map_file_path` 指定。
 
 ## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
@@ -181,7 +197,15 @@ python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py \
   --send-stop-on-exit
 ```
 
-## 10) 立方体检测 + 机械臂抓取
+## 10) 输出 FAST-LIO2 实时定位坐标
+
+```bash
+# 终端 G：订阅 /Odometry 打印当前定位 (x, y, z)
+source /opt/ros/jazzy/setup.bash
+python3 py/fastlio_pose.py
+```
+
+## 11) 立方体检测 + 机械臂抓取
 
 导航到达目标后，使用雷达点云检测立方体，控制机械臂抓取。
 
@@ -254,3 +278,4 @@ python3 py/listen_serial.py
 | `folder_summary.py` | 项目文件内容提取（GUI） | tkinter |
 | `test_ros2.py` | ROS2 初始化测试 | — |
 | `camera_four_colors_config.json` | 四色 HSV 范围配置 | test_dog.py 自动生成 |
+

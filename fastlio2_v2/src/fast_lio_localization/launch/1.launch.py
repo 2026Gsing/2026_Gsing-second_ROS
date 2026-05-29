@@ -10,6 +10,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
+from launch_ros.parameter_descriptions import Parameter
 from launch_ros.actions import Node
 
 def generate_launch_description():
@@ -73,11 +74,47 @@ def generate_launch_description():
     )
     
     declare_pcd_map_topic = DeclareLaunchArgument(
-        "pcd_map_topic", 
-        default_value="/cloud_pcd",  # 与RViz默认显示话题保持一致
+        "pcd_map_topic",
+        default_value="/cloud_pcd",
         description="发布PCD地图的话题名称"
     )
-    
+
+    declare_map_voxel_size = DeclareLaunchArgument(
+        "map_voxel_size",
+        default_value="0.1",
+        description="地图体素下采样大小 (m)，越小地图点越多"
+    )
+    declare_scan_voxel_size = DeclareLaunchArgument(
+        "scan_voxel_size",
+        default_value="0.1",
+        description="扫描体素下采样大小 (m)"
+    )
+    declare_localization_threshold = DeclareLaunchArgument(
+        "localization_threshold",
+        default_value="0.3",
+        description="ICP 配准 fitness 阈值，高于此值才更新位姿"
+    )
+    declare_freq_localization = DeclareLaunchArgument(
+        "freq_localization",
+        default_value="1.0",
+        description="ICP 定位频率 (Hz)"
+    )
+    declare_freq_global_map = DeclareLaunchArgument(
+        "freq_global_map",
+        default_value="0.25",
+        description="地图发布频率 (Hz)"
+    )
+    declare_fov = DeclareLaunchArgument(
+        "fov",
+        default_value="6.28319",
+        description="FOV 范围 (弧度)，2π=全向"
+    )
+    declare_fov_far = DeclareLaunchArgument(
+        "fov_far",
+        default_value="300",
+        description="FOV 最远距离 (m)"
+    )
+
     # 1. Fast-LIO 定位节点（关键修改：添加重映射）
     fast_lio_node = Node(
         package="fast_lio",
@@ -102,17 +139,17 @@ def generate_launch_description():
         name="global_localization",
         output="screen",
         prefix="env PATH=/usr/bin:/bin:/usr/sbin:/sbin",
-        parameters=[{
-            "map_voxel_size": 0.4,
-            "scan_voxel_size": 0.1,
-            "freq_localization": 0.5,
-            "freq_global_map": 0.25,
-            "localization_threshold": 0.8,
-            "fov": 6.28319,
-            "fov_far": 300,
-            "pcd_map_path": pcd_map_path,
-            "pcd_map_topic": pcd_map_topic,
-        }],
+        parameters=[
+            Parameter("map_voxel_size", LaunchConfiguration("map_voxel_size"), value_type=float),
+            Parameter("scan_voxel_size", LaunchConfiguration("scan_voxel_size"), value_type=float),
+            Parameter("freq_localization", LaunchConfiguration("freq_localization"), value_type=float),
+            Parameter("freq_global_map", LaunchConfiguration("freq_global_map"), value_type=float),
+            Parameter("localization_threshold", LaunchConfiguration("localization_threshold"), value_type=float),
+            Parameter("fov", LaunchConfiguration("fov"), value_type=float),
+            Parameter("fov_far", LaunchConfiguration("fov_far"), value_type=int),
+            {"pcd_map_path": pcd_map_path},
+            {"pcd_map_topic": pcd_map_topic},
+        ],
     )
     
     # 3. 变换融合节点
@@ -177,6 +214,13 @@ def generate_launch_description():
     ld.add_action(declare_rviz_config_path_cmd)
     ld.add_action(declare_map_path)
     ld.add_action(declare_pcd_map_topic)
+    ld.add_action(declare_map_voxel_size)
+    ld.add_action(declare_scan_voxel_size)
+    ld.add_action(declare_localization_threshold)
+    ld.add_action(declare_freq_localization)
+    ld.add_action(declare_freq_global_map)
+    ld.add_action(declare_fov)
+    ld.add_action(declare_fov_far)
     
     # 添加节点
     ld.add_action(fast_lio_node)

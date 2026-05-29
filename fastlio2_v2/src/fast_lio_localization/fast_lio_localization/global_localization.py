@@ -45,6 +45,7 @@ class FastLIOLocalization(Node):
         self.T_map_to_odom = np.eye(4)  # map→odom 变换矩阵（ICP 配准结果）
         self.cur_odom = None            # 最新的 FAST-LIO2 里程计
         self.cur_scan = None            # 最新的 FAST-LIO2 扫描点云
+        self.scan_buffer = []           # 多帧扫描累积缓存（提升 ICP 稳定性）
         self.initialized = False        # 是否已收到初始位姿
 
         # ============ ROS2 参数 ============
@@ -106,7 +107,14 @@ class FastLIOLocalization(Node):
     def msg_to_array(self, pc_msg):
         """将 ROS PointCloud2 消息转为 numpy 点云数组"""
         pc_array = ros2_numpy.numpify(pc_msg)
-        return pc_array["xyz"]
+        if "xyz" in pc_array.dtype.names:
+            return pc_array["xyz"]
+        # FAST-LIO2 点云字段为 x, y, z 分开的格式
+        pts = np.zeros((len(pc_array), 3), dtype=np.float32)
+        pts[:, 0] = pc_array["x"]
+        pts[:, 1] = pc_array["y"]
+        pts[:, 2] = pc_array["z"]
+        return pts
 
     def registration_at_scale(self, scan, map, initial, scale):
         """
@@ -122,7 +130,7 @@ class FastLIOLocalization(Node):
             1.0 * scale,
             initial,
             o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-            o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=20),
+            o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=50),
         )
         return result_icp.transformation, result_icp.fitness
 
@@ -137,17 +145,21 @@ class FastLIOLocalization(Node):
 
     def publish_point_cloud(self, publisher, header, pc):
         """将 numpy 点云发布为 ROS PointCloud2 消息"""
-        data = dict()
-        data["xyz"] = pc[:, :3]
-
-        if pc.shape[1] == 4:
+        # 构建结构化数组（字段名 x, y, z 与 ros2_numpy 兼容）
+        n = pc.shape[0]
+        dtype = [("x", np.float32), ("y", np.float32), ("z", np.float32)]
+        if pc.shape[1] >= 4:
+            dtype.append(("intensity", np.float32))
+        data = np.zeros(n, dtype=dtype)
+        data["x"] = pc[:, 0]
+        data["y"] = pc[:, 1]
+        data["z"] = pc[:, 2]
+        if pc.shape[1] >= 4:
             data["intensity"] = pc[:, 3]
+
         msg = ros2_numpy.msgify(PointCloud2, data)
         msg.header = header
-        if len(msg.fields) == 4:
-            msg.point_step = 16
-        else:
-            msg.point_step = 12
+        msg.point_step = 12 + (4 if pc.shape[1] >= 4 else 0)
 
         publisher.publish(msg)
 
@@ -205,21 +217,54 @@ class FastLIOLocalization(Node):
         3. 如果 fitness > 阈值则更新 map→odom 变换
         """
         scan_tobe_mapped = copy.copy(self.cur_scan)
+        # 合并累积缓存中的多帧扫描点云，提升 ICP 稳定性
+        if len(self.scan_buffer) > 1:
+            merged = np.concatenate(self.scan_buffer, axis=0)
+            scan_tobe_mapped = o3d.geometry.PointCloud()
+            scan_tobe_mapped.points = o3d.utility.Vector3dVector(merged)
+        # 清空缓存，开始下一轮累积
+        self.scan_buffer = []
+
         global_map_in_FOV = self.crop_global_map_in_FOV(pose_estimation)
 
+        n_scan = len(np.array(scan_tobe_mapped.points))
+        n_map = len(np.array(global_map_in_FOV.points))
+        self.get_logger().info(
+            f"ICP input: scan={n_scan} pts, map_FOV={n_map} pts"
+        )
+
         # 粗配准
-        transformation, _ = self.registration_at_scale(
+        transformation, fitness_coarse = self.registration_at_scale(
             scan_tobe_mapped, global_map_in_FOV, initial=pose_estimation, scale=5
         )
 
-        # 精配准
+        # 精配准（以粗配准结果为初值）
         transformation, fitness = self.registration_at_scale(
-            scan_tobe_mapped, global_map_in_FOV, initial=pose_estimation, scale=1
+            scan_tobe_mapped, global_map_in_FOV, initial=transformation, scale=1
+        )
+
+        self.get_logger().info(
+            f"ICP fitness: coarse={fitness_coarse:.3f}, fine={fitness:.3f}, "
+            f"threshold={self.get_parameter('localization_threshold').value}"
         )
 
         if fitness > self.get_parameter("localization_threshold").value:
-            self.T_map_to_odom = transformation
-            self.publish_odom(transformation)
+            # 打印变换值排查抖动
+            x, y, z = transformation[:3, 3]
+            self.get_logger().info(
+                f"map→odom: x={x:.3f} y={y:.3f} z={z:.3f}"
+            )
+            # 限制单次更新幅度，防止 ICP 跳变到错误位置
+            dx = x - self.T_map_to_odom[0, 3]
+            dy = y - self.T_map_to_odom[1, 3]
+            dz = z - self.T_map_to_odom[2, 3]
+            if abs(dx) > 1.0 or abs(dy) > 1.0 or abs(dz) > 0.3:
+                self.get_logger().warn(
+                    f"ICP jump too large ({dx:.2f}, {dy:.2f}, {dz:.2f}), rejecting"
+                )
+            else:
+                self.T_map_to_odom = transformation
+                self.publish_odom(transformation)
         else:
             self.get_logger().warn(
                 f"Fitness score {fitness} less than localization threshold "
@@ -241,10 +286,14 @@ class FastLIOLocalization(Node):
         self.cur_odom = msg
 
     def cb_save_cur_scan(self, msg):
-        """保存最新的 FAST-LIO2 配准点云并发布到 map 坐标系下可视化"""
+        """保存最新的 FAST-LIO2 配准点云，累积到缓存中"""
         pc = self.msg_to_array(msg)
         self.cur_scan = o3d.geometry.PointCloud()
         self.cur_scan.points = o3d.utility.Vector3dVector(pc)
+        # 累积多帧到缓存（上限 10 帧 ≈ 1 秒 @ 10Hz，避免淹没稀疏地图）
+        self.scan_buffer.append(pc)
+        if len(self.scan_buffer) > 10:
+            self.scan_buffer.pop(0)
         # 使用当前时间戳发布点云，避免 RViz TF 滤波器因传感器时间戳滞后而丢弃消息
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
@@ -253,21 +302,37 @@ class FastLIOLocalization(Node):
 
     def initialize_global_map(self):
         """加载 PCD 全局地图并进行体素下采样"""
-        self.global_map = o3d.io.read_point_cloud(self.get_parameter("pcd_map_path").value)
-        self.global_map = self.voxel_down_sample(self.global_map, self.get_parameter("map_voxel_size").value)
-        self.get_logger().info("Global map received.")
+        path = self.get_parameter("pcd_map_path").value
+        v_size = self.get_parameter("map_voxel_size").value
+        self.get_logger().info(f"Loading map: {path}, voxel_size={v_size}")
+        self.global_map = o3d.io.read_point_cloud(path)
+        n_raw = len(np.array(self.global_map.points))
+        self.global_map = self.voxel_down_sample(self.global_map, v_size)
+        n_down = len(np.array(self.global_map.points))
+        self.get_logger().info(f"Map loaded: raw={n_raw} pts, downsampled={n_down} pts")
 
     def cb_initialize_pose(self, msg):
         """
         收到初始位姿（来自 RViz "2D Pose Estimate" 或 publish_initial_pose.py）
         后，执行首次全局定位
+
+        RViz 的初始位姿是 map→base_link，但 ICP 需要 map→odom，
+        用当前里程计做转换：T_map_to_odom = T_map_to_base_link * inv(T_odom_to_base_link)
         """
-        initial_pose = self.pose_to_mat(msg.pose.pose)
+        T_map_to_base_link = self.pose_to_mat(msg.pose.pose)
+
+        if self.cur_odom is not None:
+            T_odom_to_base_link = self.pose_to_mat(self.cur_odom.pose.pose)
+            T_map_to_odom = np.matmul(T_map_to_base_link, self.inverse_se3(T_odom_to_base_link))
+            self.get_logger().info("Initial pose received, converted map→base_link → map→odom")
+        else:
+            T_map_to_odom = T_map_to_base_link
+            self.get_logger().warn("No odometry yet, using map→base_link as map→odom (approximate)")
+
         self.initialized = True
-        self.get_logger().info("Initial pose received.")
 
         if self.cur_scan is not None:
-            self.global_localization(initial_pose)
+            self.global_localization(T_map_to_odom)
 
     def publish_odom(self, transform):
         """将 map→odom 变换矩阵发布为 Odometry 消息"""
