@@ -102,7 +102,9 @@ source install/setup.bash
 ros2 service call /map_save std_srvs/srv/Trigger
 ```
 
-保存路径由 `unilidar_l2.yaml` 中的 `map_file_path` 指定。
+保存路径由 `src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml` 中的 `map_file_path` 指定。
+
+**建图提示**：移动机器人扫描更多区域后再保存。`voxel_size` 设太小（如 0.001）会导致文件体积巨大但 ICP 匹配慢；推荐 0.01-0.05。保存后可用 `pcl_viewer scans.pcd` 检查点数。
 
 ## 5) 生成 2D 栅格地图（pcd2pgm，终端C）
 
@@ -122,17 +124,39 @@ ros2 launch pcd2pgm pcd2pgm_launch.py
 
 ## 6) 启动全局定位（fast_lio_localization，终端D）
 
-在已建好的 PCD 地图中定位机器人位姿。
+**前提**：雷达驱动已在终端 A 运行。
+
+在已建好的 PCD 地图中定位机器人位姿。定位使用原始雷达扫描（`/unilidar/cloud`）直接与 PCD 地图做 ICP 匹配，不受 FAST-LIO 里程计漂移影响。
 
 ```bash
 cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
+export AMENT_PREFIX_PATH="$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH"
+export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages
+
 ros2 launch fast_lio_localization 1.launch.py \
   map:=src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd \
   config_file:=unilidar_l2.yaml \
-  rviz:=true
+  rviz:=true \
+  map_voxel_size:=0.01 \
+  scan_voxel_size:=0.03 \
+  freq_localization:=2.0 \
+  localization_threshold:=0.9
 ```
+
+| 参数 | 说明 | 推荐值 |
+|------|------|--------|
+| `map_voxel_size` | 地图体素下采样 (m) | 0.01 |
+| `scan_voxel_size` | 扫描体素下采样 (m) | 0.03 |
+| `freq_localization` | ICP 定位频率 (Hz) | 2.0 |
+| `localization_threshold` | ICP fitness 接受阈值 | 0.9 |
+
+**注意**：
+- `AMENT_PREFIX_PATH` 是必须的（colcon 不自动注册纯 Python 包）
+- 定位配置文件 `src/fast_lio_localization/config/unilidar_l2.yaml` 中 `pcd_save_en` 已设为 `false`，避免退出时覆盖地图
+- 在 RViz 中用 "2D Pose Estimate" 给初始位姿后，等 3-4 个 ICP 周期（约 2 秒）收敛
+- RViz 中显示 `/cur_scan_in_map`（实时扫描）和 `/submap`（地图局部），两者重叠说明定位准确
 
 ## 7) 启动 Nav2 导航（终端E）
 
