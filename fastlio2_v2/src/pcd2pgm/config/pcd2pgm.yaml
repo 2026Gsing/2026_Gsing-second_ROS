@@ -4,6 +4,7 @@ pcd2pgm:
     odom_to_lidar_odom: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     # odom_to_lidar_odom: [-0.16, 0.0, -0.18, -0.523599, 0.0, -1.5707963]
     flag_pass_through: false
+    thre_z_percentile: 95  # 过滤 Z 值最高的 5% 点云（去除高点噪声）
     map_resolution: 0.05
     map_topic_name: map
     thre_radius: 0.1

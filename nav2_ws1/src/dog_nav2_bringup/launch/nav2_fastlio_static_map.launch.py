@@ -63,11 +63,13 @@ def generate_launch_description():
         description='Nav2 params yaml'
     )
 
-    default_map_yaml = os.path.join(bringup_share, 'maps', 'map.yaml')
+    # 默认使用 pcd2pgm 生成的 2D 栅格地图
+    pcd2pgm_map_dir = "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD"
+    default_map_yaml = os.path.join(pcd2pgm_map_dir, 'pgm_map.yaml')
     declare_map = DeclareLaunchArgument(
         'map',
         default_value=default_map_yaml,
-        description='Full path to the map yaml to load'
+        description='Full path to the map yaml to load (default: pcd2pgm output)'
     )
 
     # ============ TF 树静态变换 ============

@@ -44,6 +44,23 @@ Pcd2PgmNode::Pcd2PgmNode(const rclcpp::NodeOptions & options) : Node("pcd2pgm", 
 
   applyTransform();
 
+  // 如果设置了 thre_z_percentile（>0），自动计算 Z 值百分位作为上限
+  if (thre_z_percentile_ > 0.0f) {
+    std::vector<float> z_vals;
+    z_vals.reserve(pcd_cloud_->points.size());
+    for (const auto & pt : pcd_cloud_->points) {
+      z_vals.push_back(pt.z);
+    }
+    std::sort(z_vals.begin(), z_vals.end());
+    int idx = static_cast<int>(z_vals.size() * thre_z_percentile_ / 100.0f);
+    idx = std::max(0, std::min(idx, static_cast<int>(z_vals.size()) - 1));
+    float z_cutoff = z_vals[idx];
+    RCLCPP_INFO(
+      get_logger(), "Z percentile %.0f%% cutoff: %.4f (was thre_z_max=%.4f)",
+      thre_z_percentile_, z_cutoff, thre_z_max_);
+    thre_z_max_ = z_cutoff;
+  }
+
   passThroughFilter(thre_z_min_, thre_z_max_, flag_pass_through_);
   radiusOutlierFilter(cloud_after_pass_through_, thre_radius_, thres_point_count_);
   setMapTopicMsg(cloud_after_radius_, map_topic_msg_);
@@ -66,6 +83,7 @@ void Pcd2PgmNode::declareParameters()
   declare_parameter("pcd_file", "");
   declare_parameter("thre_z_min", 0.5);
   declare_parameter("thre_z_max", 2.0);
+  declare_parameter("thre_z_percentile", 0.0);
   declare_parameter("flag_pass_through", false);
   declare_parameter("thre_radius", 0.5);
   declare_parameter("map_resolution", 0.05);
@@ -80,6 +98,7 @@ void Pcd2PgmNode::getParameters()
   get_parameter("pcd_file", pcd_file_);
   get_parameter("thre_z_min", thre_z_min_);
   get_parameter("thre_z_max", thre_z_max_);
+  get_parameter("thre_z_percentile", thre_z_percentile_);
   get_parameter("flag_pass_through", flag_pass_through_);
   get_parameter("thre_radius", thre_radius_);
   get_parameter("map_resolution", map_resolution_);

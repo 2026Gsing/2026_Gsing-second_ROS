@@ -15,6 +15,7 @@
 #ifndef PCD2PGM__PCD2PGM_HPP_
 #define PCD2PGM__PCD2PGM_HPP_
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -50,6 +51,7 @@ private:
 
   float thre_z_min_;
   float thre_z_max_;
+  float thre_z_percentile_;
   float thre_radius_;
   bool flag_pass_through_;
   float map_resolution_;
