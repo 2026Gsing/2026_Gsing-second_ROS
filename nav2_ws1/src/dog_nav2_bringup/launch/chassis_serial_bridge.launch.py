@@ -8,15 +8,16 @@ chassis_serial_bridge.launch.py — Nav2 /cmd_vel → STM32 串口桥接启动
 
 串口协议帧格式：
   [0x55][0xAA][0x10][0x09][vx(float32)][wz(float32)][state(uint8)][checksum]
+  - vx: 线速度 (m/s)，正值=前进, 负值=后退
+  - wz: 角速度 (rad/s)，正值=左转, 负值=右转
+  - state: 从 vx/wz 自动推导（0=IDLE 1=FORWARD 2=BACKWARD 3=LEFT 4=RIGHT）
 
 使用方式：
   ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
     serial_port:=/dev/ttyACM0 \
     baud_rate:=115200 \
     cmd_vel_topic:=/cmd_vel \
-    send_rate_hz:=50.0 \
-    active_state:=1 \
-    idle_state:=0
+    send_rate_hz:=50.0
 """
 
 from launch import LaunchDescription

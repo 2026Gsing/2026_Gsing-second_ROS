@@ -8,14 +8,21 @@ send_chassis_test_serial.py — 底盘串口通信测试工具（无需启动 Na
 
 协议帧:
   [0x55][0xAA][0x10][0x09][vx(float32)][wz(float32)][state(uint8)][checksum]
-  checksum = sum(前面所有字节) & 0xFF
+  - vx: 线速度 (m/s)，正值=前进, 负值=后退
+  - wz: 角速度 (rad/s)，正值=左转, 负值=右转
+  - state: 机器人运动状态，默认从 vx/wz 自动推导：
+      0=IDLE 1=FORWARD 2=BACKWARD 3=LEFT 4=RIGHT
+  - checksum = sum(前面所有字节) & 0xFF
 
 使用示例:
   # 前进 0.1m/s，持续 2 秒
-  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.10 --wz 0.00 --state 1 --rate 50 --duration 2 --send-stop-on-exit
+  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.10 --wz 0.00 --rate 50 --duration 2 --send-stop-on-exit
 
-  # 原地旋转
-  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.00 --wz 0.50 --state 1 --rate 50 --duration 3 --send-stop-on-exit
+  # 原地旋转（角速度主导，自动推导为 LEFT/RIGHT）
+  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx 0.00 --wz 0.50 --rate 50 --duration 3 --send-stop-on-exit
+
+  # 后退（线速度主导，自动推导为 BACKWARD）
+  python3 send_chassis_test_serial.py --port /dev/ttyACM0 --vx -0.10 --wz 0.00 --rate 50 --duration 3 --send-stop-on-exit
 """
 
 import argparse
@@ -37,6 +44,29 @@ FUNC_CHASSIS_MOVE = 0x10
 PAYLOAD_LEN = 9
 PACK_FMT = "<2fB"  # vx(float32), wz(float32), state(uint8)
 
+# 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
+ROBOT_STATE_IDLE     = 0  # 空闲/停止
+ROBOT_STATE_FORWARD  = 1  # 前进
+ROBOT_STATE_BACKWARD = 2  # 后退
+ROBOT_STATE_LEFT     = 3  # 左转
+ROBOT_STATE_RIGHT    = 4  # 右转
+
+_STATE_EPSILON = 1e-6
+
+
+def derive_robot_state(vx: float, wz: float) -> int:
+    """
+    从 vx, wz 速度矢量推导机器人运动状态。
+
+    推导逻辑与 STM32 control.c derive_robot_state() 一致：
+    优先判断角速度（自转），再判断线速度（平移），否则返回 IDLE。
+    """
+    if abs(wz) > abs(vx) and abs(wz) > _STATE_EPSILON:
+        return ROBOT_STATE_LEFT if wz >= 0.0 else ROBOT_STATE_RIGHT
+    if abs(vx) > _STATE_EPSILON:
+        return ROBOT_STATE_FORWARD if vx >= 0.0 else ROBOT_STATE_BACKWARD
+    return ROBOT_STATE_IDLE
+
 
 def build_packet(vx: float, wz: float, state: int) -> bytes:
     """组装串口协议帧"""
@@ -55,9 +85,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description="发送底盘串口测试帧（vx, wz, state）")
     parser.add_argument("--port", type=str, default="/dev/ttyUSB0", help="串口设备，例如 /dev/ttyUSB0 或 /dev/ttyACM0")
     parser.add_argument("--baud", type=int, default=115200, help="波特率")
-    parser.add_argument("--vx", type=float, default=0.0, help="线速度 m/s")
-    parser.add_argument("--wz", type=float, default=0.0, help="角速度 rad/s")
-    parser.add_argument("--state", type=int, default=1, help="状态字节 0~255")
+    parser.add_argument("--vx", type=float, default=0.0, help="线速度 m/s（正值=前进, 负值=后退）")
+    parser.add_argument("--wz", type=float, default=0.0, help="角速度 rad/s（正值=左转, 负值=右转）")
+    parser.add_argument("--state", type=int, default=None,
+                        help="手动指定状态字节 0-4（默认从 vx/wz 自动推导）")
     parser.add_argument("--rate", type=float, default=50.0, help="发送频率 Hz")
     parser.add_argument("--duration", type=float, default=2.0, help="发送时长（秒），<0 表示一直发")
     parser.add_argument("--print-every", type=int, default=20, help="每 N 帧打印一次十六进制，0 不打印")
@@ -71,11 +102,20 @@ def main():
         print("rate 必须 > 0")
         return 1
 
-    period = 1.0 / args.rate
-    pkt = build_packet(args.vx, args.wz, args.state)
-    stop_pkt = build_packet(0.0, 0.0, 0)
+    # state 自动推导：未指定时从 vx/wz 计算（与 STM32 逻辑一致）
+    if args.state is not None:
+        state = int(args.state) & 0xFF
+    else:
+        state = derive_robot_state(args.vx, args.wz)
 
+    period = 1.0 / args.rate
+    pkt = build_packet(args.vx, args.wz, state)
+    stop_pkt = build_packet(0.0, 0.0, ROBOT_STATE_IDLE)
+
+    state_names = {0: "IDLE", 1: "FWD", 2: "REV", 3: "LEFT", 4: "RIGHT"}
+    state_label = state_names.get(state, f"?{state}")
     print(f"打开串口 {args.port} @ {args.baud}")
+    print(f"速度 vx={args.vx:.3f} wz={args.wz:.3f} → state={state}({state_label})")
     ser = serial.Serial(port=args.port, baudrate=args.baud, timeout=0.05)
 
     start = time.monotonic()

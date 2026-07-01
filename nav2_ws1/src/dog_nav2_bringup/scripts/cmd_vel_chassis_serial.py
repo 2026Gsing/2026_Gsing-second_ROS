@@ -8,9 +8,11 @@ cmd_vel_chassis_serial.py — Nav2 /cmd_vel → STM32 串口协议转发
 
 协议帧格式：
   [0x55][0xAA][0x10][0x09][vx(float32)][wz(float32)][state(uint8)][CheckSum]
-  - vx: 线速度 (m/s)
-  - wz: 角速度 (rad/s)
-  - state: 状态字节（1=主动控制模式, 0=空闲/停止）
+  - vx: 线速度 (m/s)，正值=前进, 负值=后退
+  - wz: 角速度 (rad/s)，正值=左转, 负值=右转
+  - state: 机器人运动状态，由 vx/wz 自动推导：
+      0 = IDLE（停止）, 1 = FORWARD（前进）, 2 = BACKWARD（后退）,
+      3 = LEFT（左转）, 4 = RIGHT（右转）
   - CheckSum: 前面所有字节的和的低8位
 
 安全机制：
@@ -41,6 +43,32 @@ HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
+
+# 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
+ROBOT_STATE_IDLE     = 0  # 空闲/停止
+ROBOT_STATE_FORWARD  = 1  # 前进
+ROBOT_STATE_BACKWARD = 2  # 后退
+ROBOT_STATE_LEFT     = 3  # 左转
+ROBOT_STATE_RIGHT    = 4  # 右转
+
+_STATE_EPSILON = 1e-6
+
+
+def derive_robot_state(vx: float, wz: float) -> int:
+    """
+    从 vx, wz 速度矢量推导机器人运动状态。
+
+    推导逻辑与 STM32 control.c derive_robot_state() 一致：
+    优先判断角速度（自转），再判断线速度（平移），否则返回 IDLE。
+    """
+    # 角速度占主导 → 左转/右转
+    if abs(wz) > abs(vx) and abs(wz) > _STATE_EPSILON:
+        return ROBOT_STATE_LEFT if wz >= 0.0 else ROBOT_STATE_RIGHT
+    # 线速度主导 → 前进/后退
+    if abs(vx) > _STATE_EPSILON:
+        return ROBOT_STATE_FORWARD if vx >= 0.0 else ROBOT_STATE_BACKWARD
+    # 零速度 → 空闲
+    return ROBOT_STATE_IDLE
 
 
 class CmdVelChassisSerial(Node):
@@ -73,12 +101,6 @@ class CmdVelChassisSerial(Node):
         self._zero_on_shutdown = (
             self.get_parameter("zero_on_shutdown").get_parameter_value().bool_value
         )
-        self._active_state = int(
-            self.get_parameter("active_state").get_parameter_value().integer_value
-        ) & 0xFF
-        self._idle_state = int(
-            self.get_parameter("idle_state").get_parameter_value().integer_value
-        ) & 0xFF
 
         # ============ 状态变量 ============
         self._lock = threading.Lock()        # 线程锁，保护共享数据
@@ -88,8 +110,7 @@ class CmdVelChassisSerial(Node):
         # ============ 打开串口 ============
         self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05)
         self.get_logger().info(
-            f"Opened {port} @ {baud}, cmd_vel={topic}, send={self._send_rate}Hz, "
-            f"states(active={self._active_state}, idle={self._idle_state})"
+            f"Opened {port} @ {baud}, cmd_vel={topic}, send={self._send_rate}Hz"
         )
 
         # ============ 订阅 /cmd_vel ============
@@ -118,8 +139,8 @@ class CmdVelChassisSerial(Node):
     def _send_tick(self):
         """
         定时发送任务：
-        - 如果在 stale_timeout 内收到新命令 → 发送 active_state + 速度值
-        - 如果超时 → 发送 idle_state + 零速度（停止）
+        - 如果在 stale_timeout 内收到新命令 → 从 vx/wz 自动推导 RobotState
+        - 如果超时 → 发送 ROBOT_STATE_IDLE + 零速度（停止）
         """
         now = time.monotonic()
         with self._lock:
@@ -129,12 +150,12 @@ class CmdVelChassisSerial(Node):
         if age > self._stale_timeout:
             # 命令超时 → 发送停止帧
             vx = wz = 0.0
-            state = self._idle_state
+            state = ROBOT_STATE_IDLE
         else:
-            # 命令有效 → 发送控制帧
+            # 命令有效 → 发送控制帧，状态从速度矢量自动推导
             vx = twist.linear.x
             wz = twist.angular.z
-            state = self._active_state
+            state = derive_robot_state(vx, wz)
 
         pkt = self._build_packet(vx, wz, state)
         try:
@@ -147,7 +168,7 @@ class CmdVelChassisSerial(Node):
         """节点销毁时发送停止帧，确保机器人安全停车"""
         if self._zero_on_shutdown and self._ser and self._ser.is_open:
             try:
-                self._ser.write(self._build_packet(0.0, 0.0, self._idle_state))
+                self._ser.write(self._build_packet(0.0, 0.0, ROBOT_STATE_IDLE))
                 self._ser.flush()
             except Exception:
                 pass
