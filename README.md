@@ -1,6 +1,6 @@
-# 2026 Gsing 二队 — ROS2 Jazzy 导航工作空间
+# 2026 Gsing 二队 — ROS2 Jazzy 导航 + 视觉自动任务系统
 
-基于 **ROS2 Jazzy** 的机器人导航系统，集成 **FAST-LIO2 SLAM**（建图与定位）、**Nav2**（路径规划与运动控制）和 **STM32 底盘串口通信**，用于竞赛任务场景。
+基于 **ROS2 Jazzy** 的机器人导航与视觉自动任务系统，集成 **FAST-LIO2 SLAM**（建图与定位）、**Nav2**（路径规划与运动控制）、**YOLO 视觉**（物资识别 + 数学题识别）和 **STM32 串口通信**（底盘 + 机械臂），用于竞赛任务场景。
 
 ---
 
@@ -20,7 +20,7 @@
 │                    │ transform_fusion  │  │ publish_initial  │  │
 │                    │ (TF 变换融合)     │  │ _pose (初始化)    │  │
 │                    └────────┬─────────┘  └──────────────────┘  │
-│                             │ /localization, TF (map→camera_init)│
+│                             │ /localization                     │
 └─────────────────────────────┼───────────────────────────────────┘
                               │
 ┌─────────────────────────────┼───────────────────────────────────┐
@@ -31,15 +31,24 @@
 │  │       │ planner_server (Navfn/A* 全局规划)   │          │   │
 │  │       │ controller_server (DWB 局部规划)     │          │   │
 │  │       │ bt_navigator (行为树导航)             │          │   │
-│  │       │ behavior_server (恢复行为)            │          │   │
-│  │       │ waypoint_follower (航点跟随)          │          │   │
 │  │       └──────────────┬───────────────────────┘          │   │
 │  └──────────────────────┼───────────────────────────────────┘   │
 │                         │ /cmd_vel                                │
 │  ┌──────────────────────┼───────────────────────────────────┐   │
-│  │  chassis_serial_bridge (cmd_vel → STM32 串口协议)        │   │
-│  │  ┌─ goal_pose_to_nav2 (RViz 2D Goal → NavigateToPose)   │   │
-│  │  └─ costmap_to_grid (costmap → RViz 可视化)              │   │
+│  │  chassis_serial_bridge (cmd_vel → STM32 串口 0x10)       │   │
+│  │  + 新增: /vision_cmd_vel 优先, /vision/auto_cmd → 0x15  │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────┼───────────────────────────────────┐
+│              视觉自动任务模块 (新)                                 │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │  vision_auto_task_node.py  (状态机)                       │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────────┐ │   │
+│  │  │ YOLO 检测│ │ Nav2 Goal│ │到达检测  │ │ 串口 0x15   │ │   │
+│  │  │ task.pt  │ │ Navigator│ │/localizat│ │ AUTO_CMD    │ │   │
+│  │  │ math.pt  │ │          │ │          │ │             │ │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └─────────────┘ │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -89,19 +98,34 @@
 │   └── simulation/src/scripts/
 │       └── path_planner.py                 # A* 路径规划器（仿真用）
 │
-├── py/                                     # 工具脚本（立方体检测、机械臂控制等）
+├── vision/                                 # YOLO 视觉模块（整合自 second-YOLO-tmp）
+│   ├── src/
+│   │   ├── predict.py                      # YOLO 检测主脚本（任务模型+槽位分配）
+│   │   ├── slot_roi.py                     # ROI 槽位分配模块
+│   │   └── MATH.PY                         # 数学符号识别
+│   ├── config/
+│   │   ├── slots_roi.json                  # ROI 槽位标定
+│   │   ├── decision_state.json             # 数学决策结果 (IPC)
+│   │   └── nav_target.json                 # 导航目标输出 (IPC)
+│   └── weights/
+│       ├── task3.pt                        # 4 类物资检测 (tool/device/food/remedy)
+│       └── math12.pt                       # 数学符号检测
+│
+├── py/                                     # 独立 Python 脚本
+│   ├── vision_auto_task_node.py            # 视觉自动任务状态机（核心新增）
+│   ├── arrival_detector.py                 # 到达检测工具
 │   ├── cube_detector.py                    # 3D OBB 立方体检测（雷达点云→DBSCAN→PCA）
 │   ├── catch.py                            # 机械臂抓取控制（串口→STM32）
 │   ├── camera_four_colors_config.json      # 摄像头四色 HSV 范围配置
 │   ├── test_dog.py                         # OpenCV 颜色检测调参工具
 │   ├── move.py                             # 底盘指令测试（前进/后退/转向）
 │   ├── listen_serial.py                    # 串口监听（十六进制显示）
-│   ├── pointcloud_saver.py                 # 点云保存（空格键触发）
-│   ├── check_gz_services.py                # Gazebo 服务列表检查
-│   ├── test_ros2.py                        # ROS2 初始化测试
-│   ├── folder_summary.py                   # 项目文件内容提取工具（GUI）
-│   └── test_interactive.py                 # 交互测试脚本
+│   ├── pointcloud_saver.py                 # 点云保存（空格触发）
+│   ├── folder_summary.py                   # 项目文件内容提取工具
+│   ├── test_interactive.py                 # 交互测试脚本
+│   └── config/competition_poses.yaml       # 物资箱/归位区预置坐标
 │
+├── run_auto_task.sh                        # 视觉自动任务一键启动（新增）
 ├── run.md                                  # 详细运行流程
 └── README.md                               # 本文件
 ```
@@ -120,7 +144,8 @@
 | 建图 | FAST-LIO2 |
 | 导航 | Nav2 (Planner + Controller + BT) |
 | 依赖包 | nav2-bringup, nav2-msgs |
-| Python 依赖 | open3d, tf_transformations |
+| Python 依赖 | open3d, tf_transformations, ultralytics, pyserial |
+| 视觉 | YOLOv8/YOLO11 (ultralytics), OpenCV |
 
 ---
 
@@ -267,8 +292,9 @@ map → camera_init ── (static) ──→ odom ← FAST-LIO2 ──→ base_
 ### 话题数据流
 
 ```
+=== 导航链路 ===
 雷达驱动 (unitree_lidar_ros2)
-  │ /livox/lidar (原始点云)
+  │ /unilidar/cloud (原始点云)
   ▼
 FAST-LIO2 Mapping (fastlio_mapping)
   │ /Odometry (里程计: odom→base_link)
@@ -284,28 +310,63 @@ transform_fusion (transform_fusion.py)
 Nav2 (planner_server, controller_server, bt_navigator)
   │ /cmd_vel (速度指令)
   ▼
-cmd_vel_chassis_serial
+cmd_vel_chassis_serial (速度仲裁: vision_cmd_vel > cmd_vel)
   │ 串口 [0x55][0xAA][0x10][0x09][vx][wz][state][checksum]
   ▼
 STM32 底盘 → 电机运动
+
+=== 自动任务链路（新增） ===
+YOLO (vision/src/predict.py)
+  │ /vision/detected_objects (检测结果)
+  │ /vision/math_result (数学题结果)
+  ▼
+vision_auto_task_node.py (视觉状态机)
+  │ → Nav2 NavigateToPose (长距导航)
+  │ → /vision_cmd_vel (精细对位，高于 Nav2 优先级)
+  │ → /vision/auto_cmd (JSON) → cmd_vel_chassis_serial → 串口 0x15
+  │ ← /localization (到达判断)
+  ▼
+STM32 auto_task 状态机 → arm_task 抓放
 ```
 
 ---
 
-## 串口协议（底盘通信）
+## 串口协议（ROS → STM32）
 
-控制帧格式（Nav2 → STM32）：
+### 0x10 — 底盘速度控制 (FUNC_CHASSIS_MOVE)
+
+帧格式（Nav2 或视觉 → STM32）：
 
 | 偏移 | 字节 | 说明 |
 |------|------|------|
 | 0 | 0x55 | 帧头 1 |
 | 1 | 0xAA | 帧头 2 |
 | 2 | 0x10 | 功能码（底盘速度控制） |
-| 3 | 0x09 | 载荷长度（固定 9 字节） |
-| 4-7 | vx (float32, 小端) | 线速度 (m/s) |
-| 8-11 | wz (float32, 小端) | 角速度 (rad/s) |
-| 12 | state (uint8) | 状态（1=主动控制, 0=空闲） |
-| 13 | checksum (uint8) | 前面所有字节和 & 0xFF |
+| 3 | 0x0D | 载荷长度（13 字节：vx+vy+wz+state） |
+| 4-7 | vx (float32 LE) | 线速度 (m/s)，正=前进 |
+| 8-11 | vy (float32 LE) | 横向速度（差速/轮足暂不使用，发 0） |
+| 12-15 | wz (float32 LE) | 角速度 (rad/s)，正=左转 |
+| 16 | state (uint8) | 0=IDLE, 1=FORWARD, 2=BACKWARD, 3=LEFT, 4=RIGHT |
+| 17 | checksum (uint8) | 前面所有字节和 & 0xFF |
+
+发送频率 ≥20Hz，STM32 100ms 未收到新帧自动停车。
+
+### 0x15 — 自动任务事件 (FUNC_AUTO_TASK)
+
+视觉状态机在关键节点发送：
+
+| 偏移 | 字节 | 说明 |
+|------|------|------|
+| 0 | 0x55 | 帧头 1 |
+| 1 | 0xAA | 帧头 2 |
+| 2 | 0x15 | 功能码（自动任务事件） |
+| 3 | 0x03 | 载荷长度（固定 3 字节） |
+| 4 | cmd (uint8) | 命令：1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DONE, 6=NEXT, 7=FINISH, 8=ESTOP |
+| 5 | target_id (uint8) | 物资箱编号 |
+| 6 | zone_id (uint8) | 归位区编号 |
+| 7 | checksum (uint8) | 前面所有字节和 & 0xFF |
+
+由 `cmd_vel_chassis_serial.py` 订阅 `/vision/auto_cmd` (JSON) 自动转发。
 
 ---
 
@@ -373,11 +434,18 @@ final_z = -radar_x - 0.15
 ### 使用方式
 
 ```bash
-# 启动立方体检测（需要 FAST-LIO2 雷达点云）
 source /opt/ros/jazzy/setup.bash
+
+# 视觉自动任务
+python3 py/vision_auto_task_node.py      # 状态机（终端输入 start 开始）
+
+# YOLO 检测（独立运行）
+cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
+
+# 立方体检测（需要 FAST-LIO2 雷达点云）
 python3 py/cube_detector.py
 
-# 启动机械臂控制（需要 cube_detector 正在运行）
+# 机械臂控制（需要 cube_detector 正在运行）
 python3 py/catch.py
 
 # 颜色检测调参（需要 USB 摄像头）
@@ -388,13 +456,64 @@ python3 py/move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
 
 # 监听串口数据
 python3 py/listen_serial.py
+
+# 串口通信测试
+python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py
 ```
 
 ---
 
+## 视觉自动任务系统（新增）
+
+### 视觉状态机
+
+由 `py/vision_auto_task_node.py` 驱动，完整流程：
+
+```
+IDLE ──(输入 start)──→ SOLVE_TASK
+  │                     │ YOLO 识别智力题 → mod4 → zone_sequence
+  ▼                     ▼
+SOLVE_TASK ──────────→ FIND_BOX
+  │                     │ YOLO 检测物资箱类别
+  ▼                     ▼
+FIND_BOX ────────────→ NAV_BOX
+  │                     │ 发 Nav2 goal → 监听 /localization → 到达
+  ▼                     ▼
+NAV_BOX ────(发 0x15 ARRIVED_BOX)──→ WAIT_PICK
+  │                     │ 等待 ~5s → 发 PICK_DONE
+  ▼                     ▼
+WAIT_PICK ───(发 0x15 PICK_DONE)──→ NAV_ZONE
+  │                     │ 发 Nav2 goal → 到归位区
+  ▼                     ▼
+NAV_ZONE ───(发 0x15 ARRIVED_ZONE)──→ WAIT_PLACE
+  │                     │ 等待 ~5s → 发 PLACE_DONE
+  ▼                     ▼
+WAIT_PLACE ──(发 0x15 PLACE_DONE)──→ NEXT_OR_FINISH
+                                       │
+                          ┌────────────┴────────────┐
+                          ▼                         ▼
+                     还有箱 → FIND_BOX         完成 → IDLE
+```
+
+### 速度仲裁
+
+底盘速度优先级：`/vision_cmd_vel` (500ms 超时) > `/cmd_vel` Nav2 (80ms 超时) > 停止
+
+### 到达检测
+
+订阅 `/localization` (Odometry, map 坐标系)，判断是否到达目标点。
+配置参数：`arrival_pos_threshold=0.25m`, `arrival_angle_threshold=0.30rad`, `settle_frames=5`
+
+### YOLO 检测
+
+| 模型 | 用途 | 类别 |
+|------|------|------|
+| `vision/weights/task3.pt` | 物资分类 | tool, device, food, remedy |
+| `vision/weights/math12.pt` | 数学符号 | 0-9, +, -, ×, ÷, (, ) |
+
 ## 竞赛任务工作流
 
-比赛时的标准启动流程：
+### 手动启动（分步调试）
 
 ```
 1. 上电 → 机器人启动
@@ -404,12 +523,22 @@ python3 py/listen_serial.py
 5. 发布初始位姿（RViz "2D Pose Estimate"）
 6. 启动 Nav2（静态地图模式）
 7. 启动串口桥接（底盘控制）
-8. 在 RViz 中点击目标点 → 机器人自主导航
+8. 启动视觉状态机：python3 py/vision_auto_task_node.py
+9. 在终端输入 start → 全自动执行
 ```
 
-或者使用一键脚本：
+### 一键启动（竞赛模式）
 ```bash
-# 生成竞赛地图 + 启动 Nav2
+# 启动 Nav2 + 串口桥 + 视觉状态机
+bash run_auto_task.sh
+
+# 另开终端，启动 YOLO 检测
+cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
+```
+
+### 竞赛场地地图
+```bash
+# 生成 6m×4m 竞赛地图 + 启动 Nav2
 ./nav2_ws1/src/dog_nav2_bringup/scripts/task_field_competition.sh
 ```
 

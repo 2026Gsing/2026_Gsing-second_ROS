@@ -4,153 +4,203 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-ROS2 Jazzy-based robot navigation system for a competition robot (四足狗/quadruped chassis). Integrates **FAST-LIO2** (LiDAR SLAM + global relocalization), **Nav2** (path planning + control), and **STM32 serial communication** (chassis + robotic arm). Two independent colcon workspaces work together.
+ROS2 Jazzy 机器人导航+视觉自动任务系统，用于仿生足式机器人竞赛。集成 **FAST-LIO2**（LiDAR SLAM + 全局定位）、**Nav2**（路径规划控制）、**YOLO 视觉**（物资识别 + 数学题）和 **STM32 串口通信**（底盘 + 机械臂）。
+
+三个独立 colcon 工作空间 + 两个非构建目录协同工作。
 
 ## Repository Structure
 
 ```
-├── fastlio2_v2/           # Colcon workspace: FAST-LIO2 SLAM + localization
+├── fastlio2_v2/           # Colcon 工作空间：FAST-LIO2 SLAM + 定位
 │   └── src/
-│       ├── unilidar_fastlio_ros2-ros2/  # FAST-LIO2 core (mapping + odometry)
-│       ├── fast_lio_localization/       # Global relocalization via ICP (ament_python)
-│       ├── unitree_lidar_sdk/           # Unitree LiDAR L2 driver
-│       └── pcd2pgm/                     # PCD → PGM grid map converter
-├── nav2_ws1/              # Colcon workspace: Nav2 navigation
+│       ├── unilidar_fastlio_ros2-ros2/  # FAST-LIO2 核心 (建图+里程计)
+│       ├── fast_lio_localization/       # ICP 全局重定位 (ament_python)
+│       ├── unitree_lidar_sdk/           # 宇树 LiDAR L2 驱动
+│       └── pcd2pgm/                     # PCD → PGM 转换
+├── nav2_ws1/              # Colcon 工作空间：Nav2 导航 + 串口桥
 │   └── src/dog_nav2_bringup/
-│       ├── launch/                      # 3 launch files (static_map, dynamic, serial_bridge)
-│       ├── params/                      # Nav2 YAML parameters
-│       ├── scripts/                     # Shell scripts + Python bridge nodes
-│       ├── maps/                        # Pre-built PGM grid maps
-│       └── rviz/                        # RViz configs
-├── py/                    # Standalone utility scripts (no colcon needed)
-│   ├── cube_detector.py   # 3D OBB cube detection (DBSCAN+PCA on LiDAR point cloud)
-│   ├── catch.py           # Robotic arm control via serial
-│   ├── pointcloud_saver.py # Spacebar-triggered PCD saving
-│   ├── test_dog.py        # OpenCV HSV color calibration GUI
-│   ├── move.py            # Chassis command test tool
-│   └── listen_serial.py   # Serial monitor (hex display)
-├── run.md                 # Detailed step-by-step launch instructions
-└── README.md              # Full system architecture + data flow docs
+│       ├── launch/                      # 启动文件 (static_map, dynamic, serial_bridge)
+│       ├── params/                      # Nav2 YAML 参数
+│       ├── scripts/                     # Python 桥接节点 + shell 脚本
+│       │   └── cmd_vel_chassis_serial.py  # 扩展：0x10 + 0x15 串口发送
+│       ├── maps/                        # 预建 PGM 栅格地图
+│       └── rviz/                        # RViz 配置
+├── py/                    # 独立 Python 工具 (不需 colcon build)
+│   ├── vision_auto_task_node.py   # 视觉自动任务状态机 (核心节点)
+│   ├── arrival_detector.py        # 到达检测工具
+│   ├── cube_detector.py           # 3D OBB 立方体检测 (LiDAR 点云)
+│   ├── catch.py                   # 机械臂抓取串口控制
+│   ├── listen_serial.py           # 串口监听 (hex 显示)
+│   └── config/competition_poses.yaml  # 物资箱/归位区坐标
+├── vision/                # 视觉模块 (YOLO) — 整合自 second-YOLO-tmp
+│   ├── src/
+│   │   ├── predict.py     # YOLO 检测主脚本 (任务模型 + 槽位分配)
+│   │   ├── slot_roi.py    # ROI 槽位分配模块
+│   │   └── MATH.PY        # 数学符号识别 (YOLO)
+│   ├── config/
+│   │   ├── slots_roi.json        # ROI 槽位标定
+│   │   ├── decision_state.json   # 数学决策结果 (IPC)
+│   │   └── nav_target.json       # 导航目标输出 (IPC)
+│   └── weights/                   # YOLO 模型权重
+│       ├── task3.pt              # 4 类物资检测 (tool/device/food/remedy)
+│       └── math12.pt             # 数学符号检测 (0-9, ±×÷())
+├── run_auto_task.sh       # 任务赛一键启动脚本
+├── run.md                 # 详细启动步骤
+└── README.md              # 完整系统架构文档
 ```
 
-## Key Architecture
+## 数据流
 
-### Two Navigation Modes
-
-| Mode | Localization | Map Source | Launch File |
-|------|-------------|------------|-------------|
-| **Static Map** (competition) | FAST-LIO2 ICP global relocalization | Pre-built PGM | `nav2_fastlio_static_map.launch.py` |
-| **Dynamic** (exploration) | FAST-LIO2 real-time odometry | Built live | `nav2_fastlio_bringup.launch.py` |
-
-Also an AMCL-based alternative: `nav2_task_launch.py`
-
-### TF Tree
-
+### 导航数据流
 ```
-map → camera_init → (static) → odom ← FAST-LIO2 → base_link → unilidar_lidar
-  ↑
-  (fast_lio_localization maps ICP result via transform_fusion.py)
+Unitree LiDAR → /unilidar/cloud
+  → FAST-LIO2 → /Odometry + /cloud_registered
+    → global_localization.py (ICP vs PCD 地图) → /map_to_odom
+      → transform_fusion.py → TF map→camera_init + /localization
+        → Nav2 (planner + controller) → /cmd_vel
+          → cmd_vel_chassis_serial.py → serial 0x10 → STM32
 ```
 
-### Data Pipeline
+### 自动任务数据流（新增）
+```
+YOLO 视觉检测 (vision/src/predict.py)
+  → 检测结果 (JSON 文件或 ROS topic)
+    → vision_auto_task_node.py (状态机)
+      ← 读取 /localization (导航到达判断)
+      → 发布 Nav2 NavigateToPose goal (长距导航)
+      → 发布 /vision_cmd_vel (精细对位)
+      → 发布 /vision/auto_cmd (JSON → serial 0x15)
+        → cmd_vel_chassis_serial.py → serial 0x15 → STM32
+```
 
-1. **Unitree LiDAR** → `/unilidar/cloud` raw point cloud
-2. **FAST-LIO2** → `/Odometry` (odom→base_link) + `/cloud_registered`
-3. **global_localization.py** → ICP match vs pre-built PCD → `/map_to_odom`
-4. **transform_fusion.py** → broadcast TF `map→camera_init` + `/localization`
-5. **Nav2** → plan + control → `/cmd_vel`
-6. **cmd_vel_chassis_serial.py** → serial frame `[0x55][0xAA][0x10][0x09][vx][wz][state][checksum]` → STM32
+## 串口协议 (ROS → STM32)
 
-### Cube Detection + Arm Grasping Pipeline
+### 0x10 — FUNC_CHASSIS_MOVE (底盘速度)
+```
+[0x55][0xAA][0x10][0x09][vx(f32)][wz(f32)][state(u8)][checksum]
+```
+- vx>0 前进, vx<0 后退, wz>0 左转, wz<0 右转
+- state: 0=IDLE, 1=FORWARD, 2=BACKWARD, 3=LEFT, 4=RIGHT
+- 发送频率 ≥20Hz, 100ms 超时自动停车
 
-FAST-LIO2 point cloud → `cube_detector.py` (DBSCAN → PCA → OBB) → `/detected_cube` Marker → `catch.py` (coordinate transform + stability filter) → serial → STM32 arm
+### 0x15 — FUNC_AUTO_TASK (自动任务事件)
+```
+[0x55][0xAA][0x15][0x03][cmd(u8)][target(u8)][zone(u8)][checksum]
+```
+- cmd: 1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DONE, 6=NEXT, 7=FINISH, 8=ESTOP
+- target: 物资箱编号, zone: 归位区编号
 
-## Essential Commands
+由 `cmd_vel_chassis_serial.py` 订阅 `/vision/auto_cmd` (JSON) 自动转发。
 
-### Environment & Dependencies
+## 自动任务状态机 (py/vision_auto_task_node.py)
+
+```
+IDLE → (输入 start)
+  → SOLVE_TASK   等待 YOLO 数学题结果 → mod4 → zone_sequence
+  → FIND_BOX     YOLO 检测物资箱类别
+  → NAV_BOX      发送 Nav2 goal → 监听 /localization → 到达
+  → WAIT_PICK    等待 ~5s → 发 PICK_DONE (0x15)
+  → NAV_ZONE     发送 Nav2 goal → 到归位区
+  → WAIT_PLACE   等待 ~5s → 发 PLACE_DONE (0x15)
+  → NEXT_OR_FINISH → 下一箱 / 全部完成
+```
+
+### Nav2 速度 vs 视觉速度优先级
+`cmd_vel_chassis_serial.py` 的底盘速度仲裁：
+1. `/vision_cmd_vel` 在 500ms 内有数据 → 使用视觉速度（精细对位）
+2. 否则 `/cmd_vel` (Nav2) 在 80ms 内有数据 → 使用 Nav2 速度（长距导航）
+3. 否则 → 停止
+
+## 启动命令
+
+### 环境与构建
 ```bash
 source /opt/ros/jazzy/setup.bash
-pip install open3d tf_transformations
+pip install open3d tf_transformations ultralytics pyserial
 sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs python3-serial imagemagick
-```
 
-### Build Workspaces
-```bash
-# FAST-LIO2 workspace (selective build)
+# FAST-LIO2 选择性构建
 cd fastlio2_v2
-rm -rf build/ install/
 colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
-bash src/fast_lio_localization/scripts/hook_fix.sh  # fix ament_python indexing
-source install/setup.bash
+bash src/fast_lio_localization/scripts/hook_fix.sh
 
-# Nav2 workspace (full build)
+# Nav2 完整构建
 cd nav2_ws1
-rm -rf build/ install/
 colcon build --symlink-install
-source install/setup.bash
 ```
 
-### Launch Sequence (Competition)
+### 竞赛启动流程
 ```bash
-# Terminal A: LiDAR driver
+# 终端 A: LiDAR 驱动
 cd fastlio2_v2 && source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
 
-# Terminal B: FAST-LIO2 mapping
+# 终端 B: FAST-LIO2 建图
 ros2 run fast_lio fastlio_mapping --ros-args --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
 
-# Terminal C: Global relocalization
+# 终端 C: 全局定位
 ros2 launch fast_lio_localization 1.launch.py map:=path/to/scans.pcd config_file:=unilidar_l2.yaml rviz:=true
-# Then click "2D Pose Estimate" in RViz
+# → 在 RViz 中点击 "2D Pose Estimate" 初始化
 
-# Terminal D: Nav2 navigation
-cd nav2_ws1 && source install/setup.bash
-ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py map:=src/dog_nav2_bringup/maps/scans_2d.yaml
+# 终端 D: Nav2 导航 + 串口桥 + 视觉任务 (一键)
+bash run_auto_task.sh
 
-# Terminal E: Chassis serial bridge
-ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py serial_port:=/dev/ttyACM0 baud_rate:=115200 cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 active_state:=1 idle_state:=0
+# 或分别启动:
+# Nav2 导航
+ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py map:=nav2_ws1/src/dog_nav2_bringup/maps/task_field_map.yaml
+
+# 串口桥
+ros2 run dog_nav2_bringup cmd_vel_chassis_serial --ros-args -p serial_port:=/dev/ttyACM0
+
+# 视觉状态机
+python3 py/vision_auto_task_node.py
+
+# YOLO 检测 (可选，另开终端)
+cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
 ```
 
-### Tools (no colcon needed, run from workspace root)
+### 工具命令 (不需构建)
 ```bash
 source /opt/ros/jazzy/setup.bash
-python3 py/cube_detector.py         # 3D OBB cube detection
-python3 py/catch.py                 # Robotic arm grasp control
-python3 py/pointcloud_saver.py      # Spacebar-triggered PCD save
-python3 py/test_dog.py              # HSV color calibration
-python3 py/move.py 1                # Chassis test (0=idle 1=fwd 2=rev 3=left 4=right 5=crouch)
-python3 py/listen_serial.py         # Serial monitor
-python3 py/fastlio_pose.py          # Print real-time pose from /Odometry
+python3 py/cube_detector.py          # LiDAR 3D 立方体检测
+python3 py/catch.py                  # 机械臂抓取控制
+python3 py/listen_serial.py          # 串口监听
+python3 py/fastlio_pose.py           # 实时位姿
+python3 py/arrival_detector.py       # 到达检测 (单测)
 ```
 
-### Map Generation Pipeline
+### 地图生成
 ```bash
-# Save PCD map (after mapping runs)
+# 保存 PCD 地图 (建图运行中)
 ros2 service call /map_save std_srvs/srv/Trigger
 
-# Convert PCD → PGM grid map
+# PCD → PGM 转换
 ros2 launch pcd2pgm pcd2pgm_launch.py
 
-# Or use competition scripts
+# 竞赛场地生成
 bash nav2_ws1/src/dog_nav2_bringup/scripts/task_field_competition.sh
 ```
 
-### Networking (LiDAR communication)
+### LiDAR 网络
 ```bash
 sudo nmcli device set enp129s0 managed no
 sudo ip addr add 192.168.1.2/24 dev enp129s0
 ```
 
-### Common Pitfalls
-- **Python package not found** (`fast_lio_localization`): Run `hook_fix.sh` after build then `source install/setup.bash`
-- **Permission denied**: Run `find . -name "*.py" -path "*/scripts/*" -exec chmod +x {} +`
-- **Serial access**: `sudo usermod -aG dialout $USER` then re-login; temp fix `sudo chmod 666 /dev/ttyACM0`
-- **RViz blank map**: Check `ros2 lifecycle get /map_server` is `active`, verify TF tree with `ros2 run tf2_tools view_frames.py`
+## 关键文件
 
-## Notable Files
+- `py/vision_auto_task_node.py` — 视觉状态机核心，协调 YOLO + Nav2 + 串口
+- `cmd_vel_chassis_serial.py` — 串口协议桥 (0x10 底盘 + 0x15 任务事件)
+- `vision/src/predict.py` — YOLO 检测 + 槽位分配 + 文件 IPC
+- `vision/src/slot_roi.py` — ROI 槽位管理（检测框 → 编号映射）
+- `vision/src/MATH.PY` — 数学符号 YOLO 识别 → 方程求值
+- `py/cube_detector.py` — DBSCAN + PCA 立方体检测 (LiDAR)
+- `py/config/competition_poses.yaml` — 物资箱/归位区预置坐标
+- `fast_lio_localization/global_localization.py` — ICP 全局重定位
 
-- `fast_lio_localization/global_localization.py` — ICP-based relocalization node (core competition feature)
-- `fast_lio_localization/transform_fusion.py` — TF bridge: merges odometry + ICP result
-- `dog_nav2_bringup/scripts/cmd_vel_chassis_serial.py` — Serial protocol encoder (timeout safety, exit-safe)
-- `py/cube_detector.py` — DBSCAN + PCA pipeline for 25cm cube detection in LiDAR point cloud
-- `py/catch.py` — Sliding-window stability filter + coordinate transform for arm grasping
+## 常见问题
+
+- **fast_lio_localization 找不到包**: 运行 `hook_fix.sh` 后重新 `source install/setup.bash`
+- **串口权限**: `sudo usermod -aG dialout $USER` 后重新登录；临时 `sudo chmod 666 /dev/ttyACM0`
+- **RViz 空白地图**: 检查 `ros2 lifecycle get /map_server` 是否为 active，用 `ros2 run tf2_tools view_frames.py` 检查 TF 树
+- **YOLO 导入报错**: 确保在 `vision/` 目录下运行，或 `pip install ultralytics`

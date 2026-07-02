@@ -1,0 +1,24 @@
+# Python 依赖
+# ROS2 包 (rclpy, std_msgs, geometry_msgs, nav_msgs, etc.) 来自系统 apt，不需要 pip
+#   sudo apt install ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
+
+# YOLO 视觉
+ultralytics>=8.3.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+
+# 串口通信
+pyserial>=3.5
+
+# 配置文件
+pyyaml>=6.0
+
+# LiDAR 点云处理
+open3d>=0.17.0
+
+# 坐标变换
+tf-transformations>=1.0.2
+
+# 可视化（可选）
+matplotlib>=3.7.0
