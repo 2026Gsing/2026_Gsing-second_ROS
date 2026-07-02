@@ -14,6 +14,9 @@
 #   - Nav2 静态地图导航
 #   - 串口桥（底盘速度 0x10 + 自动任务 0x15）
 #   - 视觉自动任务状态机
+#
+# 单独启动 YOLO 检测（另开终端）：
+#   cd vision && python src/predict.py --weights weights/task.pt --source 1 --show
 
 set -e
 

@@ -80,7 +80,10 @@ _STATE_NAMES = {
 # 当前工作区路径
 _HERE = Path(__file__).resolve().parent
 _PROJECT = _HERE.parent
-_YOLO_SRC = _PROJECT / "second-YOLO-tmp" / "src"
+_VISION_DIR = _PROJECT / "vision"            # YOLO 代码整合目录
+_YOLO_SRC = _VISION_DIR / "src"
+_VISION_WEIGHTS = _VISION_DIR / "weights"
+_VISION_CONFIG = _VISION_DIR / "config"
 _DEFAULT_WAYPOINTS = _HERE / "config" / "competition_poses.yaml"
 
 
@@ -96,7 +99,7 @@ class VisionAutoTaskNode(Node):
         self.declare_parameter("pick_timeout_sec", 5.0)         # 抓取等待超时
         self.declare_parameter("place_timeout_sec", 5.0)        # 放置等待超时
         self.declare_parameter("total_boxes", 4)
-        self.declare_parameter("yolo_decision_file", str(_YOLO_SRC.parent / "config" / "decision_state.json"))
+        self.declare_parameter("yolo_decision_file", str(_VISION_CONFIG / "decision_state.json"))
         self.declare_parameter("nav2_action_timeout_sec", 30.0)
 
         # ======================== 状态机 ========================
@@ -170,9 +173,8 @@ class VisionAutoTaskNode(Node):
             sys.path.insert(0, str(_YOLO_SRC))
         try:
             from ultralytics import YOLO
-            weights_dir = _PROJECT / "second-YOLO-tmp" / "weights"
-            task_w = weights_dir / "task.pt"
-            math_w = weights_dir / "math11.pt"
+            task_w = _VISION_WEIGHTS / "task3.pt"
+            math_w = _VISION_WEIGHTS / "math12.pt"
 
             self._yolo_task_model = YOLO(str(task_w)) if task_w.exists() else None
             self._yolo_math_model = YOLO(str(math_w)) if math_w.exists() else None
