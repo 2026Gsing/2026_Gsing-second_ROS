@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-cmd_vel_chassis_serial.py — Nav2 /cmd_vel → STM32 串口协议转发
+cmd_vel_chassis_serial.py — Nav2 /cmd_vel + Vision → STM32 串口协议转发
 
 功能：
-  订阅 ROS2 /cmd_vel (Twist) 消息，按照底盘通信协议打包成帧，
-  通过串口发送给下位机 STM32，实现机器人底盘运动控制。
+  1. 订阅 /cmd_vel (Nav2) → 发送 0x10 底盘速度帧（原有功能）
+  2. 订阅 /vision_cmd_vel → 发送 0x10（视觉精细对位，优先级高于 Nav2）
+  3. 订阅 /vision/auto_cmd → 发送 0x15 自动任务事件帧（新增）
+  4. 超时保护：底盘命令超时自动停车
 
-协议帧格式：
-  [0x55][0xAA][0x10][0x09][vx(float32)][wz(float32)][state(uint8)][CheckSum]
-  - vx: 线速度 (m/s)，正值=前进, 负值=后退
-  - wz: 角速度 (rad/s)，正值=左转, 负值=右转
-  - state: 机器人运动状态，由 vx/wz 自动推导：
-      0 = IDLE（停止）, 1 = FORWARD（前进）, 2 = BACKWARD（后退）,
-      3 = LEFT（左转）, 4 = RIGHT（右转）
-  - CheckSum: 前面所有字节的和的低8位
+协议帧格式 0x10（底盘速度）：
+  [0x55][0xAA][0x10][0x09][vx(f32)][wz(f32)][state(u8)][CheckSum]
+
+协议帧格式 0x15（自动任务事件）：
+  [0x55][0xAA][0x15][0x03][cmd(u8)][target(u8)][zone(u8)][CheckSum]
 
 安全机制：
-  1. 超时保护 (stale_timeout): 超过 80ms 未收到新 cmd_vel 时自动发送停止帧
-  2. 退出保护: 节点销毁时发送停止帧，防止机器人继续运动
-  3. 最低发送频率: send_rate_hz 最低 clamp 到 10Hz（对应 STM32 100ms 看门狗）
+  1. Nav2 速度超时 80ms → 自动停止
+  2. 视觉速度超时 500ms → 退回 Nav2 控制
+  3. 退出保护: 节点销毁时发送停止帧
 """
 
+import json
 import struct
 import threading
 import time
@@ -28,6 +28,7 @@ import time
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 
 try:
     import serial
@@ -41,7 +42,9 @@ else:
 HEAD1 = 0x55           # 帧头 1
 HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
+CMD_AUTO_TASK = 0x15   # 功能码：自动任务事件
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
+LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
 
 # 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
@@ -84,8 +87,11 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("serial_port", "/dev/ttyUSB0")
         self.declare_parameter("baud_rate", 115200)
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
+        self.declare_parameter("vision_cmd_vel_topic", "/vision_cmd_vel")
+        self.declare_parameter("auto_cmd_topic", "/vision/auto_cmd")
         self.declare_parameter("send_rate_hz", 50.0)
         self.declare_parameter("stale_timeout_sec", 0.08)
+        self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
         self.declare_parameter("zero_on_shutdown", True)
         self.declare_parameter("active_state", 1)
         self.declare_parameter("idle_state", 0)
@@ -94,18 +100,23 @@ class CmdVelChassisSerial(Node):
         port = self.get_parameter("serial_port").get_parameter_value().string_value
         baud = self.get_parameter("baud_rate").get_parameter_value().integer_value
         topic = self.get_parameter("cmd_vel_topic").get_parameter_value().string_value
+        vision_topic = self.get_parameter("vision_cmd_vel_topic").get_parameter_value().string_value
+        auto_topic = self.get_parameter("auto_cmd_topic").get_parameter_value().string_value
         self._send_rate = max(
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
         self._stale_timeout = self.get_parameter("stale_timeout_sec").get_parameter_value().double_value
+        self._vision_timeout = self.get_parameter("vision_timeout_sec").get_parameter_value().double_value
         self._zero_on_shutdown = (
             self.get_parameter("zero_on_shutdown").get_parameter_value().bool_value
         )
 
         # ============ 状态变量 ============
-        self._lock = threading.Lock()        # 线程锁，保护共享数据
-        self._last_twist = Twist()           # 最近一次收到的速度命令
-        self._last_time = 0.0                # 最近一次收到命令的时间戳
+        self._lock = threading.Lock()
+        self._last_twist = Twist()
+        self._last_time = 0.0
+        self._vision_twist = None       # 视觉控速（可选，优先于 Nav2）
+        self._vision_last_time = 0.0
 
         # ============ 打开串口 ============
         self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05)
@@ -113,8 +124,10 @@ class CmdVelChassisSerial(Node):
             f"Opened {port} @ {baud}, cmd_vel={topic}, send={self._send_rate}Hz"
         )
 
-        # ============ 订阅 /cmd_vel ============
+        # ============ 订阅 ============
         self.create_subscription(Twist, topic, self._twist_cb, 10)
+        self.create_subscription(Twist, vision_topic, self._vision_cb, 10)
+        self.create_subscription(String, auto_topic, self._auto_cmd_cb, 10)
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -126,9 +139,32 @@ class CmdVelChassisSerial(Node):
             self._last_twist = msg
             self._last_time = time.monotonic()
 
+    def _vision_cb(self, msg: Twist):
+        """接收视觉 /vision_cmd_vel 消息（精细对位，覆盖 Nav2）"""
+        with self._lock:
+            self._vision_twist = msg
+            self._vision_last_time = time.monotonic()
+
+    def _auto_cmd_cb(self, msg: String):
+        """接收 /vision/auto_cmd JSON → 组装 0x15 帧发送"""
+        try:
+            data = json.loads(msg.data)
+            cmd = int(data.get("cmd", 0)) & 0xFF
+            target = int(data.get("target", 0)) & 0xFF
+            zone = int(data.get("zone", 0)) & 0xFF
+            pkt = self._build_auto_packet(cmd, target, zone)
+            with self._lock:
+                self._ser.write(pkt)
+                self._ser.flush()
+            self.get_logger().info(
+                f"[AUTO] 发送 0x15: cmd={cmd} target={target} zone={zone}"
+            )
+        except Exception as e:
+            self.get_logger().error(f"[AUTO] 解析/发送失败: {e}")
+
     def _build_packet(self, vx: float, wz: float, state: int) -> bytes:
         """
-        组装串口协议帧
+        组装 0x10 串口协议帧
         格式：[0x55][0xAA][0x10][0x09][vx(4B)][wz(4B)][state(1B)][checksum(1B)]
         """
         payload = struct.pack(PACKET_FMT, float(vx), float(wz), int(state) & 0xFF)
@@ -136,26 +172,44 @@ class CmdVelChassisSerial(Node):
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 
+    def _build_auto_packet(self, cmd: int, target: int, zone: int) -> bytes:
+        """
+        组装 0x15 串口协议帧
+        格式：[0x55][0xAA][0x15][0x03][cmd(1B)][target(1B)][zone(1B)][checksum(1B)]
+        """
+        payload = bytes([cmd, target, zone])
+        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_AUTO_TASK, LEN_AUTO_PAYLOAD]) + payload
+        checksum = sum(frame_wo_checksum) & 0xFF
+        return frame_wo_checksum + bytes([checksum])
+
     def _send_tick(self):
         """
-        定时发送任务：
-        - 如果在 stale_timeout 内收到新命令 → 从 vx/wz 自动推导 RobotState
-        - 如果超时 → 发送 ROBOT_STATE_IDLE + 零速度（停止）
+        定时发送任务（优先级：vision_cmd_vel > cmd_vel > stop）：
+        1. 如果 vision_cmd_vel 在 vision_timeout 内收到 → 使用视觉速度
+        2. 否则如果 cmd_vel 在 stale_timeout 内收到 → 使用 Nav2 速度
+        3. 否则 → 发送停止帧
         """
         now = time.monotonic()
         with self._lock:
-            twist = self._last_twist
-            age = now - self._last_time if self._last_time > 0 else self._stale_timeout + 1.0
+            vision_age = now - self._vision_last_time if self._vision_last_time > 0 else self._vision_timeout + 1.0
 
-        if age > self._stale_timeout:
-            # 命令超时 → 发送停止帧
-            vx = wz = 0.0
-            state = ROBOT_STATE_IDLE
-        else:
-            # 命令有效 → 发送控制帧，状态从速度矢量自动推导
-            vx = twist.linear.x
-            wz = twist.angular.z
-            state = derive_robot_state(vx, wz)
+            if vision_age < self._vision_timeout and self._vision_twist is not None:
+                # 视觉速度有效（优先使用）
+                vx = self._vision_twist.linear.x
+                wz = self._vision_twist.angular.z
+                state = derive_robot_state(vx, wz)
+            else:
+                # 视觉超时 → 退回 Nav2 或停止
+                twist = self._last_twist
+                age = now - self._last_time if self._last_time > 0 else self._stale_timeout + 1.0
+
+                if age > self._stale_timeout:
+                    vx = wz = 0.0
+                    state = ROBOT_STATE_IDLE
+                else:
+                    vx = twist.linear.x
+                    wz = twist.angular.z
+                    state = derive_robot_state(vx, wz)
 
         pkt = self._build_packet(vx, wz, state)
         try:
