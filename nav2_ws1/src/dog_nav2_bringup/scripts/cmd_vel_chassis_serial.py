@@ -28,7 +28,7 @@ import time
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from std_msgs.msg import String
+from std_msgs.msg import String, UInt8
 
 try:
     import serial
@@ -42,6 +42,7 @@ else:
 HEAD1 = 0x55           # 帧头 1
 HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
+CMD_GAIT_SWITCH = 0x11 # 功能码：步态切换
 CMD_AUTO_TASK = 0x15   # 功能码：自动任务事件
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
@@ -89,6 +90,7 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
         self.declare_parameter("vision_cmd_vel_topic", "/vision_cmd_vel")
         self.declare_parameter("auto_cmd_topic", "/vision/auto_cmd")
+        self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
         self.declare_parameter("send_rate_hz", 50.0)
         self.declare_parameter("stale_timeout_sec", 0.08)
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
@@ -102,6 +104,7 @@ class CmdVelChassisSerial(Node):
         topic = self.get_parameter("cmd_vel_topic").get_parameter_value().string_value
         vision_topic = self.get_parameter("vision_cmd_vel_topic").get_parameter_value().string_value
         auto_topic = self.get_parameter("auto_cmd_topic").get_parameter_value().string_value
+        gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
         self._send_rate = max(
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
@@ -128,6 +131,7 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(Twist, topic, self._twist_cb, 10)
         self.create_subscription(Twist, vision_topic, self._vision_cb, 10)
         self.create_subscription(String, auto_topic, self._auto_cmd_cb, 10)
+        self.create_subscription(UInt8, gait_topic, self._gait_cb, 10)
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -162,6 +166,18 @@ class CmdVelChassisSerial(Node):
         except Exception as e:
             self.get_logger().error(f"[AUTO] 解析/发送失败: {e}")
 
+    def _gait_cb(self, msg: UInt8):
+        """接收 /vision/gait_cmd → 组装 0x11 帧发送"""
+        try:
+            gait_id = msg.data & 0xFF
+            pkt = self._build_gait_packet(gait_id)
+            with self._lock:
+                self._ser.write(pkt)
+                self._ser.flush()
+            self.get_logger().info(f"[GAIT] 发送 0x11: gait_id={gait_id}")
+        except Exception as e:
+            self.get_logger().error(f"[GAIT] 发送失败: {e}")
+
     def _build_packet(self, vx: float, wz: float, state: int) -> bytes:
         """
         组装 0x10 串口协议帧
@@ -179,6 +195,16 @@ class CmdVelChassisSerial(Node):
         """
         payload = bytes([cmd, target, zone])
         frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_AUTO_TASK, LEN_AUTO_PAYLOAD]) + payload
+        checksum = sum(frame_wo_checksum) & 0xFF
+        return frame_wo_checksum + bytes([checksum])
+
+    def _build_gait_packet(self, gait_id: int) -> bytes:
+        """
+        组装 0x11 串口协议帧
+        格式：[0x55][0xAA][0x11][0x01][gait_id(1B)][checksum(1B)]
+        """
+        payload = bytes([gait_id & 0xFF])
+        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_GAIT_SWITCH, 1]) + payload
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 
