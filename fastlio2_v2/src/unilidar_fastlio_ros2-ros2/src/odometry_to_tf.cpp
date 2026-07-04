@@ -19,13 +19,12 @@ private:
     void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg) {
         geometry_msgs::msg::TransformStamped transform;
 
-        // 设置时间戳（使用消息中的时间戳）
-        transform.header.stamp = msg->header.stamp;
-        // transform.header.stamp = this->now();  // 或使用当前时间（根据需求选择）
+        // 设置时间戳（使用当前时间，位置实时更新）
+        transform.header.stamp = this->now();
 
         // 设置坐标系名称
-        transform.header.frame_id = "odom";  // 通常是 "odom"
-        transform.child_frame_id = "base_link";    // 通常是 "base_link"
+        transform.header.frame_id = "camera_init";  // ICP 定位帧（取代 odom）
+        transform.child_frame_id = "base_link";
 
         // 填充位置和姿态
         transform.transform.translation.x = msg->pose.pose.position.x;

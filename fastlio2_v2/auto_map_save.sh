@@ -5,7 +5,7 @@
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 
-echo "建图已启动，仅保留 x>0 的点云。"
+echo "建图已启动，仅保留 x>0.0 的点云。"
 echo "按 Enter 保存地图并退出。"
 
 # 后台启动 X 方向过滤器（只保留 x>0 的点）

@@ -23,9 +23,9 @@ bt_navigator:
     use_sim_time: false
     global_frame: map
     robot_base_frame: base_link
-    odom_frame: odom
+    odom_frame: camera_init
     odom_topic: /localization
-    transform_tolerance: 0.5
+    transform_tolerance: 2.0
     default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
 
 planner_server:
@@ -34,7 +34,7 @@ planner_server:
     use_sim_time: false
     global_frame: map
     robot_base_frame: base_link
-    odom_frame: odom
+    odom_frame: camera_init
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
@@ -65,45 +65,39 @@ controller_server:
       stateful: true
 
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: false
-      min_vel_x: 0.0
-      max_vel_x: 0.3
-      min_vel_y: 0.0
-      max_vel_y: 0.0
-      max_vel_theta: 1.0
-      acc_lim_x: 1.0
-      acc_lim_y: 0.0
-      acc_lim_theta: 2.0
-      decel_lim_x: -1.0
-      decel_lim_y: 0.0
-      decel_lim_theta: -2.0
-      vx_samples: 20
-      vy_samples: 1
-      vtheta_samples: 20
-      sim_time: 2.0
-      linear_granularity: 0.05
-      angular_granularity: 0.025
-      transform_tolerance: 0.2
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.1
-      GoalAlign.scale: 24.0
-      GoalAlign.forward_point_distance: 0.1
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0
-      RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
-      RotateToGoal.lookahead_time: -1.0
-
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      desired_linear_vel: 0.5
+      max_linear_vel: 0.8
+      min_linear_vel: 0.05
+      desired_angular_vel: 1.0
+      max_angular_vel: 1.5
+      rotate_to_heading_angular_vel: 1.0
+      lookahead_dist: 0.5
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.8
+      lookahead_time: 1.5
+      use_velocity_scaled_lookahead: false
+      min_approach_linear_velocity: 0.35
+      approach_velocity_scale: 1.0
+      use_collision_detection: false
+      use_regulated_linear_velocity_scaling: false
+      use_cost_regulated_linear_velocity_scaling: false
+      use_rotate_to_heading: false
+      allow_reversing: false
+      rotate_to_heading_min_angle: 0.785
+      max_allowed_time_to_collision: 1.0
+      use_interpolation: true
+      cost_scaling_dist: 0.3
+      cost_scaling_gain: 1.0
+      inflation_cost_scaling_factor: 3.0
+      transform_tolerance: 2.0
 behavior_server:
   ros__parameters:
     use_sim_time: false
     global_frame: map
     robot_base_frame: base_link
-    odom_frame: odom
-    transform_tolerance: 0.5
+    odom_frame: camera_init
+    transform_tolerance: 2.0
     plugin_lib_names:
       - "spin"
       - "backup"
@@ -121,8 +115,8 @@ global_costmap:
       use_sim_time: false
       global_frame: map
       robot_base_frame: base_link
-      transform_tolerance: 0.5
-      robot_radius: 0.20
+      transform_tolerance: 5.0
+      robot_radius: 0.15
       footprint_padding: 0.01
       resolution: 0.05
       update_frequency: 3.0
@@ -136,9 +130,9 @@ global_costmap:
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        enabled: true
+        enabled: false
         cost_scaling_factor: 5.0
-        inflation_radius: 0.15
+        inflation_radius: 0.20
 
 local_costmap:
   local_costmap:
@@ -146,8 +140,8 @@ local_costmap:
       use_sim_time: false
       global_frame: odom
       robot_base_frame: base_link
-      transform_tolerance: 0.5
-      robot_radius: 0.20
+      transform_tolerance: 5.0
+      robot_radius: 0.15
       footprint_padding: 0.01
       resolution: 0.05
       update_frequency: 10.0
@@ -164,6 +158,6 @@ local_costmap:
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        enabled: true
+        enabled: false
         cost_scaling_factor: 6.0
-        inflation_radius: 0.1
+        inflation_radius: 0.20

@@ -22,7 +22,7 @@ class PointCloudXFilter(Node):
         super().__init__('pointcloud_x_filter')
 
         # 参数
-        self.declare_parameter('x_min', 0.2)     # X 方向下限（前方）
+        self.declare_parameter('x_min', 0.0)     # X 方向下限（前方）
         self.declare_parameter('radius_min', 0.0)  # 最小半径（去除狗身等近距离点）
         self.x_min = self.get_parameter('x_min').value
         self.radius_min = self.get_parameter('radius_min').value

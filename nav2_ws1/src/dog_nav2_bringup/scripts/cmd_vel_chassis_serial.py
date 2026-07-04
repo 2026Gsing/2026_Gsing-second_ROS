@@ -27,6 +27,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String, UInt8
 
@@ -128,10 +129,17 @@ class CmdVelChassisSerial(Node):
         )
 
         # ============ 订阅 ============
-        self.create_subscription(Twist, topic, self._twist_cb, 10)
-        self.create_subscription(Twist, vision_topic, self._vision_cb, 10)
-        self.create_subscription(String, auto_topic, self._auto_cmd_cb, 10)
-        self.create_subscription(UInt8, gait_topic, self._gait_cb, 10)
+        # 使用显式 QoS 确保与 Nav2 controller 的发布 QoS 兼容
+        _qos = QoSProfile(
+            depth=10,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.VOLATILE,
+            history=HistoryPolicy.KEEP_LAST,
+        )
+        self.create_subscription(Twist, topic, self._twist_cb, _qos)
+        self.create_subscription(Twist, vision_topic, self._vision_cb, _qos)
+        self.create_subscription(String, auto_topic, self._auto_cmd_cb, _qos)
+        self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -142,6 +150,9 @@ class CmdVelChassisSerial(Node):
         with self._lock:
             self._last_twist = msg
             self._last_time = time.monotonic()
+            self.get_logger().info(
+                f"收到 /cmd_vel: vx={msg.linear.x:.3f} wz={msg.angular.z:.3f}"
+            )
 
     def _vision_cb(self, msg: Twist):
         """接收视觉 /vision_cmd_vel 消息（精细对位，覆盖 Nav2）"""
@@ -237,6 +248,7 @@ class CmdVelChassisSerial(Node):
                     wz = twist.angular.z
                     state = derive_robot_state(vx, wz)
 
+        self.get_logger().info(f"发送数据: vx={vx:.3f} wz={wz:.3f}")
         pkt = self._build_packet(vx, wz, state)
         try:
             self._ser.write(pkt)

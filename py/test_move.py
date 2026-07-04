@@ -325,17 +325,19 @@ class MoveTestNode(Node):
                 self.open_gate()
                 self.send_velocity(0.40, -2.0)
 
-            # --- 自定义速度: 直接输数字 ---
+            # --- 自定义速度: 输 vx 或 vx wz (空格分隔) ---
             else:
                 try:
-                    v = float(raw)
-                    if v <= 0:
+                    parts = raw.split()
+                    vx = float(parts[0])
+                    wz = float(parts[1]) if len(parts) > 1 else 0.0
+                    if vx == 0 and wz == 0:
                         self.send_velocity(0.0, 0.0)
                     else:
                         self.open_gate()
-                        self.send_velocity(v, 0.0)
-                except ValueError:
-                    print(f"  未知命令: {raw}，输入 1-11, s")
+                        self.send_velocity(vx, wz)
+                except (ValueError, IndexError):
+                    print(f"  格式: vx 或 vx wz  (如: 0.4 或 0.4 0.5)")
 
         self.send_velocity(0.0, 0.0)
 
@@ -389,20 +391,37 @@ def main(args=None):
     parser = argparse.ArgumentParser(description="纯轮足底盘运动测试工具")
     parser.add_argument("--auto", action="store_true", help="自动测试序列模式")
     parser.add_argument("--duration", type=float, default=1.5, help="自动测试每步持续时间 (秒)")
-    parser.add_argument("--vx", type=float, help="快速单步: 指定 vx")
-    parser.add_argument("--wz", type=float, help="快速单步: 指定 wz")
-    parser.add_argument("--time", type=float, default=2.0, help="快速单步: 持续时间")
+    parser.add_argument("--vx", type=float, help="指定前进速度")
+    parser.add_argument("--speed", type=float, help="快捷指定前进速度（等同 --vx）")
+    parser.add_argument("--wz", type=float, help="指定转向速度")
+    parser.add_argument("--time", type=float, default=0, help="持续时间（秒，0=持续运行直到 Ctrl+C）")
     parsed, _ = parser.parse_known_args()
+
+    # --speed 是 --vx 的快捷写法
+    if parsed.speed is not None and parsed.vx is None:
+        parsed.vx = parsed.speed
 
     rclpy.init()
     node = MoveTestNode(auto_mode=parsed.auto, step_duration=parsed.duration)
 
     try:
         if parsed.vx is not None or parsed.wz is not None:
-            # 命令行单步模式
+            # 命令行模式
             vx = parsed.vx or 0.0
             wz = parsed.wz or 0.0
-            node.step(vx, wz, parsed.time)
+            node.open_gate()
+            node.send_velocity(vx, wz)
+            if parsed.time > 0:
+                # 指定时长后停止
+                deadline = time.monotonic() + parsed.time
+                while time.monotonic() < deadline and rclpy.ok():
+                    rclpy.spin_once(node, timeout_sec=0.05)
+                node.send_velocity(0.0, 0.0)
+            else:
+                # 持续运行直到 Ctrl+C（后台线程已负责 spinning）
+                node.get_logger().info(f"  持续运行中，按 Ctrl+C 停止")
+                while rclpy.ok():
+                    time.sleep(0.1)
         elif parsed.auto:
             # 自动测试序列
             node.run_auto_sequence()

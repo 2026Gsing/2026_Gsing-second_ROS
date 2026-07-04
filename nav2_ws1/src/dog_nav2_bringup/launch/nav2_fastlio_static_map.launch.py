@@ -7,7 +7,7 @@ nav2_fastlio_static_map.launch.py — 静态地图模式下的 Nav2 导航启动
   2. FAST-LIO2 Localization 提供 map→camera_init 的实时位姿估计，
      transform_fusion.py 将其发布为 /localization 和 TF
   3. Nav2 的 global_costmap 使用 static_layer 加载预存地图，
-     local_costmap 以 odom 为参考系做局部规划
+     local_costmap 以 camera_init 为参考系做局部规划
   4. goal_pose_to_nav2.py 桥接：RViz 的 "2D Goal Pose" 点击 →
      NavigateToPose action 发送给 bt_navigator
   5. costmap_to_grid.py 将 costmap 重发布用于 RViz 可视化
@@ -15,7 +15,7 @@ nav2_fastlio_static_map.launch.py — 静态地图模式下的 Nav2 导航启动
 
 与动态建图模式 (nav2_fastlio_bringup.launch.py) 的区别：
   - 使用 map_server + static_layer，不依赖实时建图
-  - TF 树自动由 fast_lio_localization 发布 map→odom 变换
+  - TF 树自动由 fast_lio_localization 发布 map→camera_init 变换
   - 启动了辅助脚本（goal_pose 桥接、costmap 转发）
   - Nav2 节点延迟 3 秒启动，确保 map_server 先就绪
 
@@ -73,26 +73,35 @@ def generate_launch_description():
     )
 
     # ============ TF 树静态变换 ============
-    # FAST-LIO2 的 TF 树: map ← camera_init ← body
-    # Nav2 期望的 TF 树:   map ← odom ← base_link
-    # fast_lio_localization 会动态发布 map → camera_init（即 map → odom）
-    # 因此这里只需补齐：
-    #   camera_init → odom       (恒等变换，名称桥接)
-    #   body → base_link          (恒等变换，名称桥接)
-    #   base_link → unilidar_lidar (激光雷达框架)
+    # TF 树: map ← (ICP) ← camera_init ← (odometry_to_tf) ← base_link
+    # camera_init→map 由 transform_fusion.py 以 /tf_static 发布（controller 坐标转换用）
+    # 静态恒等 TF（Nav2 costmap 激活 fallback）：
+    #   camera_init → odom   (odom 作为 camera_init 别名，仅用于 local costmap)
+    #   camera_init → base_link
+    #   base_link → body
+    #   base_link → unilidar_lidar
     static_tf_caminit_odom = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_tf_caminit_odom',
-        arguments=['0', '0', '0', '0', '0', '0', 'camera_init', 'odom'],
+        arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'camera_init', '--child-frame-id', 'odom'],
+        output='screen'
+    )
+    static_tf_camerainit_baselink = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_tf_camerainit_baselink',
+        arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'camera_init', '--child-frame-id', 'base_link'],
         output='screen'
     )
 
+
+    # body 挂载在 base_link 下（恒等变换）
     static_tf_body_baselink = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_tf_body_baselink',
-        arguments=['0', '0', '0', '0', '0', '0', 'body', 'base_link'],
+        arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'base_link', '--child-frame-id', 'body'],
         output='screen'
     )
 
@@ -101,7 +110,7 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_tf_baselink_lidar',
-        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'unilidar_lidar'],
+        arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'base_link', '--child-frame-id', 'unilidar_lidar'],
         output='screen'
     )
 
@@ -180,7 +189,8 @@ def generate_launch_description():
         parameters=[{
             'use_sim_time': use_sim_time,
             'autostart': autostart,
-            'node_names': lifecycle_nodes
+            'node_names': lifecycle_nodes,
+            'service_call_timeout': 5.0  # 增加服务调用超时, 防止 behavior_server 插件加载超时
         }]
     )
 
@@ -223,21 +233,23 @@ def generate_launch_description():
     ld.add_action(declare_params_file)
     ld.add_action(declare_map)
 
-    # TF 变换先启动
+    # TF 变换先启动（camera_init 为中心，odom 作为别名用于 local costmap）
     ld.add_action(static_tf_caminit_odom)
+    ld.add_action(static_tf_camerainit_baselink)
+
     ld.add_action(static_tf_body_baselink)
     ld.add_action(static_tf_baselink_lidar)
 
     # map_server 先启动（无延迟）
     ld.add_action(map_server)
 
-    # Nav2 核心节点 + 辅助脚本延迟 3 秒启动，原因：
+
+    # Nav2 核心节点 + 辅助脚本延迟 5 秒启动，原因：
     #   1. map_server 需要时间加载地图并发布 /map 话题
     #   2. FAST-LIO2 localization 需要时间建立初始 TF 关系
-    #   3. 避免 Nav2 节点在 TF 缓存缺失时频繁报错
     ld.add_action(
         TimerAction(
-            period=3.0,
+            period=5.0,
             actions=[
                 controller_server,
                 planner_server,
