@@ -13,7 +13,7 @@
 import numpy as np
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, PointField
 import sensor_msgs_py.point_cloud2 as pc2
 
 
@@ -21,9 +21,11 @@ class PointCloudXFilter(Node):
     def __init__(self):
         super().__init__('pointcloud_x_filter')
 
-        # 参数：x 阈值，默认 > 0
-        self.declare_parameter('x_min', 0.0)
+        # 参数
+        self.declare_parameter('x_min', 0.2)     # X 方向下限（前方）
+        self.declare_parameter('radius_min', 0.0)  # 最小半径（去除狗身等近距离点）
         self.x_min = self.get_parameter('x_min').value
+        self.radius_min = self.get_parameter('radius_min').value
 
         self.sub = self.create_subscription(
             PointCloud2, '/unilidar/cloud', self.cloud_callback, 10)
@@ -31,7 +33,7 @@ class PointCloudXFilter(Node):
             PointCloud2, '/unilidar/cloud_filtered', 10)
 
         self.get_logger().info(
-            f'点云 X 过滤器已启动，仅保留 x > {self.x_min} 的点')
+            f'点云过滤器已启动，仅保留 x > {self.x_min}, 半径 > {self.radius_min} 的点')
 
     def cloud_callback(self, msg):
         # 解析点云为 numpy 数组
@@ -47,8 +49,11 @@ class PointCloudXFilter(Node):
             ('intensity', float), ('ring', float)
         ])
 
-        # 只保留 x > x_min 的点
-        mask = arr['x'] > self.x_min
+        # 计算每个点到 LiDAR 的距离
+        dist = np.sqrt(arr['x']**2 + arr['y']**2 + arr['z']**2)
+
+        # 只保留 x > x_min 且距离 > radius_min 的点
+        mask = (arr['x'] > self.x_min) & (dist > self.radius_min)
         filtered = arr[mask]
 
         if len(filtered) == 0:
@@ -57,11 +62,11 @@ class PointCloudXFilter(Node):
 
         # 构建新的 PointCloud2 消息
         fields = [
-            PointCloud2.Fields(name='x', offset=0, datatype=7, count=1),
-            PointCloud2.Fields(name='y', offset=4, datatype=7, count=1),
-            PointCloud2.Fields(name='z', offset=8, datatype=7, count=1),
-            PointCloud2.Fields(name='intensity', offset=12, datatype=7, count=1),
-            PointCloud2.Fields(name='ring', offset=16, datatype=7, count=1),
+            PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
+            PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
+            PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
+            PointField(name='intensity', offset=12, datatype=PointField.FLOAT32, count=1),
+            PointField(name='ring', offset=16, datatype=PointField.FLOAT32, count=1),
         ]
 
         out = pc2.create_cloud(
@@ -72,7 +77,7 @@ class PointCloudXFilter(Node):
 
         self.pub.publish(out)
         self.get_logger().debug(
-            f'过滤: {len(points)} → {len(filtered)} 点 (x > {self.x_min})',
+            f'过滤: {len(points)} → {len(filtered)} 点 (x>{self.x_min}, 半径>{self.radius_min})',
             throttle_duration_sec=2.0)
 
 

@@ -47,26 +47,20 @@ cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
 
-# ===== 终端 B：FAST-LIO2 建图 =====
+# ===== 终端 B：FAST-LIO2 建图（带过滤，按回车保存并退出） =====
 cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
-ros2 run fast_lio fastlio_mapping --ros-args \
-  --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
+bash auto_map_save.sh
 
 # ===== 终端 B（可选）：RViz 可视化 =====
 source /opt/ros/jazzy/setup.bash
 source fastlio2_v2/install/setup.bash
 rviz2 -d fastlio2_v2/src/fast_lio_config.rviz
 
-# ===== 终端 B3（建图后）：保存 PCD =====
-cd fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
-ros2 service call /map_save std_srvs/srv/Trigger
-
 # ===== 终端 C：PCD → PGM 栅格地图 =====
 cd fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
-# 先确认 fastlio2_v2/src/pcd2pgm/config/pcd2pgm.yaml 中 pcd_file 指向你的 PCD
+# 确认 map/pcd2pgm.yaml 中 pcd_file 指向 map/scans.pcd
 ros2 launch pcd2pgm pcd2pgm_launch.py
 
 # ===== 终端 D：全局定位（ICP） =====
@@ -75,7 +69,7 @@ source /opt/ros/jazzy/setup.bash && source install/setup.bash
 export AMENT_PREFIX_PATH="$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH"
 export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd \
+  map:=/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd \
   config_file:=unilidar_l2.yaml rviz:=true \
   map_voxel_size:=0.01 scan_voxel_size:=0.03 \
   freq_localization:=2.0 localization_threshold:=0.9

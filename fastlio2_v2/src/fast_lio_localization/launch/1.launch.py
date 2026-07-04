@@ -34,7 +34,7 @@ def generate_launch_description():
     
     # 检查默认文件是否存在
     if not os.path.exists(default_map_path):
-        default_map_path = "PCD/scans.pcd"
+        default_map_path = "/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd"
     
     # 声明启动参数
     declare_use_sim_time_cmd = DeclareLaunchArgument(

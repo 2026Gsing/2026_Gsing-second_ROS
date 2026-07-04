@@ -11,6 +11,17 @@ test_move.py — 纯轮足底盘运动测试工具
   前置条件：STM32 已上电站立、串口桥已启动
     ros2 run dog_nav2_bringup cmd_vel_chassis_serial --ros-args -p serial_port:=/dev/ttyACM0
 
+cd /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
+  serial_port:=/dev/ttyACM0 \
+  baud_rate:=115200 \
+  cmd_vel_topic:=/cmd_vel \
+  send_rate_hz:=50.0 \
+  active_state:=1 \
+  idle_state:=0
+
   运行本脚本：
     python3 py/test_move.py                          # 交互模式
     python3 py/test_move.py --auto                   # 自动测试序列
@@ -75,23 +86,25 @@ GAIT_NAMES = {0: "TROT(小跑)", 1: "WALK(行走)", 2: "BOUND(跳跃)", 3: "PRON
 # (名称, vx, wz, 描述)
 TestStep = [
     ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD_SLOW",   0.15, 0.0,  "慢速前进 (vx=0.15)"),
+    ("FORWARD_SLOW",   0.40, 0.0,  "慢速前进 (vx=0.40)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD_MED",    0.30, 0.0,  "中速前进 (vx=0.30)"),
+    ("FORWARD_FAST",   0.80, 0.0,  "快速前进 (vx=0.80)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD_FAST",   0.50, 0.0,  "快速前进 (vx=0.50)"),
+    ("BACKWARD_SLOW", -0.40, 0.0,  "慢速后退 (vx=-0.40)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("BACKWARD_SLOW", -0.15, 0.0,  "慢速后退 (vx=-0.15)"),
+    ("BACKWARD_FAST", -0.80, 0.0,  "快速后退 (vx=-0.80)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("BACKWARD_MED",  -0.30, 0.0,  "中速后退 (vx=-0.30)"),
+    ("ARC_LEFT_S",    0.40,  0.5,  "左弧慢 (vx=0.4, wz=+0.5)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("TURN_LEFT",     0.0,   0.5,  "原地左转 (wz=+0.5)"),
+    ("ARC_RIGHT_S",   0.40, -0.5,  "右弧慢 (vx=0.4, wz=-0.5)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("TURN_RIGHT",    0.0,  -0.5,  "原地右转 (wz=-0.5)"),
+    ("ARC_LEFT_M",    0.40,  1.0,  "左弧中 (vx=0.4, wz=+1.0)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_LEFT",      0.20,  0.3,  "左弧前进 (vx=0.2, wz=+0.3)"),
+    ("ARC_RIGHT_M",   0.40, -1.0,  "右弧中 (vx=0.4, wz=-1.0)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_RIGHT",     0.20, -0.3,  "右弧前进 (vx=0.2, wz=-0.3)"),
+    ("ARC_LEFT_F",    0.40,  2.0,  "左弧快 (vx=0.4, wz=+2.0)"),
+    ("STOP",       0.0,   0.0,  "停止"),
+    ("ARC_RIGHT_F",   0.40, -2.0,  "右弧快 (vx=0.4, wz=-2.0)"),
     ("STOP",       0.0,   0.0,  "停止"),
 ]
 
@@ -138,17 +151,9 @@ class MoveTestNode(Node):
         else:
             self.get_logger().info("  交互模式 — 输入命令:")
             self.get_logger().info("    1          → 开门 (AUTO_CMD_START)")
-            self.get_logger().info("    0~9        → 速度预设 (带开门)")
-            self.get_logger().info("    . / s      → 停止")
-            self.get_logger().info("    z vx wz    → 直发速度 (不经过门禁)")
-            self.get_logger().info("    r wz       → 持续旋转 (按 . 停)")
-            self.get_logger().info("    w          → TROT步态→开门→前进0.2(3s)")
-            self.get_logger().info("    p gid      → 步态切换 0=TROT 1=WALK")
-            self.get_logger().info("    t          → 串口直发 0x10 测试帧")
-            self.get_logger().info("    m          → 显示状态")
-            self.get_logger().info("    e          → 急停 (ESTOP)")
-            self.get_logger().info("    a          → 自动测试序列")
-            self.get_logger().info("    q          → 退出")
+            self.get_logger().info("    2~11       → 速度预设 (带开门)")
+            self.get_logger().info("    s          → 停止")
+            self.get_logger().info("    直接输数字   → 前进到该速度")
         self.get_logger().info("")
 
     # ================================================================
@@ -253,27 +258,18 @@ class MoveTestNode(Node):
         print("  ║        纯轮足运动测试 — 菜单          ║")
         print("  ╠═══════════════════════════════════════╣")
         print("  ║  1 ║ 开门 (AUTO_CMD_START)            ║")
-        print("  ║  2 ║ 前进 0.2 (需开门)               ║")
-        print("  ║  3 ║ 前进 0.4                         ║")
-        print("  ║  4 ║ 后退 0.2                         ║")
-        print("  ║  5 ║ 后退 0.4                         ║")
-        print("  ║  6 ║ 原地左转 0.5                     ║")
-        print("  ║  7 ║ 原地右转 0.5                     ║")
-        print("  ║  8 ║ 左弧前进 (vx=0.2, wz=+0.3)      ║")
-        print("  ║  9 ║ 右弧前进 (vx=0.2, wz=-0.3)      ║")
-        print("  ║  . ║ 停止                             ║")
-        print("  ║  m ║ 显示状态                         ║")
-        print("  ║  z ║ 直发速度 (不经过门禁)             ║")
-        print("  ║  r ║ 持续旋转 (输入wz, 按.停)          ║")
-        print("  ║  w ║ TROT→开门→前进0.2(3s)            ║")
-        print("  ║  p ║ 步态切换 (0=TROT 1=WALK)          ║")
-        print("  ║  t ║ 串口直发 0x10 测试帧             ║")
-        print("  ║  e ║ 急停                             ║")
-        print("  ║  a ║ 自动测试序列                     ║")
-        print("  ║  q ║ 退出                             ║")
+        print("  ║  2 ║ 前进 0.4                         ║")
+        print("  ║  3 ║ 前进 0.8                         ║")
+        print("  ║  4 ║ 后退 0.4                         ║")
+        print("  ║  5 ║ 后退 0.8                         ║")
+        print("  ║  6 ║ 左弧 0.5  (vx=0.4, +0.5)        ║")
+        print("  ║  7 ║ 右弧 0.5  (vx=0.4, -0.5)        ║")
+        print("  ║  8 ║ 左弧 1.0  (vx=0.4, +1.0)        ║")
+        print("  ║  9 ║ 右弧 1.0  (vx=0.4, -1.0)        ║")
+        print("  ║ 10 ║ 左弧 2.0  (vx=0.4, +2.0)        ║")
+        print("  ║ 11 ║ 右弧 2.0  (vx=0.4, -2.0)        ║")
+        print("  ║  s ║ 停止                             ║")
         print("  ╚═══════════════════════════════════════╝")
-        print("  📌 直接输入 0.05~0.99 → 前进到该速度 (带开门)")
-        print("  📌 例: 0.3 前进0.3")
         print()
 
     def run_interactive(self):
@@ -294,98 +290,40 @@ class MoveTestNode(Node):
             # --- 字母命令 ---
             if raw == "1" or raw == "g":
                 self.open_gate()
-            elif raw == "e":
-                self.estop()
             elif raw == "." or raw == "s":
                 self.send_velocity(0.0, 0.0)
-            elif raw == "a":
-                self.run_auto_sequence()
-            elif raw == "m":
-                self.print_status()
-
-            # --- z: 直发速度 (不经过门禁) ---
-            elif raw == "z":
-                try:
-                    parts = input("  vx wz > ").strip().split()
-                    vx = float(parts[0])
-                    wz = float(parts[1]) if len(parts) > 1 else 0.0
-                    self.send_velocity(vx, wz)
-                except (ValueError, IndexError):
-                    print("  格式: vx wz，如: 0.2 0")
-
-            # --- p: 步态切换 ---
-            elif raw == "p":
-                try:
-                    g = input("  gait_id (0=小跑 1=行走 2=跳跃 3=弹跳) > ").strip()
-                    self.send_gait(int(g))
-                except ValueError:
-                    print("  请输入 0-3")
-
-            # --- t: 串口直发 0x10 测试帧 ---
-            elif raw == "t":
-                try:
-                    parts = input("  vx wz [port] > ").strip().split()
-                    vx = float(parts[0])
-                    wz = float(parts[1]) if len(parts) > 1 else 0.0
-                    port = parts[2] if len(parts) > 2 else "/dev/ttyACM0"
-                    self.send_raw_serial_frame(port=port, vx=vx, wz=wz)
-                except (ValueError, IndexError):
-                    print("  格式: vx wz [port]，如: 0.2 0 或 0.2 0 /dev/ttyACM0")
-
-            # --- r: 持续旋转 ---
-            elif raw == "r":
-                try:
-                    wz = float(input("  wz > ").strip())
-                    self.open_gate()
-                    self.send_velocity(0.0, wz)
-                    self.get_logger().info(f"  持续旋转中，按 . 或 s 停止")
-                except ValueError:
-                    print("  格式: wz，如 0.5（左转）或 -0.5（右转）")
-
-            # --- w: 刚才的测试流程 ---
-            elif raw == "w":
-                self.get_logger().info("")
-                self.get_logger().info("  ⏩ 执行测试序列: TROT步态 → 开门 → 前进0.2(3s)")
-                self.send_gait(GAIT_TROT)
-                self.send_auto_cmd(AutoCmd.START)
-                self.gate_open = True
-                self.get_logger().info("  等待 1s...")
-                deadline = time.monotonic() + 1.0
-                while time.monotonic() < deadline and rclpy.ok():
-                    rclpy.spin_once(self, timeout_sec=0.05)
-                self.get_logger().info("  发速度 vx=0.2 (3s)...")
-                self.send_velocity(0.20, 0.0)
-                deadline = time.monotonic() + 3.0
-                while time.monotonic() < deadline and rclpy.ok():
-                    rclpy.spin_once(self, timeout_sec=0.05)
-                self.send_velocity(0.0, 0.0)
-                self.get_logger().info("  ✅ 测试完成")
 
             # --- 数字命令 ---
             elif raw == "2":
                 self.open_gate()
-                self.send_velocity(0.20, 0.0)
+                self.send_velocity(0.40, 0.0)
             elif raw == "3":
                 self.open_gate()
-                self.send_velocity(0.40, 0.0)
+                self.send_velocity(0.80, 0.0)
             elif raw == "4":
                 self.open_gate()
-                self.send_velocity(-0.20, 0.0)
+                self.send_velocity(-0.40, 0.0)
             elif raw == "5":
                 self.open_gate()
-                self.send_velocity(-0.40, 0.0)
+                self.send_velocity(-0.80, 0.0)
             elif raw == "6":
                 self.open_gate()
-                self.send_velocity(0.0, 0.5)
+                self.send_velocity(0.40, 0.5)
             elif raw == "7":
                 self.open_gate()
-                self.send_velocity(0.0, -0.5)
+                self.send_velocity(0.40, -0.5)
             elif raw == "8":
                 self.open_gate()
-                self.send_velocity(0.20, 0.3)
+                self.send_velocity(0.40, 1.0)
             elif raw == "9":
                 self.open_gate()
-                self.send_velocity(0.20, -0.3)
+                self.send_velocity(0.40, -1.0)
+            elif raw == "10":
+                self.open_gate()
+                self.send_velocity(0.40, 2.0)
+            elif raw == "11":
+                self.open_gate()
+                self.send_velocity(0.40, -2.0)
 
             # --- 自定义速度: 直接输数字 ---
             else:
@@ -397,7 +335,7 @@ class MoveTestNode(Node):
                         self.open_gate()
                         self.send_velocity(v, 0.0)
                 except ValueError:
-                    print(f"  未知命令: {raw}，输入 1-9, ., m, z, p, t, e, a, q")
+                    print(f"  未知命令: {raw}，输入 1-11, s")
 
         self.send_velocity(0.0, 0.0)
 

@@ -32,7 +32,7 @@ python src/predict_yolo.py --weights weights/yolov8s.pt --source 0 --show  # 内
 def parse_args():
     parser = argparse.ArgumentParser(description="Predict with YOLOv8 model")
     parser.add_argument("--weights", type=str, default="../weights/task3.pt", help="模型权重路径")
-    parser.add_argument("--source", type=str, default="0", help="输入源：0=内置摄像头，1=USB摄像头，或文件路径")
+    parser.add_argument("--source", type=str, default="1", help="输入源：0=内置摄像头，1=USB摄像头，或文件路径")
     parser.add_argument("--img", type=int, default=640, help="输入尺寸")
     parser.add_argument("--conf", type=float, default=0.25, help="置信度阈值")
     parser.add_argument("--device", type=str, default="0", help="设备，例如 '0' 或 'cpu'")

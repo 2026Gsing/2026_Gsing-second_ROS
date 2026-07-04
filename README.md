@@ -208,13 +208,14 @@ source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
 ```
 
-### 步骤 3：启动 FAST-LIO2 建图
+### 步骤 3：启动 FAST-LIO2 建图（带过滤）
+
+使用 `auto_map_save.sh` 一键启动，自动过滤狗身点云（距 LiDAR < 0.8m 和 x < 0.5 的点），按 Enter 保存 PCD 并退出。
 
 ```bash
 cd fastlio2_v2
 source install/setup.bash
-ros2 run fast_lio fastlio_mapping --ros-args \
-  --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
+bash auto_map_save.sh
 ```
 
 ### 步骤 4：生成 2D 栅格地图（首次建图时需要）
@@ -228,7 +229,7 @@ source install/setup.bash
 ros2 launch pcd2pgm pcd2pgm_launch.py
 ```
 
-生成结果（默认与 PCD 同目录）：
+生成结果（默认在 `/home/hyper/program/2026_Gsing-second_ROS/map/`）：
 - `pgm_map.pgm`
 - `pgm_map.yaml`
 
@@ -238,7 +239,7 @@ ros2 launch pcd2pgm pcd2pgm_launch.py
 cd fastlio2_v2
 source install/setup.bash
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=src/unilidar_fastlio_ros2-ros2/PCD/scans.pcd \
+  map:=/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd \
   config_file:=unilidar_l2.yaml \
   rviz:=true
 ```

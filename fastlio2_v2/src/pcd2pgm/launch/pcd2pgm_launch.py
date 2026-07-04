@@ -29,7 +29,7 @@ from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 from launch.substitutions import LaunchConfiguration
 
-MAP_DIR = "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD"
+MAP_DIR = "/home/hyper/program/2026_Gsing-second_ROS/map"
 
 
 def generate_launch_description():

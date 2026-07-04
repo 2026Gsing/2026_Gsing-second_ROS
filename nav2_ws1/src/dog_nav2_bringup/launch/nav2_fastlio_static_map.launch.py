@@ -64,7 +64,7 @@ def generate_launch_description():
     )
 
     # 默认使用 pcd2pgm 生成的 2D 栅格地图
-    pcd2pgm_map_dir = "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/PCD"
+    pcd2pgm_map_dir = "/home/hyper/program/2026_Gsing-second_ROS/map"
     default_map_yaml = os.path.join(pcd2pgm_map_dir, 'pgm_map.yaml')
     declare_map = DeclareLaunchArgument(
         'map',
