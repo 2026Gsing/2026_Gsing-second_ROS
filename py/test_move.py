@@ -3,29 +3,19 @@
 test_move.py — 纯轮足底盘运动测试工具
 
 功能：
-  1. 通过 /vision/auto_cmd 发送 AUTO_CMD_START 开启"门禁"
-  2. 通过 /vision_cmd_vel 发送速度指令测试前进/后退/左转/右转/组合运动
-  3. 可选的自动测试序列 + 手动单步模式
+  1. 自动启动串口桥（chassis_serial_bridge）
+  2. 通过 /vision/auto_cmd 发送 AUTO_CMD_START 开启"门禁"
+  3. 通过 /vision_cmd_vel 发送速度指令测试前进/后退/左转/右转/组合运动
+  4. 可选的自动测试序列 + 手动单步模式
 
 使用方式：
-  前置条件：STM32 已上电站立、串口桥已启动
-    ros2 run dog_nav2_bringup cmd_vel_chassis_serial --ros-args -p serial_port:=/dev/ttyACM0
-
-cd /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
-  serial_port:=/dev/ttyACM0 \
-  baud_rate:=115200 \
-  cmd_vel_topic:=/cmd_vel \
-  send_rate_hz:=50.0 \
-  active_state:=1 \
-  idle_state:=0
+  STM32 已上电站立，串口桥由脚本自动启动。
 
   运行本脚本：
     python3 py/test_move.py                          # 交互模式
     python3 py/test_move.py --auto                   # 自动测试序列
-    python3 py/test_move.py --auto --duration 2.0    # 自定义每步持续时间
+    python3 py/test_move.py --auto --duration 2.0    # 自定义每步持续时
+    python3 py/test_move.py --no-serial              # 跳过自动启动串口桥间
 
 注意：
   - 确保底盘周围 2m 内无人员/障碍物
@@ -36,6 +26,8 @@ ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
 import argparse
 import json
 import math
+import os
+import subprocess
 import sys
 import threading
 import time
@@ -76,8 +68,12 @@ GAIT_PRONK = 3   # 弹跳步态
 GAIT_NAMES = {0: "TROT(小跑)", 1: "WALK(行走)", 2: "BOUND(跳跃)", 3: "PRONK(弹跳)"}
 
 # 注意：0x11 控制的是步态类型（腿怎么走），不是底盘模式。
-# 底盘模式（纯轮/轮腿/纯足）由 STM32 内部 chassis_mode 控制，
-# 在竞赛模式下由 apply_auto_chassis_profile() 固定为纯轮。
+# 底盘模式（纯轮/轮腿/纯足）通过 0x14 命令切换。
+# ============================================================
+CHASSIS_MODE_PURE_WHEEL = 0  # 纯轮
+CHASSIS_MODE_WHEEL_LEG  = 1  # 轮足
+CHASSIS_MODE_PURE_LEG   = 2  # 纯足
+CHASSIS_MODE_NAMES = {0: "纯轮", 1: "轮足", 2: "纯足"}
 
 
 # ============================================================
@@ -110,7 +106,7 @@ TestStep = [
 
 
 class MoveTestNode(Node):
-    def __init__(self, auto_mode=False, step_duration=1.5):
+    def __init__(self, auto_mode=False, step_duration=1.5, no_serial=False):
         super().__init__("test_move")
 
         # ======================== 发布器 ========================
@@ -123,6 +119,7 @@ class MoveTestNode(Node):
         self.step_duration = step_duration
         self.gate_open = False
         self._step_idx = 0
+        self._serial_proc = None
 
         # ======================== 持续重发机制 ========================
         # 目标速度（由 send_velocity 更新，_republish_cb 以 20Hz 持续重发）
@@ -134,6 +131,12 @@ class MoveTestNode(Node):
         # 后台 spin 线程，确保 input() 阻塞时定时器仍能触发
         self._spin_thread = threading.Thread(target=self._bg_spin, daemon=True)
         self._spin_thread.start()
+
+        # ======================== 自动启动串口桥 ========================
+        if not no_serial:
+            self._launch_serial_bridge()
+        else:
+            self.get_logger().info("  ⏭ 跳过串口桥自动启动 (--no-serial)")
 
         self.get_logger().info("=" * 60)
         self.get_logger().info("  纯轮足底盘运动测试工具")
@@ -150,15 +153,71 @@ class MoveTestNode(Node):
             self.get_logger().info("  按 Ctrl+C 中断测试")
         else:
             self.get_logger().info("  交互模式 — 输入命令:")
-            self.get_logger().info("    1          → 开门 (AUTO_CMD_START)")
-            self.get_logger().info("    2~11       → 速度预设 (带开门)")
-            self.get_logger().info("    s          → 停止")
-            self.get_logger().info("    直接输数字   → 前进到该速度")
+            self.get_logger().info("    1~4  → 速度预设 (自动开门)")
+            self.get_logger().info("    s    → 停止")
+            self.get_logger().info("    直接输 vx wz → 自定义速度 (自动开门)")
         self.get_logger().info("")
 
     # ================================================================
-    # 命令发送
+    # 自动启动串口桥
     # ================================================================
+    def _try_serial_port(self, port: str) -> subprocess.Popen | None:
+        """尝试在指定串口上启动串口桥，成功返回进程，失败返回 None"""
+        nav2_ws = "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1"
+        setup_script = os.path.join(nav2_ws, "install/setup.bash")
+        launch_file = os.path.join(
+            nav2_ws, "src/dog_nav2_bringup",
+            "launch/chassis_serial_bridge.launch.py"
+        )
+
+        cmd = (
+            f"bash -c '"
+            f"source /opt/ros/jazzy/setup.bash && "
+            f"source {setup_script} && "
+            f"export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp && "
+            f"ros2 launch {launch_file} "
+            f"serial_port:={port} "
+            f"baud_rate:=115200 "
+            f"cmd_vel_topic:=/cmd_vel "
+            f"send_rate_hz:=50.0 "
+            f"active_state:=1 "
+            f"idle_state:=0"
+            f"'"
+        )
+
+        self.get_logger().info(f"  → 尝试 {port} ...")
+        proc = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cwd=nav2_ws
+        )
+        time.sleep(1.0)
+        if proc.poll() is not None:
+            self.get_logger().warn(f"  ⚠ {port} 不可用")
+            proc.kill()
+            return None
+        return proc
+
+    def _launch_serial_bridge(self):
+        """依次尝试 ACM0 → ACM1，找到可用串口即启动串口桥"""
+        nav2_ws = "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1"
+        launch_file = os.path.join(
+            nav2_ws, "src/dog_nav2_bringup",
+            "launch/chassis_serial_bridge.launch.py"
+        )
+        if not os.path.exists(launch_file):
+            self.get_logger().warn(f"  ⚠ 串口桥启动文件不存在: {launch_file}")
+            return
+
+        for port in ("/dev/ttyACM0", "/dev/ttyACM1"):
+            if self._serial_proc is not None:
+                break
+            self._serial_proc = self._try_serial_port(port)
+
+        if self._serial_proc is not None:
+            self.get_logger().info(f"  ✅ 串口桥已启动")
+        else:
+            self.get_logger().error("  ❌ ACM0 和 ACM1 均不可用，请检查串口连接")
+
     def _bg_spin(self):
         """后台 spin 线程，确保定时器在 input() 阻塞时仍能触发"""
         while rclpy.ok():
@@ -227,6 +286,18 @@ class MoveTestNode(Node):
         self.gait_pub.publish(msg)
         self.get_logger().info(f"[GAIT] 发送 gait_id={gait_id} ({name})")
 
+    def send_chassis_mode(self, mode_id: int):
+        """发送 0x14 底盘模式切换命令（通过串口桥转发）"""
+        name = CHASSIS_MODE_NAMES.get(mode_id & 0xFF, f"UNKNOWN({mode_id})")
+        msg = UInt8()
+        msg.data = mode_id & 0xFF
+        # 使用与 serial bridge 约定的 /vision/chassis_mode topic
+        mode_pub = self.create_publisher(UInt8, "/vision/chassis_mode", 10)
+        mode_pub.publish(msg)
+        self.get_logger().info(f"[MODE] 切换至 {name}")
+        # 发布完即销毁发布器（避免累计）
+        self.destroy_publisher(mode_pub)
+
     def send_raw_serial_frame(self, port: str = "/dev/ttyACM0", baud: int = 115200,
                               vx: float = 0.0, wz: float = 0.0):
         """直接打开串口发送一帧 0x10 速度指令（不依赖串口桥）"""
@@ -255,28 +326,26 @@ class MoveTestNode(Node):
     def _print_menu(self):
         print()
         print("  ╔═══════════════════════════════════════╗")
-        print("  ║        纯轮足运动测试 — 菜单          ║")
+        print("  ║        运动测试 — 菜单                ║")
         print("  ╠═══════════════════════════════════════╣")
-        print("  ║  1 ║ 开门 (AUTO_CMD_START)            ║")
-        print("  ║  2 ║ 前进 0.4                         ║")
-        print("  ║  3 ║ 前进 0.8                         ║")
-        print("  ║  4 ║ 后退 0.4                         ║")
-        print("  ║  5 ║ 后退 0.8                         ║")
-        print("  ║  6 ║ 左弧 0.5  (vx=0.4, +0.5)        ║")
-        print("  ║  7 ║ 右弧 0.5  (vx=0.4, -0.5)        ║")
-        print("  ║  8 ║ 左弧 1.0  (vx=0.4, +1.0)        ║")
-        print("  ║  9 ║ 右弧 1.0  (vx=0.4, -1.0)        ║")
-        print("  ║ 10 ║ 左弧 2.0  (vx=0.4, +2.0)        ║")
-        print("  ║ 11 ║ 右弧 2.0  (vx=0.4, -2.0)        ║")
+        print("  ║  ── 运动 ──                           ║")
+        print("  ║  1 ║ 前进 0.4                         ║")
+        print("  ║  2 ║ 后退 0.4                         ║")
+        print("  ║  3 ║ 左弧 1.0                         ║")
+        print("  ║  4 ║ 右弧 1.0                         ║")
         print("  ║  s ║ 停止                             ║")
+        print("  ║  直接输 vx wz → 自定义速度            ║")
+ 
+        print("  ║  ── 底盘模式 ──                       ║")
+        print("  ║  p ║ 纯轮                             ║")
+        print("  ║  h ║ 轮足                             ║")
+        print("  ║  l ║ 纯足                             ║")
         print("  ╚═══════════════════════════════════════╝")
         print()
 
     def run_interactive(self):
         """CLI 交互模式 — 数字菜单"""
         self._print_menu()
-        if not self.gate_open:
-            self.get_logger().info("  ⚠ 尚未开门！请先选 1 开门")
         while rclpy.ok():
             try:
                 raw = input("  > ").strip().lower()
@@ -288,42 +357,28 @@ class MoveTestNode(Node):
                 break
 
             # --- 字母命令 ---
-            if raw == "1" or raw == "g":
-                self.open_gate()
-            elif raw == "." or raw == "s":
+            if raw == "s":
                 self.send_velocity(0.0, 0.0)
+            elif raw == "p":
+                self.send_chassis_mode(CHASSIS_MODE_PURE_WHEEL)
+            elif raw == "h":
+                self.send_chassis_mode(CHASSIS_MODE_WHEEL_LEG)
+            elif raw == "l":
+                self.send_chassis_mode(CHASSIS_MODE_PURE_LEG)
 
             # --- 数字命令 ---
-            elif raw == "2":
+            elif raw == "1":
                 self.open_gate()
                 self.send_velocity(0.40, 0.0)
-            elif raw == "3":
-                self.open_gate()
-                self.send_velocity(0.80, 0.0)
-            elif raw == "4":
+            elif raw == "2":
                 self.open_gate()
                 self.send_velocity(-0.40, 0.0)
-            elif raw == "5":
-                self.open_gate()
-                self.send_velocity(-0.80, 0.0)
-            elif raw == "6":
-                self.open_gate()
-                self.send_velocity(0.40, 0.5)
-            elif raw == "7":
-                self.open_gate()
-                self.send_velocity(0.40, -0.5)
-            elif raw == "8":
+            elif raw == "3":
                 self.open_gate()
                 self.send_velocity(0.40, 1.0)
-            elif raw == "9":
+            elif raw == "4":
                 self.open_gate()
                 self.send_velocity(0.40, -1.0)
-            elif raw == "10":
-                self.open_gate()
-                self.send_velocity(0.40, 2.0)
-            elif raw == "11":
-                self.open_gate()
-                self.send_velocity(0.40, -2.0)
 
             # --- 自定义速度: 输 vx 或 vx wz (空格分隔) ---
             else:
@@ -394,6 +449,7 @@ def main(args=None):
     parser.add_argument("--vx", type=float, help="指定前进速度")
     parser.add_argument("--speed", type=float, help="快捷指定前进速度（等同 --vx）")
     parser.add_argument("--wz", type=float, help="指定转向速度")
+    parser.add_argument("--no-serial", action="store_true", help="不自动启动串口桥")
     parser.add_argument("--time", type=float, default=0, help="持续时间（秒，0=持续运行直到 Ctrl+C）")
     parsed, _ = parser.parse_known_args()
 
@@ -402,7 +458,7 @@ def main(args=None):
         parsed.vx = parsed.speed
 
     rclpy.init()
-    node = MoveTestNode(auto_mode=parsed.auto, step_duration=parsed.duration)
+    node = MoveTestNode(auto_mode=parsed.auto, step_duration=parsed.duration, no_serial=parsed.no_serial)
 
     try:
         if parsed.vx is not None or parsed.wz is not None:
@@ -432,6 +488,16 @@ def main(args=None):
         node.get_logger().info("\n  用户中断")
     finally:
         node.send_velocity(0.0, 0.0)
+        # 关闭串口桥子进程
+        if node._serial_proc is not None:
+            node.get_logger().info("  关闭串口桥...")
+            node._serial_proc.terminate()
+            try:
+                node._serial_proc.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                node._serial_proc.kill()
+                node._serial_proc.wait()
+            node.get_logger().info("  ✅ 串口桥已关闭")
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()

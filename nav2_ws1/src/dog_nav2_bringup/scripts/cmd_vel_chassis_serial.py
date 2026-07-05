@@ -45,6 +45,7 @@ HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
 CMD_GAIT_SWITCH = 0x11 # 功能码：步态切换
 CMD_AUTO_TASK = 0x15   # 功能码：自动任务事件
+CMD_CHASSIS_MODE = 0x14 # 功能码：底盘模式切换（新增）
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
@@ -92,6 +93,7 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("vision_cmd_vel_topic", "/vision_cmd_vel")
         self.declare_parameter("auto_cmd_topic", "/vision/auto_cmd")
         self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
+        self.declare_parameter("chassis_mode_topic", "/vision/chassis_mode")
         self.declare_parameter("send_rate_hz", 50.0)
         self.declare_parameter("stale_timeout_sec", 0.08)
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
@@ -106,6 +108,7 @@ class CmdVelChassisSerial(Node):
         vision_topic = self.get_parameter("vision_cmd_vel_topic").get_parameter_value().string_value
         auto_topic = self.get_parameter("auto_cmd_topic").get_parameter_value().string_value
         gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
+        mode_topic = self.get_parameter("chassis_mode_topic").get_parameter_value().string_value
         self._send_rate = max(
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
@@ -140,6 +143,7 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(Twist, vision_topic, self._vision_cb, _qos)
         self.create_subscription(String, auto_topic, self._auto_cmd_cb, _qos)
         self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
+        self.create_subscription(UInt8, mode_topic, self._chassis_mode_cb, _qos)
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -189,6 +193,20 @@ class CmdVelChassisSerial(Node):
         except Exception as e:
             self.get_logger().error(f"[GAIT] 发送失败: {e}")
 
+    def _chassis_mode_cb(self, msg: UInt8):
+        """接收 /vision/chassis_mode → 组装 0x14 帧发送"""
+        try:
+            mode_id = msg.data & 0xFF
+            pkt = self._build_chassis_mode_packet(mode_id)
+            with self._lock:
+                self._ser.write(pkt)
+                self._ser.flush()
+            mode_names = {0: "纯轮", 1: "轮足", 2: "纯足"}
+            name = mode_names.get(mode_id, f"UNKNOWN({mode_id})")
+            self.get_logger().info(f"[MODE] 发送 0x14: mode={mode_id} ({name})")
+        except Exception as e:
+            self.get_logger().error(f"[MODE] 发送失败: {e}")
+
     def _build_packet(self, vx: float, wz: float, state: int) -> bytes:
         """
         组装 0x10 串口协议帧
@@ -216,6 +234,17 @@ class CmdVelChassisSerial(Node):
         """
         payload = bytes([gait_id & 0xFF])
         frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_GAIT_SWITCH, 1]) + payload
+        checksum = sum(frame_wo_checksum) & 0xFF
+        return frame_wo_checksum + bytes([checksum])
+
+    def _build_chassis_mode_packet(self, mode_id: int) -> bytes:
+        """
+        组装 0x14 串口协议帧（底盘模式切换）
+        格式：[0x55][0xAA][0x14][0x01][mode_id(1B)][checksum(1B)]
+        mode_id: 0=纯轮, 1=轮足, 2=纯足
+        """
+        payload = bytes([mode_id & 0xFF])
+        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_CHASSIS_MODE, 1]) + payload
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 
