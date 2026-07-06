@@ -21,7 +21,7 @@ catch.py — 机械臂抓取控制节点（串口通信）
 
 依赖：
   cube_detector.py（提供 /detected_cube 话题）
-  STM32 串口（/dev/ttyACM0, 115200）
+  STM32 串口（/dev/ttyACM0, 115200）0
 
 使用方式：
   ros2 run py catch.py

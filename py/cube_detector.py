@@ -133,7 +133,22 @@ class CubeDetector(Node):
                     cubes.append(cube_info)
 
             if cubes:
-                best = min(cubes, key=lambda x: abs(x['edge'] - self.edge_target))
+                # ========== 1. 输出所有检测到的立方体 ==========
+                self.get_logger().info(f"检测到 {len(cubes)} 个立方体:")
+                for i, c in enumerate(cubes):
+                    xy_dist = math.hypot(c['x'], c['y'])
+                    self.get_logger().info(
+                        f"  [{i}] x={c['x']:.3f} y={c['y']:.3f} z={c['z']:.3f} "
+                        f"边长={c['edge']:.3f}m xy距离={xy_dist:.3f}m"
+                    )
+
+                # ========== 2. 只给 catch.py 传输 xy 平面 30cm 以内的立方体 ==========
+                cubes_near = [c for c in cubes if math.hypot(c['x'], c['y']) <= 0.30]
+                if not cubes_near:
+                    self.get_logger().info("xy距离>30cm，跳过传输")
+                    return
+
+                best = min(cubes_near, key=lambda x: abs(x['edge'] - self.edge_target))
 
                 marker = Marker()
                 marker.header.frame_id = "unilidar_lidar"
@@ -168,7 +183,7 @@ class CubeDetector(Node):
                 self.marker_pub.publish(marker)
 
                 self.get_logger().info(
-                    f"立方体 x={best['x']:.3f} y={best['y']:.3f} z={best['z']:.3f} "
+                    f"已传输(30cm内最佳): x={best['x']:.3f} y={best['y']:.3f} z={best['z']:.3f} "
                     f"边长={best['edge']:.3f}m"
                 )
 
