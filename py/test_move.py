@@ -15,7 +15,7 @@ test_move.py — 纯轮足底盘运动测试工具
     python3 py/test_move.py                          # 交互模式
     python3 py/test_move.py --auto                   # 自动测试序列
     python3 py/test_move.py --auto --duration 2.0    # 自定义每步持续时
-    python3 py/test_move.py --no-serial              # 跳过自动启动串口桥间
+    python3 py/test_move.py --no-serial              # 跳过自动启动串口桥
 
 注意：
   - 确保底盘周围 2m 内无人员/障碍物
@@ -45,6 +45,31 @@ except ImportError:
 
 
 # ============================================================
+# 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
+# ============================================================
+ROBOT_STATE_IDLE     = 0  # 空闲/停止
+ROBOT_STATE_FORWARD  = 1  # 前进
+ROBOT_STATE_BACKWARD = 2  # 后退
+ROBOT_STATE_LEFT     = 3  # 左转
+ROBOT_STATE_RIGHT    = 4  # 右转
+
+_STATE_EPSILON = 1e-6
+
+
+def derive_robot_state(vx: float, wz: float) -> int:
+    """
+    从 vx, wz 速度矢量推导机器人运动状态。
+    逻辑与 cmd_vel_chassis_serial.py 的 derive_robot_state() 一致：
+    优先判断角速度（自转），再判断线速度（平移），否则返回 IDLE。
+    """
+    if abs(wz) > abs(vx) and abs(wz) > _STATE_EPSILON:
+        return ROBOT_STATE_LEFT if wz >= 0.0 else ROBOT_STATE_RIGHT
+    if abs(vx) > _STATE_EPSILON:
+        return ROBOT_STATE_FORWARD if vx >= 0.0 else ROBOT_STATE_BACKWARD
+    return ROBOT_STATE_IDLE
+
+
+# ============================================================
 # AUTO_CMD 常量（与 STM32 protocol_handler.h 严格一致）
 # ============================================================
 class AutoCmd(IntEnum):
@@ -66,15 +91,6 @@ GAIT_WALK  = 1   # 行走步态
 GAIT_BOUND = 2   # 跳跃步态
 GAIT_PRONK = 3   # 弹跳步态
 GAIT_NAMES = {0: "TROT(小跑)", 1: "WALK(行走)", 2: "BOUND(跳跃)", 3: "PRONK(弹跳)"}
-
-# 注意：0x11 控制的是步态类型（腿怎么走），不是底盘模式。
-# 底盘模式（纯轮/轮腿/纯足）通过 0x14 命令切换。
-# ============================================================
-CHASSIS_MODE_PURE_WHEEL = 0  # 纯轮
-CHASSIS_MODE_WHEEL_LEG  = 1  # 轮足
-CHASSIS_MODE_PURE_LEG   = 2  # 纯足
-CHASSIS_MODE_NAMES = {0: "纯轮", 1: "轮足", 2: "纯足"}
-
 
 # ============================================================
 # 测试序列定义
@@ -113,6 +129,7 @@ class MoveTestNode(Node):
         self.vel_pub = self.create_publisher(Twist, "/vision_cmd_vel", 10)
         self.auto_cmd_pub = self.create_publisher(String, "/vision/auto_cmd", 10)
         self.gait_pub = self.create_publisher(UInt8, "/vision/gait_cmd", 10)
+        self.state_pub = self.create_publisher(UInt8, "/vision/robot_state", 10)
 
         # ======================== 状态 ========================
         self.auto_mode = auto_mode
@@ -121,12 +138,13 @@ class MoveTestNode(Node):
         self._step_idx = 0
         self._serial_proc = None
 
-        # ======================== 持续重发机制 ========================
-        # 目标速度（由 send_velocity 更新，_republish_cb 以 20Hz 持续重发）
+        # ======================== 50Hz 持续重发机制 ========================
+        # 目标速度（由 send_velocity 更新，_republish_cb 以 50Hz 持续重发）
         # 防止 STM32 串口桥的 500ms 视觉超时自动停车
         self._target_vx = 0.0
         self._target_wz = 0.0
-        self._repub_timer = self.create_timer(0.05, self._republish_cb)  # 20Hz
+        self._target_state = ROBOT_STATE_IDLE
+        self._repub_timer = self.create_timer(0.02, self._republish_cb)  # 50Hz
 
         # 后台 spin 线程，确保 input() 阻塞时定时器仍能触发
         self._spin_thread = threading.Thread(target=self._bg_spin, daemon=True)
@@ -224,11 +242,14 @@ class MoveTestNode(Node):
             rclpy.spin_once(self, timeout_sec=0.05)
 
     def _republish_cb(self):
-        """20Hz 定时器回调：持续重发当前目标速度，防止 500ms 视觉超时停车"""
+        """20Hz 定时器回调：持续重发当前目标速度 + 状态，防止 500ms 视觉超时停车"""
         msg = Twist()
         msg.linear.x = self._target_vx
         msg.angular.z = self._target_wz
         self.vel_pub.publish(msg)
+        state_msg = UInt8()
+        state_msg.data = self._target_state
+        self.state_pub.publish(state_msg)
 
     def send_auto_cmd(self, cmd: int, target_id: int = 0, zone_id: int = 0):
         """发送 0x15 自动任务命令"""
@@ -246,12 +267,20 @@ class MoveTestNode(Node):
         """更新目标速度（定时器以 20Hz 持续重发，直到下次调用或停止）"""
         self._target_vx = float(vx)
         self._target_wz = float(wz)
+        self._target_state = derive_robot_state(vx, wz)
         # 立即发一次，避免等待定时器下次触发
         msg = Twist()
         msg.linear.x = self._target_vx
         msg.angular.z = self._target_wz
         self.vel_pub.publish(msg)
-        self.get_logger().info(f"[VEL] vx={vx:+.3f}  wz={wz:+.3f}")
+        state_msg = UInt8()
+        state_msg.data = self._target_state
+        self.state_pub.publish(state_msg)
+        state_names = {0: "IDLE", 1: "FORWARD", 2: "BACKWARD", 3: "LEFT", 4: "RIGHT"}
+        self.get_logger().info(
+            f"[VEL] vx={vx:+.3f}  wz={wz:+.3f}  state={self._target_state}"
+            f"({state_names.get(self._target_state, '?')})"
+        )
 
     def open_gate(self):
         """发送 START 开启门禁 → 允许底盘运动"""
@@ -271,10 +300,12 @@ class MoveTestNode(Node):
 
     def print_status(self):
         """打印当前状态信息"""
+        state_names = {0: "IDLE", 1: "FORWARD", 2: "BACKWARD", 3: "LEFT", 4: "RIGHT"}
         self.get_logger().info("")
         self.get_logger().info("  ─── 状态 ───")
         self.get_logger().info(f"  门禁:      {'✅ 已开' if self.gate_open else '⛔ 未开'}")
         self.get_logger().info(f"  目标速度:  vx={self._target_vx:+.3f}  wz={self._target_wz:+.3f}")
+        self.get_logger().info(f"  状态:      {self._target_state} ({state_names.get(self._target_state, '?')})")
         self.get_logger().info(f"  自动模式:  {'是' if self.auto_mode else '否'}")
         self.get_logger().info(f"  20Hz 重发: {'运行中' if hasattr(self, '_repub_timer') else '未启动'}")
 
@@ -286,17 +317,33 @@ class MoveTestNode(Node):
         self.gait_pub.publish(msg)
         self.get_logger().info(f"[GAIT] 发送 gait_id={gait_id} ({name})")
 
-    def send_chassis_mode(self, mode_id: int):
-        """发送 0x14 底盘模式切换命令（通过串口桥转发）"""
-        name = CHASSIS_MODE_NAMES.get(mode_id & 0xFF, f"UNKNOWN({mode_id})")
-        msg = UInt8()
-        msg.data = mode_id & 0xFF
-        # 使用与 serial bridge 约定的 /vision/chassis_mode topic
-        mode_pub = self.create_publisher(UInt8, "/vision/chassis_mode", 10)
-        mode_pub.publish(msg)
-        self.get_logger().info(f"[MODE] 切换至 {name}")
-        # 发布完即销毁发布器（避免累计）
-        self.destroy_publisher(mode_pub)
+    def send_arm_mission(self, mode: int, flags: int,
+                          pick=None, back=None, place=None):
+        """
+        发送机械臂多段任务（通过串口桥转发为 0x14 FUNC_ARM_MISSION）
+
+        参数:
+          mode: 任务模式
+          flags: 位标志 0x01=HAS_PICK, 0x02=HAS_BACK, 0x04=HAS_PLACE
+          pick: (x, y, z) 抓取坐标 or None
+          back: (x, y, z) 取回坐标 or None
+          place: (x, y, z) 放置坐标 or None
+        """
+        data = {"mode": mode & 0xFF, "flags": flags & 0xFF}
+        for key, val in [("pick", pick), ("back", back), ("place", place)]:
+            if val is not None:
+                data[key] = [float(v) for v in val]
+        msg = String()
+        msg.data = json.dumps(data)
+        arm_pub = self.create_publisher(String, "/vision/arm_mission", 10)
+        arm_pub.publish(msg)
+        self.destroy_publisher(arm_pub)
+        self.get_logger().info(
+            f"[ARM_MISSION] mode={mode} flags={flags} "
+            f"{'pick='+str(pick) if pick else ''} "
+            f"{'back='+str(back) if back else ''} "
+            f"{'place='+str(place) if place else ''}"
+        )
 
     def send_raw_serial_frame(self, port: str = "/dev/ttyACM0", baud: int = 115200,
                               vx: float = 0.0, wz: float = 0.0):
@@ -306,9 +353,9 @@ class MoveTestNode(Node):
             return
         try:
             ser = serial.Serial(port=port, baudrate=baud, timeout=0.5)
-            # 组帧
+            # 组帧（使用与串口桥一致的 derive_robot_state 逻辑）
             import struct
-            state = 1 if vx > 0 else 2 if vx < 0 else 3 if wz > 0 else 4 if wz < 0 else 0
+            state = derive_robot_state(vx, wz)
             payload = struct.pack("<2fB", float(vx), float(wz), state)
             frame = bytes([0x55, 0xAA, 0x10, 0x09]) + payload
             checksum = sum(frame) & 0xFF
@@ -335,11 +382,6 @@ class MoveTestNode(Node):
         print("  ║  4 ║ 右弧 1.0                         ║")
         print("  ║  s ║ 停止                             ║")
         print("  ║  直接输 vx wz → 自定义速度            ║")
- 
-        print("  ║  ── 底盘模式 ──                       ║")
-        print("  ║  p ║ 纯轮                             ║")
-        print("  ║  h ║ 轮足                             ║")
-        print("  ║  l ║ 纯足                             ║")
         print("  ╚═══════════════════════════════════════╝")
         print()
 
@@ -359,12 +401,6 @@ class MoveTestNode(Node):
             # --- 字母命令 ---
             if raw == "s":
                 self.send_velocity(0.0, 0.0)
-            elif raw == "p":
-                self.send_chassis_mode(CHASSIS_MODE_PURE_WHEEL)
-            elif raw == "h":
-                self.send_chassis_mode(CHASSIS_MODE_WHEEL_LEG)
-            elif raw == "l":
-                self.send_chassis_mode(CHASSIS_MODE_PURE_LEG)
 
             # --- 数字命令 ---
             elif raw == "1":

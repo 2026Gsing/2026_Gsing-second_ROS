@@ -5,11 +5,19 @@ cmd_vel_chassis_serial.py — Nav2 /cmd_vel + Vision → STM32 串口协议转�
 功能：
   1. 订阅 /cmd_vel (Nav2) → 发送 0x10 底盘速度帧（原有功能）
   2. 订阅 /vision_cmd_vel → 发送 0x10（视觉精细对位，优先级高于 Nav2）
-  3. 订阅 /vision/auto_cmd → 发送 0x15 自动任务事件帧（新增）
-  4. 超时保护：底盘命令超时自动停车
+  3. 订阅 /vision/auto_cmd → 发送 0x15 自动任务事件帧
+  4. 订阅 /vision/arm_control → 发送 0x12 机械臂单次控制（x/y/z）
+  5. 订阅 /vision/arm_mission → 发送 0x14 机械臂多段任务（pick/back/place）
+  6. 超时保护：底盘命令超时自动停车
 
 协议帧格式 0x10（底盘速度）：
   [0x55][0xAA][0x10][0x09][vx(f32)][wz(f32)][state(u8)][CheckSum]
+
+协议帧格式 0x12（机械臂单次控制 FUNC_ARM_CONTROL）：
+  [0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][CheckSum]
+
+协议帧格式 0x14（机械臂多段任务 FUNC_ARM_MISSION）：
+  [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][pick(12B)]...[back(12B)]...[place(12B)][CheckSum]
 
 协议帧格式 0x15（自动任务事件）：
   [0x55][0xAA][0x15][0x03][cmd(u8)][target(u8)][zone(u8)][CheckSum]
@@ -44,8 +52,10 @@ HEAD1 = 0x55           # 帧头 1
 HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
 CMD_GAIT_SWITCH = 0x11 # 功能码：步态切换
-CMD_AUTO_TASK = 0x15   # 功能码：自动任务事件
-CMD_CHASSIS_MODE = 0x14 # 功能码：底盘模式切换（新增）
+CMD_ARM_CONTROL = 0x12 # 功能码：机械臂单次控制
+CMD_SUCTION     = 0x13 # 功能码：吸盘控制
+CMD_ARM_MISSION = 0x14 # 功能码：机械臂多段任务（pick/back/place）
+CMD_AUTO_TASK   = 0x15 # 功能码：自动任务事件
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
@@ -91,9 +101,11 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("baud_rate", 115200)
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
         self.declare_parameter("vision_cmd_vel_topic", "/vision_cmd_vel")
+        self.declare_parameter("vision_state_topic", "/vision/robot_state")
         self.declare_parameter("auto_cmd_topic", "/vision/auto_cmd")
         self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
-        self.declare_parameter("chassis_mode_topic", "/vision/chassis_mode")
+        self.declare_parameter("arm_control_topic", "/vision/arm_control")
+        self.declare_parameter("arm_mission_topic", "/vision/arm_mission")
         self.declare_parameter("send_rate_hz", 50.0)
         self.declare_parameter("stale_timeout_sec", 0.08)
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
@@ -106,9 +118,11 @@ class CmdVelChassisSerial(Node):
         baud = self.get_parameter("baud_rate").get_parameter_value().integer_value
         topic = self.get_parameter("cmd_vel_topic").get_parameter_value().string_value
         vision_topic = self.get_parameter("vision_cmd_vel_topic").get_parameter_value().string_value
+        vision_state_topic = self.get_parameter("vision_state_topic").get_parameter_value().string_value
         auto_topic = self.get_parameter("auto_cmd_topic").get_parameter_value().string_value
         gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
-        mode_topic = self.get_parameter("chassis_mode_topic").get_parameter_value().string_value
+        arm_control_topic = self.get_parameter("arm_control_topic").get_parameter_value().string_value
+        arm_mission_topic = self.get_parameter("arm_mission_topic").get_parameter_value().string_value
         self._send_rate = max(
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
@@ -124,6 +138,7 @@ class CmdVelChassisSerial(Node):
         self._last_time = 0.0
         self._vision_twist = None       # 视觉控速（可选，优先于 Nav2）
         self._vision_last_time = 0.0
+        self._vision_state = None       # 视觉状态（从 /vision/robot_state 接收，可选）
 
         # ============ 打开串口 ============
         self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05)
@@ -141,9 +156,11 @@ class CmdVelChassisSerial(Node):
         )
         self.create_subscription(Twist, topic, self._twist_cb, _qos)
         self.create_subscription(Twist, vision_topic, self._vision_cb, _qos)
+        self.create_subscription(UInt8, vision_state_topic, self._vision_state_cb, _qos)
         self.create_subscription(String, auto_topic, self._auto_cmd_cb, _qos)
         self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
-        self.create_subscription(UInt8, mode_topic, self._chassis_mode_cb, _qos)
+        self.create_subscription(String, arm_control_topic, self._arm_control_cb, _qos)
+        self.create_subscription(String, arm_mission_topic, self._arm_mission_cb, _qos)
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -163,6 +180,11 @@ class CmdVelChassisSerial(Node):
         with self._lock:
             self._vision_twist = msg
             self._vision_last_time = time.monotonic()
+
+    def _vision_state_cb(self, msg: UInt8):
+        """接收 /vision/robot_state 消息（test_move 等节点提供的状态，可选）"""
+        with self._lock:
+            self._vision_state = msg.data & 0xFF
 
     def _auto_cmd_cb(self, msg: String):
         """接收 /vision/auto_cmd JSON → 组装 0x15 帧发送"""
@@ -193,19 +215,69 @@ class CmdVelChassisSerial(Node):
         except Exception as e:
             self.get_logger().error(f"[GAIT] 发送失败: {e}")
 
-    def _chassis_mode_cb(self, msg: UInt8):
-        """接收 /vision/chassis_mode → 组装 0x14 帧发送"""
+    def _arm_control_cb(self, msg: String):
+        """
+        接收 /vision/arm_control JSON → 组装 0x12 帧发送（FUNC_ARM_CONTROL）
+
+        STM32 协议格式（与 protocol_handler.c FUNC_ARM_CONTROL 匹配）：
+          [0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][checksum]
+
+        JSON 格式：
+          {"x": 0.1, "y": 0.2, "z": -0.15}
+        """
         try:
-            mode_id = msg.data & 0xFF
-            pkt = self._build_chassis_mode_packet(mode_id)
+            data = json.loads(msg.data)
+            x = float(data.get("x", 0.0))
+            y = float(data.get("y", 0.0))
+            z = float(data.get("z", 0.0))
+            pkt = self._build_arm_control_packet(x, y, z)
             with self._lock:
                 self._ser.write(pkt)
                 self._ser.flush()
-            mode_names = {0: "纯轮", 1: "轮足", 2: "纯足"}
-            name = mode_names.get(mode_id, f"UNKNOWN({mode_id})")
-            self.get_logger().info(f"[MODE] 发送 0x14: mode={mode_id} ({name})")
+            self.get_logger().info(
+                f"[ARM] 发送 0x12: x={x:.3f} y={y:.3f} z={z:.3f}"
+            )
         except Exception as e:
-            self.get_logger().error(f"[MODE] 发送失败: {e}")
+            self.get_logger().error(f"[ARM] 解析/发送失败: {e}")
+
+    def _arm_mission_cb(self, msg: String):
+        """
+        接收 /vision/arm_mission JSON → 组装 0x14 帧发送（FUNC_ARM_MISSION）
+
+        STM32 协议格式（与 protocol_handler.c FUNC_ARM_MISSION 匹配）：
+          [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][pick(xyz=12B)]...[back(xyz=12B)]...[place(xyz=12B)][checksum]
+
+        flags 位：0x01=HAS_PICK, 0x02=HAS_BACK, 0x04=HAS_PLACE
+
+        JSON 格式示例：
+          {"mode":1, "flags":7,
+           "pick":[0.1,0.2,0.3], "back":[0.15,0.25,0.1], "place":[0.2,0.1,0.05]}
+
+          {"mode":1, "flags":1, "pick":[0.1,0.2,0.3]}  # 仅 pick
+        """
+        try:
+            data = json.loads(msg.data)
+            mode = int(data.get("mode", 0)) & 0xFF
+            flags = int(data.get("flags", 0)) & 0xFF
+
+            payload = bytes([mode, flags])
+
+            for key in ("pick", "back", "place"):
+                if key in data:
+                    xyz = data[key]
+                    payload += struct.pack("<3f",
+                        float(xyz[0]), float(xyz[1]), float(xyz[2]))
+
+            pkt = self._build_arm_mission_packet(payload)
+            with self._lock:
+                self._ser.write(pkt)
+                self._ser.flush()
+            self.get_logger().info(
+                f"[ARM_MISSION] 发送 0x14: mode={mode} flags={flags} "
+                f"len={len(payload)}B"
+            )
+        except Exception as e:
+            self.get_logger().error(f"[ARM_MISSION] 解析/发送失败: {e}")
 
     def _build_packet(self, vx: float, wz: float, state: int) -> bytes:
         """
@@ -237,14 +309,22 @@ class CmdVelChassisSerial(Node):
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 
-    def _build_chassis_mode_packet(self, mode_id: int) -> bytes:
+    def _build_arm_control_packet(self, x: float, y: float, z: float) -> bytes:
         """
-        组装 0x14 串口协议帧（底盘模式切换）
-        格式：[0x55][0xAA][0x14][0x01][mode_id(1B)][checksum(1B)]
-        mode_id: 0=纯轮, 1=轮足, 2=纯足
+        组装 0x12 串口协议帧（FUNC_ARM_CONTROL）
+        格式：[0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][checksum]
         """
-        payload = bytes([mode_id & 0xFF])
-        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_CHASSIS_MODE, 1]) + payload
+        payload = struct.pack("<3f", float(x), float(y), float(z))
+        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_ARM_CONTROL, 12]) + payload
+        checksum = sum(frame_wo_checksum) & 0xFF
+        return frame_wo_checksum + bytes([checksum])
+
+    def _build_arm_mission_packet(self, payload: bytes) -> bytes:
+        """
+        组装 0x14 串口协议帧（FUNC_ARM_MISSION）
+        格式：[0x55][0xAA][0x14][len][payload...][checksum]
+        """
+        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_ARM_MISSION, len(payload)]) + payload
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 
@@ -270,7 +350,11 @@ class CmdVelChassisSerial(Node):
             if use_vision:
                 vx = self._vision_twist.linear.x
                 wz = self._vision_twist.angular.z
-                state = derive_robot_state(vx, wz)
+                # 优先使用 /vision/robot_state 提供的状态（如 test_move 推导的）
+                if self._vision_state is not None:
+                    state = self._vision_state
+                else:
+                    state = derive_robot_state(vx, wz)
             else:
                 twist = self._last_twist
                 age = now - self._last_time if self._last_time > 0 else self._stale_timeout + 1.0

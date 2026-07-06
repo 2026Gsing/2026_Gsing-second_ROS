@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-catch.py — 机械臂抓取控制节点（串口通信）
+catch.py — 机械臂抓取控制节点（通过串口桥转发）
 
 功能：
   1. 订阅 /detected_cube (Marker) 获取立方体位置
   2. 将雷达坐标系坐标变换到机械臂坐标系（含偏移补偿）
   3. 使用滑动窗口标准差法判断位置是否稳定
-  4. 位置稳定后，通过串口发送坐标给 STM32 控制机械臂抓取
-  5. 以 1Hz 心跳发送确保下位机收到指令
+  4. 位置稳定后，通过 /vision/arm_control 发布坐标给串口桥转发给 STM32
+  5. 以 1Hz 心跳重发确保下位机收到指令
 
 坐标变换：
   雷达系 (unilidar_lidar): x=前进, y=左, z=上
@@ -16,16 +16,14 @@ catch.py — 机械臂抓取控制节点（串口通信）
         final_y =  radar_y + offset_y
         final_z = -radar_x + offset_z
 
-串口协议（机械臂控制）:
+串口协议（由 cmd_vel_chassis_serial.py 转发）：
   [0x55][0xAA][0x12][len=12][x(float32)][y(float32)][z(float32)][checksum]
 
 依赖：
   cube_detector.py（提供 /detected_cube 话题）
-  STM32 串口（/dev/ttyACM0, 115200）0
+  cmd_vel_chassis_serial.py（串口桥，转发 /vision/arm_control → STM32）
 
 使用方式：
-  ros2 run py catch.py
-  或者：
   python3 py/catch.py
 """
 
@@ -33,14 +31,10 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 from visualization_msgs.msg import Marker
-import serial
-import struct
+from std_msgs.msg import String
+import json
 import time
 import numpy as np
-
-# ==================== 串口配置 ====================
-SERIAL_PORT = '/dev/ttyACM0'
-BAUD_RATE = 115200
 
 # ==================== 坐标偏移参数 ====================
 # 雷达→机械臂坐标系变换后的偏移补偿（标定值）
@@ -63,36 +57,15 @@ class ArmState:
     IDLE = "IDLE"           # 空闲，等待检测到立方体
     COMPLETED = "COMPLETED" # 已发送坐标，等待下次抓取
 
-# ==================== 协议帧定义 ====================
-HEAD1 = 0x55
-HEAD2 = 0xAA
-FUNC_ARM_CONTROL = 0x12     # 功能码：机械臂控制
-
-def build_frame(func_id, payload):
-    """组装通用协议帧：[0x55][0xAA][func_id][len][payload][checksum]"""
-    frame = bytes([HEAD1, HEAD2, func_id, len(payload)]) + payload
-    checksum = sum(frame) & 0xFF
-    return frame + bytes([checksum])
-
-def float_to_le(value):
-    """float32 → 小端字节序"""
-    return struct.pack('<f', value)
-
-def cmd_arm_control(x, y, z):
-    """组装机械臂控制帧：3 个 float32 = 12 字节载荷"""
-    payload = float_to_le(x) + float_to_le(y) + float_to_le(z)
-    return build_frame(FUNC_ARM_CONTROL, payload)
 
 class ArmStateMachine(Node):
-    """机械臂状态机：订阅立方体位置 → 稳定检测 → 串口发送"""
+    """机械臂状态机：订阅立方体位置 → 稳定检测 → 通过串口桥转发"""
 
     def __init__(self):
         super().__init__('arm_state_machine')
 
-        # ============ 串口配置 ============
-        self.serial = None
-        self.serial_connected = False
-        self.connect_serial()
+        # ============ 发布器（通过串口桥转发） ============
+        self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)
 
         # ============ 状态机变量 ============
         self.state = ArmState.IDLE          # 初始状态：空闲
@@ -109,7 +82,7 @@ class ArmStateMachine(Node):
 
         # ============ 定时器 ============
         self.status_timer = self.create_timer(5.0, self.status_callback)  # 状态打印
-        self.resend_timer = self.create_timer(1.0, self.resend_callback)  # 心跳重发
+        self.resend_timer = self.create_timer(0.02, self.resend_callback)  # 50Hz 心跳重发
 
         self.get_logger().info("=" * 60)
         self.get_logger().info("Arm State Machine Started (滑动窗口标准差版)")
@@ -168,36 +141,12 @@ class ArmStateMachine(Node):
 
         return None, None
 
-    def connect_serial(self):
-        """连接 STM32 串口，清理缓冲区"""
-        try:
-            self.serial = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
-            self.serial.dtr = False
-            self.serial.rts = False
-            time.sleep(0.5)  # 等待串口稳定
-            self.serial.reset_input_buffer()
-            self.serial.reset_output_buffer()
-            self.serial_connected = True
-            self.get_logger().info("✅ 串口连接并底层清理成功！")
-            return True
-        except Exception as e:
-            self.serial_connected = False
-            self.get_logger().error(f"❌ 串口连接失败: {e}")
-            return False
-
     def send_arm_position(self, x, y, z):
-        """通过串口向 STM32 发送机械臂目标位置"""
-        if not self.serial_connected:
-            if not self.connect_serial():
-                return False
-        try:
-            self.serial.write(cmd_arm_control(x, y, z))
-            self.get_logger().info(f">>> 已向单片机发送坐标: ({x:.3f}, {y:.3f}, {z:.3f})")
-            return True
-        except Exception as e:
-            self.get_logger().error(f"串口发送异常: {e}")
-            self.serial_connected = False
-            return False
+        """通过 /vision/arm_control 发布坐标 → 串口桥转发 → STM32"""
+        msg = String()
+        msg.data = json.dumps({"x": x, "y": y, "z": z})
+        self.arm_pub.publish(msg)
+        self.get_logger().info(f">>> 已发布坐标到 /vision/arm_control: ({x:.3f}, {y:.3f}, {z:.3f})")
 
     def cube_callback(self, msg):
         """
@@ -208,7 +157,7 @@ class ArmStateMachine(Node):
         2. 坐标变换（雷达系 → 机械臂系）
         3. 加入缓存滑动窗口
         4. 调用 find_stable_points 检测是否稳定
-        5. 稳定后状态 → COMPLETED，串口发送坐标
+        5. 稳定后状态 → COMPLETED，发布坐标
         """
         if self.state != ArmState.IDLE:
             return
@@ -252,11 +201,6 @@ class ArmStateMachine(Node):
         """5 秒定时器：打印当前状态"""
         self.get_logger().info(f"[STATUS] State: {self.state}")
 
-    def cleanup(self):
-        """清理：关闭串口"""
-        if self.serial and self.serial.is_open:
-            self.serial.close()
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -266,7 +210,6 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-        node.cleanup()
         node.destroy_node()
         rclpy.shutdown()
 

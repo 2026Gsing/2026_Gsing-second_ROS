@@ -83,6 +83,14 @@ YOLO 视觉检测 (vision/src/predict.py)
 - state: 0=IDLE, 1=FORWARD, 2=BACKWARD, 3=LEFT, 4=RIGHT
 - 发送频率 ≥20Hz, 100ms 超时自动停车
 
+### 0x14 — FUNC_ARM_MISSION (机械臂多段任务)
+```
+[0x55][0xAA][0x14][len][mode(u8)][flags(u8)][pick(12B)]...[back(12B)]...[place(12B)][checksum]
+```
+- flags: 0x01=HAS_PICK, 0x02=HAS_BACK, 0x04=HAS_PLACE
+- 每个坐标 3×float32=12B (x, y, z)，按 flags 依次排列
+- 由 `/vision/arm_mission` (JSON) 驱动
+
 ### 0x15 — FUNC_AUTO_TASK (自动任务事件)
 ```
 [0x55][0xAA][0x15][0x03][cmd(u8)][target(u8)][zone(u8)][checksum]
@@ -91,6 +99,16 @@ YOLO 视觉检测 (vision/src/predict.py)
 - target: 物资箱编号, zone: 归位区编号
 
 由 `cmd_vel_chassis_serial.py` 订阅 `/vision/auto_cmd` (JSON) 自动转发。
+
+协议功能码严格对齐 STM32 protocol_handler.h：
+| 功能码 | 用途 |
+|--------|------|
+| 0x10 | FUNC_CHASSIS_MOVE — 底盘速度 |
+| 0x11 | FUNC_GAIT_SWITCH — 步态切换 |
+| 0x12 | FUNC_ARM_CONTROL — 机械臂单次控制 |
+| 0x13 | FUNC_SUCTION_CONTROL — 吸盘控制 |
+| 0x14 | FUNC_ARM_MISSION — 机械臂多段任务 |
+| 0x15 | FUNC_AUTO_TASK — 自动任务事件 |
 
 ## 自动任务状态机 (py/vision_auto_task_node.py)
 

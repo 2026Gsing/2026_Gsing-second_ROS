@@ -48,6 +48,9 @@ class BoxPickNode(Node):
     def __init__(self):
         super().__init__('box_pick_node')
 
+        # ============ 线程锁（保护多线程竞争） ============
+        self._lock = threading.Lock()
+
         # ============ 子进程 ============
         self._cube_proc = None
         self._catch_proc = None
@@ -92,48 +95,52 @@ class BoxPickNode(Node):
     # 回调
     # ================================================================
     def _cube_cb(self, msg):
-        self._latest_cube = msg
-        self._cube_received_time = time.monotonic()
+        with self._lock:
+            self._latest_cube = msg
+            self._cube_received_time = time.monotonic()
 
     def _localization_cb(self, msg):
-        self._latest_localization = msg
+        with self._lock:
+            self._latest_localization = msg
 
-        # ============ 自动到达检测 ============
-        if self._arrival_triggered or self._busy:
-            return  # 已触发或正在处理，跳过
+            # ============ 自动到达检测 ============
+            if self._arrival_triggered or self._busy:
+                return  # 已触发或正在处理，跳过
 
-        vx = msg.twist.twist.linear.x
-        vy = msg.twist.twist.linear.y
-        speed = math.hypot(vx, vy)
+            vx = msg.twist.twist.linear.x
+            vy = msg.twist.twist.linear.y
+            speed = math.hypot(vx, vy)
 
-        if speed < VEL_STOP_THRESHOLD:
-            self._arrival_count += 1
-            if self._arrival_count >= ARRIVED_FRAMES:
-                self.get_logger().info(f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧，启动检测")
-                self._arrival_triggered = True
-                self.on_arrived()
-        else:
-            self._arrival_count = 0  # 有速度了，重置计数
+            if speed < VEL_STOP_THRESHOLD:
+                self._arrival_count += 1
+                if self._arrival_count >= ARRIVED_FRAMES:
+                    self.get_logger().info(f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧，启动检测")
+                    self._arrival_triggered = True
+                    self.on_arrived()
+            else:
+                self._arrival_count = 0  # 有速度了，重置计数
 
     # ================================================================
     # Nav2 导航回调
     # ================================================================
     def _nav_goal_response_cb(self, future):
         goal_handle = future.result()
-        if not goal_handle.accepted:
-            self.get_logger().warn("[NAV] 目标被拒绝")
-            self._nav_goal_handle = None
-            return
-        self._nav_goal_handle = goal_handle
-        result_future = goal_handle.get_result_async()
-        result_future.add_done_callback(self._nav_result_cb)
+        with self._lock:
+            if not goal_handle.accepted:
+                self.get_logger().warn("[NAV] 目标被拒绝")
+                self._nav_goal_handle = None
+                return
+            self._nav_goal_handle = goal_handle
+            result_future = goal_handle.get_result_async()
+            result_future.add_done_callback(self._nav_result_cb)
 
     def _nav_result_cb(self, future):
         result = future.result()
-        if result and result.status == 4:  # SUCCEEDED
-            self._nav_succeeded = True
-            self.get_logger().info("[NAV] 导航成功！")
-        self._nav_goal_handle = None
+        with self._lock:
+            if result and result.status == 4:  # SUCCEEDED
+                self._nav_succeeded = True
+                self.get_logger().info("[NAV] 导航成功！")
+            self._nav_goal_handle = None
 
     def _send_nav_goal(self, x, y, yaw):
         """发送 Nav2 导航目标"""
@@ -151,7 +158,8 @@ class BoxPickNode(Node):
             self.get_logger().error("[NAV] Nav2 action server 不可用")
             return False
 
-        self._nav_succeeded = False
+        with self._lock:
+            self._nav_succeeded = False
         send_future = self._nav_client.send_goal_async(goal)
         send_future.add_done_callback(self._nav_goal_response_cb)
         self.get_logger().info(f"[NAV] 发送目标: ({x:.2f}, {y:.2f}, {yaw:.2f})")
@@ -162,13 +170,14 @@ class BoxPickNode(Node):
     # ================================================================
     def on_arrived(self):
         """用户确认已到达物资箱附近，开始检测流程"""
-        if self._busy:
-            self.get_logger().warn("[!] 正在处理中，请等待或输入 stop")
-            return
+        with self._lock:
+            if self._busy:
+                self.get_logger().warn("[!] 正在处理中，请等待或输入 stop")
+                return
+            self._busy = True
+            self._state = "DETECTING"
+            self._nav_succeeded = False
 
-        self._busy = True
-        self._state = "DETECTING"
-        self._nav_succeeded = False
         self.get_logger().info("=" * 50)
         self.get_logger().info("[开始] 启动 cube_detector.py ...")
         self.get_logger().info("=" * 50)
@@ -184,14 +193,17 @@ class BoxPickNode(Node):
             # ===== 等待 cube_detector 产出结果 =====
             for attempt in range(30):  # 最多等 15 秒
                 time.sleep(0.5)
-                if self._latest_cube is not None and time.monotonic() - self._cube_received_time < 3.0:
-                    break
+                with self._lock:
+                    has_cube = (self._latest_cube is not None
+                                and time.monotonic() - self._cube_received_time < 3.0)
+                    if has_cube:
+                        cube = self._latest_cube
+                        break
             else:
                 self.get_logger().warn("[超时] 15 秒未检测到立方体")
                 self._cleanup_detection()
                 return
 
-            cube = self._latest_cube
             cx = cube.pose.position.x
             cy = cube.pose.position.y
             xy_dist = math.hypot(cx, cy)
@@ -208,24 +220,28 @@ class BoxPickNode(Node):
 
     def _do_pick(self):
         """xy ≤ 30cm：直接启动 catch.py 抓取"""
-        self._state = "PICKING"
+        with self._lock:
+            self._state = "PICKING"
         self.get_logger().info(f"[抓取] 立方体在 {DIST_XY_NEAR}m 内，启动 catch.py")
         self._start_catch()
         # catch.py 会持续运行（稳定检测 + 串口发送），
         # 用户可在抓取完成后输入 stop 停止
-        self._busy = False
+        with self._lock:
+            self._busy = False
 
     def _do_renav(self, cx, cy):
         """xy > 30cm：重新导航到立方体位置"""
-        self._state = "RENAV"
+        with self._lock:
+            self._state = "RENAV"
+            loc = self._latest_localization
 
-        if self._latest_localization is None:
+        if loc is None:
             self.get_logger().error("[重规划] 无定位数据，无法计算目标")
             self._cleanup_detection()
             return
 
         # 立方体坐标从 lidar 系 → map 系
-        robot = self._latest_localization.pose.pose
+        robot = loc.pose.pose
         yaw = quaternion_to_yaw(robot.orientation)
         rx = robot.position.x
         ry = robot.position.y
@@ -240,7 +256,9 @@ class BoxPickNode(Node):
         # ===== 等待导航到达 =====
         for _ in range(120):  # 最多等 60 秒
             time.sleep(0.5)
-            if self._nav_succeeded:
+            with self._lock:
+                arrived = self._nav_succeeded
+            if arrived:
                 break
         else:
             self.get_logger().warn("[重规划] 导航超时")
@@ -248,13 +266,19 @@ class BoxPickNode(Node):
             return
 
         self.get_logger().info("[重规划] 已到达，再次检测立方体")
-        self._nav_succeeded = False
+        with self._lock:
+            self._nav_succeeded = False
 
         # ===== 再次检测 =====
         for attempt in range(10):  # 等 5 秒
             time.sleep(0.5)
-            if self._latest_cube is not None and time.monotonic() - self._cube_received_time < 3.0:
-                cube2 = self._latest_cube
+            with self._lock:
+                has_cube = (self._latest_cube is not None
+                            and time.monotonic() - self._cube_received_time < 3.0)
+                if has_cube:
+                    cube2 = self._latest_cube
+                    break
+            if has_cube:
                 cx2 = cube2.pose.position.x
                 cy2 = cube2.pose.position.y
                 xy_dist2 = math.hypot(cx2, cy2)
@@ -335,25 +359,27 @@ class BoxPickNode(Node):
         """停止所有子进程，重置状态"""
         self._stop_cube_detector()
         self._stop_catch()
-        self._state = "IDLE"
-        self._busy = False
-        self._nav_succeeded = False
-        self._latest_cube = None
-        self._arrival_triggered = False  # 允许下次自动到达检测
-        self._arrival_count = 0
+        with self._lock:
+            self._state = "IDLE"
+            self._busy = False
+            self._nav_succeeded = False
+            self._latest_cube = None
+            self._arrival_triggered = False  # 允许下次自动到达检测
+            self._arrival_count = 0
         self.get_logger().info("[结束] 已回到 IDLE，可开始下一箱")
 
     # ================================================================
     # CLI 命令
     # ================================================================
     def cmd_status(self):
-        s = f"状态: {self._state}  busy={'是' if self._busy else '否'}"
-        if self._latest_cube:
-            c = self._latest_cube.pose.position
-            d = math.hypot(c.x, c.y)
-            s += f"  最近立方体: ({c.x:.3f},{c.y:.3f}) xy距离={d:.3f}m"
-        else:
-            s += "  无立方体数据"
+        with self._lock:
+            s = f"状态: {self._state}  busy={'是' if self._busy else '否'}"
+            if self._latest_cube:
+                c = self._latest_cube.pose.position
+                d = math.hypot(c.x, c.y)
+                s += f"  最近立方体: ({c.x:.3f},{c.y:.3f}) xy距离={d:.3f}m"
+            else:
+                s += "  无立方体数据"
         self.get_logger().info(s)
 
     def cmd_stop(self):
