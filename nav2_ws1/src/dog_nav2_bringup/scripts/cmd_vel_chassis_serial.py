@@ -107,9 +107,11 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("arm_control_topic", "/vision/arm_control")
         self.declare_parameter("arm_mission_topic", "/vision/arm_mission")
         self.declare_parameter("send_rate_hz", 50.0)
-        self.declare_parameter("stale_timeout_sec", 0.08)
+        self.declare_parameter("stale_timeout_sec", 0.25)
+        self.declare_parameter("command_hold_timeout_sec", 0.75)
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
         self.declare_parameter("zero_on_shutdown", True)
+        self.declare_parameter("log_period_sec", 1.0)
         self.declare_parameter("active_state", 1)
         self.declare_parameter("idle_state", 0)
 
@@ -127,7 +129,11 @@ class CmdVelChassisSerial(Node):
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
         self._stale_timeout = self.get_parameter("stale_timeout_sec").get_parameter_value().double_value
+        self._command_hold_timeout = self.get_parameter("command_hold_timeout_sec").get_parameter_value().double_value
+        if self._command_hold_timeout < self._stale_timeout:
+            self._command_hold_timeout = self._stale_timeout
         self._vision_timeout = self.get_parameter("vision_timeout_sec").get_parameter_value().double_value
+        self._log_period = self.get_parameter("log_period_sec").get_parameter_value().double_value
         self._zero_on_shutdown = (
             self.get_parameter("zero_on_shutdown").get_parameter_value().bool_value
         )
@@ -139,9 +145,12 @@ class CmdVelChassisSerial(Node):
         self._vision_twist = None       # 视觉控速（可选，优先于 Nav2）
         self._vision_last_time = 0.0
         self._vision_state = None       # 视觉状态（从 /vision/robot_state 接收，可选）
+        self._last_sent_source = "none"
+        self._last_send_log_time = 0.0
+        self._last_cmd_log_time = 0.0
 
         # ============ 打开串口 ============
-        self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05)
+        self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.02)
         self.get_logger().info(
             f"Opened {port} @ {baud}, cmd_vel={topic}, send={self._send_rate}Hz"
         )
@@ -168,9 +177,15 @@ class CmdVelChassisSerial(Node):
 
     def _twist_cb(self, msg: Twist):
         """接收 Nav2 的 /cmd_vel 消息，缓存最新值"""
+        now = time.monotonic()
+        should_log = False
         with self._lock:
             self._last_twist = msg
-            self._last_time = time.monotonic()
+            self._last_time = now
+            if (now - self._last_cmd_log_time) >= self._log_period:
+                should_log = True
+                self._last_cmd_log_time = now
+        if should_log:
             self.get_logger().info(
                 f"收到 /cmd_vel: vx={msg.linear.x:.3f} wz={msg.angular.z:.3f}"
             )
@@ -333,11 +348,13 @@ class CmdVelChassisSerial(Node):
         定时发送任务（优先级：vision_cmd_vel > cmd_vel > stop）：
         1. 如果 vision_cmd_vel 在 vision_timeout 内收到且非零 → 使用视觉速度
         2. 否则如果 cmd_vel 在 stale_timeout 内收到 → 使用 Nav2 速度
-        3. 否则 → 发送停止帧
+        3. 否则短时间保持上一条非零 cmd_vel，滤掉 ROS 调度抖动
+        4. 超过 command_hold_timeout → 发送停止帧
         """
         now = time.monotonic()
         with self._lock:
             vision_age = now - self._vision_last_time if self._vision_last_time > 0 else self._vision_timeout + 1.0
+            source = "stop"
 
             # 视觉速度仅在非零时有效（避免视觉停止后锁死 Nav2）
             use_vision = (
@@ -350,6 +367,7 @@ class CmdVelChassisSerial(Node):
             if use_vision:
                 vx = self._vision_twist.linear.x
                 wz = self._vision_twist.angular.z
+                source = "vision"
                 # 优先使用 /vision/robot_state 提供的状态（如 test_move 推导的）
                 if self._vision_state is not None:
                     state = self._vision_state
@@ -359,19 +377,40 @@ class CmdVelChassisSerial(Node):
                 twist = self._last_twist
                 age = now - self._last_time if self._last_time > 0 else self._stale_timeout + 1.0
 
-                if age > self._stale_timeout:
-                    vx = wz = 0.0
-                    state = ROBOT_STATE_IDLE
-                else:
+                twist_is_nonzero = (
+                    abs(twist.linear.x) >= _STATE_EPSILON or
+                    abs(twist.angular.z) >= _STATE_EPSILON
+                )
+
+                if age <= self._stale_timeout:
                     vx = twist.linear.x
                     wz = twist.angular.z
                     state = derive_robot_state(vx, wz)
+                    source = "cmd_vel"
+                elif age <= self._command_hold_timeout and twist_is_nonzero:
+                    vx = twist.linear.x
+                    wz = twist.angular.z
+                    state = derive_robot_state(vx, wz)
+                    source = "cmd_vel_hold"
+                else:
+                    vx = wz = 0.0
+                    state = ROBOT_STATE_IDLE
+                    source = "stop"
 
-        self.get_logger().info(f"发送数据: vx={vx:.3f} wz={wz:.3f}")
+            should_log = False
+            if source != self._last_sent_source:
+                should_log = True
+                self._last_sent_source = source
+            elif (now - self._last_send_log_time) >= self._log_period:
+                should_log = True
+            if should_log:
+                self._last_send_log_time = now
+
+        if should_log:
+            self.get_logger().info(f"send source={source} vx={vx:.3f} wz={wz:.3f}")
         pkt = self._build_packet(vx, wz, state)
         try:
             self._ser.write(pkt)
-            self._ser.flush()
         except serial.SerialException as e:
             self.get_logger().error(f"Serial write failed: {e}")
 
