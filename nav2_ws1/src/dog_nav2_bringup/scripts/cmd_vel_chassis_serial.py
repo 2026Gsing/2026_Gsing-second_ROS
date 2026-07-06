@@ -251,7 +251,7 @@ class CmdVelChassisSerial(Node):
     def _send_tick(self):
         """
         定时发送任务（优先级：vision_cmd_vel > cmd_vel > stop）：
-        1. 如果 vision_cmd_vel 在 vision_timeout 内收到 → 使用视觉速度
+        1. 如果 vision_cmd_vel 在 vision_timeout 内收到且非零 → 使用视觉速度
         2. 否则如果 cmd_vel 在 stale_timeout 内收到 → 使用 Nav2 速度
         3. 否则 → 发送停止帧
         """
@@ -259,13 +259,19 @@ class CmdVelChassisSerial(Node):
         with self._lock:
             vision_age = now - self._vision_last_time if self._vision_last_time > 0 else self._vision_timeout + 1.0
 
-            if vision_age < self._vision_timeout and self._vision_twist is not None:
-                # 视觉速度有效（优先使用）
+            # 视觉速度仅在非零时有效（避免视觉停止后锁死 Nav2）
+            use_vision = (
+                vision_age < self._vision_timeout
+                and self._vision_twist is not None
+                and (abs(self._vision_twist.linear.x) >= _STATE_EPSILON
+                     or abs(self._vision_twist.angular.z) >= _STATE_EPSILON)
+            )
+
+            if use_vision:
                 vx = self._vision_twist.linear.x
                 wz = self._vision_twist.angular.z
                 state = derive_robot_state(vx, wz)
             else:
-                # 视觉超时 → 退回 Nav2 或停止
                 twist = self._last_twist
                 age = now - self._last_time if self._last_time > 0 else self._stale_timeout + 1.0
 
