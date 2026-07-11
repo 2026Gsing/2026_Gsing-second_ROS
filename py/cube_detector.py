@@ -9,7 +9,7 @@ cube_detector.py — 3D OBB 立方体检测节点
 
 算法流程：
   1. 接收 /unilidar/cloud 点云
-  2. 空间范围过滤（前方 0~0.8m，左右 ±0.8m，高度 0~0.6m）
+  2. 空间范围过滤（前方 0~0.5m，左右 ±0.5m，高度 0~0.6m）
   3. 去地面（去除 z 轴最低 5% 分位以下的点）
   4. 半径滤波去除离群点
   5. 体素下采样（8mm）
@@ -46,8 +46,8 @@ class CubeDetector(Node):
         self.marker_pub = self.create_publisher(Marker, '/detected_cube', 10)
 
         # ============ 点云预处理参数 ============
-        self.x_range = (-0.2, 0.8)    # X 范围（雷达前方 0~80cm）
-        self.y_range = (-0.8, 0.8)    # Y 范围（左右 ±80cm）
+        self.x_range = (0, 0.5)    # X 范围（雷达前方 0~80cm）
+        self.y_range = (-0.5, 0.5)    # Y 范围（左右 ±80cm）
         self.z_range = (0, 0.6)       # Z 范围（高度 0~60cm）
         self.voxel_size = 0.008       # 体素下采样大小（8mm）
 
@@ -106,9 +106,9 @@ class CubeDetector(Node):
                    (pts_raw[:, 2] > self.z_range[0]) & (pts_raw[:, 2] < self.z_range[1])
             pts = pts_raw[mask]
 
-            # 去地面：只保留 z > 最低5%分位 + 2cm 的点
-            z_min = np.percentile(pts[:, 2], 5)
-            pts = pts[pts[:, 2] > z_min + 0.02]
+            # 去地面（雷达倒装，地面在 Z 最大处）：去掉 Z 最高的 3% 分位以上点
+            z_ground = np.percentile(pts[:, 2], 97)
+            pts = pts[pts[:, 2] < z_ground - 0.02]
 
             # 半径滤波
             pts = self.remove_statistical_outliers(pts, self.radius, self.min_neighbors)
@@ -215,24 +215,34 @@ class CubeDetector(Node):
             high = np.percentile(pts_local[:, i], 95)
             dims.append(high - low)
 
-        # dims = [厚度, 宽度, 高度]（排序后）
+        # dims = [法线方向厚度, 宽度, 高度]
         d_sorted = sorted(dims)
 
         # 边长取三个边平均值
         edge = np.mean(dims)
 
+        # 长宽比校验：排除明显非立方体（如 30×20×25 均值也≈25）
+        if max(dims) / max(min(dims), 1e-6) > 1.8:
+            return None
+
         # 边长效验（放宽）
         if not (self.edge_target - self.edge_tol < edge < self.edge_target + self.edge_tol):
             return None
 
-        # OBB 中心（局部坐标范围中心）
-        local_center = np.array([
-            (np.min(pts_local[:, 0]) + np.max(pts_local[:, 0])) / 2,
-            (np.min(pts_local[:, 1]) + np.max(pts_local[:, 1])) / 2,
-            (np.min(pts_local[:, 2]) + np.max(pts_local[:, 2])) / 2,
-        ])
-        # 转换回全局：先转置(evecs是正交矩阵，逆=转置)
-        global_center = center + local_center @ evecs.T
+        # ========== 立方体中心校正 ==========
+        # LiDAR 只能扫到前表面，PCA 的 center 是表面中心的近似。
+        # 需要沿法线（最小特征值方向）向里推半个边长得到真实中心。
+        normal = evecs[:, 0]  # 法线方向（最小特征值）
+        # 确保法线指向雷达反方向（即指向立方体内部）
+        if np.dot(normal, center) < 0:
+            normal = -normal
+
+        # 用非截断的可见面边长（dims[1], dims[2]）估计实际立方体尺寸
+        est_edge = np.median([np.median(dims[1:]), self.edge_target])
+        half_edge = est_edge / 2.0
+
+        # 立方体中心 = 表面中心 + 向里推半个边长
+        global_center = center + normal * half_edge
 
         # Yaw = 最长主轴在 XY 平面的投影角度
         main_axis = evecs[:, 2]  # 最大特征值方向
