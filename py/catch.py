@@ -6,15 +6,24 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
   1. 订阅 /detected_cube (Marker) 获取立方体位置
   2. 将雷达坐标系坐标变换到机械臂坐标系（含偏移补偿）
   3. 使用滑动窗口标准差法判断位置是否稳定
-  4. 位置稳定后，通过 /vision/arm_control 发布坐标给串口桥转发给 STM32
-  5. 以 1Hz 心跳重发确保下位机收到指令
+  4. 位置稳定后，先推进 STM32 自动任务状态机到 PICK 状态
+  5. 再通过 /vision/arm_control 发布坐标给串口桥转发给 STM32
+  6. 以 2Hz 心跳重发确保下位机收到指令
+
+自动任务状态机推进：
+  catch.py 单独运行时，STM32 的 auto_task 默认在 IDLE 状态。
+  Auto_Task_ArmAcceptsNewTarget() 要求只能是 PICK 或 PLACE 状态才接受 0x12 坐标，
+  所以需要先发两条 auto_cmd 推进状态机：
+    AUTO_CMD_START (cmd=1)      → IDLE → START → NAV_TO_BOX
+    AUTO_CMD_ARRIVED_BOX (cmd=2) → NAV_TO_BOX → ARRIVED_BOX (400ms settle) → PICK
+  进入 PICK 后，再发 0x12 坐标，机械臂才会执行抓取。
 
 坐标变换：
   雷达系 (unilidar_lidar): x=前进, y=左, z=上
-  机械臂系: x=右, y=前, z=下
-  变换: final_x = -radar_z + offset_x
-        final_y =  radar_y + offset_y
-        final_z = -radar_x + offset_z
+  机械臂系 (STM32 arm.c): x=高度(向上), y=侧向(向右), z=前向(向前)
+  变换: final_x =  radar_z + offset_x
+        final_y = -radar_y + offset_y
+        final_z =  radar_x + offset_z
 
 串口协议（由 cmd_vel_chassis_serial.py 转发）：
   [0x55][0xAA][0x12][len=12][x(float32)][y(float32)][z(float32)][checksum]
@@ -37,10 +46,13 @@ import time
 import numpy as np
 
 # ==================== 坐标偏移参数 ====================
-# 雷达→机械臂坐标系变换后的偏移补偿（标定值）
-OFFSET_X = 0.06
+# 雷达→机械臂坐标系的物理安装偏移补偿（需标定）
+# arm_x(高度) = radar_z(高)     + OFFSET_X   # LiDAR 与臂肩的高度差
+# arm_y(侧向) = -radar_y(左→右) + OFFSET_Y   # LiDAR 与臂肩的左右偏移
+# arm_z(前向) =  radar_x(前)    + OFFSET_Z   # LiDAR 与臂肩的前后偏移
+OFFSET_X = 0.0
 OFFSET_Y = 0.0
-OFFSET_Z = -0.15
+OFFSET_Z = 0.0
 
 # ==================== 稳定检测参数 ====================
 # 滑动窗口标准差法：位置跳动小于阈值时视为稳定
@@ -51,21 +63,33 @@ STD_FACTOR = 1                 # 系数调节
 STABLE_COUNT_REQUIRED = 3      # 需要连续多少帧稳定
 CACHE_MAX_SIZE = 10            # 位置缓存最大帧数
 
+# ==================== 自动任务事件常量 ====================
+AUTO_CMD_START = 1
+AUTO_CMD_ARRIVED_BOX = 2
+AUTO_CMD_ARRIVED_ZONE = 4
+
+# ARRIVED_BOX settle 400ms + 200ms 裕量，等 STM32 进入 PICK
+ARM_DELAY_AFTER_ARRIVE_SEC = 0.6
+
+
 # ==================== 状态机定义 ====================
 class ArmState:
     """机械臂状态"""
-    IDLE = "IDLE"           # 空闲，等待检测到立方体
-    COMPLETED = "COMPLETED" # 已发送坐标，等待下次抓取
+    IDLE = "IDLE"               # 空闲，等待检测到立方体
+    STARTING = "STARTING"       # 正在推进自动任务状态机
+    WAITING_PICK = "WAITING_PICK"  # 等待 STM32 进入 PICK 状态
+    COMPLETED = "COMPLETED"     # 已发送坐标，等待下次抓取
 
 
 class ArmStateMachine(Node):
-    """机械臂状态机：订阅立方体位置 → 稳定检测 → 通过串口桥转发"""
+    """机械臂状态机：订阅立方体位置 → 稳定检测 → 推进状态机 → 通过串口桥转发"""
 
     def __init__(self):
         super().__init__('arm_state_machine')
 
         # ============ 发布器（通过串口桥转发） ============
         self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)
+        self.auto_cmd_pub = self.create_publisher(String, "/vision/auto_cmd", 10)
 
         # ============ 状态机变量 ============
         self.state = ArmState.IDLE          # 初始状态：空闲
@@ -82,35 +106,41 @@ class ArmStateMachine(Node):
 
         # ============ 定时器 ============
         self.status_timer = self.create_timer(5.0, self.status_callback)  # 状态打印
-        self.resend_timer = self.create_timer(0.02, self.resend_callback)  # 50Hz 心跳重发
+        self.resend_timer = self.create_timer(0.5, self.resend_callback)  # 2Hz 心跳重发
 
         self.get_logger().info("=" * 60)
-        self.get_logger().info("Arm State Machine Started (滑动窗口标准差版)")
+        self.get_logger().info("Arm State Machine Started (含自动任务状态机推进)")
         self.get_logger().info(f"State: {self.state}")
         self.get_logger().info("=" * 60)
 
+    def send_auto_cmd(self, cmd, target=0, zone=0):
+        """发布自动任务事件到 /vision/auto_cmd → 串口桥转发 0x15 → STM32"""
+        msg = String()
+        msg.data = json.dumps({"cmd": cmd, "target": target, "zone": zone})
+        self.auto_cmd_pub.publish(msg)
+        self.get_logger().info(f">>> 已发布 AUTO_CMD: cmd={cmd} target={target} zone={zone}")
+
     def transform_and_offset(self, radar_x, radar_y, radar_z):
         """
-        坐标变换：雷达坐标系 → 机械臂坐标系
+        坐标变换：雷达坐标系 → 机械臂坐标系（STM32 arm.c 正解定义）
 
         雷达系 (unilidar_lidar):
           x = 前进方向, y = 左侧, z = 上方
 
-        机械臂系:
-          x = 右侧, y = 前进方向, z = 下方
+        机械臂系 (arm.c:382-384):
+          x = 高度 (向上为正)
+          y = 侧向 (向右为正)
+          z = 前向 (向前为正)
 
-        变换公式：
-          final_x = -radar_z + OFFSET_X    (雷达z反转→机械臂x)
-          final_y =  radar_y + OFFSET_Y    (雷达y不变→机械臂y)
-          final_z = -radar_x + OFFSET_Z    (雷达x反转→机械臂z)
+        变换逻辑：
+          arm_x (高度) = radar_z (高度)       + OFFSET_UP
+          arm_y (侧向) = -radar_y (左→反转为右) + OFFSET_RIGHT
+          arm_z (前向) = radar_x (前进)        + OFFSET_FWD
         """
-        temp_x = -radar_z
-        temp_y = radar_y
-        temp_z = -radar_x
-        final_x = temp_x + OFFSET_X
-        final_y = temp_y + OFFSET_Y
-        final_z = temp_z + OFFSET_Z
-        return final_x, final_y, final_z, (temp_x, temp_y, temp_z)
+        final_x = radar_z + OFFSET_X      # radar_z(高度) → arm_x(高度)
+        final_y = -radar_y + OFFSET_Y     # radar_y(左) → -arm_y(右)
+        final_z = radar_x + OFFSET_Z      # radar_x(前进) → arm_z(前向)
+        return final_x, final_y, final_z, (radar_x, radar_y, radar_z)
 
     def find_stable_points(self, positions, threshold_xy, required_count):
         """
@@ -157,7 +187,7 @@ class ArmStateMachine(Node):
         2. 坐标变换（雷达系 → 机械臂系）
         3. 加入缓存滑动窗口
         4. 调用 find_stable_points 检测是否稳定
-        5. 稳定后状态 → COMPLETED，发布坐标
+        5. 稳定后，先发 AUTO_CMD 推进 STM32 状态机 → 延迟 → 发坐标
         """
         if self.state != ArmState.IDLE:
             return
@@ -186,11 +216,40 @@ class ArmStateMachine(Node):
             self.get_logger().info("=" * 60)
 
             self.target_position = avg_pos
-            self.state = ArmState.COMPLETED
-            self.send_arm_position(avg_pos[0], avg_pos[1], avg_pos[2])
+            self.state = ArmState.STARTING
+
+            # 第一步：推进自动任务状态机 → PICK
+            self.get_logger().info("[SEQ] 发送 AUTO_CMD_START...")
+            self.send_auto_cmd(AUTO_CMD_START)
+            time.sleep(0.1)
+            self.get_logger().info("[SEQ] 发送 AUTO_CMD_ARRIVED_BOX...")
+            self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, target=1, zone=0)
+
+            # 第二步：等 STM32 进入 PICK（ARRIVED_BOX settle 400ms + 裕量）
+            self.state = ArmState.WAITING_PICK
+            self.get_logger().info(f"[SEQ] 等待 {ARM_DELAY_AFTER_ARRIVE_SEC}s 让 STM32 进入 PICK 状态...")
+            self.delayed_timer = self.create_timer(ARM_DELAY_AFTER_ARRIVE_SEC, self.send_delayed_arm_command)
+
+    def send_delayed_arm_command(self):
+        """定时器回调：等待 STM32 进入 PICK 后发送机械臂坐标（只执行一次）"""
+        # 取消定时器，防止重复触发
+        if hasattr(self, 'delayed_timer') and self.delayed_timer is not None:
+            self.delayed_timer.cancel()
+            self.delayed_timer = None
+
+        if self.state != ArmState.WAITING_PICK or self.target_position is None:
+            return
+
+        self.get_logger().info("[SEQ] STM32 应已进入 PICK，发送机械臂坐标...")
+        self.state = ArmState.COMPLETED
+        self.send_arm_position(
+            self.target_position[0],
+            self.target_position[1],
+            self.target_position[2]
+        )
 
     def resend_callback(self):
-        """1Hz 心跳重发：确保下位机收到坐标指令（防止串口丢包）"""
+        """2Hz 心跳重发：确保下位机收到坐标指令（防止串口丢包）"""
         if self.state == ArmState.COMPLETED and self.target_position is not None:
             self.get_logger().info("[Heartbeat] 保障心跳发送...")
             self.send_arm_position(
