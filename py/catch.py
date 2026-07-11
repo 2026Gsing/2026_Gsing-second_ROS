@@ -37,7 +37,6 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
 """
 
 import os
-import sys
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
@@ -100,13 +99,13 @@ class ArmStateMachine(Node):
     def __init__(self):
         super().__init__('arm_state_machine')
 
-        # 检查串口设备是否存在（串口桥 cmd_vel_chassis_serial.py 依赖此设备）
-        SERIAL_DEVICE = "/dev/ttyACM0"
-        if not os.path.exists(SERIAL_DEVICE):
-            self.get_logger().error(
-                f"串口设备 {SERIAL_DEVICE} 不存在！请检查串口桥是否已连接 (sudo chmod 666 {SERIAL_DEVICE})"
+        # catch.py only publishes ROS topics. The serial bridge owns the serial port.
+        serial_device = os.environ.get("STM32_SERIAL_PORT", "/dev/ttyACM0")
+        if not os.path.exists(serial_device):
+            self.get_logger().warn(
+                f"{serial_device} not found; catch.py will still publish /vision/arm_control. "
+                "Start cmd_vel_chassis_serial.py with the real serial_port."
             )
-            sys.exit(1)
 
         # ============ 发布器（通过串口桥转发） ============
         self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)

@@ -36,23 +36,32 @@ source "$NAV2_DIR/install/setup.bash" 2>/dev/null || echo "⚠️  nav2_ws1 未 
 SERIAL_PORT="${SERIAL_PORT:-/dev/ttyACM0}"
 BAUD="${BAUD:-115200}"
 MAP_FILE="${MAP_FILE:-$NAV2_DIR/src/dog_nav2_bringup/maps/task_field_map.yaml}"
+START_ARM_PIPELINE="${START_ARM_PIPELINE:-1}"
+SERIAL_BRIDGE_SCRIPT="$NAV2_DIR/src/dog_nav2_bringup/scripts/cmd_vel_chassis_serial.py"
+NAV_PID=""
+CUBE_PID=""
+CATCH_PID=""
+VISION_PID=""
+SERIAL_PID=""
 
 # ============ 1. 串口桥 ============
 echo ""
-echo "【1/3】启动串口桥..."
-ros2 run dog_nav2_bringup cmd_vel_chassis_serial \
+echo "【1/4】启动串口桥..."
+echo "  使用源码脚本: $SERIAL_BRIDGE_SCRIPT"
+python3 "$SERIAL_BRIDGE_SCRIPT" \
   --ros-args \
   -p serial_port:="$SERIAL_PORT" \
   -p baud_rate:="$BAUD" \
   -p cmd_vel_topic:=/cmd_vel \
-  -p send_rate_hz:=50.0 &
+  -p send_rate_hz:=50.0 \
+  -p critical_repeat_count:=4 &
 
 SERIAL_PID=$!
 sleep 2
 
 # ============ 2. Nav2 ============
 echo ""
-echo "【2/3】启动 Nav2 导航..."
+echo "【2/4】启动 Nav2 导航..."
 if [ -f "$MAP_FILE" ]; then
   ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
     map:="$MAP_FILE" &
@@ -63,9 +72,24 @@ else
   echo "   请先用 task_field_competition.sh 生成地图"
 fi
 
-# ============ 3. 视觉自动任务节点 ============
+# ============ 3. 机械臂视觉链路 ============
+if [ "$START_ARM_PIPELINE" = "1" ]; then
+  echo ""
+  echo "【3/4】启动机械臂视觉链路..."
+  python3 "$PY_DIR/cube_detector.py" &
+  CUBE_PID=$!
+  sleep 1
+  python3 "$PY_DIR/catch.py" &
+  CATCH_PID=$!
+  sleep 1
+else
+  echo ""
+  echo "【3/4】跳过机械臂视觉链路 (START_ARM_PIPELINE=0)"
+fi
+
+# ============ 4. 视觉自动任务节点 ============
 echo ""
-echo "【3/3】启动视觉自动任务节点..."
+echo "【4/4】启动视觉自动任务节点..."
 python3 "$PY_DIR/vision_auto_task_node.py" &
 VISION_PID=$!
 
@@ -75,6 +99,8 @@ echo "  所有组件已启动"
 echo "  在 vision 终端输入 start 开始"
 echo "=============================="
 echo "  PID: 串口桥=$SERIAL_PID"
+echo "  PID: cube_detector=$CUBE_PID"
+echo "  PID: catch=$CATCH_PID"
 echo "  PID: 视觉=$VISION_PID"
 echo ""
 echo "  按 Ctrl+C 停止所有"
@@ -83,10 +109,12 @@ echo "  按 Ctrl+C 停止所有"
 cleanup() {
   echo ""
   echo "正在停止..."
-  kill $VISION_PID 2>/dev/null
-  kill $NAV_PID 2>/dev/null
-  kill $SERIAL_PID 2>/dev/null
-  wait
+  for pid in "$VISION_PID" "$CATCH_PID" "$CUBE_PID" "$NAV_PID" "$SERIAL_PID"; do
+    if [ -n "$pid" ]; then
+      kill "$pid" 2>/dev/null || true
+    fi
+  done
+  wait || true
   echo "已停止"
 }
 trap cleanup EXIT INT TERM

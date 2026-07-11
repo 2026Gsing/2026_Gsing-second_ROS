@@ -112,6 +112,7 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
         self.declare_parameter("zero_on_shutdown", True)
         self.declare_parameter("log_period_sec", 1.0)
+        self.declare_parameter("critical_repeat_count", 4)
         self.declare_parameter("active_state", 1)
         self.declare_parameter("idle_state", 0)
 
@@ -134,6 +135,9 @@ class CmdVelChassisSerial(Node):
             self._command_hold_timeout = self._stale_timeout
         self._vision_timeout = self.get_parameter("vision_timeout_sec").get_parameter_value().double_value
         self._log_period = self.get_parameter("log_period_sec").get_parameter_value().double_value
+        self._critical_repeat_count = max(
+            0, self.get_parameter("critical_repeat_count").get_parameter_value().integer_value
+        )
         self._zero_on_shutdown = (
             self.get_parameter("zero_on_shutdown").get_parameter_value().bool_value
         )
@@ -148,6 +152,8 @@ class CmdVelChassisSerial(Node):
         self._last_sent_source = "none"
         self._last_send_log_time = 0.0
         self._last_cmd_log_time = 0.0
+        self._serial_lock = threading.Lock()
+        self._critical_tx_queue = []
 
         # ============ 打开串口 ============
         try:
@@ -179,6 +185,41 @@ class CmdVelChassisSerial(Node):
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
         self._timer = self.create_timer(period, self._send_tick)
+
+    def _write_serial(self, pkt: bytes, flush: bool = False):
+        """Serialize all writes so chassis and arm frames never interleave."""
+        with self._serial_lock:
+            self._ser.write(pkt)
+            if flush:
+                self._ser.flush()
+
+    def _queue_critical_packet(self, pkt: bytes, label: str):
+        """Repeat non-periodic frames for a few ticks to survive a single USB/CDC loss."""
+        if self._critical_repeat_count <= 0:
+            return
+        self._critical_tx_queue = [
+            item for item in self._critical_tx_queue
+            if item.get("label") != label
+        ]
+        self._critical_tx_queue.append({
+            "packet": pkt,
+            "remaining": self._critical_repeat_count,
+            "label": label,
+        })
+        if len(self._critical_tx_queue) > 16:
+            self._critical_tx_queue = self._critical_tx_queue[-16:]
+
+    def _pop_critical_packet(self):
+        if not self._critical_tx_queue:
+            return None, None
+
+        item = self._critical_tx_queue[0]
+        pkt = item["packet"]
+        label = item["label"]
+        item["remaining"] -= 1
+        if item["remaining"] <= 0:
+            self._critical_tx_queue.pop(0)
+        return pkt, label
 
     def _twist_cb(self, msg: Twist):
         """接收 Nav2 的 /cmd_vel 消息，缓存最新值"""
@@ -215,8 +256,8 @@ class CmdVelChassisSerial(Node):
             zone = int(data.get("zone", 0)) & 0xFF
             pkt = self._build_auto_packet(cmd, target, zone)
             with self._lock:
-                self._ser.write(pkt)
-                self._ser.flush()
+                self._queue_critical_packet(pkt, f"0x15 cmd={cmd}")
+            self._write_serial(pkt, flush=True)
             self.get_logger().info(
                 f"[AUTO] 发送 0x15: cmd={cmd} target={target} zone={zone}"
             )
@@ -229,8 +270,8 @@ class CmdVelChassisSerial(Node):
             gait_id = msg.data & 0xFF
             pkt = self._build_gait_packet(gait_id)
             with self._lock:
-                self._ser.write(pkt)
-                self._ser.flush()
+                self._queue_critical_packet(pkt, f"0x11 gait={gait_id}")
+            self._write_serial(pkt, flush=True)
             self.get_logger().info(f"[GAIT] 发送 0x11: gait_id={gait_id}")
         except Exception as e:
             self.get_logger().error(f"[GAIT] 发送失败: {e}")
@@ -252,8 +293,8 @@ class CmdVelChassisSerial(Node):
             z = float(data.get("z", 0.0))
             pkt = self._build_arm_control_packet(x, y, z)
             with self._lock:
-                self._ser.write(pkt)
-                self._ser.flush()
+                self._queue_critical_packet(pkt, "0x12 arm_control")
+            self._write_serial(pkt, flush=True)
             # 节流日志：坐标变化或 5s 没打印才输出
             now = time.monotonic()
             if (x, y, z) != getattr(self, '_last_arm_log_xyz', None) or \
@@ -296,8 +337,8 @@ class CmdVelChassisSerial(Node):
 
             pkt = self._build_arm_mission_packet(payload)
             with self._lock:
-                self._ser.write(pkt)
-                self._ser.flush()
+                self._queue_critical_packet(pkt, f"0x14 arm_mission mode={mode}")
+            self._write_serial(pkt, flush=True)
             self.get_logger().info(
                 f"[ARM_MISSION] 发送 0x14: mode={mode} flags={flags} "
                 f"len={len(payload)}B"
@@ -417,12 +458,16 @@ class CmdVelChassisSerial(Node):
                 should_log = True
             if should_log:
                 self._last_send_log_time = now
+            critical_pkt, critical_label = self._pop_critical_packet()
 
         if should_log and (abs(vx) + abs(wz) > 1e-6 or transition):
             self.get_logger().info(f"send source={source} vx={vx:.3f} wz={wz:.3f}")
         pkt = self._build_packet(vx, wz, state)
         try:
-            self._ser.write(pkt)
+            self._write_serial(pkt)
+            if critical_pkt is not None:
+                self._write_serial(critical_pkt, flush=True)
+                self.get_logger().debug(f"repeat {critical_label}")
         except serial.SerialException as e:
             self.get_logger().error(f"Serial write failed: {e}")
 
@@ -430,8 +475,7 @@ class CmdVelChassisSerial(Node):
         """节点销毁时发送停止帧，确保机器人安全停车"""
         if self._zero_on_shutdown and self._ser and self._ser.is_open:
             try:
-                self._ser.write(self._build_packet(0.0, 0.0, ROBOT_STATE_IDLE))
-                self._ser.flush()
+                self._write_serial(self._build_packet(0.0, 0.0, ROBOT_STATE_IDLE), flush=True)
             except Exception:
                 pass
             self._ser.close()
