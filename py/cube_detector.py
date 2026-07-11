@@ -10,7 +10,7 @@ cube_detector.py — 3D OBB 立方体检测节点
 算法流程：
   1. 接收 /unilidar/cloud 点云
   2. 空间范围过滤（前方 0~0.5m，左右 ±0.5m，高度 0~0.6m）
-  3. 去地面（去除 Z 最高 6% 分位以上点——雷达倒装）
+  3. 去地面（去除 z 轴最低 5% 分位以下的点）
   4. 半径滤波去除离群点
   5. 体素下采样（8mm）
   6. DBSCAN 聚类（eps=4cm, min_samples=20）
@@ -30,7 +30,6 @@ import sensor_msgs_py.point_cloud2 as pc2
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import BallTree
-from sklearn.linear_model import RANSACRegressor
 import math
 
 class CubeDetector(Node):
@@ -47,9 +46,9 @@ class CubeDetector(Node):
         self.marker_pub = self.create_publisher(Marker, '/detected_cube', 10)
 
         # ============ 点云预处理参数 ============
-        self.x_range = (0, 0.8)    # X 范围（雷达前方 0~80cm）
-        self.y_range = (-0.7, 0.7)    # Y 范围（左右 ±70cm）
-        self.z_range = (0, 0.7)       # Z 范围（高度 0~70cm）
+        self.x_range = (0, 0.5)    # X 范围（雷达前方 0~80cm）
+        self.y_range = (-0.5, 0.5)    # Y 范围（左右 ±80cm）
+        self.z_range = (0, 0.6)       # Z 范围（高度 0~60cm）
         self.voxel_size = 0.008       # 体素下采样大小（8mm）
 
         # ============ DBSCAN 聚类参数 ============
@@ -99,62 +98,38 @@ class CubeDetector(Node):
         """
         try:
             pts_raw = self.pc2_to_np(msg)
-            total = pts_raw.shape[0]
-            if total < 100:
-                self.get_logger().debug(f"原始点云仅 {total} 点，跳过")
+            if pts_raw.shape[0] < 100:
                 return
 
-            # ===== 阶段 1：ROI 裁剪 =====
             mask = (pts_raw[:, 0] > self.x_range[0]) & (pts_raw[:, 0] < self.x_range[1]) & \
                    (pts_raw[:, 1] > self.y_range[0]) & (pts_raw[:, 1] < self.y_range[1]) & \
                    (pts_raw[:, 2] > self.z_range[0]) & (pts_raw[:, 2] < self.z_range[1])
             pts = pts_raw[mask]
-            after_roi = pts.shape[0]
-            n_ground = 0
-            if after_roi < 20:
-                self.get_logger().debug(f"ROI 后仅 {after_roi}/{total} 点 ({self.x_range}, {self.y_range}, {self.z_range})")
-                return
 
-            # ===== 阶段 2：RANSAC 平面拟合去地面 =====
-            # 拟合地面平面 z = a*x + b*y + c，去掉距离平面 < 4cm 的内点
-            # 箱子前表面是垂直面，距地面平面较远，会被保留为外点
-            if pts.shape[0] >= 100:
-                ransac = RANSACRegressor(
-                    residual_threshold=0.04,
-                    max_trials=100,
-                    min_samples=50,
-                    random_state=42
-                )
-                ransac.fit(pts[:, [0, 1]], pts[:, 2])
-                inlier_mask = ransac.inlier_mask_
-                pts = pts[~inlier_mask]  # 保留外点（非地面点）
-            if pts.shape[0] < 20:
-                self.get_logger().debug(f"RANSAC 去地面后仅 {pts.shape[0]} 点")
-                return
+            # 去地面（雷达倒装，地面在 Z 最大处）：去掉 Z 最高的 3% 分位以上点
+            z_ground = np.percentile(pts[:, 2], 97)
+            pts = pts[pts[:, 2] < z_ground - 0.02]
 
-            # ===== 阶段 3：半径滤波 =====
-            before_rad = pts.shape[0]
+            # 半径滤波
             pts = self.remove_statistical_outliers(pts, self.radius, self.min_neighbors)
-            if pts.shape[0] < 10:
-                self.get_logger().debug(f"半径滤波后仅 {pts.shape[0]}/{before_rad} 点")
-                return
 
-            # ===== 阶段 4：体素下采样 =====
+            # 体素下采样
             pts = self.voxel_downsample(pts, self.voxel_size)
-            after_voxel = pts.shape[0]
             if pts.shape[0] < self.cluster_min_samples:
-                self.get_logger().debug(f"下采样后仅 {after_voxel} 点 (< {self.cluster_min_samples})，跳过")
                 return
 
-            # ===== 阶段 5：DBSCAN 聚类 =====
             db = DBSCAN(eps=self.cluster_eps, min_samples=self.cluster_min_samples).fit(pts)
             labels = db.labels_
+
+            # 各阶段点数量调试
             n_clusters = labels.max() + 1
+            n_noise = (labels == -1).sum()
             self.get_logger().info(
-                f"[DBG] {total}→ROI{after_roi}→体素{after_voxel} → {n_clusters}个聚类"
+                f"[DBG] 原始{pts_raw.shape[0]}→ROI{pts_raw[mask].shape[0]}→"
+                f"去地面{pts_raw[~((pts_raw[:,2]>z_ground-0.02) & mask)].shape[0]}→"
+                f"滤波{pts.shape[0]}点 → {n_clusters}聚类({n_noise}噪点)"
             )
 
-            # ===== 阶段 6：OBB 分析 =====
             cubes = []
             for i in range(labels.max() + 1):
                 cluster_pts = pts[labels == i]
@@ -165,31 +140,18 @@ class CubeDetector(Node):
 
                 if cube_info:
                     cubes.append(cube_info)
-                else:
-                    # 打印聚类尺寸诊断
-                    center = np.mean(cluster_pts, axis=0)
-                    cov = ((cluster_pts - center).T @ (cluster_pts - center)) / len(cluster_pts)
-                    evals, _ = np.linalg.eigh(cov)
-                    dim_est = np.sqrt(evals) * 3.0  # 3σ 近似边长
+
+            if cubes:
+                # ========== 输出所有检测到的立方体 ==========
+                self.get_logger().info(f"检测到 {len(cubes)} 个立方体:")
+                for i, c in enumerate(cubes):
+                    xy_dist = math.hypot(c['x'], c['y'])
                     self.get_logger().info(
-                        f"  [聚类{i}] {cluster_pts.shape[0]}点 "
-                        f"中心({center[0]:.3f},{center[1]:.3f},{center[2]:.3f}) "
-                        f"PCA特征值:{evals[0]:.4f},{evals[1]:.4f},{evals[2]:.4f} "
-                        f"≈{dim_est[0]:.3f}×{dim_est[1]:.3f}×{dim_est[2]:.3f}m"
+                        f"  [{i}] pos=({c['x']:.3f},{c['y']:.3f},{c['z']:.3f}) "
+                        f"edge={c['edge']:.3f} mode={c['face_mode']} "
+                        f"dims=[{c['_dims0']:.3f},{c['_dims1']:.3f},{c['_dims2']:.3f}] "
+                        f"ratio={c['_ratio']:.2f} xy_dist={xy_dist:.3f}"
                     )
-
-            if not cubes:
-                self.get_logger().info(f"[DBG] {n_clusters}个聚类均未通过 OBB 校验")
-                return
-
-            # ========== 输出所有检测到的立方体 ==========
-            self.get_logger().info(f"检测到 {len(cubes)} 个立方体:")
-            for i, c in enumerate(cubes):
-                xy_dist = math.hypot(c['x'], c['y'])
-                self.get_logger().info(
-                    f"  [{i}] x={c['x']:.3f} y={c['y']:.3f} z={c['z']:.3f} "
-                    f"边长={c['edge']:.3f}m xy距离={xy_dist:.3f}m"
-                )
 
                 # ========== 选择最接近25cm的立方体发布 ==========
                 best = min(cubes, key=lambda x: abs(x['edge'] - self.edge_target))
@@ -237,11 +199,14 @@ class CubeDetector(Node):
 
     def analyze_cluster(self, pts):
         """
-        3D OBB 包围盒法：
+        自适应 3D OBB 包围盒法（支持单面/三面可见）
+
         1. 3D PCA → 三个主轴 = 立方体的三条边方向
-        2. 旋转到局部坐标系 → 三个方向的范围 = 高/宽/厚
-        3. 边长取中位数（自动滤掉"薄片"方向）
-        4. 从局部中心反算全局中心
+        2. 旋转到局部坐标系 → 三个方向的范围 = 厚/宽/高
+        3. 根据法线方向厚度 dims[0] 判断可见面数：
+           - dims[0] < 0.15（单面）：沿法线向里推半边长
+           - dims[0] ≥ 0.15（三面）：PCA 中心已是几何中心，不推
+        4. 边长取三轴均值，长宽比 < 1.8 校验
         """
         center = np.mean(pts, axis=0)
         centered = pts - center
@@ -264,42 +229,46 @@ class CubeDetector(Node):
             high = np.percentile(pts_local[:, i], 95)
             dims.append(high - low)
 
-        # dims = [法线方向厚度, 可见面宽度, 可见面高度]
-        # 法线方向（dims[0]）被单视角截断，不计入边长校验
-        face_w = dims[1]   # 可见面宽度
-        face_h = dims[2]   # 可见面高度
+        # dims = [法线方向厚度, 宽度, 高度]
+        thickness = dims[0]  # 法线方向（雷达视线方向）的厚度
+        ratio = max(dims) / max(min(dims), 1e-6)
 
-        # 先验：箱体是 25cm 立方体，因此可见面应接近正方形
-        # 放宽检验：至少一个可见边 > 15cm，且长宽比 < 2.5
-        face_max = max(face_w, face_h)
-        face_min = min(face_w, face_h)
+        # 边长取三个边平均值
+        edge = np.mean(dims)
 
-        if face_max < 0.15:
+        # 长宽比校验：排除明显非立方体（如 30×20×25 均值也≈25）
+        if ratio > 1.8:
+            self.get_logger().info(
+                f"  [淘汰] 聚类中心({center[0]:.3f},{center[1]:.3f},{center[2]:.3f}) "
+                f"长宽比 {ratio:.2f} > 1.8 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"
+            )
             return None
-        if face_max / max(face_min, 1e-6) > 2.5:
+
+        # 边长效验（放宽）
+        if not (self.edge_target - self.edge_tol < edge < self.edge_target + self.edge_tol):
+            self.get_logger().info(
+                f"  [淘汰] 边长 {edge:.3f}m 不在 [{self.edge_target-self.edge_tol}, "
+                f"{self.edge_target+self.edge_tol}] 范围 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"
+            )
             return None
 
         # ========== 立方体中心校正 ==========
-        # LiDAR 只能扫到前表面，PCA 的 center 是表面中心的近似。
-        # 需要沿法线（最小特征值方向）向里推半个边长得到真实中心。
-        normal = evecs[:, 0]  # 法线方向（最小特征值）
-        # 确保法线指向雷达反方向（即指向立方体内部）
-        if np.dot(normal, center) < 0:
-            normal = -normal
-
-        # 可见面两边的平均值作为立方体尺寸估计
-        est_edge = (face_w + face_h) / 2.0
-        edge = float(est_edge)
-        half_edge = est_edge / 2.0
-
-        # 立方体中心 = 表面中心 + 向里推半个边长
-        global_center = center + normal * half_edge
-
-        # 倒装雷达，地面在 z 最大处 ≈0.5。真箱体中心 z < 0.4
-        if global_center[2] > 0.40:
-            return None
-        if est_edge < 0.15:
-            return None
+        # 根据可见面数选择不同的中心估算策略
+        if thickness < 0.15:
+            # ---- 单面可见 ----
+            # LiDAR 只能扫到前表面，PCA 中心偏前。
+            # 需要沿法线向里推半个边长得到真实中心。
+            face_mode = "单面"
+            normal = evecs[:, 0]  # 法线方向（最小特征值）
+            if np.dot(normal, center) < 0:
+                normal = -normal
+            half_edge = edge / 2.0
+            global_center = center + normal * half_edge
+        else:
+            # ---- 三面可见（侧面视角） ----
+            # PCA 中心已接近几何中心，无需沿法线推入
+            face_mode = "三面"
+            global_center = center
 
         # Yaw = 最长主轴在 XY 平面的投影角度
         main_axis = evecs[:, 2]  # 最大特征值方向
@@ -311,7 +280,13 @@ class CubeDetector(Node):
             'z': float(global_center[2]),
             'edge': edge,
             'yaw': yaw,
-            'mode': '3d_obb'
+            'mode': '3d_obb',
+            # 调试字段
+            'face_mode': face_mode,
+            '_dims0': round(dims[0], 3),
+            '_dims1': round(dims[1], 3),
+            '_dims2': round(dims[2], 3),
+            '_ratio': round(ratio, 2),
         }
 
     def voxel_downsample(self, pts, size):

@@ -42,6 +42,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 from visualization_msgs.msg import Marker
 from std_msgs.msg import String
 import json
+import math
 import time
 import numpy as np
 
@@ -50,7 +51,7 @@ import numpy as np
 # arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
 # arm_y(侧向) = -radar_y(左→右)   # LiDAR 与臂肩的左右偏移
 # arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.06
+OFFSET_X = 0.03
 OFFSET_Y = 0.0
 OFFSET_Z = 0.25
 
@@ -58,6 +59,11 @@ OFFSET_Z = 0.25
 BOX_HEIGHT = 0.25                # 箱子边长 250mm
 
 HALF_BOX_HEIGHT = BOX_HEIGHT / 2  # 半高，中心→顶面补偿
+
+# ==================== 工作空间限制 ====================
+# 机械臂可达范围（与 STM32 Arm_IK 一致：hu=0.30, hl=0.32）
+ARM_WORKSPACE_RADIUS_MAX = 0.62   # hu + hl
+ARM_WORKSPACE_RADIUS_MIN = 0.02   # |hu - hl|
 
 # ==================== 稳定检测参数 ====================
 # 滑动窗口标准差法：位置跳动小于阈值时视为稳定
@@ -197,10 +203,18 @@ class ArmStateMachine(Node):
         if self.state != ArmState.IDLE:
             return
 
-        # 坐标变换（从箱子中心抬高半高到顶面，吸盘抓取点）
+        # 坐标变换
         radar_x, radar_y, radar_z = msg.pose.position.x, msg.pose.position.y, msg.pose.position.z
-        radar_z += HALF_BOX_HEIGHT  # 中心 → 顶面
         final_x, final_y, final_z, _ = self.transform_and_offset(radar_x, radar_y, radar_z)
+        final_x += HALF_BOX_HEIGHT  # 中心 → 顶面（在 arm 系 X 轴上加半高）
+
+        # 工作空间检查
+        dist = math.sqrt(final_x**2 + final_y**2 + final_z**2)
+        if dist > ARM_WORKSPACE_RADIUS_MAX or dist < ARM_WORKSPACE_RADIUS_MIN:
+            self.get_logger().error(f"坐标超出机械臂工作空间: "
+                                    f"({final_x:.3f}, {final_y:.3f}, {final_z:.3f}) "
+                                    f"dist={dist:.3f} (范围 {ARM_WORKSPACE_RADIUS_MIN}~{ARM_WORKSPACE_RADIUS_MAX})")
+            return
 
         # 加入缓存
         self.position_cache.append((final_x, final_y, final_z))
