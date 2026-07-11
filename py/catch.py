@@ -52,7 +52,7 @@ import numpy as np
 # arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
 # arm_y(侧向) = -radar_y(左→右)   # LiDAR 与臂肩的左右偏移
 # arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.0
+OFFSET_X = 0.095
 OFFSET_Y = 0.0
 OFFSET_Z = 0.25
 
