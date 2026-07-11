@@ -38,7 +38,7 @@ class CubeDetector(Node):
     def __init__(self):
         super().__init__('cube_detector')
 
-        # 订阅雷达点云（FAST-LIO2 配准后的 /unilidar/cloud）
+        # 订阅单帧点云，内部累积多帧后再检测
         self.subscription = self.create_subscription(
             PointCloud2, '/unilidar/cloud', self.cloud_callback, 10)
 
@@ -62,6 +62,10 @@ class CubeDetector(Node):
         # ============ 半径滤波参数 ============
         self.radius = 0.04
         self.min_neighbors = 5
+
+        # ============ 多帧累积参数 ============
+        self.frame_buffer = []        # 点云帧缓存（累积多帧再检测）
+        self.max_frames = 10          # 累积 10 帧（约 1 秒）后检测一次
 
         self.get_logger().info('=' * 60)
         self.get_logger().info('3D OBB 立方体检测已启动')
@@ -98,8 +102,16 @@ class CubeDetector(Node):
         """
         try:
             pts_raw = self.pc2_to_np(msg)
-            if pts_raw.shape[0] < 100:
+            if pts_raw.shape[0] < 50:
                 return
+
+            # 多帧累积：攒够 max_frames 帧再检测
+            self.frame_buffer.append(pts_raw)
+            if len(self.frame_buffer) < self.max_frames:
+                return
+            pts_raw = np.vstack(self.frame_buffer)
+            self.frame_buffer = []
+            self.get_logger().info(f"[累积] {self.max_frames}帧合并为 {pts_raw.shape[0]} 点")
 
             mask = (pts_raw[:, 0] > self.x_range[0]) & (pts_raw[:, 0] < self.x_range[1]) & \
                    (pts_raw[:, 1] > self.y_range[0]) & (pts_raw[:, 1] < self.y_range[1]) & \
@@ -109,6 +121,7 @@ class CubeDetector(Node):
             # 去地面（雷达倒装，地面在 Z 最大处）：去掉 Z 最高的 3% 分位以上点
             z_ground = np.percentile(pts[:, 2], 97)
             pts = pts[pts[:, 2] < z_ground - 0.02]
+            n_after_ground = pts.shape[0]
 
             # 半径滤波
             pts = self.remove_statistical_outliers(pts, self.radius, self.min_neighbors)
@@ -126,8 +139,8 @@ class CubeDetector(Node):
             n_noise = (labels == -1).sum()
             self.get_logger().info(
                 f"[DBG] 原始{pts_raw.shape[0]}→ROI{pts_raw[mask].shape[0]}→"
-                f"去地面{pts_raw[~((pts_raw[:,2]>z_ground-0.02) & mask)].shape[0]}→"
-                f"滤波{pts.shape[0]}点 → {n_clusters}聚类({n_noise}噪点)"
+                f"去地面{n_after_ground}→滤波{pts.shape[0]}点 → "
+                f"{n_clusters}聚类({n_noise}噪点)"
             )
 
             cubes = []
@@ -184,7 +197,7 @@ class CubeDetector(Node):
                 q.w = float(math.cos(best['yaw'] / 2.0))
                 marker.pose.orientation = q
 
-                marker.lifetime = rclpy.duration.Duration(seconds=0.1).to_msg()
+                marker.lifetime = rclpy.duration.Duration(seconds=1.5).to_msg()
 
                 self.marker_pub.publish(marker)
 
