@@ -16,7 +16,7 @@ make -j
 使用：
 
 ```bash
-./pcd_to_gridmap /path/to/scans.pcd output.pgm 0.05 50
+./pcd_to_gridmap /path/to/map.pcd output.pgm 0.05 50
 # 参数：<输入 pcd> <输出 pgm> <分辨率（米）> <地图边长（米）>
 ```
 

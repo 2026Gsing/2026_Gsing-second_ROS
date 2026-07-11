@@ -7,7 +7,7 @@
         filter_size_map: 0.1           # 缩小地图体素滤波，提升点面匹配精度
         cube_side_length: 300.0        # 局部地图立方体边长（米）：维护的局部地图范围，可根据场景增大
         runtime_pos_log_enable: false  # 运行时位置日志开关：是否记录实时位姿日志
-        map_file_path: "../map/scans.pcd"  # 地图保存路径（相对 fastlio2_v2/）
+        map_file_path: "../map/map.pcd"  # 地图保存路径（相对 fastlio2_v2/）
 
         # ================== Sensor Topics ==================
         common:

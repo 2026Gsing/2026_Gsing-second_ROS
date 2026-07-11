@@ -1,4 +1,4 @@
-image: scans.pcd.pgm
+image: map.pcd.pgm
 mode: trinary
 resolution: 0.01
 origin: [-20.5, -5.27, 0]

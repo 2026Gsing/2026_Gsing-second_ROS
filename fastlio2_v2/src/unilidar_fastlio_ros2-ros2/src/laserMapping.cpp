@@ -1243,7 +1243,7 @@ int main(int argc, char** argv)
     /* 2. pcd save will largely influence the real-time performences **/
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
-        string file_name = string("scans.pcd");
+        string file_name = string("map.pcd");
         string all_points_dir(string(string(ROOT_DIR) + "PCD/") + file_name);
         PointCloudXYZI::Ptr cloud_to_save(new PointCloudXYZI(*pcl_wait_save));
 

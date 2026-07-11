@@ -157,7 +157,7 @@ ros2 launch unitree_lidar_ros2 launch.py
 ros2 run fast_lio fastlio_mapping --ros-args --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml
 
 # 终端 C: 全局定位
-ros2 launch fast_lio_localization 1.launch.py map:=path/to/scans.pcd config_file:=unilidar_l2.yaml rviz:=true
+ros2 launch fast_lio_localization 1.launch.py map:=path/to/map.pcd config_file:=unilidar_l2.yaml rviz:=true
 # → 在 RViz 中点击 "2D Pose Estimate" 初始化
 
 # 终端 D: Nav2 导航 + 串口桥 + 视觉任务 (一键)

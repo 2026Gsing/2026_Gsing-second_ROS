@@ -47,12 +47,17 @@ import numpy as np
 
 # ==================== 坐标偏移参数 ====================
 # 雷达→机械臂坐标系的物理安装偏移补偿（需标定）
-# arm_x(高度) = radar_z(高)     + OFFSET_X   # LiDAR 与臂肩的高度差
-# arm_y(侧向) = -radar_y(左→右) + OFFSET_Y   # LiDAR 与臂肩的左右偏移
-# arm_z(前向) =  radar_x(前)    + OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.0
+# arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
+# arm_y(侧向) = -radar_y(左→右)   # LiDAR 与臂肩的左右偏移
+# arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
+OFFSET_X = 0.06
 OFFSET_Y = 0.0
-OFFSET_Z = 0.0
+OFFSET_Z = 0.25
+
+# ==================== 箱子尺寸参数 ====================
+BOX_HEIGHT = 0.25                # 箱子边长 250mm
+
+HALF_BOX_HEIGHT = BOX_HEIGHT / 2  # 半高，中心→顶面补偿
 
 # ==================== 稳定检测参数 ====================
 # 滑动窗口标准差法：位置跳动小于阈值时视为稳定
@@ -60,8 +65,8 @@ OFFSET_Z = 0.0
 # 默认 0.08 × 1.0 = 0.08m = 8cm 标准差内视为稳定
 STABLE_THRESHOLD_XY = 0.08    # XY 标准差阈值 (m)
 STD_FACTOR = 1                 # 系数调节
-STABLE_COUNT_REQUIRED = 3      # 需要连续多少帧稳定
-CACHE_MAX_SIZE = 10            # 位置缓存最大帧数
+STABLE_COUNT_REQUIRED = 15     # 需要连续多少帧稳定
+CACHE_MAX_SIZE = 30            # 位置缓存最大帧数
 
 # ==================== 自动任务事件常量 ====================
 AUTO_CMD_START = 1
@@ -133,13 +138,13 @@ class ArmStateMachine(Node):
           z = 前向 (向前为正)
 
         变换逻辑：
-          arm_x (高度) = radar_z (高度)       + OFFSET_UP
-          arm_y (侧向) = -radar_y (左→反转为右) + OFFSET_RIGHT
-          arm_z (前向) = radar_x (前进)        + OFFSET_FWD
+          arm_x (高度) = -radar_z (高度)     - OFFSET_X
+          arm_y (侧向) = -radar_y (左→反转为右)
+          arm_z (前向) = -radar_x (前进)     - OFFSET_Z
         """
-        final_x = radar_z + OFFSET_X      # radar_z(高度) → arm_x(高度)
-        final_y = -radar_y + OFFSET_Y     # radar_y(左) → -arm_y(右)
-        final_z = radar_x + OFFSET_Z      # radar_x(前进) → arm_z(前向)
+        final_x = -radar_z - OFFSET_X      # radar_z(高度) → arm_x(高度)
+        final_y = -radar_y                  # radar_y(左) → -arm_y(右)，无偏移
+        final_z = -radar_x - OFFSET_Z       # radar_x(前进) → arm_z(前向)
         return final_x, final_y, final_z, (radar_x, radar_y, radar_z)
 
     def find_stable_points(self, positions, threshold_xy, required_count):
@@ -192,8 +197,9 @@ class ArmStateMachine(Node):
         if self.state != ArmState.IDLE:
             return
 
-        # 坐标变换
+        # 坐标变换（从箱子中心抬高半高到顶面，吸盘抓取点）
         radar_x, radar_y, radar_z = msg.pose.position.x, msg.pose.position.y, msg.pose.position.z
+        radar_z += HALF_BOX_HEIGHT  # 中心 → 顶面
         final_x, final_y, final_z, _ = self.transform_and_offset(radar_x, radar_y, radar_z)
 
         # 加入缓存

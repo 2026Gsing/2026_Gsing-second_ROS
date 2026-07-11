@@ -368,6 +368,10 @@ class MoveTestNode(Node):
         print("  ║  ── 运动 ──                           ║")
         print("  ║  1 ║ 前进 0.2                         ║")
         print("  ║  2 ║ 后退 0.2                         ║")
+        print("  ║  3 ║ 前进 0.4                         ║")
+        print("  ║  4 ║ 后退 0.4                         ║")
+        print("  ║  5 ║ 前进 0.6                         ║")
+        print("  ║  6 ║ 后退 0.6                         ║")
         print("  ║  s ║ 停止                             ║")
         print("  ║  直接输 vx wz → 自定义速度            ║")
         print("  ╚═══════════════════════════════════════╝")
@@ -397,6 +401,18 @@ class MoveTestNode(Node):
             elif raw == "2":
                 self.open_gate()
                 self.send_velocity(-0.20, 0.0)
+            elif raw == "3":
+                self.open_gate()
+                self.send_velocity(0.40, 0.0)
+            elif raw == "4":
+                self.open_gate()
+                self.send_velocity(-0.40, 0.0)
+            elif raw == "5":
+                self.open_gate()
+                self.send_velocity(0.60, 0.0)
+            elif raw == "6":
+                self.open_gate()
+                self.send_velocity(-0.60, 0.0)
 
             # --- 自定义速度: 输 vx 或 vx wz (空格分隔) ---
             else:

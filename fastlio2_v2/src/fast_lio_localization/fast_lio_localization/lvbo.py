@@ -3,7 +3,7 @@ import numpy as np
 
 # 1. 读取点云文件
 # 如果PCD文件是二进制格式，使用 read_point_cloud 会自动识别
-pcd = o3d.io.read_point_cloud("scans.pcd")  # 替换为你的文件名，可用 fastlio2_v2/PCD/scans.pcd
+pcd = o3d.io.read_point_cloud("map.pcd")  # 替换为你的文件名，可用 fastlio2_v2/PCD/map.pcd
 print(f"原始点云数量: {len(pcd.points)}")
 
 # 2. 执行统计滤波

@@ -239,7 +239,7 @@ ros2 launch pcd2pgm pcd2pgm_launch.py
 cd fastlio2_v2
 source install/setup.bash
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd \
+  map:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd \
   config_file:=unilidar_l2.yaml \
   rviz:=true
 ```

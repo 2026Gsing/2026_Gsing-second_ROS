@@ -114,16 +114,16 @@ ros2 launch pcd2pgm pcd2pgm_launch.py
 
 ```bash
 # 查看 PCD 点云
-pcl_viewer /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/scans.pcd
+pcl_viewer /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/map.pcd
 ```
 
-> ⚠️ **注意：** 当前 `map/` 目录下缺少 `scans.pcd`，只有栅格地图（`pgm_map.pgm/.yaml`）。需先运行建图流程生成。也可以先直接用已有栅格地图跑定位。
+> ⚠️ **注意：** 当前 `map/` 目录下缺少 `map.pcd`，只有栅格地图（`pgm_map.pgm/.yaml`）。需先运行建图流程生成。也可以先直接用已有栅格地图跑定位。
 
 ---
 
 ## 5. 比赛定位导航流程
 
-> 前提：已有建好的 `map/scans.pcd`（点云地图）和 `map/pgm_map.yaml`（栅格地图）。
+> 前提：已有建好的 `map/map.pcd`（点云地图）和 `map/pgm_map.yaml`（栅格地图）。
 
 ### 终端 1 — LiDAR 驱动
 
@@ -143,7 +143,7 @@ source /opt/ros/jazzy/setup.bash && source install/setup.bash
 export AMENT_PREFIX_PATH="$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH"
 export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/scans.pcd \
+  map:=/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/map.pcd \
   config_file:=unilidar_l2.yaml rviz:=true \
   map_voxel_size:=0.01 scan_voxel_size:=0.03 \
   freq_localization:=2.0 localization_threshold:=0.9

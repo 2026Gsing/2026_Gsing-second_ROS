@@ -101,7 +101,7 @@ ros2 launch pcd2pgm pcd2pgm_launch.py
 
 ```bash
 # 查看 PCD 点云
-pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd
+pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/PCD1.pcd
 ```
 
 ---
@@ -128,7 +128,7 @@ source /opt/ros/jazzy/setup.bash && source install/setup.bash
 export AMENT_PREFIX_PATH="$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH"
 export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd \
+  map:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd \
   config_file:=unilidar_l2.yaml rviz:=true \
   map_voxel_size:=0.01 scan_voxel_size:=0.03 \
   freq_localization:=2.0 localization_threshold:=0.9

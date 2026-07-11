@@ -16,7 +16,7 @@ make -j
 使用：
 
 ```bash
-./pcd_to_octomap /path/to/scans.pcd output.bt 0.05
+./pcd_to_octomap /path/to/map.pcd output.bt 0.05
 # 参数：<输入 pcd> <输出 .bt> <分辨率（米）>
 ```
 

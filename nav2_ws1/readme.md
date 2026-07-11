@@ -16,7 +16,7 @@ src/dog_nav2_bringup/
 │   └── nav2_fastlio_static_map_params.yaml   Nav2 参数（静态地图）
 │
 ├── maps/
-│   ├── scans.pcd.yaml / scans.pcd.pgm        建图导航地图
+│   ├── map.pcd.yaml / map.pcd.pgm        建图导航地图
 │   └── scans_new.pgm / scans_new.yaml        更新后的地图
 │
 ├── scripts/
