@@ -46,9 +46,9 @@ class CubeDetector(Node):
         self.marker_pub = self.create_publisher(Marker, '/detected_cube', 10)
 
         # ============ 点云预处理参数 ============
-        self.x_range = (0, 0.5)    # X 范围（雷达前方 0~80cm）
+        self.x_range = (0, 0.35)    # X 范围（雷达前方 0~80cm）
         self.y_range = (-0.5, 0.5)    # Y 范围（左右 ±80cm）
-        self.z_range = (0, 0.6)       # Z 范围（高度 0~60cm）
+        self.z_range = (0, 0.4)       # Z 范围（高度 0~60cm）
         self.voxel_size = 0.008       # 体素下采样大小（8mm）
 
         # ============ DBSCAN 聚类参数 ============
@@ -151,7 +151,7 @@ class CubeDetector(Node):
 
                 cube_info = self.analyze_cluster(cluster_pts)
 
-                if cube_info:
+                if cube_info and abs(cube_info['y']) < 0.40:
                     cubes.append(cube_info)
 
             if cubes:
@@ -167,7 +167,8 @@ class CubeDetector(Node):
                     )
 
                 # ========== 选择最接近25cm的立方体发布 ==========
-                best = min(cubes, key=lambda x: abs(x['edge'] - self.edge_target))
+                # 优先选边长最接近25cm的，同等条件下选离中线最近（Y绝对值最小）的
+                best = min(cubes, key=lambda x: abs(x['edge'] - self.edge_target) + abs(x['y']) * 0.05)
 
                 marker = Marker()
                 marker.header.frame_id = "unilidar_lidar"
@@ -249,8 +250,8 @@ class CubeDetector(Node):
         # 边长取三个边平均值
         edge = np.mean(dims)
 
-        # 长宽比校验：排除明显非立方体（如 30×20×25 均值也≈25）
-        if ratio > 1.8:
+        # 长宽比校验：立方体真实比 = 1.0，允许被遮挡截断到 2.2
+        if ratio > 3.0:
             self.get_logger().info(
                 f"  [淘汰] 聚类中心({center[0]:.3f},{center[1]:.3f},{center[2]:.3f}) "
                 f"长宽比 {ratio:.2f} > 1.8 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"

@@ -36,6 +36,8 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
   python3 py/catch.py
 """
 
+import os
+import sys
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
@@ -51,7 +53,7 @@ import numpy as np
 # arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
 # arm_y(侧向) = -radar_y(左→右)   # LiDAR 与臂肩的左右偏移
 # arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.03
+OFFSET_X = 0.0
 OFFSET_Y = 0.0
 OFFSET_Z = 0.25
 
@@ -71,8 +73,8 @@ ARM_WORKSPACE_RADIUS_MIN = 0.02   # |hu - hl|
 # 默认 0.08 × 1.0 = 0.08m = 8cm 标准差内视为稳定
 STABLE_THRESHOLD_XY = 0.08    # XY 标准差阈值 (m)
 STD_FACTOR = 1                 # 系数调节
-STABLE_COUNT_REQUIRED = 15     # 需要连续多少帧稳定
-CACHE_MAX_SIZE = 30            # 位置缓存最大帧数
+STABLE_COUNT_REQUIRED = 3     # 需要连续多少帧稳定
+CACHE_MAX_SIZE = 10            # 位置缓存最大帧数
 
 # ==================== 自动任务事件常量 ====================
 AUTO_CMD_START = 1
@@ -97,6 +99,14 @@ class ArmStateMachine(Node):
 
     def __init__(self):
         super().__init__('arm_state_machine')
+
+        # 检查串口设备是否存在（串口桥 cmd_vel_chassis_serial.py 依赖此设备）
+        SERIAL_DEVICE = "/dev/ttyACM0"
+        if not os.path.exists(SERIAL_DEVICE):
+            self.get_logger().error(
+                f"串口设备 {SERIAL_DEVICE} 不存在！请检查串口桥是否已连接 (sudo chmod 666 {SERIAL_DEVICE})"
+            )
+            sys.exit(1)
 
         # ============ 发布器（通过串口桥转发） ============
         self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)
