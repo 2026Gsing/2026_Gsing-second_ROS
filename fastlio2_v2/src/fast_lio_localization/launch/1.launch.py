@@ -6,6 +6,9 @@
 
 import os
 from ament_index_python.packages import get_package_share_directory
+
+_LAUNCH_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.normpath(os.path.join(_LAUNCH_DIR, "../../../../"))
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
@@ -34,7 +37,7 @@ def generate_launch_description():
     
     # 检查默认文件是否存在
     if not os.path.exists(default_map_path):
-        default_map_path = "/home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd"
+        default_map_path = os.path.join(_PROJECT_ROOT, "map/scans.pcd")
     
     # 声明启动参数
     declare_use_sim_time_cmd = DeclareLaunchArgument(

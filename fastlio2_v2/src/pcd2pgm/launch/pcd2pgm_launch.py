@@ -15,6 +15,8 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+
+_LAUNCH_DIR = os.path.dirname(os.path.abspath(__file__))
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
@@ -29,7 +31,7 @@ from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 from launch.substitutions import LaunchConfiguration
 
-MAP_DIR = "/home/hyper/program/2026_Gsing-second_ROS/map"
+MAP_DIR = os.path.normpath(os.path.join(_LAUNCH_DIR, "../../../../map"))
 
 
 def generate_launch_description():

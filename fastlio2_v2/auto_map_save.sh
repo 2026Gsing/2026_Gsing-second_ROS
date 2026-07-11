@@ -9,7 +9,7 @@ echo "建图已启动，仅保留 x>0.0 的点云。"
 echo "按 Enter 保存地图并退出。"
 
 # 后台启动 X 方向过滤器（只保留 x>0 的点）
-python3 /home/hyper/program/2026_Gsing-second_ROS/py/pointcloud_x_filter.py &
+python3 ../py/pointcloud_x_filter.py &
 FILTER_PID=$!
 sleep 1
 

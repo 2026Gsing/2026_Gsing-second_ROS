@@ -9,7 +9,7 @@ def generate_launch_description():
         executable='map_server',
         name='map_server',
         output='screen',
-        parameters=[{'yaml_filename': '/home/zhanghangming/fastlio2_v2/tools/pcd_to_gridmap/build/output.yaml'}]
+        parameters=[{'yaml_filename': ''}],  # 由 launch 参数 map:= 传入
     )
 
     # 2. 定义生命周期管理器节点

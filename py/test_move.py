@@ -33,6 +33,8 @@ import threading
 import time
 from enum import IntEnum
 
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -98,25 +100,9 @@ GAIT_NAMES = {0: "TROT(小跑)", 1: "WALK(行走)", 2: "BOUND(跳跃)", 3: "PRON
 # (名称, vx, wz, 描述)
 TestStep = [
     ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD_SLOW",   0.40, 0.0,  "慢速前进 (vx=0.40)"),
+    ("FORWARD",    0.20, 0.0,  "前进 (vx=0.20)"),
     ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD_FAST",   0.80, 0.0,  "快速前进 (vx=0.80)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("BACKWARD_SLOW", -0.40, 0.0,  "慢速后退 (vx=-0.40)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("BACKWARD_FAST", -0.80, 0.0,  "快速后退 (vx=-0.80)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_LEFT_S",    0.40,  0.5,  "左弧慢 (vx=0.4, wz=+0.5)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_RIGHT_S",   0.40, -0.5,  "右弧慢 (vx=0.4, wz=-0.5)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_LEFT_M",    0.40,  1.0,  "左弧中 (vx=0.4, wz=+1.0)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_RIGHT_M",   0.40, -1.0,  "右弧中 (vx=0.4, wz=-1.0)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_LEFT_F",    0.40,  2.0,  "左弧快 (vx=0.4, wz=+2.0)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("ARC_RIGHT_F",   0.40, -2.0,  "右弧快 (vx=0.4, wz=-2.0)"),
+    ("BACKWARD",  -0.20, 0.0,  "后退 (vx=-0.20)"),
     ("STOP",       0.0,   0.0,  "停止"),
 ]
 
@@ -171,7 +157,7 @@ class MoveTestNode(Node):
             self.get_logger().info("  按 Ctrl+C 中断测试")
         else:
             self.get_logger().info("  交互模式 — 输入命令:")
-            self.get_logger().info("    1~4  → 速度预设 (自动开门)")
+            self.get_logger().info("    1~2  → 速度预设 (自动开门)")
             self.get_logger().info("    s    → 停止")
             self.get_logger().info("    直接输 vx wz → 自定义速度 (自动开门)")
         self.get_logger().info("")
@@ -181,7 +167,7 @@ class MoveTestNode(Node):
     # ================================================================
     def _try_serial_port(self, port: str) -> subprocess.Popen | None:
         """尝试在指定串口上启动串口桥，成功返回进程，失败返回 None"""
-        nav2_ws = "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1"
+        nav2_ws = os.path.join(_PROJECT_ROOT, "nav2_ws1")
         setup_script = os.path.join(nav2_ws, "install/setup.bash")
         launch_file = os.path.join(
             nav2_ws, "src/dog_nav2_bringup",
@@ -217,7 +203,7 @@ class MoveTestNode(Node):
 
     def _launch_serial_bridge(self):
         """依次尝试 ACM0 → ACM1，找到可用串口即启动串口桥"""
-        nav2_ws = "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1"
+        nav2_ws = os.path.join(_PROJECT_ROOT, "nav2_ws1")
         launch_file = os.path.join(
             nav2_ws, "src/dog_nav2_bringup",
             "launch/chassis_serial_bridge.launch.py"
@@ -376,10 +362,8 @@ class MoveTestNode(Node):
         print("  ║        运动测试 — 菜单                ║")
         print("  ╠═══════════════════════════════════════╣")
         print("  ║  ── 运动 ──                           ║")
-        print("  ║  1 ║ 前进 0.4                         ║")
-        print("  ║  2 ║ 后退 0.4                         ║")
-        print("  ║  3 ║ 左弧 1.0                         ║")
-        print("  ║  4 ║ 右弧 1.0                         ║")
+        print("  ║  1 ║ 前进 0.2                         ║")
+        print("  ║  2 ║ 后退 0.2                         ║")
         print("  ║  s ║ 停止                             ║")
         print("  ║  直接输 vx wz → 自定义速度            ║")
         print("  ╚═══════════════════════════════════════╝")
@@ -405,16 +389,10 @@ class MoveTestNode(Node):
             # --- 数字命令 ---
             elif raw == "1":
                 self.open_gate()
-                self.send_velocity(0.40, 0.0)
+                self.send_velocity(0.20, 0.0)
             elif raw == "2":
                 self.open_gate()
-                self.send_velocity(-0.40, 0.0)
-            elif raw == "3":
-                self.open_gate()
-                self.send_velocity(0.40, 1.0)
-            elif raw == "4":
-                self.open_gate()
-                self.send_velocity(0.40, -1.0)
+                self.send_velocity(-0.20, 0.0)
 
             # --- 自定义速度: 输 vx 或 vx wz (空格分隔) ---
             else:

@@ -28,6 +28,9 @@ import os
 import sys
 
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
+
+_LAUNCH_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.normpath(os.path.join(_LAUNCH_DIR, "../../../../"))
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction
 from launch.substitutions import LaunchConfiguration
@@ -64,7 +67,7 @@ def generate_launch_description():
     )
 
     # 默认使用 pcd2pgm 生成的 2D 栅格地图
-    pcd2pgm_map_dir = "/home/hyper/program/2026_Gsing-second_ROS/map"
+    pcd2pgm_map_dir = os.path.join(_PROJECT_ROOT, "map")
     default_map_yaml = os.path.join(pcd2pgm_map_dir, 'pgm_map.yaml')
     declare_map = DeclareLaunchArgument(
         'map',
