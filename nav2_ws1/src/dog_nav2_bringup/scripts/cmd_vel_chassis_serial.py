@@ -150,7 +150,12 @@ class CmdVelChassisSerial(Node):
         self._last_cmd_log_time = 0.0
 
         # ============ 打开串口 ============
-        self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.02)
+        try:
+            self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.02)
+        except serial.SerialException as e:
+            self.get_logger().error(f"串口 {port} 打开失败: {e}")
+            self.get_logger().error("请检查: 1) STM32 是否已连接  2) sudo chmod 666 {port}")
+            raise
         self.get_logger().info(
             f"Opened {port} @ {baud}, cmd_vel={topic}, send={self._send_rate}Hz"
         )
@@ -249,9 +254,15 @@ class CmdVelChassisSerial(Node):
             with self._lock:
                 self._ser.write(pkt)
                 self._ser.flush()
-            self.get_logger().info(
-                f"[ARM] 发送 0x12: x={x:.3f} y={y:.3f} z={z:.3f}"
-            )
+            # 节流日志：坐标变化或 5s 没打印才输出
+            now = time.monotonic()
+            if (x, y, z) != getattr(self, '_last_arm_log_xyz', None) or \
+               (now - getattr(self, '_last_arm_log_time', 0.0)) >= 5.0:
+                self._last_arm_log_xyz = (x, y, z)
+                self._last_arm_log_time = now
+                self.get_logger().info(
+                    f"[ARM] 发送 0x12: x={x:.3f} y={y:.3f} z={z:.3f}"
+                )
         except Exception as e:
             self.get_logger().error(f"[ARM] 解析/发送失败: {e}")
 
@@ -397,16 +408,17 @@ class CmdVelChassisSerial(Node):
                     state = ROBOT_STATE_IDLE
                     source = "stop"
 
+            transition = source != self._last_sent_source
             should_log = False
-            if source != self._last_sent_source:
+            if transition:
                 should_log = True
                 self._last_sent_source = source
-            elif (now - self._last_send_log_time) >= self._log_period:
+            elif (now - self._last_send_log_time) >= self._log_period and abs(vx) + abs(wz) > 1e-6:
                 should_log = True
             if should_log:
                 self._last_send_log_time = now
 
-        if should_log:
+        if should_log and (abs(vx) + abs(wz) > 1e-6 or transition):
             self.get_logger().info(f"send source={source} vx={vx:.3f} wz={wz:.3f}")
         pkt = self._build_packet(vx, wz, state)
         try:
