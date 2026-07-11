@@ -189,6 +189,10 @@ class MoveTestNode(Node):
             f"'"
         )
 
+        if not os.path.exists(port):
+            self.get_logger().warn(f"  ⚠ {port} 设备不存在")
+            return None
+
         self.get_logger().info(f"  → 尝试 {port} ...")
         proc = subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
