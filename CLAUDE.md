@@ -18,7 +18,7 @@ ROS2 Jazzy robot navigation + vision-based auto-task system for ROBOCON 2026. In
 **Transform** (catch.py `transform_and_offset`):
 ```
 arm_x = -radar_z - OFFSET_X     + HALF_BOX_HEIGHT
-arm_y = -radar_y
+arm_y = radar_y
 arm_z = -radar_x - OFFSET_Z
 ```
 

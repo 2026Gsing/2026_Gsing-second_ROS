@@ -22,7 +22,7 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
   雷达系 (unilidar_lidar): x=前进, y=左, z=上
   机械臂系 (STM32 arm.c): x=高度(向上), y=侧向(向右), z=前向(向前)
   变换: final_x =  radar_z + offset_x
-        final_y = -radar_y + offset_y
+        final_y =  radar_y + offset_y
         final_z =  radar_x + offset_z
 
 串口协议（由 cmd_vel_chassis_serial.py 转发）：
@@ -50,9 +50,9 @@ import numpy as np
 # ==================== 坐标偏移参数 ====================
 # 雷达→机械臂坐标系的物理安装偏移补偿（需标定）
 # arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
-# arm_y(侧向) = -radar_y(左→右)   # LiDAR 与臂肩的左右偏移
+# arm_y(侧向) = radar_y
 # arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.095
+OFFSET_X = 0.125
 OFFSET_Y = 0.0
 OFFSET_Z = 0.25
 
@@ -154,11 +154,11 @@ class ArmStateMachine(Node):
 
         变换逻辑：
           arm_x (高度) = -radar_z (高度)     - OFFSET_X
-          arm_y (侧向) = -radar_y (左→反转为右)
+          arm_y (侧向) =  radar_y (左→不变)
           arm_z (前向) = -radar_x (前进)     - OFFSET_Z
         """
         final_x = -radar_z - OFFSET_X      # radar_z(高度) → arm_x(高度)
-        final_y = -radar_y                  # radar_y(左) → -arm_y(右)，无偏移
+        final_y = radar_y                       # radar_y(左) → arm_y(左)，无偏移
         final_z = -radar_x - OFFSET_Z       # radar_x(前进) → arm_z(前向)
         return final_x, final_y, final_z, (radar_x, radar_y, radar_z)
 
