@@ -21,6 +21,7 @@ _PROCESSES = []
 # ============ 开关 ============
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
+SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
 
 
 def launch(cmd, cwd=None, name=""):
@@ -123,15 +124,18 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         name="Nav2",
     )
 
-    # 串口桥
-    launch(
-        f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
-        f"  serial_port:=/dev/ttyACM0 baud_rate:=115200 "
-        f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
-        f"  active_state:=1 idle_state:=0",
-        name="串口桥",
-    )
+    # 串口桥（串口设备不存在则跳过，避免进程崩溃）
+    if os.path.exists(SERIAL_PORT):
+        launch(
+            f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
+            f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
+            f"  serial_port:={SERIAL_PORT} baud_rate:=115200 "
+            f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
+            f"  active_state:=1 idle_state:=0",
+            name="串口桥",
+        )
+    else:
+        print(f"  [串口桥] {SERIAL_PORT} 不存在，跳过（插上 STM32 后手动启动）")
 
     # 注册清理
     _register_cleanup()

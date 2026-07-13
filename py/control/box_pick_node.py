@@ -26,6 +26,7 @@ from launch_utils import start_prerequisites, cleanup_all
 from catch import transform_and_offset, validate_arm_target, stm32_will_accept
 import math
 import signal
+import subprocess
 import sys
 import time
 import threading
@@ -83,7 +84,7 @@ class BoxPickNode(Node):
         self._print_help()
 
     def _init_icp_pose(self):
-        """发布 /initialpose 自动初始化 ICP（原点, X正向, 替代手动点 RViz）"""
+        """发布 /initialpose 自动初始化 ICP（原点, X正向）"""
         init_script = str(_HERE / "init_pose.py")
         try:
             subprocess.run(
@@ -513,7 +514,13 @@ class BoxPickNode(Node):
 # ================================================================
 # 入口
 # ================================================================
+def _sigint_handler(sig, frame):
+    """Ctrl+C → 关闭 rclpy，让 spin 返回"""
+    rclpy.shutdown()
+
+
 def main():
+    signal.signal(signal.SIGINT, _sigint_handler)
     rclpy.init()
     node = BoxPickNode()
 

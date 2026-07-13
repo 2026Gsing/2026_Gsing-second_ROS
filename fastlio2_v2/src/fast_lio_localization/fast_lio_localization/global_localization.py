@@ -173,7 +173,11 @@ class FastLIOLocalization(Node):
         3. 发布子地图用于可视化
         4. 返回裁剪后的 Open3D 点云用于 ICP 配准
         """
-        T_odom_to_base_link = self.pose_to_mat(self.cur_odom.pose.pose)
+        if self.cur_odom is not None:
+            T_odom_to_base_link = self.pose_to_mat(self.cur_odom.pose.pose)
+        else:
+            T_odom_to_base_link = np.eye(4)
+            self.get_logger().warn("No odometry yet, skip odom transform in crop")
         T_map_to_base_link = np.matmul(pose_estimation, T_odom_to_base_link)
         T_base_link_to_map = self.inverse_se3(T_map_to_base_link)
 
