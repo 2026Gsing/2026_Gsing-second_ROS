@@ -51,6 +51,16 @@ def generate_launch_description():
                 description="Send rate (Hz), keep >=10 for 100ms watchdog",
             ),
             DeclareLaunchArgument(
+                "leg_debug_csv_path",
+                default_value="",
+                description="Optional CSV path for STM32 leg support debug frames",
+            ),
+            DeclareLaunchArgument(
+                "leg_debug_log_period_sec",
+                default_value="1.0",
+                description="Console print interval for decoded leg debug snapshots",
+            ),
+            DeclareLaunchArgument(
                 "active_state",
                 default_value="1",
                 description="State byte when cmd_vel is fresh (STM32 active control mode)",
@@ -80,6 +90,13 @@ def generate_launch_description():
                     {
                         "send_rate_hz": ParameterValue(
                             LaunchConfiguration("send_rate_hz"), value_type=float
+                        )
+                    },
+                    {"leg_debug_csv_path": LaunchConfiguration("leg_debug_csv_path")},
+                    {
+                        "leg_debug_log_period_sec": ParameterValue(
+                            LaunchConfiguration("leg_debug_log_period_sec"),
+                            value_type=float,
                         )
                     },
                     {
