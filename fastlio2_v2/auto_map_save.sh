@@ -25,7 +25,7 @@ echo "本次保存目标: ${SAVE_PATH}"
 echo "按 Enter 保存地图并退出。"
 
 # 后台启动 X 方向过滤器（只保留 x>0 的点）
-python3 ../py/pointcloud_x_filter.py &
+python3 ../py/tools/pointcloud_x_filter.py &
 FILTER_PID=$!
 sleep 1
 

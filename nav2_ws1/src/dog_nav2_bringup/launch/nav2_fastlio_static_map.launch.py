@@ -33,6 +33,7 @@ _LAUNCH_DIR = os.path.dirname(os.path.abspath(__file__))
 _PROJECT_ROOT = os.path.normpath(os.path.join(_LAUNCH_DIR, "../../../../"))
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, TimerAction
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
@@ -42,6 +43,7 @@ def generate_launch_description():
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
     map_yaml = LaunchConfiguration('map')
+    start_rviz = LaunchConfiguration('start_rviz')
 
     bringup_share = get_package_share_directory('dog_nav2_bringup')
 
@@ -73,6 +75,12 @@ def generate_launch_description():
         'map',
         default_value=default_map_yaml,
         description='Full path to the map yaml to load (default: pcd2pgm output)'
+    )
+
+    declare_start_rviz = DeclareLaunchArgument(
+        'start_rviz',
+        default_value='true',
+        description='Whether to start RViz2 visualization'
     )
 
     # ============ TF 树静态变换 ============
@@ -205,6 +213,7 @@ def generate_launch_description():
         name='nav2_rviz2',
         output='screen',
         arguments=['-d', rviz_config],
+        condition=IfCondition(start_rviz),
     )
 
     # ============ 辅助脚本 ============
@@ -235,6 +244,7 @@ def generate_launch_description():
     ld.add_action(declare_autostart)
     ld.add_action(declare_params_file)
     ld.add_action(declare_map)
+    ld.add_action(declare_start_rviz)
 
     # TF 变换先启动（camera_init 为中心，odom 作为别名用于 local costmap）
     ld.add_action(static_tf_caminit_odom)

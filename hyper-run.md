@@ -80,7 +80,7 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
 ros2 launch pcd2pgm pcd2pgm_launch.py \
-  pcd_file:=/home/hyper/program/2026_Gsing-second_ROS/map/PCD13.pcd
+  pcd_file:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd
 # 输出: map/map.yaml + map/map.pgm（文件名与 PCD 相同，目录与 PCD 相同）
 ```
 

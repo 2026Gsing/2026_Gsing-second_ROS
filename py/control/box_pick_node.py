@@ -11,14 +11,8 @@ box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
   4. 完成后回到 IDLE，可开始下一箱
   5. 也可手动输入 arrived（自动检测未生效时备用）
 
-使用：
+启动（自动拉起 LiDAR、ICP、Nav2、串口桥等前置节点）：
   python3 py/control/box_pick_node.py
-
-前提（其他终端已运行）：
-  - Terminal 1: LiDAR 驱动
-  - Terminal 2: FAST-LIO2 + ICP 定位（已初始化）
-  - Terminal 3: Nav2 导航
-  - Terminal 4: 串口桥
 """
 
 import rclpy
@@ -28,15 +22,15 @@ from nav_msgs.msg import Odometry
 from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateToPose
 from arrival_detector import quaternion_to_yaw
-import subprocess
-import signal
+from launch_utils import start_prerequisites, cleanup_all
 import math
+import signal
 import sys
 import time
 import threading
 from pathlib import Path
 
-_HERE = Path(__file__).resolve().parent          # py/utils/
+_HERE = Path(__file__).resolve().parent          # py/control/
 
 # ============ 自动到达检测参数 ============
 VEL_STOP_THRESHOLD = 0.03     # 低于此速度视为停止 (m/s)
@@ -76,6 +70,8 @@ class BoxPickNode(Node):
         self._nav_goal_handle = None
         self._nav_succeeded = False
 
+        # 自动启动前置 ROS 节点
+        start_prerequisites()
         self.get_logger().info("BoxPickNode 已启动")
         self._print_help()
 

@@ -28,6 +28,8 @@ import signal
 import atexit
 from pathlib import Path
 
+from launch_utils import launch, cleanup_all
+
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -789,32 +791,6 @@ class VisionAutoTaskNode(Node):
 # 一键启动 —— 拉起所有 ROS 节点 + 本状态机
 # ================================================================
 
-_PROCS = []  # 所有子进程列表
-
-
-def _launch(cmd, cwd=None, name=""):
-    """启动一个后台进程"""
-    env = os.environ.copy()
-    env["RMW_IMPLEMENTATION"] = "rmw_cyclonedds_cpp"
-    p = subprocess.Popen(
-        ["bash", "-c", cmd], cwd=cwd, env=env, preexec_fn=os.setsid,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-    )
-    _PROCS.append(p)
-    print(f"  [{name}] PID={p.pid}")
-    return p
-
-
-def _cleanup():
-    """清理所有子进程"""
-    for p in _PROCS:
-        try:
-            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
-        except Exception:
-            pass
-    _PROCS.clear()
-
-
 def _prompt_config():
     """赛前配置交互"""
     print()
@@ -862,7 +838,7 @@ def main(args=None):
     nav2_dir = str(_PROJECT / "nav2_ws1")
     map_dir = _PROJECT / "map"
     pcd_map = str(map_dir / "map.pcd")
-    pgm_map = str(map_dir / "pgm_map.yaml")
+    pgm_map = str(map_dir / "map.yaml")
 
     ros_setup = "source /opt/ros/jazzy/setup.bash"
 
@@ -870,15 +846,15 @@ def main(args=None):
     print("║  启动比赛全流程 ROS 节点                      ║")
     print("╚══════════════════════════════════════════════╝")
 
-    # 终端 1: LiDAR 驱动
-    _launch(
+    # LiDAR 驱动
+    launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch unitree_lidar_ros2 launch.py",
         name="LiDAR",
     )
 
-    # 终端 2: ICP 定位 (FAST-LIO2 + transform_fusion)
-    _launch(
+    # ICP 定位 (FAST-LIO2 + transform_fusion)
+    launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
         f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
@@ -889,23 +865,23 @@ def main(args=None):
         name="ICP",
     )
 
-    # 终端 2b: odometry→TF 桥
+    # odometry→TF 桥
     odom_bin = f"{fastlio_dir}/build/fast_lio/odometry_to_tf"
     if os.path.isfile(odom_bin):
-        _launch(f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && {odom_bin}", name="TF桥")
+        launch(f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && {odom_bin}", name="TF桥")
     else:
         print(f"  [TF桥] 未找到 {odom_bin}，跳过")
 
-    # 终端 3: Nav2
-    _launch(
+    # Nav2
+    launch(
         f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "
         f"  map:={pgm_map}",
         name="Nav2",
     )
 
-    # 终端 4: 串口桥
-    _launch(
+    # 串口桥
+    launch(
         f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
         f"  serial_port:=/dev/ttyACM0 baud_rate:=115200 "
@@ -915,10 +891,10 @@ def main(args=None):
     )
 
     # 注册清理
-    atexit.register(_cleanup)
+    atexit.register(cleanup_all)
     for sig in (signal.SIGINT, signal.SIGTERM):
         try:
-            signal.signal(sig, lambda *_: (_cleanup(), sys.exit(0)))
+            signal.signal(sig, lambda *_: (cleanup_all(), sys.exit(0)))
         except Exception:
             pass
 
@@ -990,7 +966,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
-        _cleanup()
+        cleanup_all()
 
 
 if __name__ == "__main__":
