@@ -98,16 +98,21 @@ class VisionAutoTaskNode(Node):
         self.declare_parameter("arrival_settle_frames", 5)
         self.declare_parameter("pick_timeout_sec", 5.0)         # 抓取等待超时
         self.declare_parameter("place_timeout_sec", 5.0)        # 放置等待超时
-        self.declare_parameter("total_boxes", 4)
+        self.declare_parameter("total_boxes", 8)
         self.declare_parameter("yolo_decision_file", str(_VISION_CONFIG / "decision_state.json"))
         self.declare_parameter("nav2_action_timeout_sec", 30.0)
+        self.declare_parameter("competition_timeout_sec", 180.0)
 
         # ======================== 状态机 ========================
         self.state = VS.IDLE
         self.current_box_idx = 0     # 当前正在处理的箱号 (0-based)
         self.total_boxes = self.get_parameter("total_boxes").value
         self.zone_sequence = []      # 由数学题结果决定的归位区序列
+        self.high_score_zone = None  # 高分区编号 (0-3), None=本轮无高分区
         self.target_class = None     # 当前要抓的物资类别
+        self.math_timeout_sec = 20.0 # 智力题识别超时（手册: 20秒）
+        self.competition_start_time = 0.0  # 比赛开始时间戳（monotonic）
+        self._last_time_log = 0.0    # 上次剩余时间日志
         self.arrival = ArrivalDetector(
             position_threshold=self.get_parameter("arrival_pos_threshold").value,
             angle_threshold=self.get_parameter("arrival_angle_threshold").value,
@@ -208,6 +213,10 @@ class VisionAutoTaskNode(Node):
                 {"id": 1, "x": 1.1, "y": 1.0, "yaw": 0.0},
                 {"id": 2, "x": 1.7, "y": 1.0, "yaw": 0.0},
                 {"id": 3, "x": 2.3, "y": 1.0, "yaw": 0.0},
+                {"id": 4, "x": 0.5, "y": 1.5, "yaw": 0.0},
+                {"id": 5, "x": 1.1, "y": 1.5, "yaw": 0.0},
+                {"id": 6, "x": 1.7, "y": 1.5, "yaw": 0.0},
+                {"id": 7, "x": 2.3, "y": 1.5, "yaw": 0.0},
             ],
             "zones": [
                 {"id": 0, "x": 0.6, "y": 5.0, "yaw": 3.14},
@@ -371,10 +380,40 @@ class VisionAutoTaskNode(Node):
     # ================================================================
     def _tick(self):
         try:
+            # 比赛总时长检查（手册: 180秒）
+            if self.state not in (VS.IDLE, VS.ERROR):
+                self._check_competition_timeout()
             self._state_dispatch()
         except Exception as e:
             self.get_logger().error(f"状态机异常: {e}")
             self.stop_all()
+
+    def _check_competition_timeout(self):
+        """检查比赛是否超时，并定期日志剩余时间"""
+        timeout = self.get_parameter("competition_timeout_sec").value
+        elapsed = time.monotonic() - self.competition_start_time
+        remaining = timeout - elapsed
+
+        # 每 30s 日志剩余时间
+        if remaining > 0 and (self._last_time_log == 0 or
+                              self._last_time_log - remaining >= 30.0):
+            self.get_logger().info(f"[计时] 剩余 {remaining:.0f}s")
+            self._last_time_log = remaining
+
+        if elapsed >= timeout:
+            self.get_logger().warn(f"[计时] 比赛结束（{timeout:.0f}秒到）")
+            if self.state in (VS.WAIT_PICK, VS.WAIT_PLACE):
+                # 正在等待 → 跳过等待进入下一步
+                if self.state == VS.WAIT_PICK:
+                    self.send_auto_cmd(AUTO_CMD_PICK_DONE)
+                else:
+                    self.send_auto_cmd(AUTO_CMD_PLACE_DONE)
+                self._transition_to(VS.NEXT_OR_FINISH)
+            else:
+                # 其它状态 → 直接结束
+                self.send_velocity(0.0, 0.0)
+                self.send_auto_cmd(AUTO_CMD_FINISH)
+                self._transition_to(VS.IDLE)
 
     def _state_dispatch(self):
         s = self.state
@@ -405,36 +444,42 @@ class VisionAutoTaskNode(Node):
             self.get_logger().warn(f"当前状态 {_STATE_NAMES[self.state]}，无法启动")
             return
         self.current_box_idx = 0
+        self.competition_start_time = time.monotonic()
+        self._last_time_log = 0.0
         self._transition_to(VS.SOLVE_TASK)
         self.send_auto_cmd(AUTO_CMD_START, 0, 0)
         self.get_logger().info("=" * 40)
         self.get_logger().info("  任务启动！")
+        self.get_logger().info(f"  总时长: {self.get_parameter('competition_timeout_sec').value:.0f}秒")
         self.get_logger().info("=" * 40)
 
     def estop(self):
         """急停"""
         self.stop_all()
 
-    # --- SOLVE_TASK: 识别智力题 ---
+    # --- SOLVE_TASK: 识别智力题（手册: 20秒内, 否则无高分区）---
     def _run_solve_task(self):
         mr = self._yolo_math_result
         if mr and mr.get("mod4") is not None:
             mod4 = int(mr["mod4"])
-            # mod4 → zone 分配逻辑（根据赛事规则调整）
-            # 示例: mod4=0 → [0,1,2,3]; mod4=1 → [1,2,3,0]; ...
-            self.zone_sequence = [(mod4 + i) % self.total_boxes for i in range(self.total_boxes)]
+            self.high_score_zone = mod4
+            # 8箱4区: 箱号→区号按类型循环 (food→0, tool→1, instr→2, med→3)
+            self.zone_sequence = [(mod4 + i) % 4 for i in range(self.total_boxes)]
             self.target_class = mr.get("target_class", "tool")
             self.get_logger().info(
-                f"[智力题] mod4={mod4}  zone_sequence={self.zone_sequence}  "
-                f"target_class={self.target_class}"
+                f"[智力题] mod4={mod4}  high_score_zone={self.high_score_zone}  "
+                f"zone_sequence={self.zone_sequence}  target_class={self.target_class}"
             )
             self._transition_to(VS.FIND_BOX)
             return
 
-        # 超时处理（防止卡死）
-        if self._elapsed() > 60.0:
-            self.get_logger().warn("[智力题] 超时，使用默认序列")
-            self.zone_sequence = list(range(self.total_boxes))
+        # 手册: 20秒内未能识别 → 本轮比赛没有高分区
+        if self._elapsed() > self.math_timeout_sec:
+            self.get_logger().warn(
+                f"[智力题] {self.math_timeout_sec:.0f}秒超时，本轮无高分区"
+            )
+            self.high_score_zone = None
+            self.zone_sequence = [i % 4 for i in range(self.total_boxes)]
             self.target_class = "tool"
             self._transition_to(VS.FIND_BOX)
 
