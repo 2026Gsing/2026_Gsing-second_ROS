@@ -1,7 +1,7 @@
-image: PCD14.pgm
+image: PCD10.pgm
 mode: trinary
 resolution: 0.050
-origin: [-0.067, -1.152, 0]
+origin: [-0.131, -2.121, 0]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.196

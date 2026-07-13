@@ -17,10 +17,12 @@ map_scan.py — 一键建图脚本
   已 colcon build fastlio2_v2 工作空间
 """
 
+import re
 import subprocess
 import os
 import signal
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -32,6 +34,7 @@ _MAP_DIR = str(_PROJECT / "map")
 _ROS_SETUP = "source /opt/ros/jazzy/setup.bash"
 
 _PROCS = []  # 子进程列表
+_LOG_PATHS = {}  # name → logfile path
 
 
 def launch(cmd, name=""):
@@ -49,8 +52,41 @@ def launch(cmd, name=""):
     )
     f.close()  # 子进程已继承 fd，父进程关闭
     _PROCS.append(p)
+    _LOG_PATHS[name] = str(logfile)
     print(f"  [{name}] PID={p.pid} → {logfile}")
     return p
+
+
+def _monitor_map_points(stop_event):
+    """后台线程：实时监控 FAST-LIO2 日志中的点云数量并刷新显示"""
+    log_path = _LOG_PATHS.get("FAST-LIO2")
+    if not log_path:
+        return
+    total_pts = 0
+    frame_pts = 0
+    while not stop_event.is_set():
+        try:
+            # 读取日志最后几行，提取点云数量
+            result = subprocess.run(
+                ["grep", "-a", "publish_map", log_path],
+                capture_output=True, text=True, timeout=2,
+            )
+            if result.stdout:
+                lines = [l for l in result.stdout.strip().split("\n") if l]
+                if lines:
+                    last = lines[-1]
+                    # 格式: publish_map: frame pts=12345, total=67890
+                    m = re.search(r"total=(\d+)", last)
+                    if m:
+                        total_pts = int(m.group(1))
+                    m = re.search(r"frame pts=(\d+)", last)
+                    if m:
+                        frame_pts = int(m.group(1))
+        except Exception:
+            pass
+        if total_pts > 0:
+            print(f"\r  📊 已采集: {total_pts} 点  当前帧: {frame_pts} 点  ", end="", flush=True)
+        stop_event.wait(2.0)
 
 
 def cleanup():
@@ -132,14 +168,25 @@ def main():
     print("  按 Enter 保存地图并退出")
     print("=" * 50)
 
+    # 后台监控点云数量
+    _stop_monitor = threading.Event()
+    _monitor_thread = threading.Thread(
+        target=_monitor_map_points, args=(_stop_monitor,), daemon=True
+    )
+    _monitor_thread.start()
+
     # 等待用户按回车（Ctrl+C → 直接退出，不保存）
     saved = False
     try:
         input()
     except (EOFError, KeyboardInterrupt):
         print("\n  ⏭ 用户取消，直接退出（不保存地图）")
+        _stop_monitor.set()
         cleanup()
         return
+    finally:
+        _stop_monitor.set()
+        print()  # 换行，避免和监控输出混在一起
 
     print()
     print("=" * 50)

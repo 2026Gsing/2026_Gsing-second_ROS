@@ -26,6 +26,7 @@ _PROCESSES = []
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
+MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
 
 
 def _log_path(name):
@@ -86,17 +87,16 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     启动所有前置 ROS 节点。
 
     Args:
-        map_pcd: PCD 地图路径（用于 ICP 定位），默认 map/map.pcd
-        map_yaml: YAML 地图路径（用于 Nav2），默认 map/map.yaml
+        map_pcd: PCD 地图路径（用于 ICP 定位），默认 MAP_NAME + ".pcd"
+        map_yaml: YAML 地图路径（用于 Nav2），默认 MAP_NAME + ".yaml"
     """
     fastlio_dir = str(_PROJECT / "fastlio2_v2")
     nav2_dir = str(_PROJECT / "nav2_ws1")
-    map_dir = _PROJECT / "map"
 
     if map_pcd is None:
-        map_pcd = str(map_dir / "map.pcd")
+        map_pcd = str(_PROJECT / f"{MAP_NAME}.pcd")
     if map_yaml is None:
-        map_yaml = str(map_dir / "map.yaml")
+        map_yaml = str(_PROJECT / f"{MAP_NAME}.yaml")
 
     ros_setup = "source /opt/ros/jazzy/setup.bash"
 
