@@ -45,6 +45,11 @@ try:
 except ImportError:
     serial = None
 
+try:
+    from nav_msgs.msg import Odometry
+except ImportError:
+    Odometry = None
+
 
 # ============================================================
 # 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
@@ -123,6 +128,12 @@ class MoveTestNode(Node):
         self.gate_open = False
         self._step_idx = 0
         self._serial_proc = None
+
+        # ======================== 订阅串口反馈 ========================
+        self.create_subscription(String, "/vision/arm_event", self._arm_event_cb, 10)
+        if Odometry is not None:
+            self.create_subscription(Odometry, "/localization", self._localization_cb, 10)
+        self._last_pos = None
 
         # ======================== 50Hz 持续重发机制 ========================
         # 目标速度（由 send_velocity 更新，_republish_cb 以 50Hz 持续重发）
@@ -278,6 +289,46 @@ class MoveTestNode(Node):
             return
         self.send_auto_cmd(AutoCmd.START)
         self.get_logger().info("  → 门禁已开，现在可以发送速度指令")
+
+    # ================================================================
+    # 串口反馈
+    # ================================================================
+    def _arm_event_cb(self, msg):
+        """显示 STM32 回传的机械臂事件"""
+        try:
+            data = json.loads(msg.data)
+            event_name = data.get("event_name", "?")
+            back_slot = data.get("back_slot", "?")
+            back_side = data.get("back_side_name", "?")
+            tgt = data.get("target", {})
+            self.get_logger().info(
+                f"[ARM_EVENT] {event_name} slot={back_slot} side={back_side} "
+                f"target=({tgt.get('x',0):.3f},{tgt.get('y',0):.3f},{tgt.get('z',0):.3f})"
+            )
+        except Exception as e:
+            self.get_logger().warn(f"[ARM_EVENT] 解析失败: {e}")
+
+    def _localization_cb(self, msg):
+        """显示定位信息"""
+        x = msg.pose.pose.position.x
+        y = msg.pose.pose.position.y
+        vx = msg.twist.twist.linear.x
+        wz = msg.twist.twist.angular.z
+        pos = self._last_pos
+        speed = math.hypot(vx, msg.twist.twist.linear.y)
+        if pos is not None:
+            dx = x - pos[0]
+            dy = y - pos[1]
+            dist = math.hypot(dx, dy)
+            self.get_logger().info(
+                f"[定位] pos=({x:.3f},{y:.3f}) v={speed:.3f}m/s "
+                f"wz={wz:.3f} 已移动={dist:.2f}m"
+            )
+        else:
+            self.get_logger().info(
+                f"[定位] pos=({x:.3f},{y:.3f}) v={speed:.3f}m/s wz={wz:.3f}"
+            )
+        self._last_pos = (x, y)
         self.gate_open = True
         time.sleep(0.2)
 

@@ -173,6 +173,7 @@ class BoxPickNode(Node):
                 self.get_logger().warn("[NAV] 目标被拒绝")
                 self._nav_goal_handle = None
                 return
+            self.get_logger().info("[NAV] 目标已接受")
             self._nav_goal_handle = goal_handle
             result_future = goal_handle.get_result_async()
             result_future.add_done_callback(self._nav_result_cb)
@@ -440,6 +441,7 @@ class BoxPickNode(Node):
     # ================================================================
     def _start_cube_detector(self):
         if self._cube_proc is not None:
+            self.get_logger().info("[CUBE] 已在运行，跳过")
             return
         script = str(_HERE / "cube_detector.py")
         logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log")
@@ -471,6 +473,7 @@ class BoxPickNode(Node):
 
     def _start_catch(self):
         if self._catch_proc is not None:
+            self.get_logger().info("[CATCH] 已在运行，跳过")
             return
         script = str(_HERE / "catch.py")
         logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_catch.log")
@@ -537,6 +540,7 @@ class BoxPickNode(Node):
 # ================================================================
 def _sigint_handler(sig, frame):
     """Ctrl+C → 关闭 rclpy，让 spin 返回"""
+    print("\n[退出] 收到 Ctrl+C，正在关闭...")
     rclpy.shutdown()
 
 
