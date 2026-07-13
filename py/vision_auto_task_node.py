@@ -3,8 +3,8 @@
 vision_auto_task_node.py — 视觉全自动任务执行节点
 
 职责：
-  1. 视觉状态机 IDLE → SOLVE_TASK → FIND_BOX → NAV_BOX → WAIT_PICK
-                        → NAV_ZONE → WAIT_PLACE → NEXT_OR_FINISH
+  1. 视觉状态机 IDLE → SOLVE_TASK → NAV_BOX → WAIT_PICK
+                        → NAV_ZONE → WAIT_PLACE → NEXT_OR_FINISH (loop)
   2. YOLO 物资箱检测 + 数学题识别（可选，可通过文件或 ROS topic 输入）
   3. 发送 Nav2 导航目标
   4. 到达检测（订阅 /localization）
@@ -35,6 +35,50 @@ from std_msgs.msg import String
 import yaml
 
 from arrival_detector import ArrivalDetector, quaternion_to_yaw, normalize_angle
+
+# ============================================================
+# 物资箱类型常量
+# ============================================================
+BOX_FOOD = 1
+BOX_TOOL = 2
+BOX_INSTRUMENT = 3
+BOX_MEDICINE = 4
+
+_BOX_TYPE_NAMES = {
+    BOX_FOOD: "食品", BOX_TOOL: "工具",
+    BOX_INSTRUMENT: "仪器", BOX_MEDICINE: "药品",
+}
+
+# ============================================================
+# 场地布局（赛前按实际场地修改）
+# boxes[场地号][排][列] — 排0=外排(靠启动区) 排1=内排(靠归位区)
+# zones[场地号][区索引] — 区0~3对应的物资类型
+# 坐标模板: col_x[0..3], outer_y(靠启动区), inner_y(靠归位区), zone_x[0..3], zone_y
+# ============================================================
+FIELD_BOXES = {
+    1: [
+        [0, 0, 0, 0],  # ← 外排（靠启动区），赛前填入
+        [BOX_FOOD, BOX_TOOL, BOX_INSTRUMENT, BOX_MEDICINE],  # 内排（靠归位区）固定
+    ],
+    2: [
+        [0, 0, 0, 0],  # ← 外排（靠启动区），赛前填入
+        [BOX_MEDICINE, BOX_INSTRUMENT, BOX_TOOL, BOX_FOOD],  # 内排（靠归位区）固定
+    ],
+}
+
+FIELD_ZONES = {
+    1: [BOX_FOOD, BOX_TOOL, BOX_INSTRUMENT, BOX_MEDICINE],   # 食品 工具 仪器 药品
+    2: [BOX_MEDICINE, BOX_INSTRUMENT, BOX_TOOL, BOX_FOOD],   # 药品 仪器 工具 食品
+}
+
+# 坐标模板（两个场地物理尺寸相同，仅类型分配不同）
+_BOX_COL_X = [0.5, 1.1, 1.7, 2.3]
+_BOX_OUTER_Y = 1.0   # 外排 = 靠启动区（y 小）
+_BOX_INNER_Y = 1.5   # 内排 = 靠归位区（y 大）
+_BOX_YAW = 0.0
+_ZONE_X = [0.6, 1.4, 2.2, 3.0]
+_ZONE_Y = 5.0
+_ZONE_YAW = 3.14
 
 # ============================================================
 # AUTO_CMD 常量（与 STM32 protocol_handler.h 严格一致）
@@ -86,7 +130,6 @@ _VISION_WEIGHTS = _VISION_DIR / "weights"
 _VISION_CONFIG = _VISION_DIR / "config"
 _DEFAULT_WAYPOINTS = _HERE / "config" / "competition_poses.yaml"
 
-
 class VisionAutoTaskNode(Node):
     def __init__(self):
         super().__init__("vision_auto_task")
@@ -102,11 +145,14 @@ class VisionAutoTaskNode(Node):
         self.declare_parameter("yolo_decision_file", str(_VISION_CONFIG / "decision_state.json"))
         self.declare_parameter("nav2_action_timeout_sec", 30.0)
         self.declare_parameter("competition_timeout_sec", 180.0)
+        self.declare_parameter("field_id", 1)  # 1 或 2
 
         # ======================== 状态机 ========================
         self.state = VS.IDLE
-        self.current_box_idx = 0     # 当前正在处理的箱号 (0-based)
+        self.field_id = self.get_parameter("field_id").value  # 1 或 2
+        self.current_step_idx = 0    # 当前执行到的步骤索引
         self.total_boxes = self.get_parameter("total_boxes").value
+        self.pickup_sequence = []    # [(box_type, zone_id, box_x, box_y, box_yaw, zone_x, zone_y, zone_yaw), ...]
         self.zone_sequence = []      # 由数学题结果决定的归位区序列
         self.high_score_zone = None  # 高分区编号 (0-3), None=本轮无高分区
         self.target_class = None     # 当前要抓的物资类别
@@ -362,6 +408,67 @@ class VisionAutoTaskNode(Node):
     def _elapsed(self) -> float:
         return time.monotonic() - self._state_enter_time
 
+    def _generate_pickup_sequence(self, mod4):
+        """
+        根据场地号和数学题结果生成最优拾取序列。
+        返回: [(box_type, zone_id, box_x, box_y, box_yaw, zone_x, zone_y, zone_yaw), ...]
+        策略: 高分区类型优先 → 外排(近启动区)优先 → 左到右
+        """
+        field = self.field_id
+        boxes = FIELD_BOXES.get(field)
+        zones = FIELD_ZONES.get(field)
+        if boxes is None or zones is None:
+            self.get_logger().error(f"未知场地号 {field}")
+            return []
+
+        # 高分区类型: mod4 → zone_idx → 对应的 box_type
+        if mod4 is not None:
+            high_zone_idx = mod4 % 4
+            high_type = zones[high_zone_idx]
+        else:
+            high_type = None
+
+        # 构建 (box_type, row, col) 列表
+        all_boxes = []
+        for row in range(2):          # 0=外排(靠启动区), 1=内排(靠归位区)
+            for col in range(4):
+                bt = boxes[row][col]
+                if bt == 0:
+                    continue
+                y = _BOX_OUTER_Y if row == 0 else _BOX_INNER_Y
+                all_boxes.append((bt, _BOX_COL_X[col], y, _BOX_YAW))
+
+        # 排序: 高分区类型优先, 近启动区优先, 左到右
+        def sort_key(item):
+            bt, bx, by, byaw = item
+            is_high = 0 if bt == high_type else 1  # high type first
+            is_outer = 0 if by == _BOX_OUTER_Y else 1  # outer (near launch) first
+            return (is_high, is_outer, bx)
+
+        all_boxes.sort(key=sort_key)
+
+        # 构建完整序列: 每箱 → 其匹配区
+        sequence = []
+        for bt, bx, by, byaw in all_boxes:
+            # 找到此箱类型对应的区索引
+            try:
+                zone_idx = zones.index(bt)
+            except ValueError:
+                self.get_logger().error(f"箱类型 {bt} 无对应区")
+                continue
+            zx = _ZONE_X[zone_idx]
+            sequence.append((bt, zone_idx, bx, by, byaw, zx, _ZONE_Y, _ZONE_YAW))
+
+        self.get_logger().info(f"[场地 {field}] 拾取序列 ({len(sequence)} 箱):")
+        for i, (bt, zi, bx, by, _, zx, zy, _) in enumerate(sequence):
+            high = "★" if bt == high_type else " "
+            self.get_logger().info(
+                f"  [{i}] {high}{_BOX_TYPE_NAMES.get(bt, '?')} "
+                f"箱({bx:.1f},{by:.1f}) → 区{zi}({zx:.1f},{zy:.1f})"
+            )
+
+        return sequence
+
     # ================================================================
     # YOLO 决策 tick (5Hz)
     # ================================================================
@@ -394,10 +501,15 @@ class VisionAutoTaskNode(Node):
         elapsed = time.monotonic() - self.competition_start_time
         remaining = timeout - elapsed
 
-        # 每 30s 日志剩余时间
+        # 每 30s 日志剩余时间 + 当前进度
         if remaining > 0 and (self._last_time_log == 0 or
                               self._last_time_log - remaining >= 30.0):
-            self.get_logger().info(f"[计时] 剩余 {remaining:.0f}s")
+            total = len(self.pickup_sequence)
+            done = self.current_step_idx
+            self.get_logger().info(
+                f"[计时] 剩余 {remaining:.0f}s  "
+                f"进度 {done}/{total}箱"
+            )
             self._last_time_log = remaining
 
         if elapsed >= timeout:
@@ -421,8 +533,6 @@ class VisionAutoTaskNode(Node):
             pass  # 等待外部 start_task() 调用
         elif s == VS.SOLVE_TASK:
             self._run_solve_task()
-        elif s == VS.FIND_BOX:
-            self._run_find_box()
         elif s == VS.NAV_BOX:
             self._run_nav_box()
         elif s == VS.WAIT_PICK:
@@ -443,7 +553,8 @@ class VisionAutoTaskNode(Node):
         if self.state != VS.IDLE:
             self.get_logger().warn(f"当前状态 {_STATE_NAMES[self.state]}，无法启动")
             return
-        self.current_box_idx = 0
+        self.current_step_idx = 0
+        self.pickup_sequence = []
         self.competition_start_time = time.monotonic()
         self._last_time_log = 0.0
         self._transition_to(VS.SOLVE_TASK)
@@ -463,14 +574,13 @@ class VisionAutoTaskNode(Node):
         if mr and mr.get("mod4") is not None:
             mod4 = int(mr["mod4"])
             self.high_score_zone = mod4
-            # 8箱4区: 箱号→区号按类型循环 (food→0, tool→1, instr→2, med→3)
-            self.zone_sequence = [(mod4 + i) % 4 for i in range(self.total_boxes)]
-            self.target_class = mr.get("target_class", "tool")
+            self.pickup_sequence = self._generate_pickup_sequence(mod4)
+            self.current_step_idx = 0
             self.get_logger().info(
                 f"[智力题] mod4={mod4}  high_score_zone={self.high_score_zone}  "
-                f"zone_sequence={self.zone_sequence}  target_class={self.target_class}"
+                f"目标区类型={_BOX_TYPE_NAMES.get(FIELD_ZONES[self.field_id][mod4 % 4], '?')}"
             )
-            self._transition_to(VS.FIND_BOX)
+            self._transition_to(VS.NAV_BOX)
             return
 
         # 手册: 20秒内未能识别 → 本轮比赛没有高分区
@@ -479,49 +589,42 @@ class VisionAutoTaskNode(Node):
                 f"[智力题] {self.math_timeout_sec:.0f}秒超时，本轮无高分区"
             )
             self.high_score_zone = None
-            self.zone_sequence = [i % 4 for i in range(self.total_boxes)]
-            self.target_class = "tool"
-            self._transition_to(VS.FIND_BOX)
-
-    # --- FIND_BOX: 识别物资箱 ---
-    def _run_find_box(self):
-        det = self._yolo_detections
-        if det and "slot_id" in str(det):
-            self.get_logger().info(f"[检测] 识别到目标: {det}")
-            self._transition_to(VS.NAV_BOX)
-            return
-
-        if self._elapsed() > 30.0:
-            self.get_logger().warn("[检测] 超时，使用默认箱号")
+            self.pickup_sequence = self._generate_pickup_sequence(None)
+            self.current_step_idx = 0
             self._transition_to(VS.NAV_BOX)
 
     # --- NAV_BOX: 导航到物资箱 ---
     def _run_nav_box(self):
+        if self.current_step_idx >= len(self.pickup_sequence):
+            self.get_logger().error(f"步骤 {self.current_step_idx} 超出序列")
+            self.stop_all()
+            return
+
+        step = self.pickup_sequence[self.current_step_idx]
+        box_type, zone_id, bx, by, byaw, zx, zy, zyaw = step
+
         # 首次进入时发送 Nav2 目标
         if self._elapsed() < 0.1:
-            boxes = self.waypoints.get("boxes", [])
-            if self.current_box_idx < len(boxes):
-                wp = boxes[self.current_box_idx]
-                self.send_nav2_goal(wp["x"], wp["y"], wp["yaw"])
-                self.arrival.set_target(wp["x"], wp["y"], wp["yaw"])
-            else:
-                self.get_logger().error(f"箱号 {self.current_box_idx} 超出配置")
-                self.stop_all()
+            self.get_logger().info(
+                f"[导航] 前往箱{self.current_step_idx+1}/{len(self.pickup_sequence)} "
+                f"({_BOX_TYPE_NAMES.get(box_type,'?')}) "
+                f"位置 ({bx:.2f}, {by:.2f})"
+            )
+            self.send_nav2_goal(bx, by, byaw)
+            self.arrival.set_target(bx, by, byaw)
             return
 
         # 到达判断
         if self._nav_succeeded:
-            self.get_logger().info("[到达] Nav2 报告到达物资箱")
-            zone_id = self.zone_sequence[self.current_box_idx] if self.current_box_idx < len(self.zone_sequence) else 0
-            self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, self.current_box_idx, zone_id)
+            self.get_logger().info(f"[到达] 到达物资箱 ({_BOX_TYPE_NAMES.get(box_type,'?')})")
+            self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, self.current_step_idx, zone_id)
             self.send_velocity(0.0, 0.0)
             self._transition_to(VS.WAIT_PICK)
 
         # 超时保护
         if self._elapsed() > self.get_parameter("nav2_action_timeout_sec").value:
             self.get_logger().warn("[到达] 导航超时，强制到达")
-            zone_id = self.zone_sequence[self.current_box_idx] if self.current_box_idx < len(self.zone_sequence) else 0
-            self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, self.current_box_idx, zone_id)
+            self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, self.current_step_idx, zone_id)
             self._transition_to(VS.WAIT_PICK)
 
     # --- WAIT_PICK: 等待抓取完成 ---
@@ -533,30 +636,32 @@ class VisionAutoTaskNode(Node):
 
     # --- NAV_ZONE: 导航到归位区 ---
     def _run_nav_zone(self):
+        if self.current_step_idx >= len(self.pickup_sequence):
+            self.stop_all()
+            return
+
+        step = self.pickup_sequence[self.current_step_idx]
+        box_type, zone_id, bx, by, byaw, zx, zy, zyaw = step
+
         if self._elapsed() < 0.1:
-            zone_idx = self.zone_sequence[self.current_box_idx] if self.current_box_idx < len(self.zone_sequence) else 0
-            zones = self.waypoints.get("zones", [])
-            zone_wp = next((z for z in zones if z["id"] == zone_idx), zones[0] if zones else None)
-            if zone_wp:
-                self.send_nav2_goal(zone_wp["x"], zone_wp["y"], zone_wp["yaw"])
-                self.arrival.set_target(zone_wp["x"], zone_wp["y"], zone_wp["yaw"])
-                self.get_logger().info(f"[导航] 前往归位区 {zone_idx}")
-            else:
-                self.get_logger().error(f"归位区 {zone_idx} 未在配置中找到")
-                self.stop_all()
+            self.get_logger().info(
+                f"[导航] 前往归位区 {zone_id} "
+                f"({_BOX_TYPE_NAMES.get(box_type,'?')}) "
+                f"位置 ({zx:.2f}, {zy:.2f})"
+            )
+            self.send_nav2_goal(zx, zy, zyaw)
+            self.arrival.set_target(zx, zy, zyaw)
             return
 
         if self._nav_succeeded:
-            zone_idx = self.zone_sequence[self.current_box_idx] if self.current_box_idx < len(self.zone_sequence) else 0
-            self.get_logger().info(f"[到达] Nav2 报告到达归位区 {zone_idx}")
-            self.send_auto_cmd(AUTO_CMD_ARRIVED_ZONE, self.current_box_idx, zone_idx)
+            self.get_logger().info(f"[到达] Nav2 报告到达归位区 {zone_id}")
+            self.send_auto_cmd(AUTO_CMD_ARRIVED_ZONE, self.current_step_idx, zone_id)
             self.send_velocity(0.0, 0.0)
             self._transition_to(VS.WAIT_PLACE)
 
         if self._elapsed() > self.get_parameter("nav2_action_timeout_sec").value:
             self.get_logger().warn("[到达] 导航超时，强制到达")
-            zone_idx = self.zone_sequence[self.current_box_idx] if self.current_box_idx < len(self.zone_sequence) else 0
-            self.send_auto_cmd(AUTO_CMD_ARRIVED_ZONE, self.current_box_idx, zone_idx)
+            self.send_auto_cmd(AUTO_CMD_ARRIVED_ZONE, self.current_step_idx, zone_id)
             self._transition_to(VS.WAIT_PLACE)
 
     # --- WAIT_PLACE: 等待放置完成 ---
@@ -568,11 +673,13 @@ class VisionAutoTaskNode(Node):
 
     # --- NEXT_OR_FINISH: 下一箱或结束 ---
     def _run_next_or_finish(self):
-        self.current_box_idx += 1
-        if self.current_box_idx < self.total_boxes:
-            self.get_logger().info(f"[流程] 前往下一箱 ({self.current_box_idx + 1}/{self.total_boxes})")
+        self.current_step_idx += 1
+        if self.current_step_idx < len(self.pickup_sequence):
+            self.get_logger().info(
+                f"[流程] 前往下一箱 ({self.current_step_idx + 1}/{len(self.pickup_sequence)})"
+            )
             self.send_auto_cmd(AUTO_CMD_NEXT)
-            self._transition_to(VS.FIND_BOX)
+            self._transition_to(VS.NAV_BOX)
         else:
             self.get_logger().info("=" * 40)
             self.get_logger().info("  全部任务完成！")
