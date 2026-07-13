@@ -47,6 +47,7 @@ def launch(cmd, name=""):
         env=env,
         stdout=f, stderr=subprocess.STDOUT,
     )
+    f.close()  # 子进程已继承 fd，父进程关闭
     _PROCS.append(p)
     print(f"  [{name}] PID={p.pid} → {logfile}")
     return p

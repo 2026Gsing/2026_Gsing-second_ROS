@@ -58,6 +58,7 @@ def launch(cmd, cwd=None, name=""):
         ["bash", "-c", cmd], cwd=cwd, env=env, preexec_fn=os.setsid,
         stdout=f, stderr=subprocess.STDOUT,
     )
+    f.close()  # 子进程已继承 fd
     _PROCESSES.append(p)
     print(f"  [{name}] PID={p.pid} → {logfile}")
     return p

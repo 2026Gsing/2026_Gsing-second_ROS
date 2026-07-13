@@ -88,7 +88,7 @@ ros2 launch pcd2pgm pcd2pgm_launch.py \
 
 ```bash
 # 查看 PCD 点云
-pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/PCD13.pcd
+pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/map.pcd
 ```
 
 ---

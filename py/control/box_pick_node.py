@@ -432,6 +432,7 @@ class BoxPickNode(Node):
                 [sys.executable, script],
                 stdout=f, stderr=subprocess.STDOUT,
             )
+            f.close()  # 子进程已继承 fd
             self.get_logger().info(f"[CUBE] cube_detector PID={self._cube_proc.pid} → {logfile}")
         except Exception as e:
             self.get_logger().error(f"[CUBE] 启动失败: {e}")
@@ -462,6 +463,7 @@ class BoxPickNode(Node):
                 [sys.executable, script],
                 stdout=f, stderr=subprocess.STDOUT,
             )
+            f.close()  # 子进程已继承 fd
             self.get_logger().info(f"[CATCH] catch.py PID={self._catch_proc.pid} → {logfile}")
         except Exception as e:
             self.get_logger().error(f"[CATCH] 启动失败: {e}")
