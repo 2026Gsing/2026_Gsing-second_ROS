@@ -86,9 +86,11 @@ CACHE_MAX_SIZE = 10            # 位置缓存最大帧数
 AUTO_CMD_START = 1
 AUTO_CMD_ARRIVED_BOX = 2
 AUTO_CMD_ARRIVED_ZONE = 4
+ARM_EVENT_PICK_DONE = 1
 
 # ARRIVED_BOX settle 400ms + 200ms 裕量，等 STM32 进入 PICK
 ARM_DELAY_AFTER_ARRIVE_SEC = 0.6
+ARM_EVENT_WAIT_TIMEOUT_SEC = 20.0
 
 
 # ============================================================
@@ -217,6 +219,8 @@ class ArmStateMachine(Node):
         # ============ 状态机变量 ============
         self.state = ArmState.IDLE          # 初始状态：空闲
         self.target_position = None         # 稳定的目标位置
+        self.command_sent_time = 0.0
+        self._shutdown_requested = False
 
         # ============ 稳定检测缓存 ============
         self.position_cache = []            # 位置历史缓存（滑动窗口）
@@ -225,6 +229,9 @@ class ArmStateMachine(Node):
         qos = QoSProfile(reliability=QoSReliabilityPolicy.BEST_EFFORT, depth=10)
         self.cube_sub = self.create_subscription(
             Marker, '/detected_cube', self.cube_callback, qos
+        )
+        self.arm_event_sub = self.create_subscription(
+            String, '/vision/arm_event', self.arm_event_callback, 10
         )
 
         # ============ 定时器 ============
@@ -256,6 +263,28 @@ class ArmStateMachine(Node):
         msg.data = json.dumps({"x": x, "y": y, "z": z})
         self.arm_pub.publish(msg)
         self.get_logger().info(f">>> 已发布坐标到 /vision/arm_control: ({x:.3f}, {y:.3f}, {z:.3f})")
+
+    def arm_event_callback(self, msg):
+        """接收 STM32 完成抓取后的 0x22 回传事件。"""
+        try:
+            data = json.loads(msg.data)
+        except Exception as e:
+            self.get_logger().warn(f"[ARM_EVENT] JSON 解析失败: {e}")
+            return
+
+        event = int(data.get("event", 0))
+        event_name = data.get("event_name", "")
+        if event != ARM_EVENT_PICK_DONE and event_name != "pick_done":
+            return
+
+        side_name = data.get("back_side_name", "unknown")
+        back_slot = int(data.get("back_slot", 0))
+        self.get_logger().info(
+            f"[ARM_EVENT] 抓取完成: back_slot={back_slot} side={side_name}"
+        )
+        if not self._shutdown_requested:
+            self._shutdown_requested = True
+            rclpy.shutdown()
 
     def cube_callback(self, msg):
         """
@@ -348,13 +377,21 @@ class ArmStateMachine(Node):
             self.target_position[1],
             self.target_position[2]
         )
-        self.get_logger().info("[完成] 坐标已发送，0.5s 后自动退出")
-        time.sleep(0.5)
-        rclpy.shutdown()
+        self.command_sent_time = time.monotonic()
+        self.get_logger().info("[等待] 坐标已发送，等待 STM32 回传 ARM_EVENT pick_done")
 
     def status_callback(self):
         """5 秒定时器：打印当前状态"""
         self.get_logger().info(f"[STATUS] State: {self.state}")
+        if (
+            self.state == ArmState.COMPLETED
+            and self.command_sent_time > 0.0
+            and not self._shutdown_requested
+            and (time.monotonic() - self.command_sent_time) > ARM_EVENT_WAIT_TIMEOUT_SEC
+        ):
+            self.get_logger().warn("[ARM_EVENT] 等待 pick_done 超时，退出 catch.py")
+            self._shutdown_requested = True
+            rclpy.shutdown()
 
 
 def main(args=None):
