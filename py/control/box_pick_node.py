@@ -19,6 +19,7 @@ import rclpy
 from rclpy.node import Node
 from visualization_msgs.msg import Marker
 from nav_msgs.msg import Odometry
+from geometry_msgs.msg import PoseStamped
 from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateToPose
 from arrival_detector import quaternion_to_yaw
@@ -66,6 +67,7 @@ class BoxPickNode(Node):
         # ============ 订阅 ============
         self.create_subscription(Marker, '/detected_cube', self._cube_cb, 10)
         self.create_subscription(Odometry, '/localization', self._localization_cb, 10)
+        self.create_subscription(PoseStamped, '/goal_pose', self._goal_pose_cb, 10)
 
         # ============ Nav2 Action Client ============
         self._nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -149,6 +151,17 @@ class BoxPickNode(Node):
                         f"(已积累{self._arrival_count}帧)"
                     )
                 self._arrival_count = 0
+
+    def _goal_pose_cb(self, msg):
+        """打印 RViz 2D Nav Goal 的目标坐标"""
+        x = msg.pose.position.x
+        y = msg.pose.position.y
+        qz = msg.pose.orientation.z
+        qw = msg.pose.orientation.w
+        yaw = math.atan2(2.0 * (qw * qz), 1.0 - 2.0 * (qz * qz))
+        self.get_logger().info(
+            f"[目标] 收到 Nav2 Goal: ({x:.3f}, {y:.3f}) yaw={yaw:.3f}"
+        )
 
     # ================================================================
     # Nav2 导航回调
