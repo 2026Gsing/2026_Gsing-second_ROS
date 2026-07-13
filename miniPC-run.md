@@ -199,7 +199,7 @@ python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
 
 ```bash
 cd /home/gsing/2026Gsing/2026_Gsing-second_ROS
-bash run_auto_task.sh
+python3 /home/gsing/2026Gsing/2026_Gsing-second_ROS/py/control/auto_task.py
 ```
 
 ---

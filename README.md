@@ -112,23 +112,24 @@
 │       └── math12.pt                       # 数学符号检测
 │
 ├── py/                                     # Python 脚本
-│   ├── control/                            # 控制类（主状态机）
-│   │   └── auto_task.py                    # 视觉全自动任务状态机
-│   ├── utils/                              # 工具类（模块函数）
+│   ├── control/                            # 控制类（主状态机 + 模块）
+│   │   ├── auto_task.py                    # 视觉全自动任务状态机 + 一键启动
+│   │   ├── catch.py                        # 机械臂控制 + 坐标变换模块
+│   │   ├── cube_detector.py               # 3D OBB 立方体检测（DBSCAN+PCA）
 │   │   ├── arrival_detector.py             # 到达检测
-│   │   ├── catch.py                        # 机械臂控制 + 坐标变换
-│   │   ├── cube_detector.py               # 3D OBB 立方体检测
+│   │   ├── box_pick_node.py                # 物资箱手动抓取
 │   │   └── init_pose.py                   # 初始位姿发布
 │   ├── tools/                              # 独立工具
+│   │   ├── map_scan.py                     # 一键建图（LiDAR + FAST-LIO2 + PCD→PGM）
 │   │   ├── test_move.py                    # 底盘指令测试
 │   │   ├── test_interactive.py             # 交互测试
-│   │   ├── box_pick_node.py                # 物资箱手动抓取
 │   │   ├── listen_serial.py                # 串口监听
 │   │   └── pointcloud_x_filter.py          # 点云 X 方向过滤
-│   └── config/competition.yaml             # 比赛配置（赛前修改）
 │
-├── run_auto_task.sh                        # 视觉自动任务一键启动（新增）
-├── run.md                                  # 详细运行流程
+├── config/                                 # 比赛配置（赛前修改）
+│   └── competition.yaml
+│
+├── py/control/auto_task.py                 # 一键启动（所有节点 + 状态机）
 └── README.md                               # 本文件
 ```
 
@@ -202,40 +203,15 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-### 步骤 2：启动雷达驱动
+### 步骤 2：一键建图
 
 ```bash
-cd fastlio2_v2
-source install/setup.bash
-ros2 launch unitree_lidar_ros2 launch.py
+python3 py/tools/map_scan.py
+# 可选: python3 py/tools/map_scan.py --no-rviz
 ```
+启动 LiDAR 驱动 + FAST-LIO2 SLAM（自动编号 PCD1, PCD2...），推着机器人走一圈，按 Enter 保存 PCD 并自动转换为 PGM 栅格地图。
 
-### 步骤 3：启动 FAST-LIO2 建图（带过滤）
-
-使用 `auto_map_save.sh` 一键启动，自动过滤狗身点云（距 LiDAR < 0.8m 和 x < 0.5 的点），按 Enter 保存 PCD 并退出。
-
-```bash
-cd fastlio2_v2
-source install/setup.bash
-bash auto_map_save.sh
-```
-
-### 步骤 4：生成 2D 栅格地图（首次建图时需要）
-
-先确认 `src/pcd2pgm/config/pcd2pgm.yaml` 中 `pcd_file` 指向你的 PCD 文件。
-
-```bash
-cd fastlio2_v2
-source install/setup.bash
-
-ros2 launch pcd2pgm pcd2pgm_launch.py
-```
-
-生成结果（默认在 `/home/hyper/program/2026_Gsing-second_ROS/map/`）：
-- `pgm_map.pgm`
-- `pgm_map.yaml`
-
-### 步骤 5：启动全局定位（fast_lio_localization）
+### 步骤 3：启动全局定位（fast_lio_localization）
 
 ```bash
 cd fastlio2_v2
@@ -394,7 +370,7 @@ catch.py ──── 滑动窗口标准差（稳定检测）──── 串口
   │  坐标系变换 (雷达→机械臂)                     控制抓取动作
 ```
 
-### cube_detector.py — 3D OBB 立方体检测
+### py/control/cube_detector.py — 3D OBB 立方体检测
 
 | 步骤 | 方法 | 参数 |
 |------|------|------|
@@ -409,7 +385,7 @@ catch.py ──── 滑动窗口标准差（稳定检测）──── 串口
 
 检测结果会以绿色半透明立方体 Marker 在 RViz 中可视化。
 
-### catch.py — 机械臂抓取控制
+### py/control/catch.py — 机械臂抓取控制（模块函数 + ROS 节点）
 
 **坐标变换**（雷达系 → 机械臂系）：
 ```
@@ -426,41 +402,31 @@ final_z = -radar_x - 0.15
 
 **串口协议**（机械臂控制）：`[0x55][0xAA][0x12][12][x][y][z][checksum]`
 
-### test_dog.py — 颜色检测调参工具
-
-基于 OpenCV 的 HSV 颜色分类调参工具：
-- 支持四种颜色分类：食品(绿)、工具(灰)、药品(红)、仪器(蓝)
-- 滑条实时调节 HSV 阈值
-- Top-1 占比直判算法
-
 ### 使用方式
 
 ```bash
 source /opt/ros/jazzy/setup.bash
 
-# 视觉自动任务
-python3 py/control/auto_task.py           # 状态机（终端输入 start 开始）
+# 一键竞赛（启动所有节点 + 状态机）
+python3 py/control/auto_task.py field_id:=1
+
+# 一键建图（LiDAR + FAST-LIO2 + PCD→PGM）
+python3 py/tools/map_scan.py
 
 # YOLO 检测（独立运行）
 cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
 
 # 立方体检测（需要 FAST-LIO2 雷达点云）
-python3 py/cube_detector.py
+python3 py/control/cube_detector.py
 
 # 机械臂控制（需要 cube_detector 正在运行）
-python3 py/catch.py
-
-# 颜色检测调参（需要 USB 摄像头）
-python3 py/test_dog.py
+python3 py/control/catch.py
 
 # 底盘运动测试
-python3 py/move.py 1   # 0=待机 1=前进 2=后退 3=左转 4=右转 5=蹲下
+python3 py/tools/test_move.py
 
 # 监听串口数据
-python3 py/listen_serial.py
-
-# 串口通信测试
-python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py
+python3 py/tools/listen_serial.py
 ```
 
 ---
@@ -473,29 +439,30 @@ python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py
 
 ```
 IDLE ──(输入 start)──→ SOLVE_TASK
-  │                     │ YOLO 识别智力题 → mod4 → zone_sequence
+  │                     │ YOLO 识别智力题 → mod4 → 高分区类型
+  │                     │ 生成拾取序列: ★高分区优先 → 外排优先 → 左到右
   ▼                     ▼
-SOLVE_TASK ──────────→ FIND_BOX
-  │                     │ YOLO 检测物资箱类别
-  ▼                     ▼
-FIND_BOX ────────────→ NAV_BOX
-  │                     │ 发 Nav2 goal → 监听 /localization → 到达
+SOLVE_TASK ──────────→ NAV_BOX
+  │                     │ 发 Nav2 goal（从拾取序列取坐标）
   ▼                     ▼
 NAV_BOX ────(发 0x15 ARRIVED_BOX)──→ WAIT_PICK
-  │                     │ 等待 ~5s → 发 PICK_DONE
+  │                     │ cube_detector + catch 模块: 检测→稳定→变换→发坐标
+  │                     │ 超时 → 发 PICK_DONE
   ▼                     ▼
 WAIT_PICK ───(发 0x15 PICK_DONE)──→ NAV_ZONE
-  │                     │ 发 Nav2 goal → 到归位区
+  │                     │ 发 Nav2 goal（归位区坐标）
   ▼                     ▼
 NAV_ZONE ───(发 0x15 ARRIVED_ZONE)──→ WAIT_PLACE
-  │                     │ 等待 ~5s → 发 PLACE_DONE
+  │                     │ 发放置坐标 → 超时 → 发 PLACE_DONE
   ▼                     ▼
 WAIT_PLACE ──(发 0x15 PLACE_DONE)──→ NEXT_OR_FINISH
                                        │
                           ┌────────────┴────────────┐
                           ▼                         ▼
-                     还有箱 → FIND_BOX         完成 → IDLE
+                     还有箱 → NAV_BOX          完成 → IDLE
 ```
+
+180s 总计时到 → 自动 FINISH。
 
 ### 速度仲裁
 
@@ -515,27 +482,21 @@ WAIT_PLACE ──(发 0x15 PLACE_DONE)──→ NEXT_OR_FINISH
 
 ## 竞赛任务工作流
 
+### 一键启动（竞赛模式）
+
+```bash
+python3 py/control/auto_task.py field_id:=1
+```
+等待 8s 节点启动后自动初始化 ICP，终端输入 `start` 开始全自动执行。
+
 ### 手动启动（分步调试）
 
 ```
 1. 上电 → 机器人启动
 2. 配置网卡 → 雷达通信
-3. 启动雷达驱动
-4. 启动 FAST-LIO2 建图
-5. 发布初始位姿（RViz "2D Pose Estimate"）
-6. 启动 Nav2（静态地图模式）
-7. 启动串口桥接（底盘控制）
-8. 启动视觉状态机：python3 py/control/auto_task.py
-9. 在终端输入 start → 全自动执行
-```
-
-### 一键启动（竞赛模式）
-```bash
-# 启动 Nav2 + 串口桥 + 视觉状态机
-bash run_auto_task.sh
-
-# 另开终端，启动 YOLO 检测
-cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
+3. python3 py/tools/map_scan.py        # 建图（首次）
+4. python3 py/control/auto_task.py      # 竞赛（启动所有节点）
+5. 终端输入 start → 全自动执行
 ```
 
 ### 竞赛场地地图

@@ -4,7 +4,7 @@ box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
 
 流程：
   1. 在 RViz 中用 2D Nav Goal 导航到物资箱附近 (Terminal 3)
-  2. 机器人停稳后自动触发 → 启动 cube_detector.py 检测前方立方体
+  2. 机器人停稳后自动触发 → 启动 cube_detector.py 检测前方立方体+
   3. 检查 /detected_cube 的 xy 距离：
      a. ≤ 30cm → 启动 catch.py 抓取
      b. > 30cm → 重新 Nav2 导航到立方体位置，到达后再检测 → 抓取
