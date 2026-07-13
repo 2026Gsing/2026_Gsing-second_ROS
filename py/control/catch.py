@@ -57,13 +57,39 @@ OFFSET_Z = 0.25
 
 # ==================== 箱子尺寸参数 ====================
 BOX_HEIGHT = 0.25                # 箱子边长 250mm
-
 HALF_BOX_HEIGHT = BOX_HEIGHT / 2  # 半高，中心→顶面补偿
 
-# ==================== 工作空间限制 ====================
-# 机械臂可达范围（与 STM32 Arm_IK 一致：hu=0.30, hl=0.32）
-ARM_WORKSPACE_RADIUS_MAX = 0.62   # hu + hl
-ARM_WORKSPACE_RADIUS_MIN = 0.02   # |hu - hl|
+# ==================== 机械臂物理参数 ====================
+# 与 second-DM4340/Algorithm/kinematic/arm.c 保持一致
+ARM_HU = 0.30      # 大臂长度 (m)
+ARM_HL = 0.32      # 小臂长度 (m)
+ARM_H  = 0.00      # 基座肩宽偏移 (m)
+ARM_HE = 0.084     # 末端吸盘长度 (m)
+
+# 工作空间限制（与 STM32 Arm_IK reachability 一致）
+ARM_WORKSPACE_RADIUS_MAX = ARM_HU + ARM_HL    # 0.62
+ARM_WORKSPACE_RADIUS_MIN = abs(ARM_HU - ARM_HL)  # 0.02
+
+# ==================== STM32 轴边界 ====================
+# 与 second-DM4340/Task/arm_task.c ARM_TARGET_X/Y/Z_MIN/MAX 一致
+# STM32 内部会加 suction_cup_l (0.03m) 到 X 再检查，所以预检查时预留 0.03 裕量
+STM32_SUCTION_CUP_L = 0.03
+
+ARM_TARGET_X_MIN = -0.20 - STM32_SUCTION_CUP_L   # -0.23（预补偿）
+ARM_TARGET_X_MAX =  0.45 - STM32_SUCTION_CUP_L   #  0.42
+ARM_TARGET_Y_MIN = -0.50
+ARM_TARGET_Y_MAX =  0.50
+ARM_TARGET_Z_MIN = -0.75
+ARM_TARGET_Z_MAX =  0.55
+
+# ==================== 禁飞区（相机保护） ====================
+# 与 second-DM4340/Algorithm/kinematic/arm.c ARM_FORBID_* 一致
+ARM_FORBID_X_MIN = 0.000
+ARM_FORBID_X_MAX = 0.050
+ARM_FORBID_Y_MIN = -0.115
+ARM_FORBID_Y_MAX = 0.115
+ARM_FORBID_Z_MIN = -0.280
+ARM_FORBID_Z_MAX = 0.000
 
 # ==================== 稳定检测参数 ====================
 # 滑动窗口标准差法：位置跳动小于阈值时视为稳定
@@ -131,9 +157,94 @@ def find_stable_points(positions, threshold_xy, required_count):
 
 
 def workspace_check(x, y, z):
-    """检查坐标是否在机械臂工作空间内"""
+    """简单径向距离检查（兼容旧接口，不建议新代码使用）"""
     dist = math.sqrt(x**2 + y**2 + z**2)
     return ARM_WORKSPACE_RADIUS_MIN <= dist <= ARM_WORKSPACE_RADIUS_MAX, dist
+
+
+def validate_arm_target(x, y, z):
+    """
+    综合机械臂目标有效性检查（与 STM32 arm_task.c + arm.c 一致）。
+
+    检查项目（按 STM32 实际拒绝顺序）：
+      1. 有限值检查  —— arm_target_in_range() finity check
+      2. 轴边界检查  —— ARM_TARGET_X/Y/Z_MIN/MAX（预补偿 0.03）
+      3. IK 可达性   —— Arm_IK() dist in [|hu-hl|, hu+hl]
+      4. 肩下禁区    —— Arm_IK(): Z>=0 && X<0 直接返回 -1
+      5. 相机禁飞区  —— arm_pose_hits_forbidden_box()
+
+    Returns:
+        (valid: bool, reason: str)
+    """
+    # 1. 有限值检查
+    if not all(math.isfinite(v) for v in (x, y, z)):
+        return False, f"坐标含无效值: ({x}, {y}, {z})"
+
+    # 2. 轴边界检查（匹配 STM32 ARM_TARGET_X/Y/Z_MIN/MAX）
+    #    STM32 收到 0x12 后加 0.03 (suction_cup_l) 到 X，
+    #    再检查，所以这里减去 0.03 作为预检查边界
+    if x < ARM_TARGET_X_MIN or x > ARM_TARGET_X_MAX:
+        return False, f"X={x:.3f}m 超限 [{ARM_TARGET_X_MIN:.2f}, {ARM_TARGET_X_MAX:.2f}]"
+    if y < ARM_TARGET_Y_MIN or y > ARM_TARGET_Y_MAX:
+        return False, f"Y={y:.3f}m 超限 [{ARM_TARGET_Y_MIN:.2f}, {ARM_TARGET_Y_MAX:.2f}]"
+    if z < ARM_TARGET_Z_MIN or z > ARM_TARGET_Z_MAX:
+        return False, f"Z={z:.3f}m 超限 [{ARM_TARGET_Z_MIN:.2f}, {ARM_TARGET_Z_MAX:.2f}]"
+
+    # 3. IK 可达性检查（二连杆几何约束）
+    dist = math.sqrt(x * x + y * y + z * z)
+    if dist > ARM_WORKSPACE_RADIUS_MAX:
+        return False, f"距离={dist:.3f}m 超出最大伸展 {ARM_WORKSPACE_RADIUS_MAX:.2f}m"
+    if dist < ARM_WORKSPACE_RADIUS_MIN:
+        return False, f"距离={dist:.3f}m 小于最小收缩 {ARM_WORKSPACE_RADIUS_MIN:.2f}m"
+
+    # 4. IK 肩下禁区：Arm_IK 在前向区域(Z>=0)要求 X>=0
+    #    即不能前伸到肩关节水平以下
+    if z >= 0 and x < 0:
+        return False, f"前向禁区: Z={z:.3f}>=0 时 X={x:.3f}<0（肩关节以下无法前伸）"
+
+    # 5. 相机禁飞区：如果目标点本身落在禁飞区内则拒绝
+    #    （完整路径避让由 STM32 路径规划处理）
+    if (ARM_FORBID_X_MIN <= x <= ARM_FORBID_X_MAX and
+        ARM_FORBID_Y_MIN <= y <= ARM_FORBID_Y_MAX and
+        ARM_FORBID_Z_MIN <= z <= ARM_FORBID_Z_MAX):
+        return False, f"目标落入相机禁飞区: ({x:.3f}, {y:.3f}, {z:.3f})"
+
+    return True, "OK"
+
+
+def stm32_will_accept(x, y, z):
+    """
+    预测 STM32 是否会接受此目标（带吸盘补偿后的检查）。
+
+    STM32 内部 pipeline:
+      incoming_target → apply_suction_compensation(+0.03 on X)
+        → arm_target_in_range() → arm_find_first_valid_pick_candidate()
+          → for each Z candidate: arm_target_in_range + Arm_IK
+
+    Returns:
+        (will_accept: bool, detail: str)
+    """
+    # 模拟 STM32 吸盘补偿
+    comp_x = x + STM32_SUCTION_CUP_L
+    comp_y = y
+    comp_z = z
+
+    # 补偿后轴边界（原始 STM32 边界）
+    if comp_x < -0.20 or comp_x > 0.45:
+        return False, f"补偿后 X={comp_x:.3f} 超 STM32 边界 [-0.20, 0.45]"
+    if comp_y < -0.50 or comp_y > 0.50:
+        return False, f"Y={comp_y:.3f} 超 STM32 边界 [-0.50, 0.50]"
+    if comp_z < -0.75 or comp_z > 0.55:
+        return False, f"Z={comp_z:.3f} 超 STM32 边界 [-0.75, 0.55]"
+
+    # 补偿后 IK 可达性
+    dist = math.sqrt(comp_x * comp_x + comp_y * comp_y + comp_z * comp_z)
+    if dist > ARM_WORKSPACE_RADIUS_MAX:
+        return False, f"补偿后距离={dist:.3f}m STM32 无法到达"
+    if dist < ARM_WORKSPACE_RADIUS_MIN:
+        return False, f"补偿后距离={dist:.3f}m 过于靠近基座"
+
+    return True, "STM32 应可接受"
 
 
 # ==================== 状态机定义 ====================
@@ -225,13 +336,24 @@ class ArmStateMachine(Node):
         final_x, final_y, final_z, _ = self.transform_and_offset(radar_x, radar_y, radar_z)
         final_x += HALF_BOX_HEIGHT  # 中心 → 顶面（在 arm 系 X 轴上加半高）
 
-        # 工作空间检查
-        dist = math.sqrt(final_x**2 + final_y**2 + final_z**2)
-        if dist > ARM_WORKSPACE_RADIUS_MAX or dist < ARM_WORKSPACE_RADIUS_MIN:
-            self.get_logger().error(f"坐标超出机械臂工作空间: "
-                                    f"({final_x:.3f}, {final_y:.3f}, {final_z:.3f}) "
-                                    f"dist={dist:.3f} (范围 {ARM_WORKSPACE_RADIUS_MIN}~{ARM_WORKSPACE_RADIUS_MAX})")
+        # == 全面有效性检查（匹配 STM32 arm_task.c + arm.c 超限条件） ==
+        valid, reason = validate_arm_target(final_x, final_y, final_z)
+        if not valid:
+            self.get_logger().error(
+                f"⚠️ 目标超限（{reason}），清除缓存重新采集\n"
+                f"  坐标: ({final_x:.3f}, {final_y:.3f}, {final_z:.3f}) "
+                f"原始: ({radar_x:.3f}, {radar_y:.3f}, {radar_z:.3f})"
+            )
+            # 清除位置缓存，强制重新积累稳定样本
+            self.position_cache.clear()
             return
+
+        # STM32 接收预判
+        will_accept, stm32_reason = stm32_will_accept(final_x, final_y, final_z)
+        if not will_accept:
+            self.get_logger().warn(
+                f"⚠️ STM32 可能拒绝（{stm32_reason}），但 ROS 侧检查通过。"
+            )
 
         # 加入缓存
         self.position_cache.append((final_x, final_y, final_z))
