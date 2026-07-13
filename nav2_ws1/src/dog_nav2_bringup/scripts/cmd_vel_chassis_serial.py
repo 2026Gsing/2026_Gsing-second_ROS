@@ -56,9 +56,24 @@ CMD_ARM_CONTROL = 0x12 # 功能码：机械臂单次控制
 CMD_SUCTION     = 0x13 # 功能码：吸盘控制
 CMD_ARM_MISSION = 0x14 # 功能码：机械臂多段任务（pick/back/place）
 CMD_AUTO_TASK   = 0x15 # 功能码：自动任务事件
+CMD_ARM_EVENT   = 0x22 # STM32 -> vision: arm mission event
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
+LEN_ARM_EVENT_PAYLOAD = 16
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
+
+ARM_EVENT_PICK_DONE = 0x01
+ARM_EVENT_PLACE_DONE = 0x02
+_ARM_EVENT_NAMES = {
+    ARM_EVENT_PICK_DONE: "pick_done",
+    ARM_EVENT_PLACE_DONE: "place_done",
+}
+_ARM_BACK_SIDE_NAMES = {
+    0: "unknown",
+    1: "left",
+    2: "right",
+    3: "center",
+}
 
 # 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
 ROBOT_STATE_IDLE     = 0  # 空闲/停止
@@ -106,6 +121,7 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
         self.declare_parameter("arm_control_topic", "/vision/arm_control")
         self.declare_parameter("arm_mission_topic", "/vision/arm_mission")
+        self.declare_parameter("arm_event_topic", "/vision/arm_event")
         self.declare_parameter("send_rate_hz", 50.0)
         self.declare_parameter("stale_timeout_sec", 0.25)
         self.declare_parameter("command_hold_timeout_sec", 0.75)
@@ -126,6 +142,7 @@ class CmdVelChassisSerial(Node):
         gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
         arm_control_topic = self.get_parameter("arm_control_topic").get_parameter_value().string_value
         arm_mission_topic = self.get_parameter("arm_mission_topic").get_parameter_value().string_value
+        arm_event_topic = self.get_parameter("arm_event_topic").get_parameter_value().string_value
         self._send_rate = max(
             10.0, self.get_parameter("send_rate_hz").get_parameter_value().double_value
         )
@@ -154,6 +171,8 @@ class CmdVelChassisSerial(Node):
         self._last_cmd_log_time = 0.0
         self._serial_lock = threading.Lock()
         self._critical_tx_queue = []
+        self._rx_stop = threading.Event()
+        self._rx_buffer = bytearray()
 
         # ============ 打开串口 ============
         try:
@@ -181,6 +200,11 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
         self.create_subscription(String, arm_control_topic, self._arm_control_cb, _qos)
         self.create_subscription(String, arm_mission_topic, self._arm_mission_cb, _qos)
+        self.arm_event_pub = self.create_publisher(String, arm_event_topic, 10)
+        self.get_logger().info(f"Publishing STM32 arm events on {arm_event_topic}")
+
+        self._rx_thread = threading.Thread(target=self._serial_rx_loop, daemon=True)
+        self._rx_thread.start()
 
         # ============ 定时发送 ============
         period = 1.0 / self._send_rate
@@ -220,6 +244,81 @@ class CmdVelChassisSerial(Node):
         if item["remaining"] <= 0:
             self._critical_tx_queue.pop(0)
         return pkt, label
+
+    def _serial_rx_loop(self):
+        while not self._rx_stop.is_set():
+            try:
+                chunk = self._ser.read(64)
+            except (serial.SerialException, OSError) as e:
+                if not self._rx_stop.is_set():
+                    self.get_logger().error(f"Serial read failed: {e}")
+                break
+            if chunk:
+                self._feed_rx_bytes(chunk)
+
+    def _feed_rx_bytes(self, chunk: bytes):
+        self._rx_buffer.extend(chunk)
+        while True:
+            if len(self._rx_buffer) < 5:
+                return
+
+            head = self._rx_buffer.find(bytes([HEAD1, HEAD2]))
+            if head < 0:
+                keep_last_head = len(self._rx_buffer) > 0 and self._rx_buffer[-1] == HEAD1
+                self._rx_buffer[:] = bytes([HEAD1]) if keep_last_head else b""
+                return
+            if head > 0:
+                del self._rx_buffer[:head]
+            if len(self._rx_buffer) < 5:
+                return
+
+            payload_len = self._rx_buffer[3]
+            frame_len = 5 + payload_len
+            if len(self._rx_buffer) < frame_len:
+                return
+
+            frame = bytes(self._rx_buffer[:frame_len])
+            del self._rx_buffer[:frame_len]
+
+            checksum = sum(frame[:-1]) & 0xFF
+            if checksum != frame[-1]:
+                self.get_logger().warn(
+                    f"Drop STM32 frame: checksum expected=0x{checksum:02X} got=0x{frame[-1]:02X}"
+                )
+                continue
+
+            self._handle_rx_frame(frame[2], frame[4:-1])
+
+    def _handle_rx_frame(self, func: int, payload: bytes):
+        if func == CMD_ARM_EVENT:
+            self._handle_arm_event(payload)
+
+    def _handle_arm_event(self, payload: bytes):
+        if len(payload) != LEN_ARM_EVENT_PAYLOAD:
+            self.get_logger().warn(
+                f"Drop arm event: len={len(payload)} expected={LEN_ARM_EVENT_PAYLOAD}"
+            )
+            return
+
+        event, mission_mode, back_slot, back_side, x, y, z = struct.unpack("<BBBBfff", payload)
+        event_name = _ARM_EVENT_NAMES.get(event, f"unknown_{event}")
+        side_name = _ARM_BACK_SIDE_NAMES.get(back_side, f"unknown_{back_side}")
+        data = {
+            "event": event,
+            "event_name": event_name,
+            "mission_mode": mission_mode,
+            "back_slot": back_slot,
+            "back_side": back_side,
+            "back_side_name": side_name,
+            "target": {"x": x, "y": y, "z": z},
+        }
+        msg = String()
+        msg.data = json.dumps(data, separators=(",", ":"))
+        self.arm_event_pub.publish(msg)
+        self.get_logger().info(
+            f"[ARM_EVENT] {event_name} slot={back_slot} side={side_name} "
+            f"target=({x:.3f},{y:.3f},{z:.3f})"
+        )
 
     def _twist_cb(self, msg: Twist):
         """接收 Nav2 的 /cmd_vel 消息，缓存最新值"""
@@ -473,12 +572,19 @@ class CmdVelChassisSerial(Node):
 
     def destroy_node(self):
         """节点销毁时发送停止帧，确保机器人安全停车"""
+        self._rx_stop.set()
         if self._zero_on_shutdown and self._ser and self._ser.is_open:
             try:
                 self._write_serial(self._build_packet(0.0, 0.0, ROBOT_STATE_IDLE), flush=True)
             except Exception:
                 pass
-            self._ser.close()
+        if self._ser and self._ser.is_open:
+            try:
+                self._ser.close()
+            except Exception:
+                pass
+        if getattr(self, "_rx_thread", None) and self._rx_thread.is_alive():
+            self._rx_thread.join(timeout=0.2)
         super().destroy_node()
 
 

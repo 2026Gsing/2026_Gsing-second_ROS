@@ -112,6 +112,9 @@ _CMD_NAMES = {
     AUTO_CMD_NEXT: "NEXT", AUTO_CMD_FINISH: "FINISH", AUTO_CMD_ESTOP: "ESTOP",
 }
 
+ARM_EVENT_PICK_DONE = 1
+ARM_EVENT_PLACE_DONE = 2
+
 # ============================================================
 # 视觉状态枚举
 # ============================================================
@@ -203,6 +206,7 @@ class VisionAutoTaskNode(Node):
         self.create_subscription(String, "/vision/detected_objects", self._detection_cb, 10)
         # 订阅 LiDAR 立方体检测结果（来自 cube_detector.py）
         self.create_subscription(Marker, "/detected_cube", self._cube_cb, 10)
+        self.create_subscription(String, "/vision/arm_event", self._arm_event_cb, 10)
 
         # ======================== 发布 ========================
         # auto_cmd_payload: JSON {"cmd":2,"target":0,"zone":1} 发给 serial 桥
@@ -231,6 +235,9 @@ class VisionAutoTaskNode(Node):
         self._cube_recv_time = 0.0        # 时间戳
         self._cube_cache = []             # 稳定检测滑动窗口
         self._pick_done = False           # 抓取完成标记
+        self._last_arm_event = None
+        self._last_arm_event_time = 0.0
+        self._pick_event_received = False
 
         self.get_logger().info("VisionAutoTaskNode 已启动，等待 START 命令")
         self._publish_state()
@@ -320,6 +327,35 @@ class VisionAutoTaskNode(Node):
         """接收 cube_detector 的立方体检测结果"""
         self._latest_cube = msg
         self._cube_recv_time = time.monotonic()
+
+    def _arm_event_cb(self, msg):
+        """接收 STM32 回传的机械臂任务事件（由串口桥解析 0x22）。"""
+        try:
+            data = json.loads(msg.data)
+        except Exception as e:
+            self.get_logger().warn(f"[ARM_EVENT] JSON 解析失败: {e}")
+            return
+
+        event = int(data.get("event", 0))
+        event_name = data.get("event_name", "")
+        self._last_arm_event = data
+        self._last_arm_event_time = time.monotonic()
+
+        if event == ARM_EVENT_PICK_DONE or event_name == "pick_done":
+            side_name = data.get("back_side_name", "unknown")
+            back_slot = int(data.get("back_slot", 0))
+            self._pick_event_received = True
+            self.get_logger().info(
+                f"[ARM_EVENT] pick_done: back_slot={back_slot} side={side_name}"
+            )
+            if self.state == VS.WAIT_PICK:
+                self._cube_cache = []
+                self._pick_done = False
+                self._transition_to(VS.NAV_ZONE)
+            return
+
+        if event == ARM_EVENT_PLACE_DONE or event_name == "place_done":
+            self.get_logger().info("[ARM_EVENT] place_done")
 
     def _read_decision_file(self):
         """从 JSON 文件读取数学决策结果（文件 IPC 方式）"""
@@ -443,6 +479,8 @@ class VisionAutoTaskNode(Node):
             self._cube_cache = []
             self._pick_done = False
             self._latest_cube = None
+        if new_state == VS.WAIT_PICK:
+            self._pick_event_received = False
 
     def _elapsed(self) -> float:
         return time.monotonic() - self._state_enter_time
@@ -709,7 +747,7 @@ class VisionAutoTaskNode(Node):
 
         # 阶段三: 超时 → 发送 PICK_DONE
         if self._elapsed() > self.get_parameter("pick_timeout_sec").value:
-            self.get_logger().info("[抓取] 超时，发送 PICK_DONE")
+            self.get_logger().warn("[抓取] 等待 ARM_EVENT pick_done 超时，使用 PICK_DONE 兜底")
             self.send_auto_cmd(AUTO_CMD_PICK_DONE)
             self._cube_cache = []
             self._pick_done = False
