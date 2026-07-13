@@ -230,9 +230,9 @@ class FastLIOLocalization(Node):
         self.scan_buffer = []
 
         n_scan = len(np.array(scan_tobe_mapped.points))
-        # 跳过单帧（< 5000 点），点数太少 ICP 不可靠
-        if n_scan < 5000:
-            self.get_logger().warn(f"Skipping ICP: only {n_scan} pts, need >= 5000")
+        # 跳过单帧（< 2000 点），点数太少 ICP 不可靠
+        if n_scan < 2000:
+            self.get_logger().warn(f"Skipping ICP: only {n_scan} pts, need >= 2000")
             return
 
         global_map_in_FOV = self.crop_global_map_in_FOV(pose_estimation)

@@ -36,13 +36,26 @@ _ROS_SETUP = "source /opt/ros/jazzy/setup.bash"
 _PROCS = []  # 子进程列表
 _LOG_PATHS = {}  # name → logfile path
 
+_LOG_CATEGORIES = {
+    "LiDAR": "lidar",
+    "FAST-LIO2": "slam",
+    "RViz": "nav2",
+}
+
+
+def _log_dir(name):
+    """返回日志分类子目录"""
+    cat = _LOG_CATEGORIES.get(name, "other")
+    d = _LOG_DIR / cat
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
 
 def launch(cmd, name=""):
-    """启动后台进程，输出写入 logs/"""
+    """启动后台进程，输出写入 logs/{category}/"""
     env = os.environ.copy()
     env["RMW_IMPLEMENTATION"] = "rmw_cyclonedds_cpp"
-    _LOG_DIR.mkdir(parents=True, exist_ok=True)
-    logfile = _LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_{name}.log"
+    logfile = _log_dir(name) / f"{time.strftime('%Y-%m-%d_%H%M%S')}_{name}.log"
     f = open(logfile, "w")
     p = subprocess.Popen(
         ["bash", "-c", cmd],

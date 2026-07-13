@@ -86,7 +86,7 @@ class PointCloudXFilter(Node):
 
 
 # ==================== 日志输出 → logs/ ====================
-_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir = Path(__file__).resolve().parent.parent / "logs" / "slam"
 _logdir.mkdir(parents=True, exist_ok=True)
 _logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_pointcloud_x_filter.log", "w", buffering=1)
 

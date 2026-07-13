@@ -186,7 +186,7 @@ class MoveTestNode(Node):
             self.get_logger().warn(f"  ⚠ {port} 不存在，跳过串口桥")
             return
 
-        log_dir = os.path.join(_PROJECT_ROOT, "logs")
+        log_dir = os.path.join(_PROJECT_ROOT, "logs", "serial")
         os.makedirs(log_dir, exist_ok=True)
         leg_csv = os.path.join(log_dir, f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
         launch(

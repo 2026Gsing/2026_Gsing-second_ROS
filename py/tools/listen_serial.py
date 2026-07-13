@@ -25,7 +25,7 @@ from pathlib import Path
 import serial.tools.list_ports
 
 # ==================== 日志输出 → logs/ ====================
-_LOGDIR = Path(__file__).resolve().parent.parent / "logs"
+_LOGDIR = Path(__file__).resolve().parent.parent / "logs" / "serial"
 _LOGDIR.mkdir(parents=True, exist_ok=True)
 _logfile = open(_LOGDIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_listen_serial.log", "w", buffering=1)
 

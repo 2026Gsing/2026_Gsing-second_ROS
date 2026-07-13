@@ -333,7 +333,7 @@ class CubeDetector(Node):
 
 
 # ==================== 日志输出 → logs/ ====================
-_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir = Path(__file__).resolve().parent.parent / "logs" / "vision"
 _logdir.mkdir(parents=True, exist_ok=True)
 _logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log", "w", buffering=1)
 

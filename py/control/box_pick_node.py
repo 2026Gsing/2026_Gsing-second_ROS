@@ -19,7 +19,7 @@ import rclpy
 from rclpy.node import Node
 from visualization_msgs.msg import Marker
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Twist
 from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateToPose
 from arrival_detector import quaternion_to_yaw
@@ -35,17 +35,13 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent          # py/control/
 
-# ============ 自动到达检测参数（ICP-only，基于位置变化）============
-POS_STOP_THRESHOLD = 0.02     # 位置变化低于此值视为停止 (m)
-ARRIVED_FRAMES = 10           # 连续多少帧位置变化低于阈值算到达 (~2s @5Hz)
-
 
 class BoxPickNode(Node):
     def __init__(self):
         super().__init__('box_pick_node')
 
         # ============ 线程锁（保护多线程竞争） ============
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
 
         # ============ 子进程 ============
         self._cube_proc = None
@@ -56,10 +52,10 @@ class BoxPickNode(Node):
         self._latest_cube = None           # Marker msg (unilidar_lidar 坐标)
         self._cube_received_time = 0.0
 
-        # ============ 自动到达检测（基于位置变化） ============
-        self._last_pos = None              # 上一帧位置 (x, y)
-        self._arrival_count = 0            # 连续稳定帧计数
+        # ============ 自动到达检测（基于坐标匹配） ============
+        self._nav_goal_pos = None          # 当前 Nav2 目标位置 (x, y)
         self._arrival_triggered = False    # 是否已触发到达流程（防重复）
+        self.ARRIVAL_DIST_THRESHOLD = 0.01 # 距离目标多近算到达 (m)
 
         # ============ 状态 ============
         self._busy = False
@@ -69,6 +65,9 @@ class BoxPickNode(Node):
         self.create_subscription(Marker, '/detected_cube', self._cube_cb, 10)
         self.create_subscription(Odometry, '/localization', self._localization_cb, 10)
         self.create_subscription(PoseStamped, '/goal_pose', self._goal_pose_cb, 10)
+
+        # ============ 发布器 ============
+        self._vel_pub = self.create_publisher(Twist, "/vision_cmd_vel", 10)
 
         # ============ Nav2 Action Client ============
         self._nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -123,52 +122,35 @@ class BoxPickNode(Node):
         with self._lock:
             self._latest_localization = msg
 
-            # ============ 自动到达检测（基于位置变化） ============
+            # ============ 自动到达检测（基于坐标匹配） ============
             if self._arrival_triggered or self._busy:
-                return  # 已触发或正在处理，跳过
+                return
+            if self._nav_goal_pos is None:
+                return
 
             x = msg.pose.pose.position.x
             y = msg.pose.pose.position.y
+            gx, gy = self._nav_goal_pos
+            dist = math.hypot(x - gx, y - gy)
 
-            if self._last_pos is not None:
-                dx = x - self._last_pos[0]
-                dy = y - self._last_pos[1]
-                moved = math.hypot(dx, dy)
-
-                if moved < POS_STOP_THRESHOLD:
-                    self._arrival_count += 1
-                    if self._arrival_count >= ARRIVED_FRAMES:
-                        self.get_logger().info(
-                            f"[自动到达] 位置稳定持续 {ARRIVED_FRAMES} 帧 "
-                            f"(移动={moved:.4f}m) → 启动检测"
-                        )
-                        self._arrival_triggered = True
-                        self.on_arrived()
-                    elif self._arrival_count % 3 == 0:
-                        self.get_logger().info(
-                            f"[到达检测] 稳定帧 #{self._arrival_count}/{ARRIVED_FRAMES} "
-                            f"移动={moved:.4f}m"
-                        )
-                else:
-                    if self._arrival_count > 0:
-                        self.get_logger().info(
-                            f"[到达检测] 位置变化({moved:.3f}m)，重置计数 "
-                            f"(已积累{self._arrival_count}帧)"
-                        )
-                    self._arrival_count = 0
-            else:
-                # 第一帧，初始化位置
-                pass
-
-            self._last_pos = (x, y)
+            if dist < self.ARRIVAL_DIST_THRESHOLD:
+                self.get_logger().info(
+                    f"[自动到达] 到达目标 ({gx:.2f}, {gy:.2f}) "
+                    f"当前位置 ({x:.3f}, {y:.3f}) 距离={dist:.3f}m"
+                )
+                self._arrival_triggered = True
+                self._nav_goal_pos = None
+                self.on_arrived()
 
     def _goal_pose_cb(self, msg):
-        """打印 RViz 2D Nav Goal 的目标坐标"""
+        """记录 Nav2 目标坐标 → 到达检测用"""
         x = msg.pose.position.x
         y = msg.pose.position.y
         qz = msg.pose.orientation.z
         qw = msg.pose.orientation.w
         yaw = math.atan2(2.0 * (qw * qz), 1.0 - 2.0 * (qz * qz))
+        with self._lock:
+            self._nav_goal_pos = (x, y)
         self.get_logger().info(
             f"[目标] 收到 Nav2 Goal: ({x:.3f}, {y:.3f}) yaw={yaw:.3f}"
         )
@@ -235,6 +217,11 @@ class BoxPickNode(Node):
         self.get_logger().info("=" * 60)
         self.get_logger().info(f"[开始] 状态: {self._state} → DETECTING，启动 cube_detector.py")
         self.get_logger().info("=" * 60)
+
+        # 发停止指令（通过 /vision_cmd_vel 优先级高于 Nav2 的 /cmd_vel）
+        stop = Twist()
+        self._vel_pub.publish(stop)
+        self.get_logger().info("[停止] 已发送停止指令")
 
         self._start_cube_detector()
         # 在独立线程中等待检测结果（避免阻塞 spin）
@@ -454,7 +441,9 @@ class BoxPickNode(Node):
             self.get_logger().info("[CUBE] 已在运行，跳过")
             return
         script = str(_HERE / "cube_detector.py")
-        logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log")
+        _logdir = _HERE.parent.parent / "logs" / "vision"
+        _logdir.mkdir(parents=True, exist_ok=True)
+        logfile = str(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log")
         try:
             f = open(logfile, "w")
             self._cube_proc = subprocess.Popen(
@@ -486,7 +475,9 @@ class BoxPickNode(Node):
             self.get_logger().info("[CATCH] 已在运行，跳过")
             return
         script = str(_HERE / "catch.py")
-        logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_catch.log")
+        _logdir = _HERE.parent.parent / "logs" / "arm"
+        _logdir.mkdir(parents=True, exist_ok=True)
+        logfile = str(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_catch.log")
         try:
             f = open(logfile, "w")
             self._catch_proc = subprocess.Popen(
@@ -523,7 +514,6 @@ class BoxPickNode(Node):
             self._nav_succeeded = False
             self._latest_cube = None
             self._arrival_triggered = False  # 允许下次自动到达检测
-            self._arrival_count = 0
         self.get_logger().info("[结束] 已回到 IDLE，可开始下一箱")
 
     # ================================================================
@@ -556,6 +546,7 @@ def _sigint_handler(sig, frame):
 
 def main():
     signal.signal(signal.SIGINT, _sigint_handler)
+    os.environ.setdefault("ROS_LOG_DIR", str(_HERE.parent.parent / "logs" / "ros"))
     rclpy.init()
     node = BoxPickNode()
 

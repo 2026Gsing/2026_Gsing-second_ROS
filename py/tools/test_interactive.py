@@ -104,7 +104,7 @@ def cmd_gait(gait_id):
 
 # ==================== 日志输出 → logs/ ====================
 from pathlib import Path
-_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir = Path(__file__).resolve().parent.parent / "logs" / "serial"
 _logdir.mkdir(parents=True, exist_ok=True)
 _logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_test_interactive.log", "w", buffering=1)
 

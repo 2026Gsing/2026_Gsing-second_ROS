@@ -1,6 +1,0 @@
-[INFO] [launch]: All log files can be found below /home/hyper/.ros/log/2026-07-14-04-26-09-740706-hyper-Ubuntu-41510
-[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [41714]
-[cmd_vel_chassis_serial.py-1] [INFO] [1783974370.033116193] [cmd_vel_chassis_serial]: Opened /dev/ttyACM0 @ 115200, cmd_vel=/cmd_vel, send=50.0Hz
-[cmd_vel_chassis_serial.py-1] [INFO] [1783974370.035926461] [cmd_vel_chassis_serial]: Publishing STM32 arm events on /vision/arm_event
-[cmd_vel_chassis_serial.py-1] [INFO] [1783974370.057048791] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000

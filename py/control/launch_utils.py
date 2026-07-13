@@ -20,20 +20,35 @@ from pathlib import Path
 
 _PROJECT = Path(__file__).resolve().parent.parent.parent  # 2026_Gsing-second_ROS/
 _LOG_DIR = _PROJECT / "logs"
+_LOG_DIR.mkdir(parents=True, exist_ok=True)
+os.environ["ROS_LOG_DIR"] = str(_LOG_DIR / "ros")
 _PROCESSES = []
+
+# ============ 分类映射（name→子目录） ============
+_LOG_CATEGORIES = {
+    "LiDAR": "lidar",
+    "ICP": "slam",
+    "TF桥": "slam",
+    "FAST-LIO2": "slam",
+    "RViz": "nav2",
+    "Nav2": "nav2",
+    "串口桥": "serial",
+    "腿部调试": "serial",
+}
 
 # ============ 开关 ============
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
-MAP_NAME = "map/PCD15"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
+MAP_NAME = "map/PCD17"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
 
 
 def _log_path(name):
-    """生成日志文件路径: logs/YYYY-MM-DD_HHMMSS_name.log"""
-    _LOG_DIR.mkdir(parents=True, exist_ok=True)
+    """生成日志文件路径: logs/{category}/YYYY-MM-DD_HHMMSS_name.log"""
+    cat = _LOG_CATEGORIES.get(name, "other")
+    (cat_dir := _LOG_DIR / cat).mkdir(parents=True, exist_ok=True)
     ts = time.strftime("%Y-%m-%d_%H%M%S")
-    return str(_LOG_DIR / f"{ts}_{name}.log")
+    return str(cat_dir / f"{ts}_{name}.log")
 
 
 def launch(cmd, cwd=None, name=""):
@@ -143,7 +158,8 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     # 串口桥（串口设备不存在则跳过，避免进程崩溃）
     if os.path.exists(SERIAL_PORT):
         _LOG_DIR.mkdir(parents=True, exist_ok=True)
-        leg_csv = str(_LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
+        (_LOG_DIR / "serial").mkdir(parents=True, exist_ok=True)
+        leg_csv = str(_LOG_DIR / "serial" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
         launch(
             f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
             f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
