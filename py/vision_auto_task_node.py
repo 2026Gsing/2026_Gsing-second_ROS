@@ -22,6 +22,10 @@ import math
 import sys
 import time
 import json
+import subprocess
+import os
+import signal
+import atexit
 from pathlib import Path
 
 import rclpy
@@ -36,49 +40,41 @@ import yaml
 
 from arrival_detector import ArrivalDetector, quaternion_to_yaw, normalize_angle
 
-# ============================================================
-# 物资箱类型常量
-# ============================================================
-BOX_FOOD = 1
-BOX_TOOL = 2
-BOX_INSTRUMENT = 3
-BOX_MEDICINE = 4
+# ╔══════════════════════════════════════════════════════════╗
+# ║  赛前配置 — 比赛前一分钟改这里即可                      ║
+# ╚══════════════════════════════════════════════════════════╝
+# field_id:=1 或 field_id:=2（启动时命令行指定）
 
-_BOX_TYPE_NAMES = {
-    BOX_FOOD: "食品", BOX_TOOL: "工具",
-    BOX_INSTRUMENT: "仪器", BOX_MEDICINE: "药品",
-}
-
-# ============================================================
-# 场地布局（赛前按实际场地修改）
-# boxes[场地号][排][列] — 排0=外排(靠启动区) 排1=内排(靠归位区)
-# zones[场地号][区索引] — 区0~3对应的物资类型
-# 坐标模板: col_x[0..3], outer_y(靠启动区), inner_y(靠归位区), zone_x[0..3], zone_y
-# ============================================================
+# 物资箱: 1=食品  2=工具  3=仪器  4=药品
+# boxes[场地号][排][列] — 排0=外排(靠启动区固定) 排1=内排(靠归位区随机↓)
 FIELD_BOXES = {
     1: [
-        [0, 0, 0, 0],  # ← 外排（靠启动区），赛前填入
-        [BOX_FOOD, BOX_TOOL, BOX_INSTRUMENT, BOX_MEDICINE],  # 内排（靠归位区）固定
+        [1, 2, 3, 4],  # 外排（靠启动区）固定: 食品 工具 仪器 药品
+        [0, 0, 0, 0],  # ← 内排随机，改成现场顺序
     ],
     2: [
-        [0, 0, 0, 0],  # ← 外排（靠启动区），赛前填入
-        [BOX_MEDICINE, BOX_INSTRUMENT, BOX_TOOL, BOX_FOOD],  # 内排（靠归位区）固定
+        [4, 3, 2, 1],  # 外排（靠启动区）固定: 药品 仪器 工具 食品
+        [0, 0, 0, 0],  # ← 内排随机，改成现场顺序
     ],
 }
 
+# 归位区类型
 FIELD_ZONES = {
-    1: [BOX_FOOD, BOX_TOOL, BOX_INSTRUMENT, BOX_MEDICINE],   # 食品 工具 仪器 药品
-    2: [BOX_MEDICINE, BOX_INSTRUMENT, BOX_TOOL, BOX_FOOD],   # 药品 仪器 工具 食品
+    1: [1, 2, 3, 4],  # 食品 工具 仪器 药品
+    2: [4, 3, 2, 1],  # 药品 仪器 工具 食品
 }
 
-# 坐标模板（两个场地物理尺寸相同，仅类型分配不同）
+# 坐标（一般不用改）
 _BOX_COL_X = [0.5, 1.1, 1.7, 2.3]
-_BOX_OUTER_Y = 1.0   # 外排 = 靠启动区（y 小）
-_BOX_INNER_Y = 1.5   # 内排 = 靠归位区（y 大）
+_BOX_OUTER_Y = 1.0   # 外排靠启动区
+_BOX_INNER_Y = 1.5   # 内排靠归位区
 _BOX_YAW = 0.0
 _ZONE_X = [0.6, 1.4, 2.2, 3.0]
 _ZONE_Y = 5.0
 _ZONE_YAW = 3.14
+
+# 类型名（仅供日志显示）
+_BOX_TYPE_NAMES = {1: "食品", 2: "工具", 3: "仪器", 4: "药品"}
 
 # ============================================================
 # AUTO_CMD 常量（与 STM32 protocol_handler.h 严格一致）
@@ -691,19 +687,169 @@ class VisionAutoTaskNode(Node):
 # ================================================================
 # 入口
 # ================================================================
+# ================================================================
+# 一键启动 —— 拉起所有 ROS 节点 + 本状态机
+# ================================================================
+
+_PROCS = []  # 所有子进程列表
+
+
+def _launch(cmd, cwd=None, name=""):
+    """启动一个后台进程"""
+    env = os.environ.copy()
+    env["RMW_IMPLEMENTATION"] = "rmw_cyclonedds_cpp"
+    p = subprocess.Popen(
+        ["bash", "-c", cmd], cwd=cwd, env=env, preexec_fn=os.setsid,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    _PROCS.append(p)
+    print(f"  [{name}] PID={p.pid}")
+    return p
+
+
+def _cleanup():
+    """清理所有子进程"""
+    for p in _PROCS:
+        try:
+            os.killpg(os.getpgid(p.pid), signal.SIGTERM)
+        except Exception:
+            pass
+    _PROCS.clear()
+
+
+def _prompt_config():
+    """赛前配置交互"""
+    print()
+    print("╔══════════════════════════════════════════════╗")
+    print("║         赛前配置                             ║")
+    print("╚══════════════════════════════════════════════╝")
+    print(" 1=食品  2=工具  3=仪器  4=药品")
+    print()
+
+    field_id = None
+    while field_id not in (1, 2):
+        try:
+            field_id = int(input(" 场地号 (1 或 2): ").strip())
+        except (ValueError, EOFError):
+            pass
+
+    print(f" 使用场地 {field_id}")
+    print(" 内排顺序（靠归位区那边，4 个数字空格分隔）:")
+
+    inner = []
+    while len(inner) != 4 or sorted(inner) != [1, 2, 3, 4]:
+        try:
+            raw = input("   例: 2 1 4 3  → ").strip().split()
+            inner = [int(x) for x in raw]
+            if len(inner) != 4 or sorted(inner) != [1, 2, 3, 4]:
+                print("   错误: 需要 1/2/3/4 各一个，重新输入")
+                inner = []
+        except (ValueError, EOFError):
+            inner = []
+
+    # 写入配置
+    FIELD_BOXES[field_id][1] = inner
+    print(f" 内排: {inner}")
+    print()
+
+    return field_id
+
+
 def main(args=None):
+    # === 赛前配置 ===
+    field_id = _prompt_config()
+
+    # === 项目路径 ===
+    project = Path(__file__).resolve().parent.parent  # 2026_Gsing-second_ROS
+    fastlio_dir = str(project / "fastlio2_v2")
+    nav2_dir = str(project / "nav2_ws1")
+    map_dir = project / "map"
+    pcd_map = str(map_dir / "map.pcd")
+    pgm_map = str(map_dir / "pgm_map.yaml")
+
+    ros_setup = "source /opt/ros/jazzy/setup.bash"
+
+    print("╔══════════════════════════════════════════════╗")
+    print("║  启动比赛全流程 ROS 节点                      ║")
+    print("╚══════════════════════════════════════════════╝")
+
+    # 终端 1: LiDAR 驱动
+    _launch(
+        f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
+        f"ros2 launch unitree_lidar_ros2 launch.py",
+        name="LiDAR",
+    )
+
+    # 终端 2: ICP 定位 (FAST-LIO2 + transform_fusion)
+    _launch(
+        f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
+        f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
+        f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
+        f"ros2 launch fast_lio_localization 1.launch.py "
+        f"  map:={pcd_map} config_file:=unilidar_l2.yaml rviz:=true "
+        f"  map_voxel_size:=0.01 scan_voxel_size:=0.03 "
+        f"  freq_localization:=2.0 localization_threshold:=0.9",
+        name="ICP",
+    )
+
+    # 终端 2b: odometry→TF 桥
+    odom_bin = f"{fastlio_dir}/build/fast_lio/odometry_to_tf"
+    if os.path.isfile(odom_bin):
+        _launch(f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && {odom_bin}", name="TF桥")
+    else:
+        print(f"  [TF桥] 未找到 {odom_bin}，跳过")
+
+    # 终端 3: Nav2
+    _launch(
+        f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
+        f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "
+        f"  map:={pgm_map}",
+        name="Nav2",
+    )
+
+    # 终端 4: 串口桥
+    _launch(
+        f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
+        f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
+        f"  serial_port:=/dev/ttyACM0 baud_rate:=115200 "
+        f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
+        f"  active_state:=1 idle_state:=0",
+        name="串口桥",
+    )
+
+    # 注册清理
+    atexit.register(_cleanup)
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            signal.signal(sig, lambda *_: (_cleanup(), sys.exit(0)))
+        except Exception:
+            pass
+
+    print()
+    print("  ⏳ 等待节点启动（8 秒）...")
+    time.sleep(8)
+    print("  ✅ 请在 RViz 中点击「2D Pose Estimate」初始化 ICP 定位")
+    print()
+
+    # === 启动本节点 ===
     rclpy.init(args=args)
+
+    # 用输入 field_id 覆盖默认参数
     node = VisionAutoTaskNode()
+    node.field_id = field_id
+    # 清除旧序列
+    node.pickup_sequence = []
+    node.zone_sequence = []
+
     executor = rclpy.executors.MultiThreadedExecutor()
     executor.add_node(node)
 
     # 提供 CLI 交互
     print("\nVisionAutoTaskNode 已启动")
-    print("  命令: start → 开始任务")
-    print("        estop → 急停")
-    print("        quit  → 退出\n")
+    print("  start → 开始任务")
+    print("  estop → 急停")
+    print("  quit  → 退出（同时关闭所有节点）\n")
 
-    # 非阻塞输入监听
     import threading
     def cli_thread():
         while rclpy.ok():
@@ -729,6 +875,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+        _cleanup()
 
 
 if __name__ == "__main__":
