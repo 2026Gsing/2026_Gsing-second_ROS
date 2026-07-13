@@ -251,12 +251,19 @@ class CubeDetector(Node):
         edge = np.mean(dims)
 
         # 长宽比校验：立方体真实比 = 1.0，允许被遮挡截断到 2.2
+        # 边长优先原则：边长均值已在目标范围 [0.20, 0.30] 内 → 单面可见箱子，放行
         if ratio > 3.0:
-            self.get_logger().info(
-                f"  [淘汰] 聚类中心({center[0]:.3f},{center[1]:.3f},{center[2]:.3f}) "
-                f"长宽比 {ratio:.2f} > 1.8 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"
-            )
-            return None
+            if (self.edge_target - self.edge_tol < edge < self.edge_target + self.edge_tol):
+                self.get_logger().info(
+                    f"  [放行] 长宽比 {ratio:.2f} 但边长 {edge:.3f}m 在目标范围，"
+                    f"视为单面可见立方体 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"
+                )
+            else:
+                self.get_logger().info(
+                    f"  [淘汰] 聚类中心({center[0]:.3f},{center[1]:.3f},{center[2]:.3f}) "
+                    f"长宽比 {ratio:.2f} > 3.0 dims=[{dims[0]:.3f},{dims[1]:.3f},{dims[2]:.3f}]"
+                )
+                return None
 
         # 边长效验（放宽）
         if not (self.edge_target - self.edge_tol < edge < self.edge_target + self.edge_tol):

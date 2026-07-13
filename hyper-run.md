@@ -94,14 +94,16 @@ rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_conf
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
-ros2 launch pcd2pgm pcd2pgm_launch.py
+ros2 launch pcd2pgm pcd2pgm_launch.py \
+  pcd_file:=/home/hyper/program/2026_Gsing-second_ROS/map/PCD9.pcd
+# 输出: map/map.yaml + map/map.pgm（文件名与 PCD 相同，目录与 PCD 相同）
 ```
 
 ## 工具
 
 ```bash
 # 查看 PCD 点云
-pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/scans.pcd
+pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/scans.pcd
 ```
 
 ---

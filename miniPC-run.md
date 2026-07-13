@@ -107,7 +107,9 @@ rviz2 -d /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_co
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2
 source /opt/ros/jazzy/setup.bash && source install/setup.bash
-ros2 launch pcd2pgm pcd2pgm_launch.py
+ros2 launch pcd2pgm pcd2pgm_launch.py \
+  pcd_file:=/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/map.pcd
+# 输出: map/map.yaml + map/map.pgm（文件名与 PCD 相同，目录与 PCD 相同）
 ```
 
 ### 工具

@@ -1,10 +1,10 @@
 /**:
     ros__parameters:
         # ================== Global Settings ==================
-        feature_extract_enable: true   # 开启特征提取，箱体边缘通常更清晰
-        max_iteration: 6               # 先用稳态迭代次数，降低噪声过拟合导致的漂移
-        filter_size_surf: 0.03         # 进一步增强边缘细节
-        filter_size_map: 0.02          # 进一步提高地图密度
+        feature_extract_enable: false  # git 上游已验证能用的配置（关闭外部特征提取）
+        max_iteration: 20              # git 上游参数：增加到20次迭代，提升收敛稳定性
+        filter_size_surf: 0.15         # git 上游参数：面特征体素滤波0.15m
+        filter_size_map: 0.1           # git 上游参数：地图体素滤波0.1m
         cube_side_length: 1200.0       # 局部地图立方体边长（米）：维护的局部地图范围
         runtime_pos_log_enable: false  # 运行时位置日志开关：是否记录实时位姿日志
         map_file_path: "./map.pcd"  # 预加载地图路径（可由 launch 参数 map:= 覆盖）
@@ -20,7 +20,7 @@
         preprocess:
             lidar_type: 5                # 雷达类型：5对应Livox雷达（宇树L2基于Livox）
             scan_line: 18                # 扫描线数：宇树L2的实际扫描线数
-            point_filter_num: 1          # 恢复点密度，避免边缘被抽稀
+            point_filter_num: 1          # git 上游参数：不抽稀，保留全部点（配合 filter_size 抑制噪声）
             blind: 0.18                  # 放宽近场过滤，保留更多有效几何点
             z_limit_enable: false        # 关闭z裁剪，避免大量点被截掉
             z_min: -2.0                  # 预留参数（关闭裁剪时不生效）
@@ -32,13 +32,13 @@
             # IMU参数
             imu_en: true                 # IMU启用开关：true=使用IMU预积分，false=纯激光SLAM
             imu_time_inte: 0.004         # IMU采样间隔（秒）：250Hz对应0.004秒
-            acc_cov: 0.05                # 适度提高IMU约束权重，改善动态建图稳定性
-            gyr_cov: 0.05                # 适度提高IMU约束权重，改善动态建图稳定性
+            acc_cov: 0.1                 # 调大→更不信 IMU 加速度预测，更多依赖激光匹配
+            gyr_cov: 0.1                 # 调大→更不信 IMU 角速度预测，更多依赖激光匹配
             b_acc_cov: 0.0001            # 加速度计零偏噪声：IMU零偏的随机游走噪声
             b_gyr_cov: 0.0001            # 陀螺仪零偏噪声：IMU零偏的随机游走噪声
             
             # 外参标定
-            extrinsic_est_en: false      # 在线外参标定开关：true=自动标定雷达-IMU外参
+            extrinsic_est_en: true       # 开启在线外参标定，自动优化 IMU-LiDAR 外参（建图完成后可关闭）
             extrinsic_T: [0.007698, 0.014655, -0.00667]  # 平移外参：IMU到雷达的平移向量（x,y,z）米
             extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]  # 倒装补偿：绕X轴旋转180度（roll=pi）
             
@@ -60,9 +60,9 @@
 
         # ================== 地图保存 ==================
         pcd_save:
-            pcd_save_en: false            # 定位时不保存，避免覆盖已有地图
+            pcd_save_en: true             # 建图完成后自动保存 PCD 地图
             interval: -1                 # 保存间隔：-1=仅结束时保存，>0=每N帧保存一次（建议100避免内存溢出）
-            voxel_size: 0.01             # 保存时更小体素，提升PCD点密度
+            voxel_size: 0.01             # git 上游参数：保存体素1cm，保留更多细节
             sor_mean_k: 12               # 保留更多边缘点，轻度去噪
             sor_stddev_mul: 2.0          # 放宽离群点阈值，避免过度删点
             flip_z: false                # 排查阶段关闭Z翻转，避免导图与定位坐标系不一致

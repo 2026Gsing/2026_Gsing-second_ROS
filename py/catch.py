@@ -8,7 +8,6 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
   3. 使用滑动窗口标准差法判断位置是否稳定
   4. 位置稳定后，先推进 STM32 自动任务状态机到 PICK 状态
   5. 再通过 /vision/arm_control 发布坐标给串口桥转发给 STM32
-  6. 以 2Hz 心跳重发确保下位机收到指令
 
 自动任务状态机推进：
   catch.py 单独运行时，STM32 的 auto_task 默认在 IDLE 状态。
@@ -52,7 +51,7 @@ import numpy as np
 # arm_x(高度) = -radar_z(高)     - OFFSET_X   # LiDAR 与臂肩的高度差
 # arm_y(侧向) = radar_y
 # arm_z(前向) =  -radar_x(前)    - OFFSET_Z   # LiDAR 与臂肩的前后偏移
-OFFSET_X = 0.125
+OFFSET_X = 0.110
 OFFSET_Y = 0.0
 OFFSET_Z = 0.25
 
@@ -126,7 +125,6 @@ class ArmStateMachine(Node):
 
         # ============ 定时器 ============
         self.status_timer = self.create_timer(5.0, self.status_callback)  # 状态打印
-        self.resend_timer = self.create_timer(0.5, self.resend_callback)  # 2Hz 心跳重发
 
         self.get_logger().info("=" * 60)
         self.get_logger().info("Arm State Machine Started (含自动任务状态机推进)")
@@ -276,14 +274,6 @@ class ArmStateMachine(Node):
             self.target_position[1],
             self.target_position[2]
         )
-
-    def resend_callback(self):
-        """2Hz 心跳重发：确保下位机收到坐标指令（防止串口丢包）"""
-        if self.state == ArmState.COMPLETED and self.target_position is not None:
-            self.get_logger().info("[Heartbeat] 保障心跳发送...")
-            self.send_arm_position(
-                self.target_position[0], self.target_position[1], self.target_position[2]
-            )
 
     def status_callback(self):
         """5 秒定时器：打印当前状态"""

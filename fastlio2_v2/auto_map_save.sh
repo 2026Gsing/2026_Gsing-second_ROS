@@ -29,11 +29,12 @@ python3 ../py/pointcloud_x_filter.py &
 FILTER_PID=$!
 sleep 1
 
-# 后台启动建图，直接指定 map_file_path 为编号文件
+# 后台启动建图，直接指定 map_file_path 为编号文件，关闭 IMU 只用激光
 ros2 run fast_lio fastlio_mapping --ros-args \
   --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml \
   -p "common.lid_topic:=/unilidar/cloud_filtered" \
   -r /livox/imu:=/unilidar/imu \
+  -p imu_en:=false \
   -p map_file_path:="${SAVE_PATH}" &
 MAPPING_PID=$!
 
@@ -49,7 +50,7 @@ echo "============================================"
 echo " 地图已保存，停止建图。"
 echo "============================================"
 
-# 清理（强杀进程组和所有子进程）
+# 清理
 pkill -9 -f "fastlio_mapping" 2>/dev/null
 pkill -9 -f "pointcloud_x_filter" 2>/dev/null
 wait $MAPPING_PID 2>/dev/null

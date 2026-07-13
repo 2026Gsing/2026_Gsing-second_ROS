@@ -32,8 +32,8 @@
             # IMU参数
             imu_en: true                 # IMU启用开关：true=使用IMU预积分，false=纯激光SLAM
             imu_time_inte: 0.004         # IMU采样间隔（秒）：250Hz对应0.004秒
-            acc_cov: 0.02                # 降低IMU协方差，增加IMU约束权重，抑制帧间抖动
-            gyr_cov: 0.02                # 降低IMU协方差，增加IMU约束权重，抑制帧间抖动
+            acc_cov: 0.1                 # 调大→更不信 IMU 加速度预测，更多依赖激光匹配
+            gyr_cov: 0.1                 # 调大→更不信 IMU 角速度预测，更多依赖激光匹配
             b_acc_cov: 0.0001            # 加速度计零偏噪声：IMU零偏的随机游走噪声
             b_gyr_cov: 0.0001            # 陀螺仪零偏噪声：IMU零偏的随机游走噪声
             
