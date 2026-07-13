@@ -287,6 +287,10 @@ class BoxPickNode(Node):
         self.get_logger().info("[抓取] ✓ 可达，启动 catch.py")
         self.get_logger().info("[抓取] catch.py 流程: 稳定检测(3-5s) → AUTO_CMD推进 → 发坐标 → 自动退出")
         self._start_catch()
+        if self._catch_proc is None:
+            self.get_logger().error("[抓取] ✗ catch.py 启动失败，回到 IDLE")
+            self._cleanup_detection()
+            return
         # 独立线程等待 catch.py 退出，然后自动清理
         t = threading.Thread(target=self._monitor_catch, daemon=True)
         t.start()
