@@ -33,7 +33,7 @@ import threading
 import time
 from enum import IntEnum
 
-_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import rclpy
 from rclpy.node import Node

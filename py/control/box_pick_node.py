@@ -5,9 +5,9 @@ box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
 流程：
   1. 在 RViz 中用 2D Nav Goal 导航到物资箱附近 (Terminal 3)
   2. 机器人停稳后自动触发 → 启动 cube_detector.py 检测前方立方体+
-  3. 检查 /detected_cube 的 xy 距离：
-     a. ≤ 30cm → 启动 catch.py 抓取
-     b. > 30cm → 重新 Nav2 导航到立方体位置，到达后再检测 → 抓取
+  3. 用 catch.py 的坐标变换 + STM32 可达性判断：
+     a. 机械臂可达 → 启动 catch.py 抓取
+     b. 不可达 → 重新 Nav2 导航靠近，到达后再检测 → 抓取
   4. 完成后回到 IDLE，可开始下一箱
   5. 也可手动输入 arrived（自动检测未生效时备用）
 
@@ -23,6 +23,7 @@ from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateToPose
 from arrival_detector import quaternion_to_yaw
 from launch_utils import start_prerequisites, cleanup_all
+from catch import transform_and_offset, validate_arm_target, stm32_will_accept
 import math
 import signal
 import sys
@@ -73,7 +74,27 @@ class BoxPickNode(Node):
         # 自动启动前置 ROS 节点
         start_prerequisites()
         self.get_logger().info("BoxPickNode 已启动")
+
+        # 等待节点启动 → 自动初始化 ICP 定位（原点, X正向）
+        self.get_logger().info("⏳ 等待 8 秒让节点就绪...")
+        time.sleep(8)
+        self._init_icp_pose()
+
         self._print_help()
+
+    def _init_icp_pose(self):
+        """发布 /initialpose 自动初始化 ICP（原点, X正向, 替代手动点 RViz）"""
+        init_script = str(_HERE / "init_pose.py")
+        try:
+            subprocess.run(
+                ["bash", "-c",
+                 f"source /opt/ros/jazzy/setup.bash && "
+                 f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp python3 {init_script}"],
+                timeout=10,
+            )
+            self.get_logger().info("✅ ICP 初始化为 (0,0,0) X正向")
+        except Exception as e:
+            self.get_logger().warn(f"⚠ ICP 初始化失败: {e}")
 
     # ================================================================
     # CLI 帮助
@@ -199,14 +220,42 @@ class BoxPickNode(Node):
                 self._cleanup_detection()
                 return
 
-            cx = cube.pose.position.x
-            cy = cube.pose.position.y
-            xy_dist = math.hypot(cx, cy)
-            self.get_logger().info(f"[检测] 立方体: x={cx:.3f}  y={cy:.3f}  xy距离={xy_dist:.3f}m")
+            cx, cy, cz = cube.pose.position.x, cube.pose.position.y, cube.pose.position.z
+            self.get_logger().info(
+                f"[原始] 雷达系坐标: x={cx:.3f}  y={cy:.3f}  z={cz:.3f}  "
+                f"xy距离={math.hypot(cx, cy):.3f}m"
+            )
 
-            if xy_dist <= DIST_XY_NEAR:
+            arm_x, arm_y, arm_z, _ = transform_and_offset(cx, cy, cz)
+            self.get_logger().info(
+                f"[变换] 机械臂系(未补偿): x={arm_x:.3f}  y={arm_y:.3f}  z={arm_z:.3f}  "
+                f"距离={math.hypot(arm_x, arm_y, arm_z):.3f}m"
+            )
+
+            arm_x += 0.125  # HALF_BOX_HEIGHT 中心→顶面
+            self.get_logger().info(
+                f"[补偿] 加半高后: x={arm_x:.3f}  y={arm_y:.3f}  z={arm_z:.3f}"
+            )
+
+            reachable, reason = validate_arm_target(arm_x, arm_y, arm_z)
+            self.get_logger().info(
+                f"[ROS侧] 轴边界+IK检查: {'通过' if reachable else f'拒绝({reason})'}"
+            )
+
+            if reachable:
+                stm32_ok, stm32_reason = stm32_will_accept(arm_x, arm_y, arm_z)
+                self.get_logger().info(
+                    f"[STM32] 补偿后检查: {'通过' if stm32_ok else f'拒绝({stm32_reason})'}"
+                )
+                if not stm32_ok:
+                    reachable = False
+                    reason = f"STM32拒绝({stm32_reason})"
+
+            if reachable:
+                self.get_logger().info("→ 判定: 可达，直接抓取")
                 self._do_pick()
             else:
+                self.get_logger().info(f"→ 判定: 不可达({reason})，靠近重试")
                 self._do_renav(cx, cy)
 
         except Exception as e:
@@ -214,10 +263,10 @@ class BoxPickNode(Node):
             self._cleanup_detection()
 
     def _do_pick(self):
-        """xy ≤ 30cm：直接启动 catch.py 抓取"""
+        """机械臂可达 → 启动 catch.py 抓取"""
         with self._lock:
             self._state = "PICKING"
-        self.get_logger().info(f"[抓取] 立方体在 {DIST_XY_NEAR}m 内，启动 catch.py")
+        self.get_logger().info("[抓取] 机械臂可达，启动 catch.py")
         self._start_catch()
         # catch.py 会持续运行（稳定检测 + 串口发送），
         # 用户可在抓取完成后输入 stop 停止
@@ -225,7 +274,7 @@ class BoxPickNode(Node):
             self._busy = False
 
     def _do_renav(self, cx, cy):
-        """xy > 30cm：重新导航到立方体位置"""
+        """机械臂不可达 → 靠近后再检测"""
         with self._lock:
             self._state = "RENAV"
             loc = self._latest_localization
@@ -244,27 +293,52 @@ class BoxPickNode(Node):
         cube_mx = rx + cx * math.cos(yaw) - cy * math.sin(yaw)
         cube_my = ry + cx * math.sin(yaw) + cy * math.cos(yaw)
 
+        # 导航到立方体前方 0.3m（沿机器人→立方体方向偏移）
+        # 这样不论机器人从哪个方向接近，停稳后立方体都在正前方
+        APPROACH_OFFSET = 0.3
+        dx = cube_mx - rx
+        dy = cube_my - ry
+        approach_len = math.hypot(dx, dy)
+        if approach_len > 0.01:
+            approach_mx = cube_mx - APPROACH_OFFSET * dx / approach_len
+            approach_my = cube_my - APPROACH_OFFSET * dy / approach_len
+        else:
+            approach_mx, approach_my = cube_mx, cube_my
+
+        # 目标朝向：面对立方体
+        approach_yaw = math.atan2(cube_my - approach_my, cube_mx - approach_mx)
+
         dist = math.hypot(cx, cy)
-        self.get_logger().info(f"[重规划] 立方体在 {dist:.3f}m 外，导航到 ({cube_mx:.3f}, {cube_my:.3f})")
-        self._send_nav_goal(cube_mx, cube_my, yaw)
+        self.get_logger().info(
+            f"[重规划] 立方体 lidar_xy={dist:.3f}m "
+            f"→ 导航到前方 {APPROACH_OFFSET:.1f}m 处 "
+            f"({approach_mx:.3f}, {approach_my:.3f}) "
+            f"朝向={approach_yaw:.2f}rad"
+        )
+        self._send_nav_goal(approach_mx, approach_my, approach_yaw)
 
         # ===== 等待导航到达 =====
-        for _ in range(120):  # 最多等 60 秒
+        self.get_logger().info("[重规划] 等待导航到达（最多 60 秒）...")
+        for i in range(120):  # 最多等 60 秒
             time.sleep(0.5)
             with self._lock:
                 arrived = self._nav_succeeded
             if arrived:
+                self.get_logger().info(f"[重规划] 导航到达(耗时约{i * 0.5:.0f}s)")
                 break
+            if i % 20 == 19:  # 每 10 秒报一次进度
+                self.get_logger().info(f"[重规划] 导航中...({i * 0.5:.0f}s)")
         else:
-            self.get_logger().warn("[重规划] 导航超时")
+            self.get_logger().warn("[重规划] 导航超时(60s)")
             self._cleanup_detection()
             return
 
-        self.get_logger().info("[重规划] 已到达，再次检测立方体")
+        self.get_logger().info("[重规划] 已到达，重新检测立方体")
         with self._lock:
             self._nav_succeeded = False
 
-        # ===== 再次检测 =====
+        # ===== 再次检测（用同样的可达性判断）=====
+        self.get_logger().info("[二次检测] 等待 cube_detector 数据（最多 5 秒）...")
         for attempt in range(10):  # 等 5 秒
             time.sleep(0.5)
             with self._lock:
@@ -272,19 +346,36 @@ class BoxPickNode(Node):
                             and time.monotonic() - self._cube_received_time < 3.0)
                 if has_cube:
                     cube2 = self._latest_cube
+                    self.get_logger().info(f"[二次检测] 第{attempt+1}/10 帧收到数据")
                     break
-            if has_cube:
-                cx2 = cube2.pose.position.x
-                cy2 = cube2.pose.position.y
-                xy_dist2 = math.hypot(cx2, cy2)
-                self.get_logger().info(f"[二次检测] 立方体: x={cx2:.3f}  y={cy2:.3f}  xy距离={xy_dist2:.3f}m")
-
-                if xy_dist2 <= DIST_XY_NEAR:
-                    self._do_pick()
-                    return
-                else:
-                    self.get_logger().warn(f"[二次检测] 仍在 {DIST_XY_NEAR}m 外，请手动调整")
-                    break
+        if has_cube:
+            cx2, cy2, cz2 = cube2.pose.position.x, cube2.pose.position.y, cube2.pose.position.z
+            self.get_logger().info(
+                f"[二次检测] 原始雷达坐标: ({cx2:.3f}, {cy2:.3f}, {cz2:.3f})"
+            )
+            ax2, ay2, az2, _ = transform_and_offset(cx2, cy2, cz2)
+            self.get_logger().info(
+                f"[二次检测] 机械臂系(未补偿): ({ax2:.3f}, {ay2:.3f}, {az2:.3f})"
+            )
+            ax2 += 0.125
+            reachable2, reason2 = validate_arm_target(ax2, ay2, az2)
+            self.get_logger().info(
+                f"[二次检测] ROS侧检查: {'通过' if reachable2 else f'拒绝({reason2})'}"
+            )
+            if reachable2:
+                stm32_ok2, stm32_reason2 = stm32_will_accept(ax2, ay2, az2)
+                self.get_logger().info(
+                    f"[二次检测] STM32侧: {'通过' if stm32_ok2 else f'拒绝({stm32_reason2})'}"
+                )
+                if not stm32_ok2:
+                    reachable2 = False
+                    reason2 = stm32_reason2
+            if reachable2:
+                self.get_logger().info("[二次检测] ✓ 可达，启动抓取")
+                self._do_pick()
+                return
+            else:
+                self.get_logger().warn(f"[二次检测] ✗ 仍不可达({reason2})，请手动调整")
 
         self.get_logger().warn("[重规划] 二次检测未抓到，回到 IDLE")
         self._cleanup_detection()
@@ -394,7 +485,7 @@ def main():
     print("=" * 50)
     print("  1. 在 RViz 中用 2D Nav Goal 导航到物资箱")
     print("  2. 机器人停稳后 自动 启动 cube_detector 检测")
-    print("     → 30cm内抓取 / 远处重规划导航")
+    print("     → 机械臂可达则抓取 / 不可达则靠近再检测")
     print("  3. 输入 arrived 可手动触发（自动检测未生效时备用）")
     print("=" * 50 + "\n")
 

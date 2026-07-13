@@ -53,9 +53,8 @@ except Exception:
 
 try:
     from catch import (
-        transform_and_offset, find_stable_points, workspace_check,
+        transform_and_offset, find_stable_points, validate_arm_target,
         OFFSET_X, OFFSET_Z, HALF_BOX_HEIGHT,
-        ARM_WORKSPACE_RADIUS_MIN, ARM_WORKSPACE_RADIUS_MAX,
         STABLE_THRESHOLD_XY, STABLE_COUNT_REQUIRED, CACHE_MAX_SIZE,
     )
     _HAVE_CATCH = True
@@ -698,15 +697,15 @@ class VisionAutoTaskNode(Node):
                     arm_x += HALF_BOX_HEIGHT  # 中心→顶面
 
                     # 使用 catch 模块的工作空间检查
-                    ok, dist = workspace_check(arm_x, arm_y, arm_z)
+                    ok, reason = validate_arm_target(arm_x, arm_y, arm_z)
                     if ok:
                         self.send_arm_target(arm_x, arm_y, arm_z)
                         self._pick_done = True
                         self.get_logger().info(
-                            f"[抓取] 坐标 ({arm_x:.3f}, {arm_y:.3f}, {arm_z:.3f})"
+                            f"[抓取] 坐标 ({arm_x:.3f}, {arm_y:.3f}, {arm_z:.3f}) 通过验证"
                         )
                     else:
-                        self.get_logger().warn(f"[抓取] 坐标 {dist:.3f}m 超出工作空间")
+                        self.get_logger().warn(f"[抓取] 坐标超限({reason})，跳过")
 
         # 阶段三: 超时 → 发送 PICK_DONE
         if self._elapsed() > self.get_parameter("pick_timeout_sec").value:

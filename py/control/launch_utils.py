@@ -20,7 +20,7 @@ _PROCESSES = []
 
 # ============ 开关 ============
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
-USE_TERMINAL = False   # 是否用独立终端窗口显示每个节点输出
+USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 
 
 def launch(cmd, cwd=None, name=""):
@@ -69,7 +69,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     启动所有前置 ROS 节点。
 
     Args:
-        map_pcd: PCD 地图路径（用于 ICP 定位），默认 map/scans.pcd
+        map_pcd: PCD 地图路径（用于 ICP 定位），默认 map/map.pcd
         map_yaml: YAML 地图路径（用于 Nav2），默认 map/map.yaml
     """
     fastlio_dir = str(_PROJECT / "fastlio2_v2")
