@@ -26,6 +26,7 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent          # py/tools/
 _PROJECT = _HERE.parent.parent                   # 2026_Gsing-second_ROS
+_LOG_DIR = _PROJECT / "logs"
 _FASTLIO_DIR = str(_PROJECT / "fastlio2_v2")
 _MAP_DIR = str(_PROJECT / "map")
 _ROS_SETUP = "source /opt/ros/jazzy/setup.bash"
@@ -34,18 +35,20 @@ _PROCS = []  # 子进程列表
 
 
 def launch(cmd, name=""):
-    """启动后台进程"""
+    """启动后台进程，输出写入 logs/"""
     env = os.environ.copy()
     env["RMW_IMPLEMENTATION"] = "rmw_cyclonedds_cpp"
+    _LOG_DIR.mkdir(parents=True, exist_ok=True)
+    logfile = _LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_{name}.log"
+    f = open(logfile, "w")
     p = subprocess.Popen(
         ["bash", "-c", cmd],
         preexec_fn=os.setsid,
         env=env,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        stdout=f, stderr=subprocess.STDOUT,
     )
     _PROCS.append(p)
-    print(f"  [{name}] PID={p.pid}")
+    print(f"  [{name}] PID={p.pid} → {logfile}")
     return p
 
 

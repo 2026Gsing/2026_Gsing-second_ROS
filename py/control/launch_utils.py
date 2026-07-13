@@ -7,15 +7,19 @@ launch_utils.py — 前置 ROS 节点启动/清理工具
   - odometry→TF 桥
   - Nav2 导航
   - 串口桥 (cmd_vel_chassis_serial.py)
+
+日志输出：所有子进程的 stdout/stderr 写入 logs/ 目录，按节点名+时间命名。
 """
 
 import atexit
 import os
 import signal
 import subprocess
+import time
 from pathlib import Path
 
 _PROJECT = Path(__file__).resolve().parent.parent.parent  # 2026_Gsing-second_ROS/
+_LOG_DIR = _PROJECT / "logs"
 _PROCESSES = []
 
 # ============ 开关 ============
@@ -24,27 +28,38 @@ USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
 
 
+def _log_path(name):
+    """生成日志文件路径: logs/YYYY-MM-DD_HHMMSS_name.log"""
+    _LOG_DIR.mkdir(parents=True, exist_ok=True)
+    ts = time.strftime("%Y-%m-%d_%H%M%S")
+    return str(_LOG_DIR / f"{ts}_{name}.log")
+
+
 def launch(cmd, cwd=None, name=""):
-    """启动一个后台 ROS 进程（或终端窗口）"""
+    """启动一个后台 ROS 进程（或终端窗口），输出写入 logs/"""
     env = os.environ.copy()
     env["RMW_IMPLEMENTATION"] = "rmw_cyclonedds_cpp"
 
+    logfile = _log_path(name)
+    f = open(logfile, "w")
+
     if USE_TERMINAL:
-        # 每个节点开一个 gnome-terminal 窗口，方便看输出调试
-        term_cmd = f"cd {cwd or '.'} && {cmd}; exec bash"
+        # 每个节点开一个 gnome-terminal 窗口，顺便写日志
+        term_cmd = f"cd {cwd or '.'} && ({cmd}) 2>&1 | tee {logfile}; exec bash"
         p = subprocess.Popen(
             ["gnome-terminal", "--", "bash", "-c", term_cmd],
             env=env,
         )
-        print(f"  [{name}] 终端窗口已启动")
+        print(f"  [{name}] 终端窗口已启动 → {logfile}")
+        f.close()
         return p
 
     p = subprocess.Popen(
         ["bash", "-c", cmd], cwd=cwd, env=env, preexec_fn=os.setsid,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        stdout=f, stderr=subprocess.STDOUT,
     )
     _PROCESSES.append(p)
-    print(f"  [{name}] PID={p.pid}")
+    print(f"  [{name}] PID={p.pid} → {logfile}")
     return p
 
 

@@ -425,13 +425,14 @@ class BoxPickNode(Node):
         if self._cube_proc is not None:
             return
         script = str(_HERE / "cube_detector.py")
+        logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log")
         try:
+            f = open(logfile, "w")
             self._cube_proc = subprocess.Popen(
                 [sys.executable, script],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                stdout=f, stderr=subprocess.STDOUT,
             )
-            self.get_logger().info(f"[CUBE] cube_detector PID={self._cube_proc.pid}")
+            self.get_logger().info(f"[CUBE] cube_detector PID={self._cube_proc.pid} → {logfile}")
         except Exception as e:
             self.get_logger().error(f"[CUBE] 启动失败: {e}")
 
@@ -454,13 +455,14 @@ class BoxPickNode(Node):
         if self._catch_proc is not None:
             return
         script = str(_HERE / "catch.py")
+        logfile = str(_HERE.parent.parent / "logs" / f"{time.strftime('%Y-%m-%d_%H%M%S')}_catch.log")
         try:
+            f = open(logfile, "w")
             self._catch_proc = subprocess.Popen(
                 [sys.executable, script],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                stdout=f, stderr=subprocess.STDOUT,
             )
-            self.get_logger().info(f"[CATCH] catch.py PID={self._catch_proc.pid}")
+            self.get_logger().info(f"[CATCH] catch.py PID={self._catch_proc.pid} → {logfile}")
         except Exception as e:
             self.get_logger().error(f"[CATCH] 启动失败: {e}")
 
