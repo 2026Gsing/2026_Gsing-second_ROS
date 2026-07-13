@@ -1,0 +1,98 @@
+[INFO] [launch]: All log files can be found below /home/hyper/.ros/log/2026-07-14-04-14-50-168349-hyper-Ubuntu-39973
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [40108]
+[INFO] [static_transform_publisher-2]: process started with pid [40109]
+[INFO] [static_transform_publisher-3]: process started with pid [40110]
+[INFO] [static_transform_publisher-4]: process started with pid [40111]
+[INFO] [map_server-5]: process started with pid [40112]
+[INFO] [rviz2-6]: process started with pid [40113]
+[static_transform_publisher-4] [INFO] [1783973690.221602442] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-3] [INFO] [1783973690.221990967] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'body'
+[static_transform_publisher-2] [INFO] [1783973690.222016746] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'camera_init' to 'base_link'
+[static_transform_publisher-1] [INFO] [1783973690.225005764] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[map_server-5] [INFO] [1783973690.234096191] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1783973690.234151192] [map_server]: Creating
+[rviz2-6] [INFO] [1783973691.187718380] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1783973691.187766170] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1783973691.243224513] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-7]: process started with pid [40427]
+[INFO] [planner_server-8]: process started with pid [40428]
+[INFO] [behavior_server-9]: process started with pid [40429]
+[INFO] [bt_navigator-10]: process started with pid [40430]
+[INFO] [waypoint_follower-11]: process started with pid [40431]
+[INFO] [lifecycle_manager-12]: process started with pid [40432]
+[INFO] [goal_pose_to_nav2-13]: process started with pid [40433]
+[INFO] [costmap_to_grid-14]: process started with pid [40434]
+[lifecycle_manager-12] [INFO] [1783973695.258946478] [lifecycle_manager_navigation]: Creating
+[waypoint_follower-11] [INFO] [1783973695.259601665] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1783973695.259918572] [waypoint_follower]: Creating
+[bt_navigator-10] [INFO] [1783973695.260706465] [bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1783973695.261436441] [bt_navigator]: Creating
+[planner_server-8] [INFO] [1783973695.261927936] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783973695.262700157] [planner_server]: Creating
+[controller_server-7] [INFO] [1783973695.262419678] [controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-9] [INFO] [1783973695.263938807] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783973695.264156060] [controller_server]: Creating controller server
+[lifecycle_manager-12] [INFO] [1783973695.264842622] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1783973695.265184720] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783973695.265511482] [global_costmap.global_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1783973695.266508228] [local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783973695.266731571] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-12] [INFO] [1783973695.276913161] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1783973695.276946240] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[map_server-5] [INFO] [1783973695.277105031] [map_server]: Configuring
+[map_server-5] [INFO] [1783973695.277156899] [map_io]: Loading yaml file: /home/hyper/program/2026_Gsing-second_ROS/map/map.yaml
+[map_server-5] [INFO] [1783973695.277348444] [map_io]: resolution: 0.05
+[map_server-5] [INFO] [1783973695.277354239] [map_io]: origin[0]: -0.067
+[map_server-5] [INFO] [1783973695.277357251] [map_io]: origin[1]: -1.152
+[map_server-5] [INFO] [1783973695.277358899] [map_io]: origin[2]: 0
+[map_server-5] [INFO] [1783973695.277360571] [map_io]: free_thresh: 0.196
+[map_server-5] [INFO] [1783973695.277362135] [map_io]: occupied_thresh: 0.65
+[map_server-5] [INFO] [1783973695.277365245] [map_io]: mode: trinary
+[map_server-5] [INFO] [1783973695.277367472] [map_io]: negate: 0
+[map_server-5] [INFO] [1783973695.277490401] [map_io]: Loading image_file: /home/hyper/program/2026_Gsing-second_ROS/map/PCD14.pgm
+[map_server-5] [ERROR] [1783973695.281735067] [map_io]: Failed to load image file /home/hyper/program/2026_Gsing-second_ROS/map/PCD14.pgm for reason: Magick: Unable to open file (/home/hyper/program/2026_Gsing-second_ROS/map/PCD14.pgm) reported by magick/blob.c:3118 (OpenBlob)
+[map_server-5] [ERROR] [1783973695.281780849] [map_server]: Caught exception in callback for transition 10
+[map_server-5] [ERROR] [1783973695.281794709] [map_server]: Original error: Failed to load map yaml file: /home/hyper/program/2026_Gsing-second_ROS/map/map.yaml
+[map_server-5] [WARN] [1783973695.281812073] [map_server]: Callback returned ERROR during the transition: configure
+[map_server-5] [FATAL] [1783973695.281818246] [map_server]: Lifecycle node map_server does not have error state implemented
+[lifecycle_manager-12] [ERROR] [1783973695.282012830] [lifecycle_manager_navigation]: Failed to change state for node: map_server
+[lifecycle_manager-12] [ERROR] [1783973695.282044179] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[costmap_to_grid-14] [INFO] [1783973695.477423705] [costmap_to_grid]: Publishing /global_costmap_grid and /local_costmap_grid for RViz
+[goal_pose_to_nav2-13] [INFO] [1783973695.636038108] [goal_pose_to_nav2]: Bridge ready: goal_pose -> NavigateToPose (navigate_to_pose)
