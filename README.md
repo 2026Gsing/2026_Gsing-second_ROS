@@ -125,8 +125,7 @@
 │   │   ├── box_pick_node.py                # 物资箱手动抓取
 │   │   ├── listen_serial.py                # 串口监听
 │   │   └── pointcloud_x_filter.py          # 点云 X 方向过滤
-│   ├── config/competition_poses.yaml       # 物资箱/归位区预置坐标
-│   └── camera_four_colors_config.json      # 摄像头四色 HSV 范围配置
+│   └── config/competition.yaml             # 比赛配置（赛前修改）
 │
 ├── run_auto_task.sh                        # 视觉自动任务一键启动（新增）
 ├── run.md                                  # 详细运行流程
@@ -433,7 +432,6 @@ final_z = -radar_x - 0.15
 - 支持四种颜色分类：食品(绿)、工具(灰)、药品(红)、仪器(蓝)
 - 滑条实时调节 HSV 阈值
 - Top-1 占比直判算法
-- 自动保存配置到 `camera_four_colors_config.json`
 
 ### 使用方式
 

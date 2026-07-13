@@ -61,40 +61,35 @@ except Exception:
     _HAVE_CATCH = False
 
 # ╔══════════════════════════════════════════════════════════╗
-# ║  赛前配置 — 比赛前一分钟改这里即可                      ║
+# ║  赛前配置 — 改 py/config/competition.yaml               ║
 # ╚══════════════════════════════════════════════════════════╝
-# field_id:=1 或 field_id:=2（启动时命令行指定）
+# field_id:=1 或 field_id:=2（启动时命令行指定，也可改 yaml）
 
-# 物资箱: 1=食品  2=工具  3=仪器  4=药品
-# boxes[场地号][排][列] — 排0=外排(靠启动区固定) 排1=内排(靠归位区随机↓)
-FIELD_BOXES = {
-    1: [
-        [1, 2, 3, 4],  # 外排（靠启动区）固定: 食品 工具 仪器 药品
-        [0, 0, 0, 0],  # ← 内排随机，改成现场顺序
-    ],
-    2: [
-        [4, 3, 2, 1],  # 外排（靠启动区）固定: 药品 仪器 工具 食品
-        [0, 0, 0, 0],  # ← 内排随机，改成现场顺序
-    ],
-}
+# 从配置文件加载（见 py/config/competition.yaml）
+_CFG = {}
+_cfg_path = Path(__file__).resolve().parent.parent.parent / "config" / "competition.yaml"
+if _cfg_path.exists():
+    try:
+        _CFG = yaml.safe_load(_cfg_path.read_text(encoding="utf-8"))
+    except Exception:
+        _CFG = {}
 
-# 归位区类型
-FIELD_ZONES = {
-    1: [1, 2, 3, 4],  # 食品 工具 仪器 药品
-    2: [4, 3, 2, 1],  # 药品 仪器 工具 食品
-}
+FIELD_BOXES = _CFG.get("field_boxes", {
+    1: [[1, 2, 3, 4], [0, 0, 0, 0]],
+    2: [[4, 3, 2, 1], [0, 0, 0, 0]],
+})
+FIELD_ZONES = _CFG.get("field_zones", {1: [1, 2, 3, 4], 2: [4, 3, 2, 1]})
 
-# 坐标（一般不用改）
-_BOX_COL_X = [0.5, 1.1, 1.7, 2.3]
-_BOX_OUTER_Y = 1.0   # 外排靠启动区
-_BOX_INNER_Y = 1.5   # 内排靠归位区
-_BOX_YAW = 0.0
-_ZONE_X = [0.6, 1.4, 2.2, 3.0]
-_ZONE_Y = 5.0
-_ZONE_YAW = 3.14
+_coord = _CFG.get("coordinates", {})
+_BOX_COL_X = _coord.get("box_col_x", [0.5, 1.1, 1.7, 2.3])
+_BOX_OUTER_Y = _coord.get("box_outer_y", 1.0)
+_BOX_INNER_Y = _coord.get("box_inner_y", 1.5)
+_BOX_YAW = _coord.get("box_yaw", 0.0)
+_ZONE_X = _coord.get("zone_x", [0.6, 1.4, 2.2, 3.0])
+_ZONE_Y = _coord.get("zone_y", 5.0)
+_ZONE_YAW = _coord.get("zone_yaw", 3.14)
 
-# 类型名（仅供日志显示）
-_BOX_TYPE_NAMES = {1: "食品", 2: "工具", 3: "仪器", 4: "药品"}
+_BOX_TYPE_NAMES = _CFG.get("box_type_names", {1: "食品", 2: "工具", 3: "仪器", 4: "药品"})
 
 # ============================================================
 # AUTO_CMD 常量（与 STM32 protocol_handler.h 严格一致）
@@ -144,37 +139,36 @@ _VISION_DIR = _PROJECT / "vision"                # YOLO 代码整合目录
 _YOLO_SRC = _VISION_DIR / "src"
 _VISION_WEIGHTS = _VISION_DIR / "weights"
 _VISION_CONFIG = _VISION_DIR / "config"
-_DEFAULT_WAYPOINTS = _PROJECT / "py" / "config" / "competition_poses.yaml"
 
 class VisionAutoTaskNode(Node):
     def __init__(self):
         super().__init__("vision_auto_task")
 
-        # ======================== 参数 ========================
-        self.declare_parameter("waypoints_file", str(_DEFAULT_WAYPOINTS))
-        self.declare_parameter("arrival_pos_threshold", 0.25)   # m
-        self.declare_parameter("arrival_angle_threshold", 0.30) # rad
-        self.declare_parameter("arrival_settle_frames", 5)
-        self.declare_parameter("pick_timeout_sec", 5.0)         # 抓取等待超时
-        self.declare_parameter("place_timeout_sec", 5.0)        # 放置等待超时
-        self.declare_parameter("total_boxes", 8)
+        # ======================== 参数（默认值来自 competition.yaml）=======================
+        _to = _CFG.get("timeouts", {})
+        self.declare_parameter("arrival_pos_threshold", _to.get("nav2_arrival_pos", 0.25))
+        self.declare_parameter("arrival_angle_threshold", _to.get("nav2_arrival_angle", 0.30))
+        self.declare_parameter("arrival_settle_frames", _to.get("nav2_arrival_frames", 5))
+        self.declare_parameter("pick_timeout_sec", _to.get("pick", 5.0))
+        self.declare_parameter("place_timeout_sec", _to.get("place", 5.0))
+        self.declare_parameter("total_boxes", _CFG.get("total_boxes", 8))
         self.declare_parameter("yolo_decision_file", str(_VISION_CONFIG / "decision_state.json"))
-        self.declare_parameter("nav2_action_timeout_sec", 30.0)
-        self.declare_parameter("competition_timeout_sec", 180.0)
-        self.declare_parameter("field_id", 1)  # 1 或 2
+        self.declare_parameter("nav2_action_timeout_sec", _to.get("nav2_action", 30.0))
+        self.declare_parameter("competition_timeout_sec", _to.get("competition", 180.0))
+        self.declare_parameter("field_id", _CFG.get("field_id", 1))
 
         # ======================== 状态机 ========================
         self.state = VS.IDLE
-        self.field_id = self.get_parameter("field_id").value  # 1 或 2
-        self.current_step_idx = 0    # 当前执行到的步骤索引
+        self.field_id = self.get_parameter("field_id").value
+        self.current_step_idx = 0
         self.total_boxes = self.get_parameter("total_boxes").value
-        self.pickup_sequence = []    # [(box_type, zone_id, box_x, box_y, box_yaw, zone_x, zone_y, zone_yaw), ...]
-        self.zone_sequence = []      # 由数学题结果决定的归位区序列
-        self.high_score_zone = None  # 高分区编号 (0-3), None=本轮无高分区
-        self.target_class = None     # 当前要抓的物资类别
-        self.math_timeout_sec = 20.0 # 智力题识别超时（手册: 20秒）
-        self.competition_start_time = 0.0  # 比赛开始时间戳（monotonic）
-        self._last_time_log = 0.0    # 上次剩余时间日志
+        self.pickup_sequence = []
+        self.zone_sequence = []
+        self.high_score_zone = None
+        self.target_class = None
+        self.math_timeout_sec = _to.get("math", 20.0)
+        self.competition_start_time = 0.0
+        self._last_time_log = 0.0
         self.arrival = ArrivalDetector(
             position_threshold=self.get_parameter("arrival_pos_threshold").value,
             angle_threshold=self.get_parameter("arrival_angle_threshold").value,
