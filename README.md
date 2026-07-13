@@ -43,7 +43,7 @@
 ┌─────────────────────────────┼───────────────────────────────────┐
 │              视觉自动任务模块 (新)                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │  vision_auto_task_node.py  (状态机)                       │   │
+│  │  control/auto_task.py  (状态机)                          │   │
 │  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────────┐ │   │
 │  │  │ YOLO 检测│ │ Nav2 Goal│ │到达检测  │ │ 串口 0x15   │ │   │
 │  │  │ task.pt  │ │ Navigator│ │/localizat│ │ AUTO_CMD    │ │   │
@@ -111,19 +111,22 @@
 │       ├── task3.pt                        # 4 类物资检测 (tool/device/food/remedy)
 │       └── math12.pt                       # 数学符号检测
 │
-├── py/                                     # 独立 Python 脚本
-│   ├── vision_auto_task_node.py            # 视觉自动任务状态机（核心新增）
-│   ├── arrival_detector.py                 # 到达检测工具
-│   ├── cube_detector.py                    # 3D OBB 立方体检测（雷达点云→DBSCAN→PCA）
-│   ├── catch.py                            # 机械臂抓取控制（串口→STM32）
-│   ├── camera_four_colors_config.json      # 摄像头四色 HSV 范围配置
-│   ├── test_dog.py                         # OpenCV 颜色检测调参工具
-│   ├── move.py                             # 底盘指令测试（前进/后退/转向）
-│   ├── listen_serial.py                    # 串口监听（十六进制显示）
-│   ├── pointcloud_saver.py                 # 点云保存（空格触发）
-│   ├── folder_summary.py                   # 项目文件内容提取工具
-│   ├── test_interactive.py                 # 交互测试脚本
-│   └── config/competition_poses.yaml       # 物资箱/归位区预置坐标
+├── py/                                     # Python 脚本
+│   ├── control/                            # 控制类（主状态机）
+│   │   └── auto_task.py                    # 视觉全自动任务状态机
+│   ├── utils/                              # 工具类（模块函数）
+│   │   ├── arrival_detector.py             # 到达检测
+│   │   ├── catch.py                        # 机械臂控制 + 坐标变换
+│   │   ├── cube_detector.py               # 3D OBB 立方体检测
+│   │   └── init_pose.py                   # 初始位姿发布
+│   ├── tools/                              # 独立工具
+│   │   ├── test_move.py                    # 底盘指令测试
+│   │   ├── test_interactive.py             # 交互测试
+│   │   ├── box_pick_node.py                # 物资箱手动抓取
+│   │   ├── listen_serial.py                # 串口监听
+│   │   └── pointcloud_x_filter.py          # 点云 X 方向过滤
+│   ├── config/competition_poses.yaml       # 物资箱/归位区预置坐标
+│   └── camera_four_colors_config.json      # 摄像头四色 HSV 范围配置
 │
 ├── run_auto_task.sh                        # 视觉自动任务一键启动（新增）
 ├── run.md                                  # 详细运行流程
@@ -321,7 +324,7 @@ YOLO (vision/src/predict.py)
   │ /vision/detected_objects (检测结果)
   │ /vision/math_result (数学题结果)
   ▼
-vision_auto_task_node.py (视觉状态机)
+py/control/auto_task.py (视觉状态机)
   │ → Nav2 NavigateToPose (长距导航)
   │ → /vision_cmd_vel (精细对位，高于 Nav2 优先级)
   │ → /vision/auto_cmd (JSON) → cmd_vel_chassis_serial → 串口 0x15
@@ -438,7 +441,7 @@ final_z = -radar_x - 0.15
 source /opt/ros/jazzy/setup.bash
 
 # 视觉自动任务
-python3 py/vision_auto_task_node.py      # 状态机（终端输入 start 开始）
+python3 py/control/auto_task.py           # 状态机（终端输入 start 开始）
 
 # YOLO 检测（独立运行）
 cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
@@ -468,7 +471,7 @@ python3 nav2_ws1/src/dog_nav2_bringup/scripts/send_chassis_test_serial.py
 
 ### 视觉状态机
 
-由 `py/vision_auto_task_node.py` 驱动，完整流程：
+由 `py/control/auto_task.py` 驱动，完整流程：
 
 ```
 IDLE ──(输入 start)──→ SOLVE_TASK
@@ -524,7 +527,7 @@ WAIT_PLACE ──(发 0x15 PLACE_DONE)──→ NEXT_OR_FINISH
 5. 发布初始位姿（RViz "2D Pose Estimate"）
 6. 启动 Nav2（静态地图模式）
 7. 启动串口桥接（底盘控制）
-8. 启动视觉状态机：python3 py/vision_auto_task_node.py
+8. 启动视觉状态机：python3 py/control/auto_task.py
 9. 在终端输入 start → 全自动执行
 ```
 

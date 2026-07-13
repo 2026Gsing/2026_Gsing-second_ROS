@@ -58,7 +58,7 @@ ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
 # T5: Vision auto task (optional)
 python3 py/cube_detector.py     # LiDAR cube detection
 python3 py/catch.py             # Arm control via serial bridge
-python3 py/vision_auto_task_node.py  # Full auto-task state machine
+python3 py/control/auto_task.py  # Full auto-task state machine
 ```
 
 ## Build Commands
@@ -118,7 +118,7 @@ AUTO_CMD values: 1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DO
 
 ## Auto-Task State Machine
 
-### ROS side (vision_auto_task_node.py)
+### ROS side (py/control/auto_task.py)
 ```
 IDLE → SOLVE_TASK → FIND_BOX → NAV_BOX → WAIT_PICK
   → NAV_ZONE → WAIT_PLACE → NEXT_OR_FINISH → (loop)
@@ -146,7 +146,7 @@ Arm accepts 0x12 only during PICK/PLACE (`Auto_Task_ArmAcceptsNewTarget()`).
 |------|------|
 | `py/cube_detector.py` | DBSCAN + PCA 3D OBB detection, 10-frame accumulation |
 | `py/catch.py` | Arm coordinate transform, stability check, serial bridge |
-| `py/vision_auto_task_node.py` | Full auto-task state machine |
+| `py/control/auto_task.py` | Full auto-task state machine |
 | `py/cube_detector.py` analyzer | PCA → dims → adaptive center (1-face push / 3-face no-push) |
 | `py/config/competition_poses.yaml` | Pre-configured box/zone waypoints |
 

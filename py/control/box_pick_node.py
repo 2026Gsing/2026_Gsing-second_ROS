@@ -12,7 +12,7 @@ box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
   5. 也可手动输入 arrived（自动检测未生效时备用）
 
 使用：
-  python3 py/box_pick_node.py
+  python3 py/control/box_pick_node.py
 
 前提（其他终端已运行）：
   - Terminal 1: LiDAR 驱动
@@ -36,8 +36,7 @@ import time
 import threading
 from pathlib import Path
 
-_HERE = Path(__file__).resolve().parent
-DIST_XY_NEAR = 0.30  # 30cm 以内直接抓取
+_HERE = Path(__file__).resolve().parent          # py/utils/
 
 # ============ 自动到达检测参数 ============
 VEL_STOP_THRESHOLD = 0.03     # 低于此速度视为停止 (m/s)

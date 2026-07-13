@@ -76,10 +76,10 @@ fi
 if [ "$START_ARM_PIPELINE" = "1" ]; then
   echo ""
   echo "【3/4】启动机械臂视觉链路..."
-  python3 "$PY_DIR/cube_detector.py" &
+  python3 "$PY_DIR/utils/cube_detector.py" &
   CUBE_PID=$!
   sleep 1
-  python3 "$PY_DIR/catch.py" &
+  python3 "$PY_DIR/utils/catch.py" &
   CATCH_PID=$!
   sleep 1
 else
@@ -90,7 +90,7 @@ fi
 # ============ 4. 视觉自动任务节点 ============
 echo ""
 echo "【4/4】启动视觉自动任务节点..."
-python3 "$PY_DIR/vision_auto_task_node.py" &
+python3 "$PY_DIR/control/auto_task.py" &
 VISION_PID=$!
 
 echo ""

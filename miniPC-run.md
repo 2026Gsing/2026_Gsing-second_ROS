@@ -181,7 +181,7 @@ ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 source /opt/ros/jazzy/setup.bash
 source /home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/setup.bash
-python3 /home/gsing/2026Gsing/2026_Gsing-second_ROS/py/vision_auto_task_node.py
+python3 /home/gsing/2026Gsing/2026_Gsing-second_ROS/py/control/auto_task.py
 ```
 
 ### 终端 6（可选）— YOLO 检测

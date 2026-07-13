@@ -83,6 +83,59 @@ AUTO_CMD_ARRIVED_ZONE = 4
 ARM_DELAY_AFTER_ARRIVE_SEC = 0.6
 
 
+# ============================================================
+# 模块级工具函数（可被 vision_auto_task_node.py 直接导入使用）
+# ============================================================
+
+def transform_and_offset(radar_x, radar_y, radar_z):
+    """
+    坐标变换：雷达坐标系 → 机械臂坐标系
+
+    雷达系 (unilidar_lidar): x=前进, y=左, z=上
+    机械臂系 (arm.c):       x=高度(向上), y=侧向(向右), z=前向(向前)
+    """
+    final_x = -radar_z - OFFSET_X
+    final_y = radar_y
+    final_z = -radar_x - OFFSET_Z
+    return final_x, final_y, final_z, (radar_x, radar_y, radar_z)
+
+
+def find_stable_points(positions, threshold_xy, required_count):
+    """
+    滑动窗口标准差法判断位置是否稳定。
+
+    Args:
+        positions: list of (x, y, z) tuples
+        threshold_xy: XY 标准差阈值
+        required_count: 需要多少帧稳定
+
+    Returns:
+        (indices, avg_pos) 或 (None, None)
+    """
+    if len(positions) < required_count:
+        return None, None
+
+    recent = positions[-required_count:]
+    arr = np.array(recent)
+
+    std_x = np.std(arr[:, 0])
+    std_y = np.std(arr[:, 1])
+
+    if std_x < threshold_xy * STD_FACTOR and std_y < threshold_xy * STD_FACTOR:
+        avg = (float(np.mean(arr[:, 0])),
+               float(np.mean(arr[:, 1])),
+               float(np.mean(arr[:, 2])))
+        return list(range(len(recent))), avg
+
+    return None, None
+
+
+def workspace_check(x, y, z):
+    """检查坐标是否在机械臂工作空间内"""
+    dist = math.sqrt(x**2 + y**2 + z**2)
+    return ARM_WORKSPACE_RADIUS_MIN <= dist <= ARM_WORKSPACE_RADIUS_MAX, dist
+
+
 # ==================== 状态机定义 ====================
 class ArmState:
     """机械臂状态"""
@@ -139,55 +192,12 @@ class ArmStateMachine(Node):
         self.get_logger().info(f">>> 已发布 AUTO_CMD: cmd={cmd} target={target} zone={zone}")
 
     def transform_and_offset(self, radar_x, radar_y, radar_z):
-        """
-        坐标变换：雷达坐标系 → 机械臂坐标系（STM32 arm.c 正解定义）
-
-        雷达系 (unilidar_lidar):
-          x = 前进方向, y = 左侧, z = 上方
-
-        机械臂系 (arm.c:382-384):
-          x = 高度 (向上为正)
-          y = 侧向 (向右为正)
-          z = 前向 (向前为正)
-
-        变换逻辑：
-          arm_x (高度) = -radar_z (高度)     - OFFSET_X
-          arm_y (侧向) =  radar_y (左→不变)
-          arm_z (前向) = -radar_x (前进)     - OFFSET_Z
-        """
-        final_x = -radar_z - OFFSET_X      # radar_z(高度) → arm_x(高度)
-        final_y = radar_y                       # radar_y(左) → arm_y(左)，无偏移
-        final_z = -radar_x - OFFSET_Z       # radar_x(前进) → arm_z(前向)
-        return final_x, final_y, final_z, (radar_x, radar_y, radar_z)
+        """委托模块级函数"""
+        return transform_and_offset(radar_x, radar_y, radar_z)
 
     def find_stable_points(self, positions, threshold_xy, required_count):
-        """
-        滑动窗口标准差法判断位置是否稳定
-
-        原理：
-          对最近的 required_count 个位置的 XY 坐标计算标准差。
-          如果标准差 < 阈值，说明位置已收敛，返回均值作为最终目标。
-
-        优势：
-          O(n) 时间复杂度（比暴力组合搜索 O(C(n,k)) 快得多）
-        """
-        if len(positions) < required_count:
-            return None, None
-
-        recent = positions[-required_count:]
-        arr = np.array(recent)
-
-        std_x = np.std(arr[:, 0])  # X 方向跳动标准差
-        std_y = np.std(arr[:, 1])  # Y 方向跳动标准差
-
-        # 两个方向标准差都小于阈值 → 视为稳定
-        if std_x < threshold_xy * STD_FACTOR and std_y < threshold_xy * STD_FACTOR:
-            avg = (float(np.mean(arr[:, 0])),
-                   float(np.mean(arr[:, 1])),
-                   float(np.mean(arr[:, 2])))
-            return list(range(len(recent))), avg
-
-        return None, None
+        """委托模块级函数"""
+        return find_stable_points(positions, threshold_xy, required_count)
 
     def send_arm_position(self, x, y, z):
         """通过 /vision/arm_control 发布坐标 → 串口桥转发 → STM32"""
