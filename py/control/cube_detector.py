@@ -21,16 +21,20 @@ cube_detector.py — 3D OBB 立方体检测节点
 坐标系：unilidar_lidar（雷达坐标系，x=前进方向）
 """
 
+import math
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import PointCloud2
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Quaternion
 import sensor_msgs_py.point_cloud2 as pc2
-import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import BallTree
-import math
 
 class CubeDetector(Node):
     """3D OBB 立方体检测器：从雷达点云中检测 25cm 立方体物块"""
@@ -327,6 +331,22 @@ class CubeDetector(Node):
         centroids = summed / counts[:, np.newaxis]
         return centroids.astype(np.float32)
 
+
+# ==================== 日志输出 → logs/ ====================
+_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir.mkdir(parents=True, exist_ok=True)
+_logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log", "w", buffering=1)
+
+class _Tee:
+    def write(self, text):
+        sys.__stdout__.write(text)
+        _logfile.write(text)
+    def flush(self):
+        sys.__stdout__.flush()
+        _logfile.flush()
+
+sys.stdout = _Tee()
+sys.stderr = _Tee()
 
 def main():
     rclpy.init()

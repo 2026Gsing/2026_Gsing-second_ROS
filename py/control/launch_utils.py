@@ -26,7 +26,7 @@ _PROCESSES = []
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
-MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
+MAP_NAME = "map/PCD15"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
 
 
 def _log_path(name):
@@ -143,7 +143,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     # 串口桥（串口设备不存在则跳过，避免进程崩溃）
     if os.path.exists(SERIAL_PORT):
         _LOG_DIR.mkdir(parents=True, exist_ok=True)
-        leg_csv = str(_LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_腿部调试.csv")
+        leg_csv = str(_LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
         launch(
             f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
             f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "

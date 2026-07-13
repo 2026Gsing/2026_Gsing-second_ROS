@@ -102,6 +102,23 @@ def cmd_gait(gait_id):
     payload = uint8_to_bytes(gait_id)
     return build_frame(FUNC_GAIT, payload)
 
+# ==================== 日志输出 → logs/ ====================
+from pathlib import Path
+_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir.mkdir(parents=True, exist_ok=True)
+_logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_test_interactive.log", "w", buffering=1)
+
+class _Tee:
+    def write(self, text):
+        sys.__stdout__.write(text)
+        _logfile.write(text)
+    def flush(self):
+        sys.__stdout__.flush()
+        _logfile.flush()
+
+sys.stdout = _Tee()
+sys.stderr = _Tee()
+
 # ==================== 主程序入口 ====================
 
 def main():

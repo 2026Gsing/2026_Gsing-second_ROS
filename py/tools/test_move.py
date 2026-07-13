@@ -188,7 +188,7 @@ class MoveTestNode(Node):
 
         log_dir = os.path.join(_PROJECT_ROOT, "logs")
         os.makedirs(log_dir, exist_ok=True)
-        leg_csv = os.path.join(log_dir, f"{time.strftime('%Y-%m-%d_%H%M%S')}_腿部调试.csv")
+        leg_csv = os.path.join(log_dir, f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
         launch(
             f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
             f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "

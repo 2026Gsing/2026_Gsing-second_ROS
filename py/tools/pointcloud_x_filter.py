@@ -10,6 +10,10 @@
   bash auto_map_save.sh 50000000
 """
 
+import sys
+import time
+from pathlib import Path
+
 import numpy as np
 import rclpy
 from rclpy.node import Node
@@ -80,6 +84,22 @@ class PointCloudXFilter(Node):
             f'过滤: {len(points)} → {len(filtered)} 点 (x>{self.x_min}, 半径>{self.radius_min})',
             throttle_duration_sec=2.0)
 
+
+# ==================== 日志输出 → logs/ ====================
+_logdir = Path(__file__).resolve().parent.parent / "logs"
+_logdir.mkdir(parents=True, exist_ok=True)
+_logfile = open(_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_pointcloud_x_filter.log", "w", buffering=1)
+
+class _Tee:
+    def write(self, text):
+        sys.__stdout__.write(text)
+        _logfile.write(text)
+    def flush(self):
+        sys.__stdout__.flush()
+        _logfile.flush()
+
+sys.stdout = _Tee()
+sys.stderr = _Tee()
 
 def main():
     rclpy.init()

@@ -35,9 +35,9 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent          # py/control/
 
-# ============ 自动到达检测参数 ============
-VEL_STOP_THRESHOLD = 0.03     # 低于此速度视为停止 (m/s)
-ARRIVED_FRAMES = 20           # 连续多少帧速度低于阈值算到达 (~2s @10Hz)
+# ============ 自动到达检测参数（ICP-only，基于位置变化）============
+POS_STOP_THRESHOLD = 0.02     # 位置变化低于此值视为停止 (m)
+ARRIVED_FRAMES = 10           # 连续多少帧位置变化低于阈值算到达 (~2s @5Hz)
 
 
 class BoxPickNode(Node):
@@ -56,8 +56,9 @@ class BoxPickNode(Node):
         self._latest_cube = None           # Marker msg (unilidar_lidar 坐标)
         self._cube_received_time = 0.0
 
-        # ============ 自动到达检测 ============
-        self._arrival_count = 0            # 连续低速帧计数
+        # ============ 自动到达检测（基于位置变化） ============
+        self._last_pos = None              # 上一帧位置 (x, y)
+        self._arrival_count = 0            # 连续稳定帧计数
         self._arrival_triggered = False    # 是否已触发到达流程（防重复）
 
         # ============ 状态 ============
@@ -122,37 +123,44 @@ class BoxPickNode(Node):
         with self._lock:
             self._latest_localization = msg
 
-            # ============ 自动到达检测 ============
+            # ============ 自动到达检测（基于位置变化） ============
             if self._arrival_triggered or self._busy:
                 return  # 已触发或正在处理，跳过
 
-            vx = msg.twist.twist.linear.x
-            vy = msg.twist.twist.linear.y
-            wz = msg.twist.twist.angular.z
-            speed = math.hypot(vx, vy)
+            x = msg.pose.pose.position.x
+            y = msg.pose.pose.position.y
 
-            # 线速度 + 角速度都接近零才算到达（防止原地旋转时误触发）
-            if speed < VEL_STOP_THRESHOLD and abs(wz) < 0.05:
-                self._arrival_count += 1
-                if self._arrival_count >= ARRIVED_FRAMES:
-                    self.get_logger().info(
-                        f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧 "
-                        f"(v={speed:.3f}m/s wz={wz:.3f}) → 启动检测"
-                    )
-                    self._arrival_triggered = True
-                    self.on_arrived()
-                elif self._arrival_count % 5 == 0:
-                    self.get_logger().info(
-                        f"[到达检测] 低速帧 #{self._arrival_count}/{ARRIVED_FRAMES} "
-                        f"v={speed:.4f} wz={wz:.3f}"
-                    )
+            if self._last_pos is not None:
+                dx = x - self._last_pos[0]
+                dy = y - self._last_pos[1]
+                moved = math.hypot(dx, dy)
+
+                if moved < POS_STOP_THRESHOLD:
+                    self._arrival_count += 1
+                    if self._arrival_count >= ARRIVED_FRAMES:
+                        self.get_logger().info(
+                            f"[自动到达] 位置稳定持续 {ARRIVED_FRAMES} 帧 "
+                            f"(移动={moved:.4f}m) → 启动检测"
+                        )
+                        self._arrival_triggered = True
+                        self.on_arrived()
+                    elif self._arrival_count % 3 == 0:
+                        self.get_logger().info(
+                            f"[到达检测] 稳定帧 #{self._arrival_count}/{ARRIVED_FRAMES} "
+                            f"移动={moved:.4f}m"
+                        )
+                else:
+                    if self._arrival_count > 0:
+                        self.get_logger().info(
+                            f"[到达检测] 位置变化({moved:.3f}m)，重置计数 "
+                            f"(已积累{self._arrival_count}帧)"
+                        )
+                    self._arrival_count = 0
             else:
-                if self._arrival_count > 0:
-                    self.get_logger().info(
-                        f"[到达检测] 速度恢复(v={speed:.3f} wz={wz:.3f})，重置计数 "
-                        f"(已积累{self._arrival_count}帧)"
-                    )
-                self._arrival_count = 0
+                # 第一帧，初始化位置
+                pass
+
+            self._last_pos = (x, y)
 
     def _goal_pose_cb(self, msg):
         """打印 RViz 2D Nav Goal 的目标坐标"""

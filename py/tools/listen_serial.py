@@ -18,9 +18,28 @@ listen_serial.py — STM32 串口监听工具
 """
 
 import serial
+import sys
 import time
+from pathlib import Path
 
 import serial.tools.list_ports
+
+# ==================== 日志输出 → logs/ ====================
+_LOGDIR = Path(__file__).resolve().parent.parent / "logs"
+_LOGDIR.mkdir(parents=True, exist_ok=True)
+_logfile = open(_LOGDIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_listen_serial.log", "w", buffering=1)
+
+class _Tee:
+    """同时输出到终端和日志文件"""
+    def write(self, text):
+        sys.__stdout__.write(text)
+        _logfile.write(text)
+    def flush(self):
+        sys.__stdout__.flush()
+        _logfile.flush()
+
+sys.stdout = _Tee()
+sys.stderr = _Tee()
 
 # ==================== 自动检测 STM32 串口 ====================
 ports = serial.tools.list_ports.comports()
