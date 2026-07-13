@@ -142,12 +142,16 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
 
     # 串口桥（串口设备不存在则跳过，避免进程崩溃）
     if os.path.exists(SERIAL_PORT):
+        _LOG_DIR.mkdir(parents=True, exist_ok=True)
+        leg_csv = str(_LOG_DIR / f"{time.strftime('%Y-%m-%d_%H%M%S')}_腿部调试.csv")
         launch(
             f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
             f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
             f"  serial_port:={SERIAL_PORT} baud_rate:=115200 "
             f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
-            f"  active_state:=1 idle_state:=0",
+            f"  active_state:=1 idle_state:=0 "
+            f"  leg_debug_csv_path:={leg_csv} "
+            f"  leg_debug_log_period_sec:=0.5",
             name="串口桥",
         )
     else:

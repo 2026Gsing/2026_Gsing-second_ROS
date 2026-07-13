@@ -50,6 +50,9 @@ try:
 except ImportError:
     Odometry = None
 
+sys.path.insert(0, os.path.join(_PROJECT_ROOT, "py/control"))
+from launch_utils import launch
+
 
 # ============================================================
 # 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
@@ -127,8 +130,6 @@ class MoveTestNode(Node):
         self.step_duration = step_duration
         self.gate_open = False
         self._step_idx = 0
-        self._serial_proc = None
-
         # ======================== 订阅串口反馈 ========================
         self.create_subscription(String, "/vision/arm_event", self._arm_event_cb, 10)
         if Odometry is not None:
@@ -174,68 +175,30 @@ class MoveTestNode(Node):
         self.get_logger().info("")
 
     # ================================================================
-    # 自动启动串口桥
+    # 自动启动串口桥（使用 launch_utils，与 box_pick_node/auto_task 一致）
     # ================================================================
-    def _try_serial_port(self, port: str) -> subprocess.Popen | None:
-        """尝试在指定串口上启动串口桥，成功返回进程，失败返回 None"""
-        nav2_ws = os.path.join(_PROJECT_ROOT, "nav2_ws1")
-        setup_script = os.path.join(nav2_ws, "install/setup.bash")
-        launch_file = os.path.join(
-            nav2_ws, "src/dog_nav2_bringup",
-            "launch/chassis_serial_bridge.launch.py"
-        )
-
-        cmd = (
-            f"bash -c '"
-            f"source /opt/ros/jazzy/setup.bash && "
-            f"source {setup_script} && "
-            f"export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp && "
-            f"ros2 launch {launch_file} "
-            f"serial_port:={port} "
-            f"baud_rate:=115200 "
-            f"cmd_vel_topic:=/cmd_vel "
-            f"send_rate_hz:=50.0 "
-            f"active_state:=1 "
-            f"idle_state:=0"
-            f"'"
-        )
+    def _launch_serial_bridge(self):
+        nav2_dir = os.path.join(_PROJECT_ROOT, "nav2_ws1")
+        ros_setup = "source /opt/ros/jazzy/setup.bash"
+        port = "/dev/ttyACM0"
 
         if not os.path.exists(port):
-            self.get_logger().warn(f"  ⚠ {port} 设备不存在")
-            return None
-
-        self.get_logger().info(f"  → 尝试 {port} ...")
-        proc = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            cwd=nav2_ws
-        )
-        time.sleep(1.0)
-        if proc.poll() is not None:
-            self.get_logger().warn(f"  ⚠ {port} 不可用")
-            proc.kill()
-            return None
-        return proc
-
-    def _launch_serial_bridge(self):
-        """依次尝试 ACM0 → ACM1，找到可用串口即启动串口桥"""
-        nav2_ws = os.path.join(_PROJECT_ROOT, "nav2_ws1")
-        launch_file = os.path.join(
-            nav2_ws, "src/dog_nav2_bringup",
-            "launch/chassis_serial_bridge.launch.py"
-        )
-        if not os.path.exists(launch_file):
-            self.get_logger().warn(f"  ⚠ 串口桥启动文件不存在: {launch_file}")
+            self.get_logger().warn(f"  ⚠ {port} 不存在，跳过串口桥")
             return
 
-        for port in ("/dev/ttyACM0", "/dev/ttyACM1"):
-            if self._serial_proc is not None:
-                break
-            self._serial_proc = self._try_serial_port(port)
-
-        if self._serial_proc is not None:
-            self.get_logger().info(f"  ✅ 串口桥已启动")
-        else:
-            self.get_logger().error("  ❌ ACM0 和 ACM1 均不可用，请检查串口连接")
+        log_dir = os.path.join(_PROJECT_ROOT, "logs")
+        os.makedirs(log_dir, exist_ok=True)
+        leg_csv = os.path.join(log_dir, f"{time.strftime('%Y-%m-%d_%H%M%S')}_腿部调试.csv")
+        launch(
+            f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
+            f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
+            f"  serial_port:={port} baud_rate:=115200 "
+            f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
+            f"  active_state:=1 idle_state:=0 "
+            f"  leg_debug_csv_path:={leg_csv} "
+            f"  leg_debug_log_period_sec:=0.5",
+            name="串口桥",
+        )
 
     def _bg_spin(self):
         """后台 spin 线程，确保定时器在 input() 阻塞时仍能触发"""
@@ -573,16 +536,7 @@ def main(args=None):
         node.get_logger().info("\n  用户中断")
     finally:
         node.send_velocity(0.0, 0.0)
-        # 关闭串口桥子进程
-        if node._serial_proc is not None:
-            node.get_logger().info("  关闭串口桥...")
-            node._serial_proc.terminate()
-            try:
-                node._serial_proc.wait(timeout=3)
-            except subprocess.TimeoutExpired:
-                node._serial_proc.kill()
-                node._serial_proc.wait()
-            node.get_logger().info("  ✅ 串口桥已关闭")
+        node.get_logger().info("  停止并退出")
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()

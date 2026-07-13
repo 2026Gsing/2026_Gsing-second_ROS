@@ -128,26 +128,28 @@ class BoxPickNode(Node):
 
             vx = msg.twist.twist.linear.x
             vy = msg.twist.twist.linear.y
+            wz = msg.twist.twist.angular.z
             speed = math.hypot(vx, vy)
 
-            if speed < VEL_STOP_THRESHOLD:
+            # 线速度 + 角速度都接近零才算到达（防止原地旋转时误触发）
+            if speed < VEL_STOP_THRESHOLD and abs(wz) < 0.05:
                 self._arrival_count += 1
                 if self._arrival_count >= ARRIVED_FRAMES:
                     self.get_logger().info(
                         f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧 "
-                        f"(v={speed:.3f}m/s x{vx:.3f} y{vy:.3f}) → 启动检测"
+                        f"(v={speed:.3f}m/s wz={wz:.3f}) → 启动检测"
                     )
                     self._arrival_triggered = True
                     self.on_arrived()
                 elif self._arrival_count % 5 == 0:
                     self.get_logger().info(
                         f"[到达检测] 低速帧 #{self._arrival_count}/{ARRIVED_FRAMES} "
-                        f"速度={speed:.4f} m/s"
+                        f"v={speed:.4f} wz={wz:.3f}"
                     )
             else:
                 if self._arrival_count > 0:
                     self.get_logger().info(
-                        f"[到达检测] 速度恢复({speed:.3f}m/s)，重置计数 "
+                        f"[到达检测] 速度恢复(v={speed:.3f} wz={wz:.3f})，重置计数 "
                         f"(已积累{self._arrival_count}帧)"
                     )
                 self._arrival_count = 0

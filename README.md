@@ -113,18 +113,19 @@
 │
 ├── py/                                     # Python 脚本
 │   ├── control/                            # 控制类（主状态机 + 模块）
+│   │   ├── launch_utils.py                 # 共享：一键启动所有前置 ROS 节点
 │   │   ├── auto_task.py                    # 视觉全自动任务状态机 + 一键启动
-│   │   ├── catch.py                        # 机械臂控制 + 坐标变换模块
+│   │   ├── box_pick_node.py               # 物资箱自动检测+抓取（含重规划）
+│   │   ├── catch.py                        # 机械臂坐标变换 + 可达性验证
 │   │   ├── cube_detector.py               # 3D OBB 立方体检测（DBSCAN+PCA）
 │   │   ├── arrival_detector.py             # 到达检测
-│   │   ├── box_pick_node.py                # 物资箱手动抓取
-│   │   └── init_pose.py                   # 初始位姿发布
-│   ├── tools/                              # 独立工具
-│   │   ├── map_scan.py                     # 一键建图（LiDAR + FAST-LIO2 + PCD→PGM）
-│   │   ├── test_move.py                    # 底盘指令测试
-│   │   ├── test_interactive.py             # 交互测试
-│   │   ├── listen_serial.py                # 串口监听
-│   │   └── pointcloud_x_filter.py          # 点云 X 方向过滤
+│   │   └── init_pose.py                   # /initialpose 发布(ICP初始化)
+│   └── tools/                              # 独立工具
+│       ├── map_scan.py                     # 一键建图(LiDAR+SLAM+PCD→PGM)
+│       ├── test_move.py                    # 底盘指令测试
+│       ├── test_interactive.py             # 交互测试
+│       ├── listen_serial.py                # 串口监听(hex显示)
+│       └── pointcloud_x_filter.py          # 点云 X 方向过滤
 │
 ├── config/                                 # 比赛配置（赛前修改）
 │   └── competition.yaml
@@ -166,6 +167,7 @@
 ### 步骤 0：配置网卡（雷达通信）
 
 ```bash
+# 查看网口名称: ip a | grep enp
 sudo nmcli device set enp129s0 managed no
 sudo ip addr add 192.168.1.2/24 dev enp129s0
 ```
@@ -310,42 +312,26 @@ STM32 auto_task 状态机 → arm_task 抓放
 
 ---
 
-## 串口协议（ROS → STM32）
+## 串口协议
 
-### 0x10 — 底盘速度控制 (FUNC_CHASSIS_MOVE)
+帧格式：`[0x55][0xAA][func_id][len][payload...][checksum]`
 
-帧格式（Nav2 或视觉 → STM32）：
+| 功能码 | 名称 | 方向 | 载荷 | 说明 |
+|--------|------|------|------|------|
+| `0x10` | CHASSIS_MOVE | ROS→STM32 | `vx(f32)+wz(f32)+state(u8)` = 9B | 50Hz 定时发送，底盘速度控制 |
+| `0x12` | ARM_CONTROL | ROS→STM32 | `x(f32)+y(f32)+z(f32)` = 12B | 机械臂单次坐标控制 |
+| `0x14` | ARM_MISSION | ROS→STM32 | `mode(u8)+flags(u8)+pick/back/place` | 机械臂多段任务 |
+| `0x15` | AUTO_TASK | ROS→STM32 | `cmd(u8)+target(u8)+zone(u8)` = 3B | 自动任务事件 |
+| `0x22` | ARM_EVENT | STM32→ROS | `event(u8)+mode(u8)+slot(u8)+side(u8)+x(f32)+y(f32)+z(f32)` = 16B | 机械臂任务完成回传 |
+| `0x31` | LEG_DEBUG | STM32→ROS | `time(u32)+type(u8)+leg(u8)+flags(u8)+seq(u8)+values(16×f32)` = 72B | 腿部支撑力调试帧 |
 
-| 偏移 | 字节 | 说明 |
-|------|------|------|
-| 0 | 0x55 | 帧头 1 |
-| 1 | 0xAA | 帧头 2 |
-| 2 | 0x10 | 功能码（底盘速度控制） |
-| 3 | 0x0D | 载荷长度（13 字节：vx+vy+wz+state） |
-| 4-7 | vx (float32 LE) | 线速度 (m/s)，正=前进 |
-| 8-11 | vy (float32 LE) | 横向速度（差速/轮足暂不使用，发 0） |
-| 12-15 | wz (float32 LE) | 角速度 (rad/s)，正=左转 |
-| 16 | state (uint8) | 0=IDLE, 1=FORWARD, 2=BACKWARD, 3=LEFT, 4=RIGHT |
-| 17 | checksum (uint8) | 前面所有字节和 & 0xFF |
+AUTO_CMD 命令：1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DONE, 6=NEXT, 7=FINISH, 8=ESTOP
 
-发送频率 ≥20Hz，STM32 100ms 未收到新帧自动停车。
-
-### 0x15 — 自动任务事件 (FUNC_AUTO_TASK)
-
-视觉状态机在关键节点发送：
-
-| 偏移 | 字节 | 说明 |
-|------|------|------|
-| 0 | 0x55 | 帧头 1 |
-| 1 | 0xAA | 帧头 2 |
-| 2 | 0x15 | 功能码（自动任务事件） |
-| 3 | 0x03 | 载荷长度（固定 3 字节） |
-| 4 | cmd (uint8) | 命令：1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DONE, 6=NEXT, 7=FINISH, 8=ESTOP |
-| 5 | target_id (uint8) | 物资箱编号 |
-| 6 | zone_id (uint8) | 归位区编号 |
-| 7 | checksum (uint8) | 前面所有字节和 & 0xFF |
-
-由 `cmd_vel_chassis_serial.py` 订阅 `/vision/auto_cmd` (JSON) 自动转发。
+串口桥 `cmd_vel_chassis_serial.py` 同时负责：
+- 50Hz 发送底盘速度（0x10）
+- 转发 `/vision/auto_cmd` → 0x15
+- 转发 `/vision/arm_control` → 0x12
+- 后台 RX 线程解析 STM32 回传帧（0x22 → `/vision/arm_event`、0x31 → CSV 日志 + 控制台输出）
 
 ---
 
@@ -402,31 +388,22 @@ final_z = -radar_x - 0.15
 
 **串口协议**（机械臂控制）：`[0x55][0xAA][0x12][12][x][y][z][checksum]`
 
-### 使用方式
+## 一键启动
 
 ```bash
-source /opt/ros/jazzy/setup.bash
-
-# 一键竞赛（启动所有节点 + 状态机）
+# 竞赛（自动拉起 LiDAR、ICP、Nav2、串口桥、状态机）
 python3 py/control/auto_task.py field_id:=1
 
-# 一键建图（LiDAR + FAST-LIO2 + PCD→PGM）
+# 物资箱抓取（自动拉起所有前置节点，自动到达检测+抓取/重规划）
+python3 py/control/box_pick_node.py
+
+# 建图（LiDAR + FAST-LIO2 SLAM，按 Enter 保存 + 自动 PCD→PGM）
 python3 py/tools/map_scan.py
+python3 py/tools/map_scan.py --no-rviz
 
-# YOLO 检测（独立运行）
-cd vision && python3 src/predict.py --weights weights/task3.pt --source 1 --draw-roi
-
-# 立方体检测（需要 FAST-LIO2 雷达点云）
-python3 py/control/cube_detector.py
-
-# 机械臂控制（需要 cube_detector 正在运行）
-python3 py/control/catch.py
-
-# 底盘运动测试
+# 底盘测试（自动启动串口桥，交互/自动序列）
 python3 py/tools/test_move.py
-
-# 监听串口数据
-python3 py/tools/listen_serial.py
+python3 py/tools/test_move.py --auto
 ```
 
 ---
