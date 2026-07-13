@@ -40,7 +40,7 @@ _LOG_CATEGORIES = {
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
-MAP_NAME = "map/PCD17"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
+MAP_NAME = "map/PCD24"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
 
 
 def _log_path(name):

@@ -26,6 +26,7 @@ from arrival_detector import quaternion_to_yaw
 from launch_utils import start_prerequisites, cleanup_all
 from catch import transform_and_offset, validate_arm_target, stm32_will_accept
 import math
+import os
 import signal
 import subprocess
 import sys
@@ -55,7 +56,7 @@ class BoxPickNode(Node):
         # ============ 自动到达检测（基于坐标匹配） ============
         self._nav_goal_pos = None          # 当前 Nav2 目标位置 (x, y)
         self._arrival_triggered = False    # 是否已触发到达流程（防重复）
-        self.ARRIVAL_DIST_THRESHOLD = 0.01 # 距离目标多近算到达 (m)
+        self.ARRIVAL_DIST_THRESHOLD = 0.15 # 距离目标多近算到达 (m)
 
         # ============ 状态 ============
         self._busy = False
@@ -586,7 +587,8 @@ def main():
     finally:
         node._cleanup_detection()
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
