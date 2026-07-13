@@ -348,6 +348,9 @@ class ArmStateMachine(Node):
             self.target_position[1],
             self.target_position[2]
         )
+        self.get_logger().info("[完成] 坐标已发送，0.5s 后自动退出")
+        time.sleep(0.5)
+        rclpy.shutdown()
 
     def status_callback(self):
         """5 秒定时器：打印当前状态"""

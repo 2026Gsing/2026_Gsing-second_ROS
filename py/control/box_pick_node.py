@@ -130,11 +130,24 @@ class BoxPickNode(Node):
             if speed < VEL_STOP_THRESHOLD:
                 self._arrival_count += 1
                 if self._arrival_count >= ARRIVED_FRAMES:
-                    self.get_logger().info(f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧，启动检测")
+                    self.get_logger().info(
+                        f"[自动到达] 速度归零持续 {ARRIVED_FRAMES} 帧 "
+                        f"(v={speed:.3f}m/s x{vx:.3f} y{vy:.3f}) → 启动检测"
+                    )
                     self._arrival_triggered = True
                     self.on_arrived()
+                elif self._arrival_count % 5 == 0:
+                    self.get_logger().info(
+                        f"[到达检测] 低速帧 #{self._arrival_count}/{ARRIVED_FRAMES} "
+                        f"速度={speed:.4f} m/s"
+                    )
             else:
-                self._arrival_count = 0  # 有速度了，重置计数
+                if self._arrival_count > 0:
+                    self.get_logger().info(
+                        f"[到达检测] 速度恢复({speed:.3f}m/s)，重置计数 "
+                        f"(已积累{self._arrival_count}帧)"
+                    )
+                self._arrival_count = 0
 
     # ================================================================
     # Nav2 导航回调
@@ -194,9 +207,9 @@ class BoxPickNode(Node):
             self._state = "DETECTING"
             self._nav_succeeded = False
 
-        self.get_logger().info("=" * 50)
-        self.get_logger().info("[开始] 启动 cube_detector.py ...")
-        self.get_logger().info("=" * 50)
+        self.get_logger().info("=" * 60)
+        self.get_logger().info(f"[开始] 状态: {self._state} → DETECTING，启动 cube_detector.py")
+        self.get_logger().info("=" * 60)
 
         self._start_cube_detector()
         # 在独立线程中等待检测结果（避免阻塞 spin）
@@ -207,6 +220,7 @@ class BoxPickNode(Node):
         """等待检测结果，根据距离决定下一步"""
         try:
             # ===== 等待 cube_detector 产出结果 =====
+            self.get_logger().info("[检测] 等待 cube_detector 数据（最多 15 秒）...")
             for attempt in range(30):  # 最多等 15 秒
                 time.sleep(0.5)
                 with self._lock:
@@ -214,9 +228,12 @@ class BoxPickNode(Node):
                                 and time.monotonic() - self._cube_received_time < 3.0)
                     if has_cube:
                         cube = self._latest_cube
+                        self.get_logger().info(f"[检测] 第{attempt+1}/30 帧收到数据")
                         break
+                if attempt % 10 == 9:
+                    self.get_logger().info(f"[检测] 等待中...({(attempt+1)*0.5:.0f}s)")
             else:
-                self.get_logger().warn("[超时] 15 秒未检测到立方体")
+                self.get_logger().warn("[检测] ⏰ 超时: 15 秒未检测到立方体")
                 self._cleanup_detection()
                 return
 
@@ -263,15 +280,35 @@ class BoxPickNode(Node):
             self._cleanup_detection()
 
     def _do_pick(self):
-        """机械臂可达 → 启动 catch.py 抓取"""
+        """机械臂可达 → 启动 catch.py 抓取，完成后自动清理"""
         with self._lock:
             self._state = "PICKING"
-        self.get_logger().info("[抓取] 机械臂可达，启动 catch.py")
+        self.get_logger().info("[抓取] ✓ 可达，启动 catch.py")
+        self.get_logger().info("[抓取] catch.py 流程: 稳定检测(3-5s) → AUTO_CMD推进 → 发坐标 → 自动退出")
         self._start_catch()
-        # catch.py 会持续运行（稳定检测 + 串口发送），
-        # 用户可在抓取完成后输入 stop 停止
-        with self._lock:
-            self._busy = False
+        # 独立线程等待 catch.py 退出，然后自动清理
+        t = threading.Thread(target=self._monitor_catch, daemon=True)
+        t.start()
+
+    def _monitor_catch(self):
+        """等待 catch.py 退出，自动回到 IDLE"""
+        proc = self._catch_proc
+        if proc is None:
+            return
+        self.get_logger().info(f"[抓取] 等待 catch.py (PID={proc.pid}) 完成...")
+        try:
+            proc.wait(timeout=30)
+            self.get_logger().info("[抓取] catch.py 已正常退出")
+        except Exception as e:
+            self.get_logger().warn(f"[抓取] catch.py 等待异常: {e}")
+            try:
+                proc.kill()
+                proc.wait(timeout=3)
+            except Exception:
+                pass
+        time.sleep(0.5)  # 等机械臂动作收尾
+        self.get_logger().info("[抓取] ✅ 抓取流程完成，回到 IDLE")
+        self._cleanup_detection()
 
     def _do_renav(self, cx, cy):
         """机械臂不可达 → 靠近后再检测"""
