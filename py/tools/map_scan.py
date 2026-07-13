@@ -102,7 +102,7 @@ def main():
     print("[2/3] 启动 FAST-LIO2 SLAM 建图...")
     launch(
         f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
-        f"python3 {_HERE}/pointcloud_x_filter.py & "
+        f"(python3 {_HERE}/pointcloud_x_filter.py &) && "
         f"ros2 run fast_lio fastlio_mapping --ros-args "
         f"  --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml "
         f"  -p \"common.lid_topic:=/unilidar/cloud_filtered\" "
@@ -131,11 +131,14 @@ def main():
     print("  按 Enter 保存地图并退出")
     print("=" * 50)
 
-    # 等待用户按回车
+    # 等待用户按回车（Ctrl+C → 直接退出，不保存）
+    saved = False
     try:
         input()
     except (EOFError, KeyboardInterrupt):
-        pass
+        print("\n  ⏭ 用户取消，直接退出（不保存地图）")
+        cleanup()
+        return
 
     print()
     print("=" * 50)
@@ -143,51 +146,66 @@ def main():
     print("=" * 50)
 
     # 调用 /map_save 服务保存
-    result = subprocess.run(
-        ["bash", "-c",
-         f"{_ROS_SETUP} && "
-         f"ros2 service call /map_save std_srvs/srv/Trigger"],
-        env={**os.environ, "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"},
-        capture_output=True, text=True, timeout=10,
-    )
-    print(f"  map_save 返回码={result.returncode}")
-    if result.returncode != 0:
-        print(f"  stderr: {result.stderr[:200]}")
-    time.sleep(1)
+    try:
+        result = subprocess.run(
+            ["bash", "-c",
+             f"{_ROS_SETUP} && "
+             f"ros2 service call /map_save std_srvs/srv/Trigger"],
+            env={**os.environ, "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"},
+            capture_output=True, text=True, timeout=10,
+        )
+        print(f"  map_save 返回码={result.returncode}")
+        if result.returncode != 0:
+            print(f"  stderr: {result.stderr[:200]}")
+        else:
+            saved = True
+        time.sleep(1)
+    except subprocess.TimeoutExpired:
+        print("  ⚠ map_save 超时（FAST-LIO2 可能已停止）")
+    except Exception as e:
+        print(f"  ⚠ map_save 异常: {e}")
 
-    # 清理建图进程
     cleanup()
     print("  建图进程已停止")
 
-    # 检查 PCD 是否有效
-    pcd_size = os.path.getsize(pcd_path) if os.path.isfile(pcd_path) else 0
-    print(f"  PCD 文件大小: {pcd_size} bytes")
-    if pcd_size < 100:
-        print("  ⚠ PCD 文件过小，可能是 LiDAR 未连接或无数据")
+    if saved:
+        # 检查 PCD 是否有效
+        pcd_size = os.path.getsize(pcd_path) if os.path.isfile(pcd_path) else 0
+        print(f"  PCD 文件大小: {pcd_size} bytes")
+        if pcd_size < 100:
+            print("  ⚠ PCD 文件过小，可能是 LiDAR 未连接或无数据")
 
-    # === 终端 3: PCD → PGM 转换 ===
-    print()
-    print("[3/3] 转换 PCD → PGM 栅格地图...")
-    result2 = subprocess.run(
-        ["bash", "-c",
-         f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
-         f"ros2 launch pcd2pgm pcd2pgm_launch.py "
-         f"  pcd_file:={pcd_path}"],
-        env={**os.environ, "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"},
-        capture_output=True, text=True, timeout=60,
-    )
-    print(f"  pcd2pgm 返回码={result2.returncode}")
-    if result2.returncode != 0:
-        print(f"  stderr: {result2.stderr[:500]}")
+        # === PCD → PGM 转换 ===
+        print()
+        print("[3/3] 转换 PCD → PGM 栅格地图...")
+        try:
+            result2 = subprocess.run(
+                ["bash", "-c",
+                 f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
+                 f"ros2 launch pcd2pgm pcd2pgm_launch.py "
+                 f"  pcd_file:={pcd_path}"],
+                env={**os.environ, "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"},
+                capture_output=True, text=True, timeout=60,
+            )
+            print(f"  pcd2pgm 返回码={result2.returncode}")
+            if result2.returncode != 0:
+                print(f"  stderr: {result2.stderr[:500]}")
+            else:
+                print(f"  PGM 已保存到 {_MAP_DIR}/")
+        except subprocess.TimeoutExpired:
+            print("  ⚠ pcd2pgm 超时")
+        except Exception as e:
+            print(f"  ⚠ pcd2pgm 异常: {e}")
+
+        print()
+        print("=" * 50)
+        print("  建图完成！")
+        print(f"  PCD: {pcd_path}")
+        if os.path.isfile(str(Path(_MAP_DIR) / f'PCD{pcd_num}.yaml')):
+            print(f"  PGM: {Path(_MAP_DIR) / f'PCD{pcd_num}.yaml'}")
+        print("=" * 50)
     else:
-        print(f"  PGM 已保存到 {_MAP_DIR}/")
-    print()
-    print("=" * 50)
-    print("  建图完成！")
-    print(f"  PCD: {pcd_path}")
-    if os.path.isfile(str(Path(_MAP_DIR) / f'PCD{pcd_num}.yaml')):
-        print(f"  PGM: {Path(_MAP_DIR) / f'PCD{pcd_num}.yaml'}")
-    print("=" * 50)
+        print("\n  未保存地图，建图已退出。")
 
 
 if __name__ == "__main__":
