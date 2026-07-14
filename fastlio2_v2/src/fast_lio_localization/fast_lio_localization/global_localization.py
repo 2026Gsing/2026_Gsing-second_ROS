@@ -297,6 +297,10 @@ class FastLIOLocalization(Node):
             self.localisation_timer_callback
         )
 
+        # 自动初始化：5 秒后若未收到 /initialpose，以原点 X+ 自动开始 ICP
+        # （替代手动在 RViz 中点 "2D Pose Estimate" 或外部运行 init_pose.py）
+        self.create_timer(5.0, self._auto_init_if_needed_wrapper)
+
     def pose_to_mat(self, pose):
         """将 ROS Pose 消息转为 4×4 齐次变换矩阵"""
         trans = np.eye(4)
@@ -598,6 +602,24 @@ class FastLIOLocalization(Node):
 
         if self.cur_scan is not None:
             self.global_localization(self.T_map_to_odom)
+
+    def _auto_init_if_needed_wrapper(self):
+        """自动初始化兜底：5 秒后若未收到 /initialpose，以原点 X+ 启动 ICP"""
+        if not self.initialized:
+            if self.cur_scan is not None:
+                self.get_logger().warn(
+                    "No /initialpose received within 5s — auto-initializing at (0, 0) facing X+"
+                )
+                self.T_map_to_odom = np.eye(4)
+                self.initialized = True
+                self.global_localization(np.eye(4))
+            return
+
+        # 已初始化，销毁本定时器
+        for t in self.timers:
+            if t.timer_callback == self._auto_init_if_needed_wrapper:
+                self.destroy_timer(t)
+                break
 
 
 def main(args=None):
