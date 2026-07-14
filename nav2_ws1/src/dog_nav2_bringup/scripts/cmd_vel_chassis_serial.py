@@ -105,6 +105,25 @@ LEG_DEBUG_GLOBAL_FIELDS = [
     "support_force_bias_leg3_n",
 ]
 
+LEG_DEBUG_ATTITUDE_FIELDS = [
+    "att_enabled",
+    "att_imu_valid",
+    "att_zero_valid",
+    "att_mode",
+    "att_support_projection_mode",
+    "att_force_solution_ok",
+    "att_stance_leg_count",
+    "att_bump_request",
+    "att_roll_zero_deg",
+    "att_pitch_zero_deg",
+    "att_roll_err_deg",
+    "att_pitch_err_deg",
+    "att_roll_moment_cmd_nm",
+    "att_pitch_moment_cmd_nm",
+    "att_accel_dev_mps2",
+    "att_gyro_abs_dps",
+]
+
 LEG_DEBUG_NAMES = {
     0: "leg0_12_LF",
     1: "leg1_78_RR",
@@ -236,6 +255,7 @@ class CmdVelChassisSerial(Node):
         self._rx_buffer = bytearray()
         self._leg_debug_latest_legs = {}
         self._leg_debug_latest_global = None
+        self._leg_debug_latest_attitude = None
         self._leg_debug_last_log_time = 0.0
         self._leg_debug_csv_file = None
         self._leg_debug_csv_writer = None
@@ -293,6 +313,7 @@ class CmdVelChassisSerial(Node):
                 "flags",
                 *LEG_DEBUG_FIELDS,
                 *LEG_DEBUG_GLOBAL_FIELDS,
+                *LEG_DEBUG_ATTITUDE_FIELDS,
             ]
             self._leg_debug_csv_file = open(path, "w", newline="", encoding="utf-8")
             self._leg_debug_csv_writer = csv.DictWriter(
@@ -324,6 +345,9 @@ class CmdVelChassisSerial(Node):
         elif frame_type == 2:
             for name, value in zip(LEG_DEBUG_GLOBAL_FIELDS, values):
                 row[name] = value
+        elif frame_type == 3:
+            for name, value in zip(LEG_DEBUG_ATTITUDE_FIELDS, values):
+                row[name] = value
         self._leg_debug_csv_writer.writerow(row)
 
     @staticmethod
@@ -351,6 +375,13 @@ class CmdVelChassisSerial(Node):
                 f" stride={g[4]:.2f} lift={g[5]:.2f}"
                 f" roll={g[8]:+.1f} pitch={g[9]:+.1f}"
                 f" comp={g[10]:.2f}"
+            )
+        if self._leg_debug_latest_attitude is not None:
+            a = self._leg_debug_latest_attitude["values"]
+            global_text += (
+                f" att={int(a[0])}/{int(a[1])}/{int(a[2])}"
+                f" mode={int(a[3])}"
+                f" proj={int(a[4])}"
             )
 
         leg_parts = []
@@ -486,6 +517,8 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_latest_legs[leg_id] = frame
         elif frame_type == 2:
             self._leg_debug_latest_global = frame
+        elif frame_type == 3:
+            self._leg_debug_latest_attitude = frame
 
         self._log_leg_debug_snapshot()
 
