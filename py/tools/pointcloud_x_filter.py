@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 点云 X 方向过滤节点
 订阅 /unilidar/cloud，只保留 x > 0 的点，发布到 /unilidar/cloud_filtered

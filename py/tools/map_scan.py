@@ -159,7 +159,7 @@ def main():
     print("[2/3] 启动 FAST-LIO2 SLAM 建图...")
     launch(
         f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
-        f"(python3 {_HERE}/pointcloud_x_filter.py &) && "
+        f"(/usr/bin/python3 {_HERE}/pointcloud_x_filter.py &) && "
         f"ros2 run fast_lio fastlio_mapping --ros-args "
         f"  --params-file src/unilidar_fastlio_ros2-ros2/config/unilidar_l2.yaml "
         f"  -p \"common.lid_topic:=/unilidar/cloud_filtered\" "
@@ -214,13 +214,24 @@ def main():
     print("=" * 50)
 
     # 调用 /map_save 服务保存
+    # 先清理 CycloneDDS 共享内存，避免 participant 索引耗尽
+    for pat in ["*cyclone*", "*dds*"]:
+        for p in Path("/dev/shm").glob(pat):
+            try:
+                if p.is_dir():
+                    import shutil; shutil.rmtree(p, ignore_errors=True)
+                else:
+                    p.unlink(missing_ok=True)
+            except Exception:
+                pass
+
     try:
         result = subprocess.run(
             ["bash", "-c",
-             f"{_ROS_SETUP} && "
+             f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
              f"ros2 service call /map_save std_srvs/srv/Trigger"],
             env={**os.environ, "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"},
-            capture_output=True, text=True, timeout=10,
+            capture_output=True, text=True, timeout=30,
         )
         print(f"  map_save 返回码={result.returncode}")
         if result.returncode != 0:
