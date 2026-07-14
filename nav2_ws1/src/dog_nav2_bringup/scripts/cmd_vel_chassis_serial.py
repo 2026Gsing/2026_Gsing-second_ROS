@@ -79,7 +79,7 @@ LEG_DEBUG_FIELDS = [
     "fy_up_n",
     "fy_sag_n",
     "swing_unload_n",
-    "support_y_bias_cm",
+    "stance_takeoff_release",
     "stance_entry_ramp",
     "stance_support_ramp",
     "sag_rescue",
@@ -364,6 +364,7 @@ class CmdVelChassisSerial(Node):
                 f" ty/ay={v[3]:.1f}/{v[5]:.1f}"
                 f" ey={v[6]:+.1f}"
                 f" Fy={v[7]:+.0f}"
+                f" rel={v[11]:.2f}"
                 f" sag={v[14]:.2f}"
                 f" tauK={v[15]:+.1f}"
             )
