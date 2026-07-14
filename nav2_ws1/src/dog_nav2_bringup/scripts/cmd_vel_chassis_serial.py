@@ -449,8 +449,11 @@ class CmdVelChassisSerial(Node):
     def _serial_rx_loop(self):
         while not self._rx_stop.is_set():
             try:
+                if self._ser is None:
+                    self.get_logger().error("Serial port is None, stopping RX loop")
+                    break
                 chunk = self._ser.read(64)
-            except (serial.SerialException, OSError) as e:
+            except (serial.SerialException, OSError, TypeError) as e:
                 if not self._rx_stop.is_set():
                     self.get_logger().error(f"Serial read failed: {e}")
                 break
@@ -822,7 +825,8 @@ def main(args=None):
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":
