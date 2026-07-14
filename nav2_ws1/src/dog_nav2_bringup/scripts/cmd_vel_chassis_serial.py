@@ -66,7 +66,7 @@ ARM_BACK_SIDE_UNKNOWN = 0x00
 ARM_BACK_SIDE_LEFT = 0x01
 ARM_BACK_SIDE_RIGHT = 0x02
 ARM_BACK_SIDE_CENTER = 0x03
-LEG_DEBUG_FMT = "<IBBBB18f"
+LEG_DEBUG_FMT = "<IBBBB19f"
 LEN_LEG_DEBUG_PAYLOAD = struct.calcsize(LEG_DEBUG_FMT)
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
 
@@ -89,6 +89,7 @@ LEG_DEBUG_FIELDS = [
     "tau_ff_knee_nm",
     "error_x_cm",
     "knee_torque_limit_nm",
+    "x_alignment",
 ]
 
 LEG_DEBUG_GLOBAL_FIELDS = [
@@ -108,8 +109,9 @@ LEG_DEBUG_GLOBAL_FIELDS = [
     "support_force_bias_leg1_n",
     "support_force_bias_leg2_n",
     "support_force_bias_leg3_n",
-    "gait_rear_x_relief_cm",
-    "gait_rear_x_relief_cmps",
+    "gait_rear_x_safety_relief_cm",
+    "gait_rear_x_safety_relief_cmps",
+    "gait_sync_mps",
 ]
 
 LEG_DEBUG_ATTITUDE_FIELDS = [
@@ -131,6 +133,7 @@ LEG_DEBUG_ATTITUDE_FIELDS = [
     "att_gyro_abs_dps",
     "att_roll_raw_deg",
     "att_pitch_raw_deg",
+    "att_accel_abs_mps2",
 ]
 
 LEG_DEBUG_NAMES = {
@@ -423,6 +426,7 @@ class CmdVelChassisSerial(Node):
                 f" Fy={v[7]:+.0f}"
                 f" rel={v[11]:.2f}"
                 f" sag={v[14]:.2f}"
+                f" xa={v[18]:.2f}"
                 f" tauK={v[15]:+.1f}"
             )
         self.get_logger().info("[LEG_DEBUG]" + global_text + " | " + " ; ".join(leg_parts))
