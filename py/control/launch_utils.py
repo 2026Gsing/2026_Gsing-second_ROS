@@ -17,6 +17,7 @@ import os
 import platform
 import signal
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -59,8 +60,24 @@ _LOG_CATEGORIES = {
 _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
-SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
+SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
 MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+
+# ============ 硬件自动检测 ============
+try:
+    sys.path.insert(0, str(_PROJECT / "py"))
+    from tools.detect_hardware import detect_all
+    _hw = detect_all(verbose=False)
+    sys.path.pop(0)
+    if _hw["serial_port"]:
+        print(f"  [硬件] 自动检测到 STM32 串口: {_hw['serial_port']}")
+        SERIAL_PORT = _hw["serial_port"]
+    if _hw["lidar_iface"]:
+        print(f"  [硬件] LiDAR 网卡: {_hw['lidar_iface']}  IP: {_hw['lidar_local_ip']}")
+    if _hw["lidar_reachable"]:
+        print(f"  [硬件] LiDAR {_hw['lidar_ip']} → 可达")
+except Exception:
+    pass
 
 
 def _log_path(name):

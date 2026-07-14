@@ -53,6 +53,18 @@ except ImportError:
 sys.path.insert(0, os.path.join(_PROJECT_ROOT, "py/control"))
 from launch_utils import launch
 
+# 硬件自动检测：找 STM32 串口
+_DETECTED_SERIAL = None
+try:
+    sys.path.insert(0, os.path.join(_PROJECT_ROOT, "py"))
+    from tools.detect_hardware import detect_all
+    _hw = detect_all(verbose=False)
+    sys.path.pop(0)
+    if _hw["serial_port"]:
+        _DETECTED_SERIAL = _hw["serial_port"]
+except Exception:
+    pass
+
 
 # ============================================================
 # 机器人状态枚举（与 STM32 control.h RobotState_e 严格一致）
@@ -102,21 +114,8 @@ GAIT_BOUND = 2   # 跳跃步态
 GAIT_PRONK = 3   # 弹跳步态
 GAIT_NAMES = {0: "TROT(小跑)", 1: "WALK(行走)", 2: "BOUND(跳跃)", 3: "PRONK(弹跳)"}
 
-# ============================================================
-# 测试序列定义
-# ============================================================
-# (名称, vx, wz, 描述)
-TestStep = [
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("FORWARD",    0.20, 0.0,  "前进 (vx=0.20)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-    ("BACKWARD",  -0.20, 0.0,  "后退 (vx=-0.20)"),
-    ("STOP",       0.0,   0.0,  "停止"),
-]
-
-
 class MoveTestNode(Node):
-    def __init__(self, auto_mode=False, step_duration=1.5, no_serial=False):
+    def __init__(self, no_serial=False):
         super().__init__("test_move")
 
         # ======================== 发布器 ========================
@@ -126,8 +125,6 @@ class MoveTestNode(Node):
         self.state_pub = self.create_publisher(UInt8, "/vision/robot_state", 10)
 
         # ======================== 状态 ========================
-        self.auto_mode = auto_mode
-        self.step_duration = step_duration
         self.gate_open = False
         self._step_idx = 0
         # ======================== 订阅串口反馈 ========================
@@ -163,15 +160,10 @@ class MoveTestNode(Node):
         self.get_logger().info("  随时可按 Ctrl+C 急停")
         self.get_logger().info("")
 
-        if auto_mode:
-            self.get_logger().info("  自动测试模式")
-            self.get_logger().info(f"  每步持续 {step_duration:.1f}s")
-            self.get_logger().info("  按 Ctrl+C 中断测试")
-        else:
-            self.get_logger().info("  交互模式 — 输入命令:")
-            self.get_logger().info("    1~2  → 速度预设 (自动开门)")
-            self.get_logger().info("    s    → 停止")
-            self.get_logger().info("    直接输 vx wz → 自定义速度 (自动开门)")
+        self.get_logger().info("  交互模式 — 输入命令:")
+        self.get_logger().info("    1~2  → 速度预设 (自动开门)")
+        self.get_logger().info("    s    → 停止")
+        self.get_logger().info("    直接输 vx wz → 自定义速度 (自动开门)")
         self.get_logger().info("")
 
     # ================================================================
@@ -180,8 +172,9 @@ class MoveTestNode(Node):
     def _launch_serial_bridge(self):
         nav2_dir = os.path.join(_PROJECT_ROOT, "nav2_ws1")
         ros_setup = "source /opt/ros/jazzy/setup.bash"
-        port = "/dev/ttyACM0"
 
+        # 使用自动检测的串口，失败则回退
+        port = _DETECTED_SERIAL or "/dev/ttyACM0"
         if not os.path.exists(port):
             self.get_logger().warn(f"  ⚠ {port} 不存在，跳过串口桥")
             return
@@ -444,56 +437,12 @@ class MoveTestNode(Node):
 
         self.send_velocity(0.0, 0.0)
 
-    # ================================================================
-    # 自动测试序列
-    # ================================================================
-    def run_auto_sequence(self):
-        """执行预定义的自动测试序列"""
-        # 先开门
-        self.open_gate()
-        time.sleep(0.5)
-
-        for i, (name, vx, wz, desc) in enumerate(TestStep):
-            if not rclpy.ok():
-                break
-
-            self.get_logger().info(f"")
-            self.get_logger().info(f"[{i+1}/{len(TestStep)}] {desc}")
-            self.send_velocity(vx, wz)
-
-            # 等待指定时长，期间 spinning
-            deadline = time.monotonic() + self.step_duration
-            while time.monotonic() < deadline and rclpy.ok():
-                rclpy.spin_once(self, timeout_sec=0.05)
-
-        # 结束：停止
-        self.send_velocity(0.0, 0.0)
-        self.get_logger().info(f"")
-        self.get_logger().info("=" * 60)
-        self.get_logger().info("  自动测试序列完成！")
-        self.get_logger().info("=" * 60)
-
-    # ================================================================
-    # 快速单步测试（用于外部程序调用）
-    # ================================================================
-    def step(self, vx: float, wz: float, duration: float = 1.0):
-        """执行单步运动：发速度 → 等待 → 停止"""
-        self.open_gate()
-        self.send_velocity(vx, wz)
-        deadline = time.monotonic() + duration
-        while time.monotonic() < deadline and rclpy.ok():
-            rclpy.spin_once(self, timeout_sec=0.05)
-        self.send_velocity(0.0, 0.0)
-        time.sleep(0.3)
-
 
 # ================================================================
 # 入口
 # ================================================================
 def main(args=None):
     parser = argparse.ArgumentParser(description="纯轮足底盘运动测试工具")
-    parser.add_argument("--auto", action="store_true", help="自动测试序列模式")
-    parser.add_argument("--duration", type=float, default=1.5, help="自动测试每步持续时间 (秒)")
     parser.add_argument("--vx", type=float, help="指定前进速度")
     parser.add_argument("--speed", type=float, help="快捷指定前进速度（等同 --vx）")
     parser.add_argument("--wz", type=float, help="指定转向速度")
@@ -506,7 +455,7 @@ def main(args=None):
         parsed.vx = parsed.speed
 
     rclpy.init()
-    node = MoveTestNode(auto_mode=parsed.auto, step_duration=parsed.duration, no_serial=parsed.no_serial)
+    node = MoveTestNode(no_serial=parsed.no_serial)
 
     try:
         if parsed.vx is not None or parsed.wz is not None:
@@ -526,9 +475,6 @@ def main(args=None):
                 node.get_logger().info(f"  持续运行中，按 Ctrl+C 停止")
                 while rclpy.ok():
                     time.sleep(0.1)
-        elif parsed.auto:
-            # 自动测试序列
-            node.run_auto_sequence()
         else:
             # 交互模式
             node.run_interactive()
