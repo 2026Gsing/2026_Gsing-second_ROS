@@ -605,6 +605,7 @@ class FastLIOLocalization(Node):
 
     def _auto_init_if_needed(self):
         """自动初始化兜底：5 秒后若未收到 /initialpose，以原点 X+ 启动 ICP"""
+        self.get_logger().info(f"_auto_init_if_needed: initialized={self.initialized} cur_scan={'✓' if self.cur_scan is not None else '✗'}")
         if not self.initialized:
             if self.cur_scan is not None:
                 self.get_logger().warn(
