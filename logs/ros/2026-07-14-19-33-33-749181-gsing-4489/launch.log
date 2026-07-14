@@ -1,0 +1,15 @@
+1784028813.7540557 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-19-33-33-749181-gsing-4489
+1784028813.7546601 [INFO] [launch]: Default logging verbosity is set to INFO
+1784028814.4896085 [INFO] [static_transform_publisher-1]: process started with pid [4628]
+1784028814.5016870 [INFO] [static_transform_publisher-2]: process started with pid [4629]
+1784028814.5057480 [INFO] [static_transform_publisher-3]: process started with pid [4630]
+1784028814.5064249 [INFO] [static_transform_publisher-4]: process started with pid [4631]
+1784028814.5085497 [INFO] [map_server-5]: process started with pid [4632]
+1784028819.7765796 [INFO] [controller_server-6]: process started with pid [4789]
+1784028819.7771521 [INFO] [planner_server-7]: process started with pid [4790]
+1784028819.7983563 [INFO] [behavior_server-8]: process started with pid [4791]
+1784028819.7988315 [INFO] [bt_navigator-9]: process started with pid [4792]
+1784028819.7992151 [INFO] [waypoint_follower-10]: process started with pid [4793]
+1784028819.7996759 [INFO] [lifecycle_manager-11]: process started with pid [4794]
+1784028819.8000436 [INFO] [goal_pose_to_nav2-12]: process started with pid [4795]
+1784028819.8093462 [INFO] [costmap_to_grid-13]: process started with pid [4796]
