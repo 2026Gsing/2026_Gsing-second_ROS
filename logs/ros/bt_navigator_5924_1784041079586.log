@@ -1,0 +1,26 @@
+[INFO] [1784041079.741665885] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784041079.783454661] [bt_navigator]: Creating
+[INFO] [1784041082.854085833] [bt_navigator]: Configuring
+[INFO] [1784041082.955903547] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784041083.145068143] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784041084.738048740] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784041087.255115712] [bt_navigator]: Activating
+[INFO] [1784041087.497185099] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784041106.124379942] [bt_navigator]: Begin navigating from current location (0.23, -0.02) to (0.62, 0.09)
+[INFO] [1784041106.168996871] [bt_navigator]: Received goal preemption request
+[INFO] [1784041106.170382858] [bt_navigator]: Begin navigating from current location (0.26, -0.04) to (0.62, 0.09)
+[WARN] [1784041119.590787658] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[WARN] [1784041126.036968981] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784041126.075186167] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784041126.088581457] [bt_navigator]: Goal failed
+[INFO] [1784041132.258301683] [bt_navigator]: Deactivating
+[INFO] [1784041132.258458365] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [1784041133.304165326] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784041133.304334871] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[INFO] [1784041133.304516475] [bt_navigator]: Cleaning up
+[INFO] [1784041133.915874520] [bt_navigator]: Completed Cleaning up
+[INFO] [1784041133.916246871] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.

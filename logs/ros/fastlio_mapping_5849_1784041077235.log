@@ -1,0 +1,3 @@
+[INFO] [1784041077.570778432] [fastlio_mapping]: p_pre->lidar_type 5
+[INFO] [1784041077.625377880] [fastlio_mapping]: Node init finished.
+[INFO] [1784041129.706047875] [rclcpp]: signal_handler(SIGINT/SIGTERM)

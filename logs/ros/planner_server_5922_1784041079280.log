@@ -1,0 +1,43 @@
+[INFO] [1784041080.102779463] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784041080.184320647] [planner_server]: Creating
+[INFO] [1784041080.405176638] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784041080.427074122] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784041081.327062325] [planner_server]: Configuring
+[INFO] [1784041081.327222059] [global_costmap.global_costmap]: Configuring
+[INFO] [1784041081.492831143] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784041081.599447984] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784041081.627529100] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1784041081.912012933] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1784041081.912141903] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1784041081.923078903] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1784041085.530147952] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 62 X 53 at 0.050000 m/pix
+[INFO] [1784041085.866276373] [planner_server]: Activating
+[INFO] [1784041085.866398457] [global_costmap.global_costmap]: Activating
+[INFO] [1784041085.866441388] [global_costmap.global_costmap]: Checking transform
+[INFO] [1784041085.866548521] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784041086.386881847] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784041086.869430269] [global_costmap.global_costmap]: start
+[INFO] [1784041086.922181861] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1784041086.938530150] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [1784041119.595982961] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[WARN] [1784041119.876306036] [planner_server]: Planner loop missed its desired rate of 10.0000 Hz. Current loop rate is 3.9893 Hz
+[INFO] [1784041132.248461822] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784041132.248632471] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784041132.248810775] [planner_server]: Deactivating
+[INFO] [1784041132.248960774] [global_costmap.global_costmap]: Deactivating
+[INFO] [1784041132.541711001] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[INFO] [1784041132.541821199] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[INFO] [1784041132.613901011] [planner_server]: Cleaning up
+[WARN] [1784041132.769197184] [rcl_lifecycle]: No transition matching 4 found for current state cleaningup
+[WARN] [1784041132.769263203] [rcl_lifecycle]: No transition matching 4 found for current state cleaningup
+[ERROR] [1784041132.775741969] [planner_server]: Unable to start transition 4 from current state cleaningup: Transition is not registered., at ./src/rcl_lifecycle.c:355
+[INFO] [1784041132.822324087] [global_costmap.global_costmap]: Cleaning up
+[INFO] [1784041132.904967703] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[INFO] [1784041132.905124373] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[INFO] [1784041133.033633340] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
