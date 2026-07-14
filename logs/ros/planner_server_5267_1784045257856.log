@@ -1,0 +1,44 @@
+[INFO] [1784045258.146314250] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784045258.237847475] [planner_server]: Creating
+[INFO] [1784045258.321833664] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784045258.341134498] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784045260.080199928] [planner_server]: Configuring
+[INFO] [1784045260.080442197] [global_costmap.global_costmap]: Configuring
+[INFO] [1784045260.254107837] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784045260.400321916] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784045260.411569691] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1784045260.602970905] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1784045260.605030944] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1784045260.632521442] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1784045263.738458852] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 61 X 44 at 0.050000 m/pix
+[INFO] [1784045264.092996226] [planner_server]: Activating
+[INFO] [1784045264.093147698] [global_costmap.global_costmap]: Activating
+[INFO] [1784045264.093191639] [global_costmap.global_costmap]: Checking transform
+[INFO] [1784045264.093305700] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784045264.593928288] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784045265.093482886] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784045265.602770112] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784045266.095140741] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784045266.600729470] [global_costmap.global_costmap]: start
+[INFO] [1784045266.654192068] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1784045266.660934735] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [1784045343.635414045] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784045343.635635698] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784045343.635831052] [planner_server]: Deactivating
+[INFO] [1784045343.635949020] [global_costmap.global_costmap]: Deactivating
+[WARN] [1784045343.735823776] [rcl_lifecycle]: No transition matching 4 found for current state deactivating
+[WARN] [1784045343.735884404] [rcl_lifecycle]: No transition matching 4 found for current state deactivating
+[ERROR] [1784045343.735917546] [planner_server]: Unable to start transition 4 from current state deactivating: Transition is not registered., at ./src/rcl_lifecycle.c:355
+[INFO] [1784045343.941517339] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[INFO] [1784045343.941656206] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[INFO] [1784045343.957338176] [planner_server]: Cleaning up
+[INFO] [1784045344.027954280] [global_costmap.global_costmap]: Cleaning up
+[INFO] [1784045344.077339022] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[INFO] [1784045344.091662352] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[INFO] [1784045344.229215895] [planner_server]: Destroying bond (planner_server) to lifecycle manager.

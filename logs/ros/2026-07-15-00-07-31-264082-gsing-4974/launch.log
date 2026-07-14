@@ -1,0 +1,21 @@
+1784045251.2696853 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-00-07-31-264082-gsing-4974
+1784045251.2702661 [INFO] [launch]: Default logging verbosity is set to INFO
+1784045252.2107041 [INFO] [static_transform_publisher-1]: process started with pid [5096]
+1784045252.2201567 [INFO] [static_transform_publisher-2]: process started with pid [5097]
+1784045252.2212703 [INFO] [static_transform_publisher-3]: process started with pid [5098]
+1784045252.2258098 [INFO] [static_transform_publisher-4]: process started with pid [5099]
+1784045252.2309325 [INFO] [map_server-5]: process started with pid [5100]
+1784045252.2325144 [INFO] [rviz2-6]: process started with pid [5101]
+1784045257.3678091 [INFO] [controller_server-7]: process started with pid [5266]
+1784045257.3783209 [INFO] [planner_server-8]: process started with pid [5267]
+1784045257.3792450 [INFO] [behavior_server-9]: process started with pid [5268]
+1784045257.3824039 [INFO] [bt_navigator-10]: process started with pid [5269]
+1784045257.3858850 [INFO] [waypoint_follower-11]: process started with pid [5270]
+1784045257.3929541 [INFO] [lifecycle_manager-12]: process started with pid [5271]
+1784045257.3937113 [INFO] [goal_pose_to_nav2-13]: process started with pid [5272]
+1784045257.3942883 [INFO] [costmap_to_grid-14]: process started with pid [5273]
+1784045344.8170340 [INFO] [controller_server-7]: process has finished cleanly [pid 5266]
+1784045345.6881850 [INFO] [planner_server-8]: process has finished cleanly [pid 5267]
+1784045346.0340257 [INFO] [bt_navigator-10]: process has finished cleanly [pid 5269]
+1784045347.7174716 [ERROR] [rviz2-6]: process has died [pid 5101, exit code -11, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/rviz/nav2_fastlio_static_map.rviz --ros-args -r __node:=nav2_rviz2'].
+1784045350.1702812 [INFO] [lifecycle_manager-12]: process has finished cleanly [pid 5271]
