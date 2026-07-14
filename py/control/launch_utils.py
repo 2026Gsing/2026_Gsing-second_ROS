@@ -55,9 +55,9 @@ _LOG_CATEGORIES = {
 }
 
 # ============ 开关 ============
-# RViz 默认：miniPC(gsing) 不启动，主机(hyper) 启动
+# RViz 默认：Nav2 默认开 RViz（LiDAR/ICP 已硬编码不开）
 # 可通过环境变量 GSING_RVIZ=1 或 GSING_RVIZ=0 临时覆盖
-_HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
+_HOST_RVIZ_DEFAULT = "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
