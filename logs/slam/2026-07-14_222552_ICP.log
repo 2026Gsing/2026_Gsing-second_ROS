@@ -1,0 +1,266 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-22-26-01-452239-gsing-4880
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [5016]
+[INFO] [env-2]: process started with pid [5017]
+[INFO] [env-3]: process started with pid [5018]
+[INFO] [pcd_to_pointcloud-4]: process started with pid [5019]
+[pcd_to_pointcloud-4] [INFO] [1784039162.939730761] [map_publisher]: Publishing data with 320387 points (x y z normal_x normal_y normal_z intensity curvature) on topic /cloud_pcd in frame map.
+[fastlio_mapping-1] [INFO] [1784039163.373013219] [fastlio_mapping]: p_pre->lidar_type 5
+[fastlio_mapping-1] Multi thread started 
+[fastlio_mapping-1] ~~~~/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[fastlio_mapping-1] [INFO] [1784039163.475830486] [fastlio_mapping]: Node init finished.
+[env-2] [INFO] [1784039169.289837669] [global_localization]: Waiting for global map...
+[env-2] [INFO] [1784039169.314524068] [global_localization]: Loading map: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD23.pcd, voxel_size=0.01
+[env-2] [INFO] [1784039169.748193540] [global_localization]: Map loaded: raw=320387 pts
+[env-2] [INFO] [1784039172.660362000] [global_localization]: Map downsampled: 85434 pts
+[env-2] [INFO] [1784039172.674677964] [global_localization]: Global map received.
+[env-2] [INFO] [1784039173.278710343] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039173.730284860] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039174.237180079] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039174.712741075] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039175.221536098] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039175.711853067] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039176.250032022] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039176.782888092] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039177.210255829] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039177.728206487] [global_localization]: Waiting for initial pose...
+[env-2] [INFO] [1784039177.743461595] [global_localization]: _auto_init_if_needed: initialized=False cur_scan=✓
+[env-2] [WARN] [1784039177.778531507] [global_localization]: No /initialpose received within 5s — auto-initializing at (0, 0) facing X+
+[env-2] [WARN] [1784039177.820333374] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039178.054570613] [global_localization]: ICP input: scan=48478 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039182.252377710] [global_localization]: ICP fitness: coarse=1.000, fine=0.983, threshold=0.9
+[env-2] [INFO] [1784039182.256096563] [global_localization]: map→odom: x=0.161 y=-0.020 z=-0.049
+[env-2] [WARN] [1784039182.270640172] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039182.303053387] [global_localization]: ICP input: scan=5052 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039182.650744809] [global_localization]: ICP fitness: coarse=1.000, fine=0.991, threshold=0.9
+[env-2] [INFO] [1784039182.653532569] [global_localization]: map→odom: x=0.201 y=-0.014 z=-0.037
+[env-2] [WARN] [1784039182.703404020] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039182.730257662] [global_localization]: ICP input: scan=38476 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039184.701579252] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-2] [INFO] [1784039184.708972481] [global_localization]: map→odom: x=0.246 y=-0.021 z=-0.051
+[env-2] [INFO] [1784039184.721454194] [global_localization]: _auto_init_if_needed: initialized=True cur_scan=✓
+[env-2] [WARN] [1784039184.750424113] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039184.789637596] [global_localization]: ICP input: scan=4791 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039185.715214802] [global_localization]: ICP fitness: coarse=1.000, fine=0.997, threshold=0.9
+[env-2] [INFO] [1784039185.721943418] [global_localization]: map→odom: x=0.217 y=-0.006 z=-0.062
+[env-2] [WARN] [1784039185.764419585] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039185.796965471] [global_localization]: ICP input: scan=4686 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039187.027352498] [global_localization]: ICP fitness: coarse=1.000, fine=0.988, threshold=0.9
+[env-2] [INFO] [1784039187.037528061] [global_localization]: map→odom: x=0.272 y=-0.030 z=-0.064
+[env-2] [WARN] [1784039187.062210630] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039187.110934282] [global_localization]: ICP input: scan=4926 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039187.747143089] [global_localization]: ICP fitness: coarse=1.000, fine=0.998, threshold=0.9
+[env-2] [INFO] [1784039187.752243302] [global_localization]: map→odom: x=0.256 y=-0.025 z=-0.055
+[env-2] [WARN] [1784039187.781085749] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039187.805438329] [global_localization]: ICP input: scan=4786 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039189.043070655] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-2] [INFO] [1784039189.057798125] [global_localization]: map→odom: x=0.287 y=-0.055 z=-0.051
+[env-2] [WARN] [1784039189.079056823] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039189.127852770] [global_localization]: ICP input: scan=4952 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039190.408053890] [global_localization]: ICP fitness: coarse=1.000, fine=0.993, threshold=0.9
+[env-2] [INFO] [1784039190.434105464] [global_localization]: map→odom: x=0.281 y=-0.043 z=-0.040
+[env-2] [WARN] [1784039190.522662607] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039190.589917054] [global_localization]: ICP input: scan=4892 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039191.211641180] [global_localization]: ICP fitness: coarse=1.000, fine=0.998, threshold=0.9
+[env-2] [INFO] [1784039191.221216587] [global_localization]: map→odom: x=0.251 y=-0.025 z=-0.049
+[env-2] [WARN] [1784039191.240286924] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039191.278125870] [global_localization]: ICP input: scan=4743 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039192.238333410] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-2] [INFO] [1784039192.258365953] [global_localization]: map→odom: x=0.267 y=-0.057 z=-0.046
+[env-2] [WARN] [1784039192.298374101] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039192.445910050] [global_localization]: ICP input: scan=4659 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039192.958455095] [global_localization]: ICP fitness: coarse=1.000, fine=1.000, threshold=0.9
+[env-2] [INFO] [1784039192.963017227] [global_localization]: map→odom: x=0.242 y=-0.037 z=-0.057
+[env-2] [WARN] [1784039192.992102747] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039193.066533027] [global_localization]: ICP input: scan=5007 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039193.452636776] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-2] [INFO] [1784039193.455975028] [global_localization]: map→odom: x=0.238 y=-0.031 z=-0.048
+[env-2] [WARN] [1784039193.468381182] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039193.500860151] [global_localization]: ICP input: scan=4842 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039193.885183849] [global_localization]: ICP fitness: coarse=1.000, fine=0.993, threshold=0.9
+[env-2] [INFO] [1784039193.903613246] [global_localization]: map→odom: x=0.256 y=-0.031 z=-0.041
+[env-2] [WARN] [1784039193.922954998] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039193.985058267] [global_localization]: ICP input: scan=4688 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039194.484765422] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-2] [INFO] [1784039194.488447007] [global_localization]: map→odom: x=0.269 y=-0.042 z=-0.058
+[env-2] [WARN] [1784039194.505216125] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039194.531573227] [global_localization]: ICP input: scan=4648 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039194.835618443] [global_localization]: ICP fitness: coarse=1.000, fine=0.999, threshold=0.9
+[env-2] [INFO] [1784039194.842036754] [global_localization]: map→odom: x=0.250 y=-0.034 z=-0.062
+[env-2] [WARN] [1784039194.858212223] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039194.883454560] [global_localization]: ICP input: scan=5027 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039195.424708953] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-2] [INFO] [1784039195.462062314] [global_localization]: map→odom: x=0.253 y=-0.029 z=-0.037
+[env-2] [WARN] [1784039195.518415626] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039195.604838466] [global_localization]: ICP input: scan=4735 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039197.052437118] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-2] [INFO] [1784039197.061793721] [global_localization]: map→odom: x=0.251 y=-0.036 z=-0.052
+[env-2] [WARN] [1784039197.095869866] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039197.151978442] [global_localization]: ICP input: scan=4653 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039199.298888942] [global_localization]: ICP fitness: coarse=1.000, fine=1.000, threshold=0.9
+[env-2] [INFO] [1784039199.307741722] [global_localization]: map→odom: x=0.192 y=-0.018 z=-0.062
+[env-2] [WARN] [1784039199.324630519] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039199.368629713] [global_localization]: ICP input: scan=4740 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039200.155138083] [global_localization]: ICP fitness: coarse=1.000, fine=0.991, threshold=0.9
+[env-2] [INFO] [1784039200.166629260] [global_localization]: map→odom: x=0.233 y=-0.029 z=-0.055
+[env-2] [WARN] [1784039200.185465008] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039200.230893812] [global_localization]: ICP input: scan=4737 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039200.878570860] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-2] [INFO] [1784039200.898590381] [global_localization]: map→odom: x=0.261 y=-0.066 z=-0.050
+[env-2] [WARN] [1784039200.938325492] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039201.039951970] [global_localization]: ICP input: scan=4676 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039202.183239604] [global_localization]: ICP fitness: coarse=1.000, fine=1.000, threshold=0.9
+[env-2] [INFO] [1784039202.199291154] [global_localization]: map→odom: x=0.229 y=-0.046 z=-0.058
+[env-2] [WARN] [1784039202.235111004] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039202.301800906] [global_localization]: ICP input: scan=4656 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039202.903957002] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-2] [INFO] [1784039202.908909609] [global_localization]: map→odom: x=0.259 y=-0.058 z=-0.058
+[env-2] [WARN] [1784039202.923400710] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039202.960739770] [global_localization]: ICP input: scan=5024 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039203.519775554] [global_localization]: ICP fitness: coarse=1.000, fine=0.989, threshold=0.9
+[env-2] [INFO] [1784039203.539830364] [global_localization]: map→odom: x=0.262 y=-0.046 z=-0.038
+[env-2] [WARN] [1784039203.588012148] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039203.629169960] [global_localization]: ICP input: scan=4651 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039204.797393643] [global_localization]: ICP fitness: coarse=1.000, fine=1.000, threshold=0.9
+[env-2] [INFO] [1784039204.810014779] [global_localization]: map→odom: x=0.231 y=-0.040 z=-0.054
+[env-2] [WARN] [1784039204.838907378] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039205.019342591] [global_localization]: ICP input: scan=4718 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039205.754219604] [global_localization]: ICP fitness: coarse=1.000, fine=0.966, threshold=0.9
+[env-2] [INFO] [1784039205.758758512] [global_localization]: map→odom: x=0.341 y=-0.158 z=-0.059
+[env-2] [WARN] [1784039205.779154463] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039205.819546612] [global_localization]: ICP input: scan=5024 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039206.201366492] [global_localization]: ICP fitness: coarse=1.000, fine=0.992, threshold=0.9
+[env-2] [INFO] [1784039206.204518802] [global_localization]: map→odom: x=0.291 y=-0.064 z=-0.047
+[env-2] [WARN] [1784039206.218523107] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039206.259390186] [global_localization]: ICP input: scan=4959 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039206.552167985] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-2] [INFO] [1784039206.555687242] [global_localization]: map→odom: x=0.281 y=-0.056 z=-0.035
+[env-2] [WARN] [1784039206.702249608] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039206.749518162] [global_localization]: ICP input: scan=47914 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039208.729247939] [global_localization]: ICP fitness: coarse=1.000, fine=0.980, threshold=0.9
+[env-2] [INFO] [1784039208.765832228] [global_localization]: map→odom: x=0.305 y=-0.044 z=-0.050
+[env-2] [WARN] [1784039208.835114751] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039208.963694581] [global_localization]: ICP input: scan=4675 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039210.596748024] [global_localization]: ICP fitness: coarse=1.000, fine=0.998, threshold=0.9
+[env-2] [INFO] [1784039210.601301920] [global_localization]: map→odom: x=0.260 y=-0.025 z=-0.061
+[env-2] [WARN] [1784039210.641442782] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039210.683594706] [global_localization]: ICP input: scan=4899 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039211.690960502] [global_localization]: ICP fitness: coarse=1.000, fine=0.998, threshold=0.9
+[env-2] [INFO] [1784039211.701199933] [global_localization]: map→odom: x=0.248 y=-0.013 z=-0.051
+[env-2] [WARN] [1784039211.759901060] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039211.827923402] [global_localization]: ICP input: scan=4719 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039212.989320476] [global_localization]: ICP fitness: coarse=1.000, fine=0.989, threshold=0.9
+[env-2] [INFO] [1784039213.005877894] [global_localization]: map→odom: x=0.261 y=-0.045 z=-0.060
+[env-2] [WARN] [1784039213.050851696] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039213.134401288] [global_localization]: ICP input: scan=4855 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039213.583960413] [global_localization]: ICP fitness: coarse=1.000, fine=0.982, threshold=0.9
+[env-2] [INFO] [1784039213.588804821] [global_localization]: map→odom: x=0.287 y=-0.074 z=-0.041
+[env-2] [WARN] [1784039213.602849062] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039213.631163432] [global_localization]: ICP input: scan=4675 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039214.317781317] [global_localization]: ICP fitness: coarse=1.000, fine=0.999, threshold=0.9
+[env-2] [INFO] [1784039214.321336040] [global_localization]: map→odom: x=0.236 y=-0.043 z=-0.061
+[env-2] [WARN] [1784039214.334103764] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039214.471065776] [global_localization]: ICP input: scan=4652 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039215.046069192] [global_localization]: ICP fitness: coarse=1.000, fine=0.999, threshold=0.9
+[env-2] [INFO] [1784039215.057283747] [global_localization]: map→odom: x=0.227 y=-0.032 z=-0.061
+[env-2] [WARN] [1784039215.100223686] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039215.168133578] [global_localization]: ICP input: scan=4927 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039215.857039723] [global_localization]: ICP fitness: coarse=1.000, fine=0.991, threshold=0.9
+[env-2] [INFO] [1784039215.862443322] [global_localization]: map→odom: x=0.252 y=-0.045 z=-0.038
+[env-2] [WARN] [1784039215.940940837] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039216.036071740] [global_localization]: ICP input: scan=4906 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039216.731254777] [global_localization]: ICP fitness: coarse=1.000, fine=0.983, threshold=0.9
+[env-2] [INFO] [1784039216.741053323] [global_localization]: map→odom: x=0.274 y=-0.057 z=-0.043
+[env-2] [WARN] [1784039216.767702532] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039216.814322002] [global_localization]: ICP input: scan=4687 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039217.697216994] [global_localization]: ICP fitness: coarse=1.000, fine=0.988, threshold=0.9
+[env-2] [INFO] [1784039217.701736379] [global_localization]: map→odom: x=0.290 y=-0.084 z=-0.056
+[env-2] [WARN] [1784039217.733801218] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039217.778679670] [global_localization]: ICP input: scan=4693 pts, map_FOV=85434 pts
+[env-2] [INFO] [1784039218.988040907] [global_localization]: ICP fitness: coarse=1.000, fine=0.995, threshold=0.9
+[env-2] [INFO] [1784039219.008003156] [global_localization]: map→odom: x=0.287 y=-0.045 z=-0.058
+[env-2] [WARN] [1784039219.075340452] [global_localization]: No odometry yet, skip odom transform in crop
+[env-2] [INFO] [1784039219.189007937] [global_localization]: ICP input: scan=4637 pts, map_FOV=85434 pts
+[fastlio_mapping-1] [INFO] [1784039219.483419077] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[fastlio_mapping-1] Rebuild thread terminated normally
+[INFO] [fastlio_mapping-1]: process has finished cleanly [pid 5016]
+[env-2] [INFO] [1784039220.317903187] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[env-2] [INFO] [1784039220.328815719] [global_localization]: map→odom: x=0.272 y=-0.082 z=-0.058
+[env-2] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[env-3] Traceback (most recent call last):
+[env-3]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion", line 33, in <module>
+[env-3]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'transform_fusion')())
+[env-3]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/transform_fusion.py", line 134, in main
+[env-3]     rclpy.spin(node)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[env-3]     executor.spin_once()
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[env-3]     self._spin_once_impl(timeout_sec)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+[env-3]     raise handler.exception()
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+[env-3]     result = coro.send(None)
+[env-3]              ^^^^^^^^^^^^^^^
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 592, in handler
+[env-3]     await call_coroutine()
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 454, in _execute
+[env-3]     await await_or_execute(tmr.callback)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 115, in await_or_execute
+[env-3]     return callback(*args)
+[env-3]            ^^^^^^^^^^^^^^^
+[env-3]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/transform_fusion.py", line 100, in transform_fusion
+[env-3]     self.tf_broadcaster.sendTransform(transform_stamped_msg)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/tf2_ros/transform_broadcaster.py", line 77, in sendTransform
+[env-3]     self.pub_tf.publish(TFMessage(transforms=transform))
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 70, in publish
+[env-3]     self.__publisher.publish(msg)
+[env-3] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[env-2] Traceback (most recent call last):
+[env-2]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization", line 33, in <module>
+[env-2]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'global_localization')())
+[env-2]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-2]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 626, in main
+[env-2]     rclpy.spin(node)
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[env-2]     executor.spin_once()
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[env-2]     self._spin_once_impl(timeout_sec)
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+[env-2]     raise handler.exception()
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+[env-2]     result = coro.send(None)
+[env-2]              ^^^^^^^^^^^^^^^
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 592, in handler
+[env-2]     await call_coroutine()
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 454, in _execute
+[env-2]     await await_or_execute(tmr.callback)
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 115, in await_or_execute
+[env-2]     return callback(*args)
+[env-2]            ^^^^^^^^^^^^^^^
+[env-2]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 604, in localisation_timer_callback
+[env-2]     self.global_localization(self.T_map_to_odom)
+[env-2]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 520, in global_localization
+[env-2]     self.publish_odom(transformation)
+[env-2]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 595, in publish_odom
+[env-2]     self.pub_map_to_odom.publish(odom_msg)
+[env-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 70, in publish
+[env-2]     self.__publisher.publish(msg)
+[env-2] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[ERROR] [env-3]: process has died [pid 5018, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+[ERROR] [env-2]: process has died [pid 5017, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_cvqf3kxs --params-file /tmp/launch_params_nwb0rzu_'].
