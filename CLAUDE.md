@@ -141,11 +141,21 @@ GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关 Nav2 RViz
 **Navigation pipeline:**
 ```
 LiDAR L2 → /unilidar/cloud → pointcloud_x_filter → /unilidar/cloud_filtered
-  → FAST-LIO2 SLAM → /Odometry → odometry_to_tf → TF odom→base_link
-  → global_localization.py (ICP vs PCD map) → /localization
+  → FAST-LIO2 SLAM → /Odometry → odometry_to_tf → TF camera_init→body
+  → ICP (global_localization.py) → /map_to_odom → transform_fusion → /localization + TF map→camera_init
   → Nav2 (planner + controller) → /cmd_vel
-  → cmd_vel_chassis_serial.py (0x10 frame) → STM32
+  → cmd_vel_chassis_serial.py (0x10 frame with state) → STM32
 ```
+
+**TF tree (2026-07-15 修正):**
+```
+map ← (ICP / transform_fusion) ← camera_init ← (odometry_to_tf, dynamic) ← body ← (static) ← base_link
+                                   └── (static identity) ← odom  (local costmap 用)
+```
+- `camera_init→body` 由 FAST-LIO2 的 `odometry_to_tf` 动态发布（反映机器人运动）
+- `body→base_link` 是静态恒等变换
+- **不发布 `camera_init→base_link` 静态恒等** — 这会与上述动态链冲突，导致 Nav2 的 SimpleProgressChecker 读取到 base_link 始终在 (0,0)
+- `map→camera_init` 由 `transform_fusion.py` 以 ICP 结果发布
 
 **Vision auto task:**
 ```
@@ -172,6 +182,32 @@ USE_TERMINAL = True     # gnome-terminal per node (vs background)
 SERIAL_PORT = "/dev/ttyACM0"
 MAP_NAME = "map/PCD21"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 ```
+
+### ICP 定位参数 (`launch_utils.py:207-210`)
+
+```python
+map_voxel_size:=0.08 scan_voxel_size:=0.08
+freq_localization:=2.0 localization_threshold:=0.85
+```
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| `map_voxel_size` | 0.08 m | 地图下采样体素（2026-07-15 从 0.008 放宽到 0.08） |
+| `scan_voxel_size` | 0.08 m | 扫描下采样体素（2026-07-15 从 0.02 放宽到 0.08） |
+| `freq_localization` | 2.0 Hz | ICP 定位频率 |
+| `localization_threshold` | 0.85 | ICP 配准 fitness 阈值（2026-07-15 从 0.9 降低） |
+
+### 底盘状态码推导 (`cmd_vel_chassis_serial.py:derive_robot_state()`)
+
+Serial bridge 从 `(vx, wz)` 速度推导 `state` 字节（0x10 帧的第9字节）：
+
+```python
+# vx 非零 → FORWARD(1) 或 BACKWARD(2)，即使 wz > vx（前进中转弯）
+# vx 为零且 wz 非零 → LEFT(3) 或 RIGHT(4)（纯旋转）
+# 全部零 → IDLE(0)
+```
+
+2026-07-15 修正：之前当 `abs(wz) > abs(vx)` 时返回 LEFT/RIGHT，导致 Nav2 导航时（vx=0.1, wz=0.15→0.29）发送 state=LEFT，STM32 优先转向步态，前进速度降至指令的 1/8。
 
 ## Serial Protocol (ROS ↔ STM32)
 
@@ -219,3 +255,38 @@ SetGoal still appears in the toolbar but has no subscriber — harmless. Always 
 - **conda Python**: Always use `./ros-run.sh` or explicit `/usr/bin/python3`, never bare `python3`
 - **Serial port**: `sudo chmod 666 /dev/ttyACM0`
 - **ICP not initialized**: `box_pick_node.py` publishes `/initialpose` after 8s, but ICP takes ~15s to load map — message is often dropped. ICP auto-initializes once LiDAR data flows, so this is usually non-blocking.
+
+## 2026-07-15 修复记录
+
+### 1. Nav2 "Failed to make progress" — TF 树冲突
+
+**问题**: `nav2_fastlio_static_map.launch.py` 发布了 `camera_init→base_link` 静态恒等变换，与 FAST-LIO2 `odometry_to_tf` 发布的动态 `camera_init→body→base_link` 链冲突。Nav2 的 SimpleProgressChecker 查找 `odom→base_link` 时解析到静态恒等，始终读到 (0,0)，10 秒后触发失败。
+
+**修复**: 删除了 `static_tf_camerainit_baselink` 节点。动态 TF 链已提供正确的 `camera_init→base_link`。
+
+### 2. Nav2 "Failed to make progress" — 底盘状态码错误
+
+**问题**: `cmd_vel_chassis_serial.py` 的 `derive_robot_state()` 中，当 `abs(wz) > abs(vx)` 时返回 `LEFT(3)`。导航时 Nav2 发出 `vx=0.10, wz=0.15~0.29`，状态码为 LEFT，STM32 优先执行转向步态，实际前进速度仅 0.013 m/s（指令的 1/8）。
+
+**修复**: 改为先判 vx，非零则直接返回 FORWARD(1)/BACKWARD(2)。wz 仅用于纯旋转。
+
+### 3. Nav2 参数调整
+
+| 参数 | 文件 | 旧值 | 新值 |
+|------|------|------|------|
+| `required_movement_radius` | `nav2_fastlio_static_map_params.yaml` | 0.5 | 0.3 |
+| `movement_time_allowance` | ↑ | 10.0 | 30.0 |
+| `lookahead_dist` | ↑ | 0.5 | 0.4 |
+| `max_lookahead_dist` | ↑ | 0.8 | 0.6 |
+| `min_approach_linear_velocity` | ↑ | 0.35 | 0.10 |
+| `local_costmap.rolling_window` | ↑ | false | true |
+
+### 4. ICP 定位参数优化
+
+`launch_utils.py` 中 ICP 启动参数：
+
+| 参数 | 旧值 | 新值 | 原因 |
+|------|------|------|------|
+| `map_voxel_size` | 0.008 | 0.08 | 10x 放宽，地图点从 11万→约 3000-5000，首次匹配 18.5s→<2s |
+| `scan_voxel_size` | 0.02 | 0.08 | 与地图一致 |
+| `localization_threshold` | 0.9 | 0.85 | 体素变粗后 fitness 自然稍低 |

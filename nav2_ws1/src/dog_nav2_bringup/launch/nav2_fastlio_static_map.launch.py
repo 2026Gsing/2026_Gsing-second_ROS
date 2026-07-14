@@ -84,13 +84,16 @@ def generate_launch_description():
     )
 
     # ============ TF 树静态变换 ============
-    # TF 树: map ← (ICP) ← camera_init ← (odometry_to_tf) ← base_link
+    # TF 树: map ← (ICP) ← camera_init ← (odometry_to_tf) ← body ← base_link
     # camera_init→map 由 transform_fusion.py 以 /tf_static 发布（controller 坐标转换用）
-    # 静态恒等 TF（Nav2 costmap 激活 fallback）：
+    # 静态恒等 TF：
     #   camera_init → odom   (odom 作为 camera_init 别名，仅用于 local costmap)
-    #   camera_init → base_link
     #   base_link → body
     #   base_link → unilidar_lidar
+    #
+    # 注意：不发布 camera_init→base_link 静态恒等——这会与 FAST-LIO2
+    # odometry_to_tf 发布的动态 camera_init→body 链冲突，
+    # 导致 SimpleProgressChecker 检测到 base_link 始终在 (0,0)。
     static_tf_caminit_odom = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -98,15 +101,6 @@ def generate_launch_description():
         arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'camera_init', '--child-frame-id', 'odom'],
         output='screen'
     )
-    static_tf_camerainit_baselink = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='static_tf_camerainit_baselink',
-        arguments=['--x', '0', '--y', '0', '--z', '0', '--qx', '0', '--qy', '0', '--qz', '0', '--qw', '1', '--frame-id', 'camera_init', '--child-frame-id', 'base_link'],
-        output='screen'
-    )
-
-
     # body 挂载在 base_link 下（恒等变换）
     static_tf_body_baselink = Node(
         package='tf2_ros',
@@ -248,8 +242,10 @@ def generate_launch_description():
     ld.add_action(declare_start_rviz)
 
     # TF 变换先启动（camera_init 为中心，odom 作为别名用于 local costmap）
+    # 注意：不发布 camera_init→base_link 静态恒等——这会与 FAST-LIO2
+    # odometry_to_tf 发布的动态 camera_init→body→base_link 链冲突，
+    # 导致 SimpleProgressChecker 检测到 base_link 始终在 (0,0)。
     ld.add_action(static_tf_caminit_odom)
-    ld.add_action(static_tf_camerainit_baselink)
 
     ld.add_action(static_tf_body_baselink)
     ld.add_action(static_tf_baselink_lidar)

@@ -182,15 +182,21 @@ def derive_robot_state(vx: float, wz: float) -> int:
     """
     从 vx, wz 速度矢量推导机器人运动状态。
 
-    推导逻辑与 STM32 control.c derive_robot_state() 一致：
-    优先判断角速度（自转），再判断线速度（平移），否则返回 IDLE。
+    推导逻辑：
+      线速度非零 → FORWARD（或 BACKWARD），即使 wz > vx（前进中转弯）。
+      零线速度 → 纯旋转 LEFT/RIGHT。
+      全部零 → IDLE。
+
+    2026-07-15 修正：去掉 wz > vx 优先判断。
+    四足机器人前进中转弯时，主要运动方向是前进，状态应为 FORWARD。
+    STM32 接收 wz 作为转向分量独立处理，不需要 LEFT/RIGHT 状态来触发转向。
     """
-    # 角速度占主导 → 左转/右转
-    if abs(wz) > abs(vx) and abs(wz) > _STATE_EPSILON:
-        return ROBOT_STATE_LEFT if wz >= 0.0 else ROBOT_STATE_RIGHT
-    # 线速度主导 → 前进/后退
+    # 线速度主导 → 前进/后退（即使 wz > vx，机器人仍在前进）
     if abs(vx) > _STATE_EPSILON:
         return ROBOT_STATE_FORWARD if vx >= 0.0 else ROBOT_STATE_BACKWARD
+    # 零线速度 → 左转/右转（纯旋转）
+    if abs(wz) > _STATE_EPSILON:
+        return ROBOT_STATE_LEFT if wz >= 0.0 else ROBOT_STATE_RIGHT
     # 零速度 → 空闲
     return ROBOT_STATE_IDLE
 

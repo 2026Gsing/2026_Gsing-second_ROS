@@ -1,0 +1,17 @@
+1784058260.1102145 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-03-44-20-104962-gsing-5360
+1784058260.1110687 [INFO] [launch]: Default logging verbosity is set to INFO
+1784058260.6488461 [INFO] [static_transform_publisher-1]: process started with pid [5473]
+1784058260.6495309 [INFO] [static_transform_publisher-2]: process started with pid [5474]
+1784058260.6500099 [INFO] [static_transform_publisher-3]: process started with pid [5475]
+1784058260.6504035 [INFO] [map_server-4]: process started with pid [5476]
+1784058260.6508725 [INFO] [rviz2-5]: process started with pid [5477]
+1784058265.8208418 [INFO] [controller_server-6]: process started with pid [5640]
+1784058265.8261209 [INFO] [planner_server-7]: process started with pid [5641]
+1784058265.8327844 [INFO] [behavior_server-8]: process started with pid [5642]
+1784058265.8333268 [INFO] [bt_navigator-9]: process started with pid [5643]
+1784058265.8337970 [INFO] [waypoint_follower-10]: process started with pid [5644]
+1784058265.8342512 [INFO] [lifecycle_manager-11]: process started with pid [5645]
+1784058265.8347683 [INFO] [costmap_to_grid-12]: process started with pid [5646]
+1784058326.3676786 [INFO] [planner_server-7]: process has finished cleanly [pid 5641]
+1784058326.8493965 [INFO] [bt_navigator-9]: process has finished cleanly [pid 5643]
+1784058327.9795573 [INFO] [lifecycle_manager-11]: process has finished cleanly [pid 5645]

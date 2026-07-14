@@ -61,7 +61,7 @@ _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
-MAP_NAME = "map/PCD30"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/PCD31"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
 try:
@@ -206,8 +206,8 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
         f"ros2 launch fast_lio_localization 1.launch.py "
         f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
-        f"  map_voxel_size:=0.008 scan_voxel_size:=0.02 "
-        f"  freq_localization:=2.0 localization_threshold:=0.9",
+        f"  map_voxel_size:=0.08 scan_voxel_size:=0.08 "
+        f"  freq_localization:=2.0 localization_threshold:=0.85",
         name="ICP",
     )
 
