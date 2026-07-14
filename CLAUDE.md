@@ -12,41 +12,47 @@ Robot: Unitree Go2/B2 wheel-leg quadruped with STM32H723VGTX bare-metal firmware
 
 ## ⚠️ Python 环境陷阱
 
-**默认 `python3` 解析到 conda 3.14.4，无法 import rclpy**（ROS2 的 C 扩展编译为 Python 3.12 ABI）。
+**默认 `python3` 解析到 conda 3.14.x，无法 import rclpy**（ROS2 的 C 扩展编译为 Python 3.12 ABI）。
 
-| 方式 | 用什么 Python | 能不能跑 ROS2 |
+| 方式 | 用什么 Python | 能否跑 ROS2 |
 |------|:---:|:---:|
-| `python3 script.py` | conda 3.14.4 | ❌ |
-| `./script.py` | shebang → `/usr/bin/python3` (3.12) | ✅ |
+| `python3 script.py` | conda 3.14 | ❌ |
 | `./ros-run.sh script.py` | `/usr/bin/python3` + 自动 source | ✅ |
+| `/usr/bin/python3 script.py` | system 3.12 | ✅（需手动 source） |
 
-**所有脚本的 shebang 已改为 `#!/usr/bin/python3`**，因此 `./` 开头可正确使用系统 Python。
-
-`ros-run.sh` 是项目根目录的 helper，自动执行 source + RMW 设置：
+`ros-run.sh` 已包含自动 source + RMW 设置，推荐使用：
 ```bash
-cd /home/gsing/2026Gsing/2026_Gsing-second_ROS
 ./ros-run.sh py/control/box_pick_node.py
 ```
 
----
+## 双机配置（主机 + miniPC）
+
+代码通过 Git 在开发主机（`hyper-Ubuntu`）和机载 miniPC（`gsing`）之间同步。
+
+| 方面 | 主机 (hyper-Ubuntu) | miniPC (gsing) |
+|------|---------------------|----------------|
+| hostname | `hyper-Ubuntu` | `gsing` |
+| 项目路径 | `/home/hyper/program/...` | `/home/gsing/2026Gsing/...` |
+| 网卡（LiDAR） | `enp129s0` | 需 `ip a` 确认 |
+| 默认 RViz | ✅ 开 | ❌ 关（`GSING_RVIZ=1` 临时开） |
+
+**路径自动适配**：`Path(__file__).resolve()` 在任何机器上都能找到正确路径。C++ 各编各的（`build/` `install/` 在 `.gitignore` 中）。
 
 ## Quick Start
 
 ```bash
-# 1. Source ROS2 + workspaces（每次新终端）
+# 1. Source ROS2 + workspaces（每个新终端）
 source /opt/ros/jazzy/setup.bash
 source fastlio2_v2/install/setup.bash
 source nav2_ws1/install/setup.bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # 2. 一键启动
-./py/control/box_pick_node.py              # 物资箱检测抓取
-./py/control/auto_task.py field_id:=1       # 全场自动任务
-./py/tools/map_scan.py                      # 建图
-./py/tools/test_move.py                     # 底盘测试
+./ros-run.sh py/control/box_pick_node.py         # 物资箱检测抓取
+./ros-run.sh py/control/auto_task.py field_id:=1  # 全场自动任务
+./ros-run.sh py/tools/map_scan.py                 # 建图
+./ros-run.sh py/tools/test_move.py                # 底盘测试
 ```
-
----
 
 ## Build Commands
 
@@ -61,248 +67,130 @@ bash src/fast_lio_localization/scripts/hook_fix.sh
 # Nav2 workspace (launch files + Python scripts only, no C++)
 cd nav2_ws1
 colcon build --symlink-install
-# ⚠️ Manual sync after build:
+# ⚠️ Manual sync after build (install/ 下是副本)：
 cp src/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml \
    install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml
 ```
 
-**注意**: 如果从别处 clone，`install/` 下的 symlink 会断。先 `rm -rf build/ install/` 再重新编译。
-
----
+**注意**: 从别处 clone 后 `install/` 的 symlink 会断，先 `rm -rf build/ install/` 再重新编译。
 
 ## Hardware Setup
 
 ```bash
-# LiDAR 网卡（Unitree L2 LiDAR，每次重启后执行）
-sudo nmcli device set enp129s0 managed no
+# LiDAR 网卡（每次重启后执行）
+sudo nmcli device set enp129s0 managed no     # miniPC 网卡名可能不同
 sudo ip addr add 192.168.1.2/24 dev enp129s0
 
-# 串口权限（STM32 下位机）
+# 验证 LiDAR 连接
+source /opt/ros/jazzy/setup.bash && export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 topic echo /unilidar/cloud --once
+
+# 串口权限
 sudo chmod 666 /dev/ttyACM0              # 临时
 sudo usermod -aG dialout $USER           # 永久（需重登录）
 ```
 
-验证 LiDAR 连接：
+## Global RViz Switch
+
+环境变量 `GSING_RVIZ=0` 可一次性关闭所有 RViz（LiDAR + ICP + Nav2）：
+
 ```bash
-source /opt/ros/jazzy/setup.bash && export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ros2 topic echo /unilidar/cloud --once   # 有数据则正常
+GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py
+GSING_RVIZ=0 ./ros-run.sh py/tools/map_scan.py
 ```
 
----
+默认行为：主机开（`hyper-Ubuntu`），miniPC 关（`gsing`）。`launch_utils.py` 和 `map_scan.py` 都支持。
 
 ## Architecture
 
 ```
 2026_Gsing-second_ROS/
 ├── config/competition.yaml       ← 比赛配置（场地布局、超时、坐标）
-├── py/
-│   ├── control/                  ← ROS2 节点（直接运行，自动启动前置）
+├── py/                           ← ROS2 Python 节点
+│   ├── control/                  ← 自动任务、机械臂控制、检测
 │   │   ├── launch_utils.py       ← 一键启动 LiDAR + ICP + Nav2 + 串口桥
-│   │   ├── auto_task.py          ← 全场自动状态机（8 状态循环）
+│   │   ├── auto_task.py          ← 全场自动状态机
 │   │   ├── box_pick_node.py      ← 到达→检测→抓取/重规划
 │   │   ├── catch.py              ← 机械臂坐标变换 + STM32 可达性验证
-│   │   ├── cube_detector.py      ← DBSCAN+PCA 3D OBB 检测
-│   │   ├── arrival_detector.py   ← 位置/角度到达判断
-│   │   └── init_pose.py          ← 发布 /initialpose 初始化 ICP
-│   └── tools/
+│   │   └── cube_detector.py      ← DBSCAN+PCA 3D OBB 检测
+│   └── tools/                    ← 工具脚本
 │       ├── map_scan.py           ← 一键建图（SLAM→PCD→PGM）
 │       ├── test_move.py          ← 底盘运动测试
 │       ├── listen_serial.py      ← 串口十六进制监听
-│       ├── test_interactive.py   ← 机械臂协议交互测试
-│       └── pointcloud_x_filter.py ← 点云 x>0 过滤
-├── fastlio2_v2/                  ← FAST-LIO2 SLAM + pcd2pgm 工作空间
+│       └── pointcloud_x_filter.py ← LiDAR 点云 x>0 过滤
+├── fastlio2_v2/                  ← FAST-LIO2 SLAM 工作空间（C++）
 │   └── src/
-│       ├── fast_lio/             ← C++: FAST-LIO2 核心
-│       ├── fast_lio_localization/ ← Python: ICP 全局定位 + transform_fusion
-│       ├── pcd2pgm/              ← C++: PCD → 栅格地图
-│       └── unitree_lidar_ros2/   ← C++: Unitree L2 LiDAR 驱动
+│       ├── fast_lio/             ← FAST-LIO2 核心
+│       ├── fast_lio_localization/ ← ICP 全局定位 + transform_fusion
+│       ├── pcd2pgm/              ← PCD → 栅格地图
+│       └── unitree_lidar_ros2/   ← LiDAR 驱动（launch.py 已改支持 start_rviz 参数）
 ├── nav2_ws1/                     ← Nav2 工作空间
 │   └── src/dog_nav2_bringup/
 │       ├── launch/               ← launch 文件
-│       ├── scripts/              ← cmd_vel → STM32 串口桥等
+│       ├── scripts/              ← cmd_vel → STM32 串口桥
 │       ├── params/               ← Nav2 调参 YAML
 │       └── maps/                 ← 预存栅格地图
 ├── vision/                       ← YOLO 权重 (task3.pt, math12.pt)
-└── map/                          ← 建图输出 (PCD + PGM + YAML)
+├── map/                          ← 建图输出 (PCD + PGM + YAML)
+├── logs/                         ← 运行日志（gitignored）
+└── ros-run.sh                    ← helper: source + system Python 启动
 ```
 
-### 关键数据流
+### Key Data Flows
 
+**Navigation pipeline:**
 ```
-LiDAR → /unilidar/cloud → pointcloud_x_filter(x>0) → /unilidar/cloud_filtered
-                                                           ↓
-                                                    FAST-LIO2 SLAM
-                                                           ↓
-                                            ┌────────────────┴────────────────┐
-                                            ↓                                ↓
-                              fast_lio_localization (ICP)            pcd2pgm (PCD→栅格)
-                                            ↓                                ↓
-                                   /localization (Odometry)           map/*.pgm
-                                            ↓
-                              ┌─────────────┴─────────────┐
-                              ↓                           ↓
-                    arrival_detector                  Nav2 (规划+控制)
-                    (到达判断)                              ↓
-                                                      /cmd_vel
-                                                         ↓
-                                              chassis_serial_bridge
-                                              [0x55][0xAA][0x10]... → STM32
+LiDAR L2 → /unilidar/cloud → pointcloud_x_filter → /unilidar/cloud_filtered
+  → FAST-LIO2 SLAM → /Odometry → odometry_to_tf → TF odom→base_link
+  → global_localization.py (ICP vs PCD map) → /localization
+  → Nav2 (planner + controller) → /cmd_vel
+  → cmd_vel_chassis_serial.py (0x10 frame) → STM32
 ```
 
----
+**Vision auto task:**
+```
+YOLO detection → JSON files (IPC) → auto_task.py (state machine)
+  → START/ARRIVED_BOX/ARRIVED_ZONE/FINISH (0x15) → STM32
+  → NavigateToPose action (Nav2, long-range)
+  → /vision_cmd_vel (fine alignment, overrides Nav2)
+```
 
 ## Launch Utilities (`py/control/launch_utils.py`)
 
-`auto_task.py` 和 `box_pick_node.py` 共用 `start_prerequisites()` 启动全部前置节点：
+Both `auto_task.py` and `box_pick_node.py` share `start_prerequisites()`.
 
-```
-顺序: LiDAR → ICP定位 → TF桥 → Nav2导航 → 串口桥
-```
+**Startup order:** LiDAR → ICP localization → TF bridge → Nav2 → Serial bridge
 
-顶部开关：
+**Startup cleanup:** Before launching, automatically kills stale ROS processes (`pkill -f`) and cleans CycloneDDS shared memory (`/dev/shm/*cyclone*`).
+
+**Exit cleanup:** `cleanup_all()` kills background processes + terminal ROS nodes + cleans DDS shm.
+
+Top-level switches:
 ```python
-ENABLE_RVIZ = True      # 是否打开 RViz
-USE_TERMINAL = True     # 每个节点开独立 gnome-terminal 窗口
+ENABLE_RVIZ = True      # GSING_RVIZ env var overrides; hostname-based default
+USE_TERMINAL = True     # gnome-terminal per node (vs background)
 SERIAL_PORT = "/dev/ttyACM0"
-MAP_NAME = "map/PCD17"  # 默认地图名（不含扩展名）
+MAP_NAME = "map/map"    # standard competition map
 ```
 
-所有子进程 stdout+stderr → `logs/{category}/YYYY-MM-DD_HHMMSS_name.log`。
+## Serial Protocol (ROS ↔ STM32)
 
----
+Frame: `[0x55][0xAA][func_id][len][payload...][checksum]`
 
-## 各脚本行为
-
-### `box_pick_node.py` — 物资箱到达→检测→抓取
-
-```
-start_prerequisites() → sleep 8s → init_icp_pose(0,0 X正向)
-  → rclpy.spin()
-  → 等待 /goal_pose（RViz 2D Goal Pose）→ 记录目标坐标
-  → 自动到达检测（距离 < 0.15m）→ on_arrived()
-    → 启动 cube_detector 子进程
-    → 收到 /detected_cube (Marker) → transform_and_offset()
-    → validate_arm_target() + stm32_will_accept()
-      → 可达 → 启动 catch.py 抓取（发送 0x12 坐标）
-      → 不可达 → Nav2 导航到立方体前方 0.3m
-    → catch.py 收到 ARM_EVENT pick_done → 退出 → 回到 IDLE
-```
-
-交互命令: `arrived` `status` `stop` `quit`
-
-### `auto_task.py` — 全场自动状态机
-
-```
-IDLE → SOLVE_TASK(数学题) → FIND_BOX → NAV_BOX
-  → WAIT_PICK → NAV_ZONE → WAIT_PLACE → NEXT_OR_FINISH (loop)
-```
-
-- 从 `config/competition.yaml` 读取场地配置
-- 取货顺序：高分类型 → 外排 → 左到右
-- 比赛超时 180s 自动结束
-
-### `map_scan.py` — 一键建图
-
-```
-LiDAR → FAST-LIO2 SLAM → Enter 保存 PCD → 启动 pcd2pgm → PGM + YAML
-```
-
----
-
-## Serial Protocol（ROS ↔ STM32）
-
-固定帧格式: `[0x55][0xAA][func_id][len][payload...][checksum]`
-
-| Code | 名称 | 载荷 | 方向 | 发送者 |
-|------|------|------|------|--------|
-| `0x10` | CHASSIS_MOVE | `vx(f32)+wz(f32)+state(u8)` = 9B | ROS→STM32 | 串口桥 50Hz |
+| Code | Name | Payload | Direction | Sent by |
+|------|------|---------|-----------|---------|
+| `0x10` | CHASSIS_MOVE | `vx(f32)+wz(f32)+state(u8)` = 9B | ROS→STM32 | serial bridge 50Hz |
 | `0x11` | GAIT_SWITCH | `gait_id(u8)` = 1B | ROS→STM32 | test_move.py |
-| `0x12` | ARM_CONTROL | `x(f32)+y(f32)+z(f32)` = 12B | ROS→STM32 | catch.py / auto_task |
-| `0x13` | SUCTION | 1B | ROS→STM32 | - |
-| `0x14` | ARM_MISSION | `mode(u8)+flags(u8)+pick/back/place` | ROS→STM32 | auto_task |
-| `0x15` | AUTO_TASK | `cmd(u8)+target(u8)+zone(u8)` = 3B | ROS→STM32 | auto_task |
-| `0x22` | ARM_EVENT | `event+mode+slot+side+xyz` = 16B | STM32→ROS | 串口桥 RX 线程 → `/vision/arm_event` |
-| `0x31` | LEG_DEBUG | 腿部调试数据 | STM32→ROS | 串口桥 RX 线程 |
+| `0x12` | ARM_CONTROL | `x(f32)+y(f32)+z(f32)` = 12B | ROS→STM32 | catch.py |
+| `0x14` | ARM_MISSION | `mode(u8)+flags(u8)+pick/back/place` | ROS→STM32 | auto_task.py |
+| `0x15` | AUTO_TASK | `cmd(u8)+target(u8)+zone(u8)` = 3B | ROS→STM32 | auto_task.py |
+| `0x22` | ARM_EVENT | `event+mode+slot+side+xyz` = 16B | STM32→ROS | serial bridge |
 
-AUTO_CMD: `START(1)` → `ARRIVED_BOX(2)` → `PICK_DONE(3)` → `ARRIVED_ZONE(4)` → `PLACE_DONE(5)` → `NEXT(6)` → `FINISH(7)` → `ESTOP(8)`
+## Common Pitfalls
 
-ARM_EVENT: `pick_done(1)`, `place_done(2)` — JSON 格式发布
-
-### Velocity Arbitration（串口桥 `cmd_vel_chassis_serial.py`）
-
-1. `/vision_cmd_vel` < 500ms 且非零 → 视觉精细控速（覆盖 Nav2）
-2. `/cmd_vel` (Nav2) < 80ms → Nav2 导航速度
-3. 否则 → 停止 (ROBOT_STATE_IDLE)
-
----
-
-## Coordinate Transform & Arm Reachability
-
-`catch.py` 中 LiDAR 坐标系 → 机械臂坐标系：
-```python
-arm_x = -radar_z - OFFSET_X + HALF_BOX_HEIGHT   # 高度 (up)
-arm_y =  radar_y                                  # 横向 (right)
-arm_z = -radar_x - OFFSET_Z                      # 前向 (forward)
-```
-
-验证函数（与 STM32 `arm_task.c` + `arm.c` 严格一致）：
-
-| 检查 | 函数 | 范围（补偿前） |
-|------|------|----------------|
-| 坐标轴边界 | `validate_arm_target()` | X∈[-0.23,0.42], Y∈[-0.50,0.50], Z∈[-0.75,0.55] |
-| IK 可达性 | `validate_arm_target()` | `sqrt(x²+y²+z²)` ∈ [0.02, 0.62] |
-| 肩部禁区 | `validate_arm_target()` | Z≥0 ⇒ X≥0（肩部以下够不到前方） |
-| STM32 后补偿 | `stm32_will_accept()` | X 加 0.03 后检查 STM32 原始范围 |
-
----
-
-## Nav2 Speed Tuning
-
-```bash
-# 运行时调参（无需重启）
-ros2 param set /controller_server FollowPath.desired_linear_vel 1.0
-ros2 param set /controller_server FollowPath.max_linear_vel 1.2
-ros2 param set /controller_server FollowPath.lookahead_dist 0.8
-```
-
-配置文件: `nav2_ws1/src/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml`
-
----
-
-## 各脚本依赖的系统 Python 包
-
-| 包 | 用途 | 安装方式 |
-|----|------|----------|
-| `rclpy` + ROS2 msgs | ROS2 Python | `apt install ros-jazzy-*` (系统 Python 3.12) |
-| `ultralytics` | YOLO 检测 | `pip install ultralytics` → `~/.local/lib/python3.12/` |
-| `cv2` (opencv) | 摄像头 | `apt install python3-opencv` |
-| `numpy` | 数值计算 | 系统预装 |
-| `scikit-learn` | DBSCAN 聚类 | `apt install python3-sklearn` |
-| `pyserial` | 串口通信 | `apt install python3-serial` |
-| `pyyaml` | 配置文件 | `apt install python3-yaml` |
-| `sensor_msgs_py` | point_cloud2 | `apt install ros-jazzy-sensor-msgs-py` |
-| `tf-transformations` | TF 工具 | `apt install ros-jazzy-tf-transformations` |
-
----
-
-## 常见问题
-
-### 编译/构建
-- **symlink 断链**（`install/` 指向 `/home/hyper/...`）：`rm -rf build/ install/` 后重新编译
-- **fast_lio_localization 找不到**：编译后运行 `hook_fix.sh`
-- **Nav2 参数未同步**：编译后手动 cp params YAML 到 `install/`
-- **`ModuleNotFoundError: No module named 'lark'`**：`pip install lark`（conda Python 需要）
-- **`ModuleNotFoundError: No module named 'catkin_pkg'`**：`pip install catkin_pkg empy`（conda Python 需要）
-
-### 运行
-- **`rclpy` import 失败**：用了 `python3` 而非 `./` 运行脚本
-- **ICP 未初始化**：`box_pick_node.py` 自动等 8s 后发 `/initialpose`，或在 RViz 中点 "2D Pose Estimate"
-- **TF 树不更新**：`ros2 run tf2_tools view_frames.py` 检查 map→camera_init→odom→base_link 链
-- **pcd_to_pointcloud crash (exit -6)**：CPU 无 AVX，`pcl_ros` 节点 SIGABRT，不影响主流程
-- **ICP 说 "Skipping: only N pts, need >= 5000"**：检查 LiDAR 连接和 x>0 滤波器
-- **`python3: can't open file`**：确保在项目根目录运行
-
-### 硬件
-- **LiDAR 没数据**：检查 `nmcli` 网卡设置和 `ip addr`
-- **串口打不开**：`sudo chmod 666 /dev/ttyACM0` 或确认 STM32 已连接
-- **`/dev/ttyACM0` 不存在**：STM32 未连接或被其他程序占用（`ls /dev/tty*` 查看）
+- **LiDAR network**: `sudo nmcli device set enp129s0 managed no && sudo ip addr add 192.168.1.2/24 dev enp129s0`
+- **RMW mismatch**: All terminals MUST set `export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`
+- **Nav2 params out of sync**: After `colcon build`, manually `cp` params YAML to install/
+- **DDS participant exhaustion**: Script auto-cleans `/dev/shm/*cyclone*` on startup and exit
+- **conda Python**: Always use `./ros-run.sh` or explicit `/usr/bin/python3`, never bare `python3`
+- **Serial port**: `sudo chmod 666 /dev/ttyACM0`
