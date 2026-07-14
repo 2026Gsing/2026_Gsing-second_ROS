@@ -1,0 +1,39 @@
+1783992385.1091406 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-09-26-25-104967-gsing-10414
+1783992385.1096864 [INFO] [launch]: Default logging verbosity is set to INFO
+1783992385.9460964 [INFO] [fastlio_mapping-1]: process started with pid [10546]
+1783992385.9543600 [INFO] [rviz2-2]: process started with pid [10547]
+1783992385.9556739 [INFO] [env-3]: process started with pid [10548]
+1783992385.9565330 [INFO] [env-4]: process started with pid [10549]
+1783992385.9573488 [INFO] [pcd_to_pointcloud-5]: process started with pid [10550]
+1783992390.0278711 [rviz2-2] [INFO] [1783992390.025129475] [rviz2]: Stereo is NOT SUPPORTED
+1783992390.0326152 [rviz2-2] [INFO] [1783992390.025376012] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+1783992390.5570972 [rviz2-2] [INFO] [1783992390.556346026] [rviz2]: Stereo is NOT SUPPORTED
+1783992394.7927103 [rviz2-2] [INFO] [1783992394.791289794] [rviz]: Subscribing to: /submap
+1783992394.7932966 [rviz2-2] 
+1783992394.8290062 [rviz2-2] [INFO] [1783992394.827542943] [rviz]: Subscribing to: /cur_scan_in_map
+1783992394.8319895 [rviz2-2] 
+1783992394.8707769 [rviz2-2] [INFO] [1783992394.869825990] [rviz]: Subscribing to: /cloud_pcd
+1783992394.8713026 [rviz2-2] 
+1783992394.9079924 [rviz2-2] [INFO] [1783992394.906108504] [rviz]: Subscribing to: /cloud_pcd
+1783992394.9108579 [rviz2-2] 
+1783992395.4329464 [rviz2-2] [INFO] [1783992395.426640803] [rviz]: Subscribing to: /submap
+1783992395.4577732 [rviz2-2] 
+1783992395.4990458 [rviz2-2] [INFO] [1783992395.457413418] [rviz]: Subscribing to: /cur_scan_in_map
+1783992395.5013762 [rviz2-2] 
+1783992395.5094335 [rviz2-2] [INFO] [1783992395.491627441] [rviz]: Subscribing to: /cloud_pcd
+1783992395.5157971 [rviz2-2] 
+1783992418.1290939 [ERROR] [env-3]: process has died [pid 10548, exit code -4, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_hn2mm5bu --params-file /tmp/launch_params_dnh6zw8a'].

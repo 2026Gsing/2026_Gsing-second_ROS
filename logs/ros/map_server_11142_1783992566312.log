@@ -1,0 +1,12 @@
+[INFO] [1783992566.480618731] [map_server]: 
+	map_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783992566.480929263] [map_server]: Creating
+[INFO] [1783992573.724686057] [map_server]: Configuring
+[INFO] [1783992573.724893530] [map_io]: Loading yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD24.yaml
+[ERROR] [1783992573.728898313] [map_io]: Failed processing YAML file /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD24.yaml at position (-1:-1) for reason: bad file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD24.yaml
+[ERROR] [1783992573.729147882] [map_server]: Caught exception in callback for transition 10
+[ERROR] [1783992573.729326579] [map_server]: Original error: Failed to load map yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD24.yaml
+[WARN] [1783992573.729443617] [map_server]: Callback returned ERROR during the transition: configure
+[FATAL] [1783992573.729494499] [map_server]: Lifecycle node map_server does not have error state implemented

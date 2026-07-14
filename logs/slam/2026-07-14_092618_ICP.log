@@ -1,0 +1,47 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-09-26-25-104967-gsing-10414
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [10546]
+[INFO] [rviz2-2]: process started with pid [10547]
+[INFO] [env-3]: process started with pid [10548]
+[INFO] [env-4]: process started with pid [10549]
+[INFO] [pcd_to_pointcloud-5]: process started with pid [10550]
+[pcd_to_pointcloud-5] [pcl::PCDReader::read] Could not find file '/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD24.pcd'.
+[pcd_to_pointcloud-5] [ERROR] [1783992386.834822324] [map_publisher]: failed to open PCD file
+[pcd_to_pointcloud-5] terminate called after throwing an instance of 'std::runtime_error'
+[pcd_to_pointcloud-5]   what():  could not open pcd file
+[fastlio_mapping-1] [INFO] [1783992387.895963815] [fastlio_mapping]: p_pre->lidar_type 5
+[fastlio_mapping-1] Multi thread started 
+[fastlio_mapping-1] ~~~~/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[fastlio_mapping-1] [INFO] [1783992388.111885812] [fastlio_mapping]: Node init finished.
+[rviz2-2] [INFO] [1783992390.025129475] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783992390.025376012] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+[rviz2-2] [INFO] [1783992390.556346026] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783992394.791289794] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992394.827542943] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992394.869825990] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992394.906108504] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992395.426640803] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992395.457413418] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[rviz2-2] [INFO] [1783992395.491627441] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[ERROR] [env-3]: process has died [pid 10548, exit code -4, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_hn2mm5bu --params-file /tmp/launch_params_dnh6zw8a'].

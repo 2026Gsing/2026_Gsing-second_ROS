@@ -1,0 +1,40 @@
+1783992565.1469383 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-09-29-25-142594-gsing-11056
+1783992565.1477001 [INFO] [launch]: Default logging verbosity is set to INFO
+1783992565.6528416 [INFO] [fastlio_mapping-1]: process started with pid [11139]
+1783992565.6534712 [INFO] [rviz2-2]: process started with pid [11141]
+1783992565.6539218 [INFO] [env-3]: process started with pid [11143]
+1783992565.6543813 [INFO] [env-4]: process started with pid [11145]
+1783992565.6547787 [INFO] [pcd_to_pointcloud-5]: process started with pid [11146]
+1783992569.4137764 [rviz2-2] [INFO] [1783992569.411061733] [rviz2]: Stereo is NOT SUPPORTED
+1783992569.4155097 [rviz2-2] [INFO] [1783992569.411318035] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+1783992569.6662652 [rviz2-2] [INFO] [1783992569.661551678] [rviz2]: Stereo is NOT SUPPORTED
+1783992571.2892237 [rviz2-2] [INFO] [1783992571.281619634] [rviz]: Subscribing to: /cur_scan_in_map
+1783992571.2896326 [rviz2-2] 
+1783992571.3179624 [rviz2-2] [INFO] [1783992571.292070764] [rviz]: Subscribing to: /submap
+1783992571.3185558 [rviz2-2] 
+1783992571.3197541 [rviz2-2] [INFO] [1783992571.304725879] [rviz]: Subscribing to: /cloud_pcd
+1783992571.3201022 [rviz2-2] 
+1783992571.3613703 [rviz2-2] [INFO] [1783992571.324575884] [rviz]: Subscribing to: /cloud_pcd
+1783992571.3735526 [rviz2-2] 
+1783992572.0039201 [rviz2-2] [INFO] [1783992571.994097983] [rviz]: Subscribing to: /cur_scan_in_map
+1783992572.0236621 [rviz2-2] 
+1783992572.0530372 [rviz2-2] [INFO] [1783992572.042110286] [rviz]: Subscribing to: /submap
+1783992572.0535085 [rviz2-2] 
+1783992572.1047969 [rviz2-2] [INFO] [1783992572.093817236] [rviz]: Subscribing to: /cloud_pcd
+1783992572.1129255 [rviz2-2] 
+1783992597.9906297 [ERROR] [env-3]: process has died [pid 11143, exit code -4, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_me_lp_hy --params-file /tmp/launch_params_8c6jg7n7'].
+1783992674.5952384 [ERROR] [pcd_to_pointcloud-5]: process has died [pid 11146, exit code -6, cmd '/opt/ros/jazzy/lib/pcl_ros/pcd_to_pointcloud --ros-args -r __node:=map_publisher --params-file /tmp/launch_params_6jw_ufj7 -r cloud_pcd:=/cloud_pcd'].

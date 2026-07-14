@@ -1,0 +1,3 @@
+Traceback (most recent call last):
+  File "<string>", line 19, in <module>
+ImportError: cannot import name 'AutoTaskNode' from 'auto_task' (/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/control/auto_task.py)

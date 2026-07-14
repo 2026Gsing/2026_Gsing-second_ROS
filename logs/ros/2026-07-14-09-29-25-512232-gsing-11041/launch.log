@@ -1,0 +1,11 @@
+1783992565.5165927 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-09-29-25-512232-gsing-11041
+1783992565.5171967 [INFO] [launch]: Default logging verbosity is set to INFO
+1783992578.9006188 [INFO] [unitree_lidar_ros2_node-1]: process started with pid [11425]
+1783992578.9038794 [INFO] [rviz2-2]: process started with pid [11429]
+1783992591.6705735 [rviz2-2] [INFO] [1783992591.637996288] [rviz2]: Stereo is NOT SUPPORTED
+1783992591.7052774 [rviz2-2] [INFO] [1783992591.645594451] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+1783992592.0699182 [rviz2-2] [INFO] [1783992592.065278449] [rviz2]: Stereo is NOT SUPPORTED
+1783992593.7231009 [rviz2-2] [INFO] [1783992593.712137389] [rviz2]: Subscribing to: /unilidar/cloud
+1783992593.7279830 [rviz2-2] 
+1783992594.3034990 [rviz2-2] [INFO] [1783992594.294307535] [rviz2]: Subscribing to: /unilidar/cloud
+1783992594.3040538 [rviz2-2] 

@@ -1,0 +1,10 @@
+[INFO] [1783992572.926577489] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783992573.087666866] [planner_server]: Creating
+[INFO] [1783992573.951508056] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783992573.990954915] [global_costmap.global_costmap]: Creating Costmap
