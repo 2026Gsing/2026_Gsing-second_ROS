@@ -7,11 +7,23 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 sudo chmod 666 /dev/ttyACM0
 ```
 
-## 构建
+## 编译 nav2 工作空间
 ```bash
-cd 2026_Gsing-second_ROS
-cd fastlio2_v2 && source /opt/ros/jazzy/setup.bash && colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization && bash src/fast_lio_localization/scripts/hook_fix.sh
-cd ../nav2_ws1 && source /opt/ros/jazzy/setup.bash && colcon build --symlink-install && cp src/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml
+cd ~/2026Gsing/2026_Gsing-second_ROS/nav2_ws1
+source /opt/ros/jazzy/setup.bash
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+colcon build --symlink-install
+cp src/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml \
+   install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml
+```
+
+## 编译 FAST-LIO2 工作空间
+```bash
+cd ~/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2
+source /opt/ros/jazzy/setup.bash
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
+bash src/fast_lio_localization/scripts/hook_fix.sh
 ```
 
 ## LiDAR 网卡（每次重启后）
@@ -22,30 +34,29 @@ sudo ip addr add 192.168.1.2/24 dev enp4s0
 
 ## 硬件检测
 ```bash
-cd 2026_Gsing-second_ROS
+cd ~/2026Gsing/2026_Gsing-second_ROS
 ./ros-run.sh py/tools/detect_hardware.py
 ```
 
 ## 一键启动
 ```bash
-cd 2026_Gsing-second_ROS
-./ros-run.sh py/control/auto_task.py              # 竞赛全自动
-./ros-run.sh py/control/box_pick_node.py         
-GSING_RVIZ=1 ./ros-run.sh py/control/box_pick_node.py  # 物资箱抓取（仅 Nav2 开 RViz）
-./ros-run.sh py/tools/map_scan.py --no-rviz       # 建图（无 RViz）
-./ros-run.sh py/tools/test_move.py                # 底盘测试
+cd ~/2026Gsing/2026_Gsing-second_ROS
+./ros-run.sh py/control/auto_task.py
+./ros-run.sh py/control/box_pick_node.py
+GSING_RVIZ=1 ./ros-run.sh py/control/box_pick_node.py
+./ros-run.sh py/tools/map_scan.py --no-rviz
+./ros-run.sh py/tools/test_move.py
 ```
 
 ## RViz 控制
-LiDAR 和 ICP 强制不开 RViz（硬编码 `start_rviz:=false`），只有 Nav2 受 `GSING_RVIZ` 控制。
 ```bash
-GSING_RVIZ=1 ./ros-run.sh py/control/auto_task.py     # 强制开 Nav2 RViz
-GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关 Nav2 RViz
+GSING_RVIZ=1 ./ros-run.sh py/control/auto_task.py
+GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py
 ```
 
 ## 日志
 ```bash
-cd 2026_Gsing-second_ROS
+cd ~/2026Gsing/2026_Gsing-second_ROS
 tail -f logs/lidar/*_LiDAR.log
 grep -l "ERROR\|Traceback" logs/*/*.log
 tail -f logs/serial/*_串口桥.log | grep LEG_DEBUG
@@ -55,11 +66,11 @@ tail -f logs/serial/*_串口桥.log | grep LEG_DEBUG
 ```bash
 source /opt/ros/jazzy/setup.bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ros2 param set /controller_server FollowPath.desired_linear_vel 0.8
+ros2 param set /controller_server FollowPath.desired_linear_vel 0.1
 ros2 param set /global_localization localization_threshold 0.8
 ```
 
-## 分步启动（排查用，每步开一个新终端）
+## 分步启动（排查用）
 ```bash
 # 终端 1: LiDAR
 cd ~/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2 && source install/setup.bash && ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false
@@ -83,4 +94,6 @@ source /opt/ros/jazzy/setup.bash && export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ros2 run tf2_tools view_frames.py
 ros2 topic echo /localization --once
 rm -f /dev/shm/*cyclone* /dev/shm/*dds*
+ping 192.168.1.1
+timeout 5 tcpdump -i enp4s0 port 6201 -X
 ```
