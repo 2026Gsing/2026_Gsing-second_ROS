@@ -33,8 +33,6 @@ from sensor_msgs.msg import PointCloud2
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Quaternion
 import sensor_msgs_py.point_cloud2 as pc2
-from sklearn.cluster import DBSCAN
-from sklearn.neighbors import BallTree
 
 class CubeDetector(Node):
     """3D OBB 立方体检测器：从雷达点云中检测 25cm 立方体物块"""
@@ -85,11 +83,14 @@ class CubeDetector(Node):
         return np.column_stack((arr['x'], arr['y'], arr['z'])).astype(np.float32)
 
     def remove_statistical_outliers(self, pts, radius=0.03, min_neighbors=3):
-        """半径统计滤波：移除周围邻域点过少的离群点"""
+        """半径统计滤波：移除周围邻域点过少的离群点（纯 numpy 实现，无 sklearn/scipy 依赖）"""
         if len(pts) < min_neighbors:
             return pts
-        tree = BallTree(pts, metric='euclidean')
-        counts = tree.query_radius(pts, r=radius, count_only=True)
+        # 计算所有点对之间的距离平方
+        diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]  # (N, N, 3)
+        dist_sq = np.sum(diff * diff, axis=-1)  # (N, N)
+        # 统计每个点在 radius 内的邻域点数（包含自身）
+        counts = np.sum(dist_sq <= radius * radius, axis=1)
         return pts[counts >= min_neighbors]
 
     def cloud_callback(self, msg):
@@ -135,8 +136,7 @@ class CubeDetector(Node):
             if pts.shape[0] < self.cluster_min_samples:
                 return
 
-            db = DBSCAN(eps=self.cluster_eps, min_samples=self.cluster_min_samples).fit(pts)
-            labels = db.labels_
+            labels = self._dbscan(pts, eps=self.cluster_eps, min_samples=self.cluster_min_samples)
 
             # 各阶段点数量调试
             n_clusters = labels.max() + 1
@@ -214,6 +214,54 @@ class CubeDetector(Node):
 
         except Exception as e:
             self.get_logger().error(f'点云处理异常: {str(e)}')
+
+    @staticmethod
+    def _dbscan(pts, eps, min_samples):
+        """
+        纯 numpy 实现的 DBSCAN 聚类（无 sklearn/scipy 依赖，避免 Bay Trail AVX 崩溃）
+
+        算法：
+        1. 计算所有点对距离 → 邻域矩阵
+        2. 标记核心点（邻域 ≥ min_samples）
+        3. 邻域传播：广度优先连接核心点
+        4. 标签：-1=噪声, ≥0=聚类ID
+        """
+        n = len(pts)
+        if n == 0:
+            return np.array([], dtype=np.int32)
+
+        # 计算距离平方矩阵 (N x N)
+        diff = pts[:, np.newaxis, :] - pts[np.newaxis, :, :]
+        dist_sq = np.sum(diff * diff, axis=-1)
+        eps_sq = eps * eps
+
+        # 邻域矩阵（包括自身）
+        neighbors = dist_sq <= eps_sq
+
+        # 核心点：邻域内（含自身）≥ min_samples
+        core = np.sum(neighbors, axis=1) >= min_samples
+
+        labels = np.full(n, -1, dtype=np.int32)
+        cluster_id = 0
+
+        for i in range(n):
+            if not core[i] or labels[i] != -1:
+                continue
+            # BFS 扩展聚类
+            queue = [i]
+            labels[i] = cluster_id
+            while queue:
+                p = queue.pop()
+                if not core[p]:
+                    continue
+                # 找到 p 的所有邻居中未标记的点
+                for j in np.where(neighbors[p] & (labels == -1))[0]:
+                    labels[j] = cluster_id
+                    if core[j]:
+                        queue.append(j)
+            cluster_id += 1
+
+        return labels
 
     def analyze_cluster(self, pts):
         """

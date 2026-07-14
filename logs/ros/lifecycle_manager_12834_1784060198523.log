@@ -1,0 +1,16 @@
+[INFO] [1784060198.634496849] [lifecycle_manager_navigation]: Creating
+[INFO] [1784060198.739579415] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1784060200.206704004] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1784060200.206872078] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[INFO] [1784060200.529287580] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[INFO] [1784060201.320791008] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[INFO] [1784060201.858940660] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[INFO] [1784060202.439216056] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[INFO] [1784060204.400704861] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[INFO] [1784060204.837581083] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[INFO] [1784060205.005827207] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[INFO] [1784060205.006024441] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[ERROR] [1784060265.019281230] [lifecycle_manager_navigation]: Failed to change state for node: controller_server
+[ERROR] [1784060265.019894751] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[INFO] [1784060298.561100619] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784060298.561336051] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)

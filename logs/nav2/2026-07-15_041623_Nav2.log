@@ -1,0 +1,303 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-04-16-32-337719-gsing-12618
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [12709]
+[INFO] [static_transform_publisher-2]: process started with pid [12711]
+[INFO] [static_transform_publisher-3]: process started with pid [12712]
+[INFO] [map_server-4]: process started with pid [12714]
+[INFO] [rviz2-5]: process started with pid [12715]
+[static_transform_publisher-2] [INFO] [1784060193.387031738] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'body'
+[static_transform_publisher-3] [INFO] [1784060193.392845651] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-1] [INFO] [1784060193.489828034] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[map_server-4] [INFO] [1784060193.801046952] [map_server]: 
+[map_server-4] 	map_server lifecycle node launched. 
+[map_server-4] 	Waiting on external lifecycle transitions to activate
+[map_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-4] [INFO] [1784060193.805434156] [map_server]: Creating
+[rviz2-5] [INFO] [1784060197.867779056] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-5] [INFO] [1784060197.868010875] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+[rviz2-5] [INFO] [1784060198.212296853] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-6]: process started with pid [12829]
+[INFO] [planner_server-7]: process started with pid [12830]
+[INFO] [behavior_server-8]: process started with pid [12831]
+[INFO] [bt_navigator-9]: process started with pid [12832]
+[INFO] [waypoint_follower-10]: process started with pid [12833]
+[INFO] [lifecycle_manager-11]: process started with pid [12834]
+[INFO] [costmap_to_grid-12]: process started with pid [12836]
+[lifecycle_manager-11] [INFO] [1784060198.634496849] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-11] [INFO] [1784060198.739579415] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[bt_navigator-9] [INFO] [1784060199.152696594] [bt_navigator]: 
+[bt_navigator-9] 	bt_navigator lifecycle node launched. 
+[bt_navigator-9] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-9] [INFO] [1784060199.461208459] [bt_navigator]: Creating
+[waypoint_follower-10] [INFO] [1784060199.559662427] [waypoint_follower]: 
+[waypoint_follower-10] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-10] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-10] [INFO] [1784060199.583931676] [waypoint_follower]: Creating
+[planner_server-7] [INFO] [1784060199.689224047] [planner_server]: 
+[planner_server-7] 	planner_server lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-7] [INFO] [1784060199.701217100] [planner_server]: Creating
+[planner_server-7] [INFO] [1784060199.796248830] [global_costmap.global_costmap]: 
+[planner_server-7] 	global_costmap lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-7] [INFO] [1784060199.839303599] [global_costmap.global_costmap]: Creating Costmap
+[behavior_server-8] [INFO] [1784060199.955602755] [behavior_server]: 
+[behavior_server-8] 	behavior_server lifecycle node launched. 
+[behavior_server-8] 	Waiting on external lifecycle transitions to activate
+[behavior_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1784060200.106733201] [controller_server]: 
+[controller_server-6] 	controller_server lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-11] [INFO] [1784060200.206704004] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-11] [INFO] [1784060200.206872078] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[map_server-4] [INFO] [1784060200.210787930] [map_server]: Configuring
+[map_server-4] [INFO] [1784060200.210957540] [map_io]: Loading yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD31.yaml
+[map_server-4] [INFO] [1784060200.213073885] [map_io]: resolution: 0.05
+[map_server-4] [INFO] [1784060200.213135746] [map_io]: origin[0]: -0.006
+[map_server-4] [INFO] [1784060200.213164894] [map_io]: origin[1]: -1.132
+[map_server-4] [INFO] [1784060200.213189519] [map_io]: origin[2]: 0
+[map_server-4] [INFO] [1784060200.213214419] [map_io]: free_thresh: 0.196
+[map_server-4] [INFO] [1784060200.213239799] [map_io]: occupied_thresh: 0.65
+[map_server-4] [INFO] [1784060200.213267604] [map_io]: mode: trinary
+[map_server-4] [INFO] [1784060200.213291472] [map_io]: negate: 0
+[controller_server-6] [INFO] [1784060200.233058400] [controller_server]: Creating controller server
+[map_server-4] [INFO] [1784060200.251459124] [map_io]: Loading image_file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD31.pgm
+[map_server-4] [INFO] [1784060200.266176067] [map_io]: Read map /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD31.pgm: 55 X 42 map @ 0.05 m/cell
+[controller_server-6] [INFO] [1784060200.521813374] [local_costmap.local_costmap]: 
+[controller_server-6] 	local_costmap lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-11] [INFO] [1784060200.529287580] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-6] [INFO] [1784060200.531166443] [local_costmap.local_costmap]: Creating Costmap
+[controller_server-6] [INFO] [1784060200.593023175] [controller_server]: Configuring controller interface
+[controller_server-6] [INFO] [1784060200.593115168] [controller_server]: getting progress checker plugins..
+[controller_server-6] [INFO] [1784060200.598906247] [controller_server]: getting goal checker plugins..
+[controller_server-6] [INFO] [1784060200.599906699] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-6] [INFO] [1784060200.600082273] [local_costmap.local_costmap]: Configuring
+[controller_server-6] [INFO] [1784060200.708378465] [local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-6] [INFO] [1784060200.873586873] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[controller_server-6] [INFO] [1784060200.912095005] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-6] [INFO] [1784060201.177605441] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-6] [INFO] [1784060201.188486922] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-6] [INFO] [1784060201.194187315] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-6] [INFO] [1784060201.199930465] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-6] [INFO] [1784060201.221318890] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1784060201.294624257] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-11] [INFO] [1784060201.320791008] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-7] [INFO] [1784060201.325394049] [planner_server]: Configuring
+[planner_server-7] [INFO] [1784060201.325535674] [global_costmap.global_costmap]: Configuring
+[planner_server-7] [INFO] [1784060201.431768279] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-7] [INFO] [1784060201.504114930] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-7] [INFO] [1784060201.527460375] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-7] [INFO] [1784060201.721947912] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-7] [INFO] [1784060201.722091674] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-7] [INFO] [1784060201.731319535] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-11] [INFO] [1784060201.858940660] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-8] [INFO] [1784060201.862815928] [behavior_server]: Configuring
+[behavior_server-8] [INFO] [1784060201.921904889] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-8] [INFO] [1784060201.940664550] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-8] [INFO] [1784060201.957849911] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-8] [INFO] [1784060201.974955532] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-8] [INFO] [1784060202.048874265] [behavior_server]: Configuring spin
+[behavior_server-8] [INFO] [1784060202.117589603] [behavior_server]: Configuring backup
+[behavior_server-8] [INFO] [1784060202.172394766] [behavior_server]: Configuring drive_on_heading
+[behavior_server-8] [INFO] [1784060202.248481423] [behavior_server]: Configuring wait
+[lifecycle_manager-11] [INFO] [1784060202.439216056] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-9] [INFO] [1784060202.455566101] [bt_navigator]: Configuring
+[bt_navigator-9] [INFO] [1784060202.590470638] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-9] [WARN] [1784060202.798645745] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+[bt_navigator-9] Make sure these match your BT and there are not other sources of error codes youreported to your application
+[bt_navigator-9] [INFO] [1784060204.002908322] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-11] [INFO] [1784060204.400704861] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-10] [INFO] [1784060204.408422889] [waypoint_follower]: Configuring
+[waypoint_follower-10] [INFO] [1784060204.823007683] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-10] [INFO] [1784060204.824079633] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-11] [INFO] [1784060204.837581083] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[map_server-4] [INFO] [1784060204.841059050] [map_server]: Activating
+[map_server-4] [INFO] [1784060204.846540790] [map_server]: Creating bond (map_server) to lifecycle manager.
+[planner_server-7] [INFO] [1784060204.847183710] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 55 X 42 at 0.050000 m/pix
+[controller_server-6] [INFO] [1784060204.849961408] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 55 X 42 at 0.050000 m/pix
+[rviz2-5] [INFO] [1784060204.929432054] [rviz2]: Trying to create a map of size 55 x 42 using 1 swatches
+[rviz2-5] [ERROR] [1784060204.991337795] [rviz2]: rviz/glsl120/indexed_8bit_image.vert
+[rviz2-5] rviz/glsl120/indexed_8bit_image.frag
+[rviz2-5]  GLSL link result : 
+[rviz2-5] active samplers with a different type refer to the same texture image unit
+[lifecycle_manager-11] [INFO] [1784060205.005827207] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[lifecycle_manager-11] [INFO] [1784060205.006024441] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-6] [INFO] [1784060205.011724812] [controller_server]: Activating
+[controller_server-6] [INFO] [1784060205.011839125] [local_costmap.local_costmap]: Activating
+[controller_server-6] [INFO] [1784060205.011882194] [local_costmap.local_costmap]: Checking transform
+[controller_server-6] [INFO] [1784060205.012013871] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060205.513511877] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060206.012058195] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060206.512471364] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060207.012414465] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[costmap_to_grid-12] [INFO] [1784060207.165925376] [costmap_to_grid]: Publishing /global_costmap_grid and /local_costmap_grid for RViz
+[controller_server-6] [INFO] [1784060207.518435845] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060208.012194824] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060208.512087309] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060209.012128044] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060209.512040798] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060210.012096353] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060210.512066204] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060211.012046905] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060211.512605400] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060212.013555676] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060212.515483700] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060213.014833685] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060213.513406419] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060214.012086939] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060214.513839403] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060215.012076301] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060215.512300065] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060216.012114864] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060216.512087489] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060217.013499796] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060217.513484277] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060218.012135313] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060218.512046317] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060219.013444284] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060219.512458816] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060220.012076944] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060220.512073268] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060221.012752881] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060221.512097956] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060222.012086684] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060222.512081508] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060223.012072167] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060223.513545482] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060224.013129983] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060224.512088243] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060225.012101114] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060225.512050154] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060226.012514458] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060226.512054388] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060227.012066789] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060227.512062148] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060228.012062416] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060228.512111763] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060229.012069417] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060229.512117275] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060230.012058728] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060230.512066792] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060231.012690020] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060231.512090983] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060232.012096118] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060232.512147212] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060233.012062464] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060233.512107580] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060234.012211990] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060234.516540011] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060235.012136449] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060235.512157766] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060236.012166291] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060236.512076868] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060237.012373263] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060237.512699645] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060238.013310826] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060238.512402196] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060239.014726028] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060239.514447657] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060240.012108125] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060240.517138267] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060241.012610742] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060241.512118103] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060242.012385904] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060242.512109986] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060243.012080301] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060243.512408037] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060244.015664368] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060244.512066366] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060245.013769236] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060245.513666185] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060246.012102354] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060246.512098266] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060247.013630273] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060247.512159101] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060248.016178909] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060248.512097313] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060249.012103840] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060249.512863975] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060250.013568393] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060250.512086605] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060251.012075006] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060251.512065671] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060252.012068830] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060252.512079472] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060253.014916517] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060253.512114304] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060254.012095471] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060254.517545068] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060255.012059852] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060255.513669652] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060256.017879988] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060256.512156141] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060257.013014775] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060257.515448297] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060258.012182156] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060258.512045200] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060259.015574119] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060259.513942729] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060260.012088953] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060260.513027506] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060261.013836949] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060261.512074882] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060262.013430101] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060262.513684000] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060263.012100828] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060263.516285202] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060264.012310138] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060264.512125578] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [INFO] [1784060265.014505110] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[controller_server-6] [ERROR] [1784060265.014748341] [local_costmap.local_costmap]: Failed to activate local_costmap because transform from base_link to map did not become available before timeout
+[lifecycle_manager-11] [ERROR] [1784060265.019281230] [lifecycle_manager_navigation]: Failed to change state for node: controller_server
+[lifecycle_manager-11] [ERROR] [1784060265.019894751] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[controller_server-6] [INFO] [1784060297.134188178] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-6] [INFO] [1784060297.134623497] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-6] [INFO] [1784060297.134903653] [controller_server]: Cleaning up
+[controller_server-6] [INFO] [1784060297.135022707] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1784060297.136026019] [local_costmap.local_costmap]: Cleaning up
+[controller_server-6] [INFO] [1784060297.395741483] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[planner_server-7] [INFO] [1784060297.464935029] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-7] [INFO] [1784060297.470874934] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-7] [INFO] [1784060297.483188094] [planner_server]: Cleaning up
+[controller_server-6] [INFO] [1784060297.495637397] [local_costmap.local_costmap]: Destroying
+[planner_server-7] [INFO] [1784060297.661611955] [global_costmap.global_costmap]: Cleaning up
+[bt_navigator-9] [INFO] [1784060297.712012715] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-9] [INFO] [1784060297.712270275] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-9] [INFO] [1784060297.712480999] [bt_navigator]: Cleaning up
+[controller_server-6] [INFO] [1784060297.740420945] [controller_server]: Destroying
+[planner_server-7] [INFO] [1784060297.785726099] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-7] [INFO] [1784060297.786517320] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[planner_server-7] [INFO] [1784060297.972639353] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-7] [INFO] [1784060298.009326183] [global_costmap.global_costmap]: Destroying
+[bt_navigator-9] [INFO] [1784060298.018494549] [bt_navigator]: Completed Cleaning up
+[bt_navigator-9] [INFO] [1784060298.018677324] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[planner_server-7] [INFO] [1784060298.118972067] [planner_server]: Destroying
+[bt_navigator-9] [INFO] [1784060298.204805232] [bt_navigator]: Destroying
+[lifecycle_manager-11] [INFO] [1784060298.561100619] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-11] [INFO] [1784060298.561336051] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[lifecycle_manager-11] [INFO] [1784060298.866841607] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[INFO] [controller_server-6]: process has finished cleanly [pid 12829]
+[rviz2-5] [INFO] [1784060299.093792624] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [planner_server-7]: process has finished cleanly [pid 12830]
+[INFO] [bt_navigator-9]: process has finished cleanly [pid 12832]
+[INFO] [rviz2-5]: process has finished cleanly [pid 12715]
+[INFO] [lifecycle_manager-11]: process has finished cleanly [pid 12834]
+[map_server-4] [WARN] [1784060439.033620622] [rcl_lifecycle]: No transition matching 1 found for current state active
+[map_server-4] [WARN] [1784060439.033682424] [rcl_lifecycle]: No transition matching 1 found for current state active
+[map_server-4] [ERROR] [1784060439.039841811] [map_server]: Unable to start transition 1 from current state active: Transition is not registered., at ./src/rcl_lifecycle.c:355

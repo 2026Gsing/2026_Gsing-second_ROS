@@ -27,7 +27,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion, TransformStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
@@ -272,9 +272,10 @@ class FastLIOLocalization(Node):
             ],
         )
 
-        # ============ TF 监听 ============
+        # ============ TF 监听 / 广播 ============
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
+        self.tf_br = tf2_ros.TransformBroadcaster(self)
 
         # ============ 发布器 ============
         self.pub_pc_in_map = self.create_publisher(PointCloud2, "/cur_scan_in_map", 10)
@@ -582,10 +583,12 @@ class FastLIOLocalization(Node):
             self.global_localization(T_map_to_odom)
 
     def publish_odom(self, transform):
-        """将 map→odom 变换矩阵发布为 Odometry 消息"""
-        odom_msg = Odometry()
+        """将 map→odom 变换矩阵发布为 Odometry 消息，并广播 map→base_link TF"""
         xyz = transform[:3, 3]
         quat = tf_transformations.quaternion_from_matrix(transform)
+
+        # ── 发布 /map_to_odom（供 transform_fusion 订阅） ──
+        odom_msg = Odometry()
         odom_msg.pose.pose = Pose(
             position=Point(x=xyz[0], y=xyz[1], z=xyz[2]),
             orientation=Quaternion(x=quat[0], y=quat[1], z=quat[2], w=quat[3])
@@ -593,6 +596,23 @@ class FastLIOLocalization(Node):
         odom_msg.header.stamp = self.get_clock().now().to_msg()
         odom_msg.header.frame_id = "map"
         self.pub_map_to_odom.publish(odom_msg)
+
+        # ── 广播 map→base_link TF（供 Nav2 local_costmap 直接使用） ──
+        # 当无 FAST-LIO2 odometry 时，map→base_link ≈ map→odom。
+        # 这让 Nav2 不再依赖易碎的 odom→camera_init→base_link TF 链，
+        # 直接使用 ICP 的全局定位结果。
+        t = TransformStamped()
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.header.frame_id = "map"
+        t.child_frame_id = "base_link"
+        t.transform.translation.x = xyz[0]
+        t.transform.translation.y = xyz[1]
+        t.transform.translation.z = xyz[2]
+        t.transform.rotation.x = quat[0]
+        t.transform.rotation.y = quat[1]
+        t.transform.rotation.z = quat[2]
+        t.transform.rotation.w = quat[3]
+        self.tf_br.sendTransform(t)
 
     def localisation_timer_callback(self):
         """定时定位任务：持续执行 ICP 配准以维持定位精度"""

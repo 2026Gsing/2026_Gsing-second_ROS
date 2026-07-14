@@ -1,0 +1,23 @@
+[INFO] [1784062741.390136456] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784062741.436485921] [bt_navigator]: Creating
+[INFO] [1784062742.852341039] [bt_navigator]: Configuring
+[INFO] [1784062742.901380574] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784062742.957712194] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784062744.862419686] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784062746.379906203] [bt_navigator]: Activating
+[INFO] [1784062747.153898978] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784062770.070237237] [bt_navigator]: Begin navigating from current location (0.35, 0.07) to (0.43, 0.18)
+[WARN] [1784062770.101621079] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784062770.112885313] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784062770.115609099] [bt_navigator]: Goal failed
+[INFO] [1784062814.667360802] [bt_navigator]: Deactivating
+[INFO] [1784062814.667479404] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [1784062815.282930504] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784062815.283108485] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[INFO] [1784062815.283276794] [bt_navigator]: Cleaning up
+[INFO] [1784062815.812537213] [bt_navigator]: Completed Cleaning up
+[INFO] [1784062815.812729139] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.

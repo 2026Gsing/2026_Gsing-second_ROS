@@ -199,6 +199,23 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         name="LiDAR",
     )
 
+    # 等待 LiDAR 驱动初始化 + DDS 发现完成（否则 ICP/FAST-LIO2 收不到话题）
+    print("  [启动] 等待 10 秒让 LiDAR 驱动就绪...")
+    time.sleep(10)
+
+    # 验证 LiDAR 话题是否已发布
+    try:
+        result = subprocess.run(
+            ["bash", "-c", f"{ros_setup} && ros2 topic list 2>/dev/null | grep -q unilidar/cloud"],
+            timeout=3, capture_output=True,
+        )
+        if result.returncode == 0:
+            print("  [启动] ✅ LiDAR 话题已就绪")
+        else:
+            print("  [启动] ⚠️ LiDAR 话题未检测到（但仍继续）")
+    except Exception:
+        print("  [启动] ⚠️ 话题检测失败（但仍继续）")
+
     # ICP 定位 (FAST-LIO2 + transform_fusion)
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "

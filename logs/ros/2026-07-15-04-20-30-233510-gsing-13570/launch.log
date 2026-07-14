@@ -1,0 +1,9 @@
+1784060430.2386456 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-04-20-30-233510-gsing-13570
+1784060430.2392404 [INFO] [launch]: Default logging verbosity is set to INFO
+1784060431.1824892 [INFO] [fastlio_mapping-1]: process started with pid [13696]
+1784060431.1865342 [INFO] [env-2]: process started with pid [13697]
+1784060431.1877978 [INFO] [env-3]: process started with pid [13698]
+1784060431.1918914 [INFO] [pcd_to_pointcloud-4]: process started with pid [13699]
+1784060525.3476181 [INFO] [fastlio_mapping-1]: process has finished cleanly [pid 13696]
+1784060526.4662647 [INFO] [env-2]: process has finished cleanly [pid 13697]
+1784060527.6876616 [ERROR] [env-3]: process has died [pid 13698, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
