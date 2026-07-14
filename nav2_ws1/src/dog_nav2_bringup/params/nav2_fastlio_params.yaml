@@ -15,7 +15,7 @@ bt_navigator:
     robot_base_frame: base_link
     odom_frame: odom
     transform_tolerance: 0.5
-    default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
+    default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
     plugin_lib_names:
       - "nav2_compute_path_to_pose_action_bt_node"
       - "nav2_follow_path_action_bt_node"

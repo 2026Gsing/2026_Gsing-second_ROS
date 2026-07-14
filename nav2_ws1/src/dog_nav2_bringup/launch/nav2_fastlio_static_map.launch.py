@@ -163,13 +163,19 @@ def generate_launch_description():
         parameters=[params_file, {'use_sim_time': use_sim_time}],
     )
 
+    # 自定义 BT XML（在系统默认基础上增加了显式 server_timeout，确保规划器有充足响应时间）
+    custom_bt_xml = os.path.join(bringup_share, 'behavior_trees', 'custom_navigate_to_pose_w_replanning_and_recovery.xml')
+
     # bt_navigator: 行为树导航器，按 "规划→控制→检查→恢复" 的行为树驱动导航流程
     bt_navigator = Node(
         package='nav2_bt_navigator',
         executable='bt_navigator',
         name='bt_navigator',
         output='screen',
-        parameters=[params_file, {'use_sim_time': use_sim_time}],
+        parameters=[params_file, {
+            'use_sim_time': use_sim_time,
+            'default_bt_xml_filename': custom_bt_xml,
+        }],
     )
 
     # waypoint_follower: 多航点连续导航

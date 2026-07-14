@@ -186,6 +186,26 @@ Frame: `[0x55][0xAA][func_id][len][payload...][checksum]`
 | `0x15` | AUTO_TASK | `cmd(u8)+target(u8)+zone(u8)` = 3B | ROS→STM32 | auto_task.py |
 | `0x22` | ARM_EVENT | `event+mode+slot+side+xyz` = 16B | STM32→ROS | serial bridge |
 
+## Custom BT XML — server_timeout Fix
+
+**Problem**: `navigate_w_replanning_and_recovery.xml` does not exist in ROS2 Jazzy. The correct filename is `navigate_to_pose_w_replanning_and_recovery.xml`. When bt_navigator can't find the specified XML, it falls back to a simplified default behavior tree where `ComputePathToPose` has an implicit 0s `server_timeout`, causing the planner action to fail immediately (~0.03s).
+
+**Fix**: Three layers:
+
+1. **Filename correction** — All 6 files referencing the old name now use `navigate_to_pose_w_replanning_and_recovery.xml` (params YAMLs, shell heredocs, Python inline YAML)
+2. **Custom BT XML** — `nav2_ws1/src/dog_nav2_bringup/behavior_trees/custom_navigate_to_pose_w_replanning_and_recovery.xml` is a copy of the system default with `server_timeout="5.0"` added to `<ComputePathToPose>`, giving the planner action server sufficient time to respond
+3. **Launch override** — `nav2_fastlio_static_map.launch.py` computes `custom_bt_xml` via `get_package_share_directory` and overrides `default_bt_xml_filename` in the bt_navigator parameters
+
+If you create a new params YAML or launch file, reference the custom BT XML via:
+```python
+custom_bt_xml = os.path.join(bringup_share, 'behavior_trees', 'custom_navigate_to_pose_w_replanning_and_recovery.xml')
+```
+Or use the standard system filename if you don't need the explicit timeout:
+```
+default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
+```
+(relative path resolved by bt_navigator from `nav2_bt_navigator/share/nav2_bt_navigator/behavior_trees/`)
+
 ## Common Pitfalls
 
 - **LiDAR network**: `sudo nmcli device set enp4s0 managed no && sudo ip addr add 192.168.1.2/24 dev enp4s0`（笔记本用 `enp129s0`）
