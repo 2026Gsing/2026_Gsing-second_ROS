@@ -1,0 +1,4 @@
+[INFO] [1784029626.799178409] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+translation: ('0.000000', '0.000000', '0.000000')
+rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+from 'camera_init' to 'odom'
