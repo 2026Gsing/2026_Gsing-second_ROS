@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/control/cube_detector.py", line 36, in <module>
+    from sklearn.cluster import DBSCAN
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/__init__.py", line 70, in <module>
+    from sklearn.base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/base.py", line 20, in <module>
+    from sklearn.utils._metadata_requests import _MetadataRequester, _routing_enabled
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/__init__.py", line 9, in <module>
+    from sklearn.utils._chunking import gen_batches, gen_even_slices
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/_chunking.py", line 11, in <module>
+    from sklearn.utils._param_validation import Interval, validate_params
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/_param_validation.py", line 17, in <module>
+    from sklearn.utils.validation import _is_arraylike_not_scalar
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/validation.py", line 24, in <module>
+    from sklearn.utils._array_api import (
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/_array_api.py", line 23, in <module>
+    from sklearn.utils.fixes import parse_version
+  File "/home/gsing/.local/lib/python3.12/site-packages/sklearn/utils/fixes.py", line 16, in <module>
+    import scipy.stats
+  File "/usr/lib/python3/dist-packages/scipy/stats/__init__.py", line 608, in <module>
+    from ._stats_py import *
+  File "/usr/lib/python3/dist-packages/scipy/stats/_stats_py.py", line 53, in <module>
+    from ._hypotests import _all_partitions
+  File "/usr/lib/python3/dist-packages/scipy/stats/_hypotests.py", line 13, in <module>
+    from scipy.fft import ifft
+  File "/usr/lib/python3/dist-packages/scipy/fft/__init__.py", line 85, in <module>
+    from ._basic import (
+  File "/usr/lib/python3/dist-packages/scipy/fft/_basic.py", line 1, in <module>
+    from scipy._lib.uarray import generate_multimethod, Dispatchable
+  File "/usr/lib/python3/dist-packages/scipy/_lib/uarray.py", line 28, in <module>
+    from ._uarray import *
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+KeyboardInterrupt

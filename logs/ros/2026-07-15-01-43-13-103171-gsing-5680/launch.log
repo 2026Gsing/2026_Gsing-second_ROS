@@ -1,0 +1,20 @@
+1784050993.1083028 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-01-43-13-103171-gsing-5680
+1784050993.1093149 [INFO] [launch]: Default logging verbosity is set to INFO
+1784050993.7113802 [INFO] [static_transform_publisher-1]: process started with pid [5818]
+1784050993.7120092 [INFO] [static_transform_publisher-2]: process started with pid [5819]
+1784050993.7125950 [INFO] [static_transform_publisher-3]: process started with pid [5820]
+1784050993.7130771 [INFO] [static_transform_publisher-4]: process started with pid [5821]
+1784050993.7334695 [INFO] [map_server-5]: process started with pid [5822]
+1784050993.7341857 [INFO] [rviz2-6]: process started with pid [5823]
+1784050999.0728841 [INFO] [controller_server-7]: process started with pid [6007]
+1784050999.0771890 [INFO] [planner_server-8]: process started with pid [6008]
+1784050999.0937209 [INFO] [behavior_server-9]: process started with pid [6009]
+1784050999.0941923 [INFO] [bt_navigator-10]: process started with pid [6010]
+1784050999.0946329 [INFO] [waypoint_follower-11]: process started with pid [6011]
+1784050999.0950003 [INFO] [lifecycle_manager-12]: process started with pid [6012]
+1784050999.1174474 [INFO] [goal_pose_to_nav2-13]: process started with pid [6013]
+1784050999.1179886 [INFO] [costmap_to_grid-14]: process started with pid [6014]
+1784051081.0454929 [INFO] [controller_server-7]: process has finished cleanly [pid 6007]
+1784051081.6467252 [INFO] [bt_navigator-10]: process has finished cleanly [pid 6010]
+1784051081.7341690 [INFO] [planner_server-8]: process has finished cleanly [pid 6008]
+1784051083.5227869 [ERROR] [rviz2-6]: process has died [pid 5823, exit code -11, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/rviz/nav2_fastlio_static_map.rviz --ros-args -r __node:=nav2_rviz2'].
