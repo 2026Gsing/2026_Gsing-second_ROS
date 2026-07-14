@@ -44,3 +44,43 @@ Multi thread started
 [INFO] [1784021868.268096905] [laser_mapping]: publish_map: frame pts=0, total=0
 [INFO] [1784021869.268102744] [laser_mapping]: publish_map: frame pts=0, total=0
 [INFO] [1784021870.269501430] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021871.267922705] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021872.267928565] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021873.268451829] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021874.269615474] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021874.669757140] [laser_mapping]: Saving map to /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD20.pcd...
+[WARN] [1784021874.670210342] [laser_mapping]: Map cloud is empty, skip saving.
+[INFO] [1784021875.268401639] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021876.210242165] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+Rebuild thread terminated normally
+Traceback (most recent call last):
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 108, in main
+    rclpy.spin(node)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 117, in <module>
+    main()
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 113, in main
+    rclpy.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 134, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/utilities.py", line 82, in shutdown
+    context.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/context.py", line 129, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:333
