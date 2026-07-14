@@ -120,10 +120,21 @@ MAP_NAME = "map/PCD13"     # → map/PCD13.pcd + map/PCD13.yaml
 
 | 参数 | 默认 | 说明 |
 |------|------|------|
-| `ENABLE_RVIZ` | `True` | 是否打开 RViz 可视化 |
+| `ENABLE_RVIZ` | `True` | 是否打开 RViz 可视化（控制 **所有** RViz：LiDAR、ICP、Nav2） |
 | `USE_TERMINAL` | `True` | 是否用独立终端窗口显示每个节点输出 |
 | `SERIAL_PORT` | `/dev/ttyACM0` | STM32 串口设备路径 |
 | `MAP_NAME` | `map/map` | 地图文件名（不含扩展名） |
+
+### 全局 RViz 开关（临时覆盖，不修改文件）
+
+设置环境变量 `GSING_RVIZ=0` 可一次性关闭 **所有** RViz 窗口（LiDAR、ICP、Nav2）：
+
+```bash
+GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py
+GSING_RVIZ=0 ./ros-run.sh py/tools/map_scan.py
+```
+
+等效于把 `launch_utils.py` 的 `ENABLE_RVIZ` 临时设为 `False`，不影响文件。
 
 ---
 

@@ -53,7 +53,8 @@ _LOG_CATEGORIES = {
 }
 
 # ============ 开关 ============
-ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
+# 全局 RViz 开关：可通过环境变量 GSING_RVIZ=0/false 一次性关闭所有 RViz
+ENABLE_RVIZ = os.environ.get("GSING_RVIZ", "true").lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
 MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
@@ -166,14 +167,14 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     print("║  启动前置 ROS 节点                            ║")
     print("╚══════════════════════════════════════════════╝")
 
-    # LiDAR 驱动
+    rviz_arg = "true" if ENABLE_RVIZ else "false"
+
+    # LiDAR 驱动（支持 start_rviz:=false 关闭其 RViz）
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
         name="LiDAR",
     )
-
-    rviz_arg = "true" if ENABLE_RVIZ else "false"
 
     # ICP 定位 (FAST-LIO2 + transform_fusion)
     launch(

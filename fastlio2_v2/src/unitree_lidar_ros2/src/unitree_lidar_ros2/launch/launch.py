@@ -2,9 +2,16 @@ import os
 import subprocess
 
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
+    # 是否启动 RViz（可通过 start_rviz:=false 关闭）
+    start_rviz = LaunchConfiguration('start_rviz', default='true')
+
     # Run unitree lidar
     node1 = Node(
         package='unitree_lidar_ros2',
@@ -17,7 +24,7 @@ def generate_launch_description():
                 # 如果'xfer_format'参数无效，可以尝试以下可能的参数名之一：
                 # {'data_type': 1},
                 # {'publish_format': 1},
-                
+
                 # 以下是您原有的参数
                 {'initialize_type': 2},
                 {'work_mode': 0},
@@ -32,7 +39,7 @@ def generate_launch_description():
                 {'lidar_ip': '192.168.1.62'},
                 {'local_port': 6201},
                 {'local_ip': '192.168.1.2'},
-                
+
                 {'cloud_frame': "unilidar_lidar"},
                 {'cloud_topic': "unilidar/cloud"},
                 {'imu_frame': "unilidar_imu"},
@@ -49,6 +56,10 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         arguments=['-d', rviz_config_file],
-        output='log'
+        output='log',
+        condition=IfCondition(start_rviz),
     )
-    return LaunchDescription([node1, rviz_node])
+    return LaunchDescription([
+        DeclareLaunchArgument('start_rviz', default_value='true', description='Launch RViz2'),
+        node1, rviz_node,
+    ])
