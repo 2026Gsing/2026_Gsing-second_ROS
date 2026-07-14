@@ -1,0 +1,33 @@
+[INFO] [1784051001.066230409] [lifecycle_manager_navigation]: Creating
+[INFO] [1784051001.423089172] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1784051001.678780714] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1784051001.678937249] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[INFO] [1784051002.055472375] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[INFO] [1784051002.650118954] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[INFO] [1784051003.071297819] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[INFO] [1784051003.784385327] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[INFO] [1784051005.512838314] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[INFO] [1784051006.070027342] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[INFO] [1784051006.222575344] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[INFO] [1784051006.222735287] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[INFO] [1784051006.435714683] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[INFO] [1784051006.435851475] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[INFO] [1784051006.601341122] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[INFO] [1784051006.601539242] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[INFO] [1784051006.733907045] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[INFO] [1784051006.734080297] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[INFO] [1784051007.418670188] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[INFO] [1784051007.418779101] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[INFO] [1784051007.575044543] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[INFO] [1784051007.575215611] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[INFO] [1784051007.575266077] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[INFO] [1784051079.575448186] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from controller_server.[0m[0m
+[ERROR] [1784051079.575611464] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER controller_server IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[INFO] [1784051079.575742938] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[INFO] [1784051079.575788118] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[INFO] [1784051079.575828883] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[INFO] [1784051079.746309578] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[INFO] [1784051079.951863411] [lifecycle_manager_navigation]: [34m[1mDeactivating behavior_server[0m[0m
+[INFO] [1784051080.168549724] [lifecycle_manager_navigation]: [34m[1mDeactivating planner_server[0m[0m
+[ERROR] [1784051080.314671730] [lifecycle_manager_navigation]: Failed to change state for node: planner_server
+[INFO] [1784051080.316981647] [lifecycle_manager_navigation]: [34m[1mDeactivating controller_server[0m[0m
