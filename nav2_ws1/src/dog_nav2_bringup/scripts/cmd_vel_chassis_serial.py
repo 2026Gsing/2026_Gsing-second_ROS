@@ -136,6 +136,28 @@ LEG_DEBUG_ATTITUDE_FIELDS = [
     "att_accel_abs_mps2",
 ]
 
+LEG_DEBUG_CONTROL_FIELDS = [
+    "ctl_chassis_mode",
+    "ctl_sys_mode",
+    "ctl_current_state",
+    "ctl_gait_running",
+    "ctl_is_zeroing",
+    "ctl_target_vx_mps",
+    "ctl_target_wz_radps",
+    "ctl_target_state",
+    "ctl_vision_vx_mps",
+    "ctl_vision_wz_radps",
+    "ctl_vision_state",
+    "ctl_vision_age_ms",
+    "ctl_vision_timeout_count",
+    "ctl_vision_rx_count",
+    "ctl_usb_rx_packet_count",
+    "ctl_vision_frame_count",
+    "ctl_auto_task_state",
+    "ctl_auto_force_stop",
+    "ctl_motion_gate_open",
+]
+
 LEG_DEBUG_NAMES = {
     0: "leg0_12_LF",
     1: "leg1_78_RR",
@@ -297,6 +319,7 @@ class CmdVelChassisSerial(Node):
         self._leg_debug_latest_legs = {}
         self._leg_debug_latest_global = None
         self._leg_debug_latest_attitude = None
+        self._leg_debug_latest_control = None
         self._leg_debug_last_log_time = 0.0
         self._leg_debug_csv_file = None
         self._leg_debug_csv_writer = None
@@ -354,6 +377,7 @@ class CmdVelChassisSerial(Node):
                 *LEG_DEBUG_FIELDS,
                 *LEG_DEBUG_GLOBAL_FIELDS,
                 *LEG_DEBUG_ATTITUDE_FIELDS,
+                *LEG_DEBUG_CONTROL_FIELDS,
             ]
             self._leg_debug_csv_file = open(path, "w", newline="", encoding="utf-8")
             self._leg_debug_csv_writer = csv.DictWriter(
@@ -387,6 +411,9 @@ class CmdVelChassisSerial(Node):
                 row[name] = value
         elif frame_type == 3:
             for name, value in zip(LEG_DEBUG_ATTITUDE_FIELDS, values):
+                row[name] = value
+        elif frame_type == 4:
+            for name, value in zip(LEG_DEBUG_CONTROL_FIELDS, values):
                 row[name] = value
         self._leg_debug_csv_writer.writerow(row)
 
@@ -424,6 +451,13 @@ class CmdVelChassisSerial(Node):
                 f" proj={int(a[4])}"
                 f" raw={a[16]:+.1f}/{a[17]:+.1f}"
                 f" zero={a[8]:+.1f}/{a[9]:+.1f}"
+            )
+        if self._leg_debug_latest_control is not None:
+            c = self._leg_debug_latest_control["values"]
+            global_text += (
+                f" ctl=m{int(c[0])}/s{int(c[2])}"
+                f" gait={int(c[3])} zero={int(c[4])}"
+                f" age={c[11]:.0f}ms to={int(c[12])}"
             )
 
         leg_parts = []
@@ -655,6 +689,8 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_latest_global = frame
         elif frame_type == 3:
             self._leg_debug_latest_attitude = frame
+        elif frame_type == 4:
+            self._leg_debug_latest_control = frame
 
         self._log_leg_debug_snapshot()
 
