@@ -278,6 +278,13 @@ class CmdVelChassisSerial(Node):
         self._last_send_log_time = 0.0
         self._last_cmd_log_time = 0.0
         self._serial_lock = threading.Lock()
+        self._serial_port = port
+        self._serial_baud = baud
+        self._ser = None
+        self._reconnect_interval_sec = 1.0
+        self._next_reconnect_time = 0.0
+        self._reconnect_zero_frame_count = 10
+        self._reconnect_zero_frames_remaining = 0
         self._critical_tx_queue = []
         self._rx_stop = threading.Event()
         self._rx_buffer = bytearray()
@@ -291,7 +298,7 @@ class CmdVelChassisSerial(Node):
 
         # ============ 打开串口 ============
         try:
-            self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.10)
+            self._ser = self._open_serial_port()
         except serial.SerialException as e:
             self.get_logger().error(f"串口 {port} 打开失败: {e}")
             self.get_logger().error("请检查: 1) STM32 是否已连接  2) sudo chmod 666 {port}")
@@ -433,9 +440,98 @@ class CmdVelChassisSerial(Node):
         if self._leg_debug_csv_file is not None:
             self._leg_debug_csv_file.flush()
 
+    def _open_serial_port(self):
+        return serial.Serial(
+            port=self._serial_port,
+            baudrate=self._serial_baud,
+            timeout=0.05,
+            write_timeout=0.10,
+        )
+
+    def _get_serial(self):
+        with self._serial_lock:
+            return self._ser
+
+    def _try_reconnect_serial(self, now: float) -> bool:
+        stale_ser = None
+        with self._serial_lock:
+            if self._ser is not None and self._ser.is_open:
+                return True
+            stale_ser = self._ser
+            self._ser = None
+            if now < self._next_reconnect_time:
+                return False
+            self._next_reconnect_time = now + self._reconnect_interval_sec
+
+        if stale_ser is not None:
+            try:
+                stale_ser.close()
+            except Exception:
+                pass
+
+        try:
+            new_ser = self._open_serial_port()
+        except (serial.SerialException, OSError) as e:
+            self.get_logger().warn(f"Serial reconnect pending: {e}")
+            return False
+
+        with self._serial_lock:
+            if self._ser is None:
+                self._ser = new_ser
+                self._reconnect_zero_frames_remaining = self._reconnect_zero_frame_count
+                self._next_reconnect_time = 0.0
+                new_ser = None
+
+        if new_ser is not None:
+            try:
+                new_ser.close()
+            except Exception:
+                pass
+            return self._get_serial() is not None
+
+        self.get_logger().info(
+            f"Reconnected {self._serial_port}; sending {self._reconnect_zero_frame_count} zero-speed frames"
+        )
+        return True
+
+    def _handle_serial_fault(self, failing_ser, direction: str, error: Exception):
+        with self._serial_lock:
+            active_ser = self._ser
+            if active_ser is None:
+                return
+            if failing_ser is not None and active_ser is not failing_ser:
+                return
+            self._ser = None
+            self._reconnect_zero_frames_remaining = 0
+            self._next_reconnect_time = time.monotonic() + self._reconnect_interval_sec
+
+        try:
+            active_ser.close()
+        except Exception:
+            pass
+
+        with self._lock:
+            self._critical_tx_queue.clear()
+
+        if not self._rx_stop.is_set():
+            self.get_logger().error(
+                f"Serial {direction} failed: {error}; commands paused until reconnect"
+            )
+
+    def _is_reconnect_zero_active(self) -> bool:
+        with self._serial_lock:
+            return self._reconnect_zero_frames_remaining > 0
+
+    def _confirm_reconnect_zero_frame(self):
+        with self._serial_lock:
+            if self._reconnect_zero_frames_remaining > 0:
+                self._reconnect_zero_frames_remaining -= 1
+
     def _write_serial(self, pkt: bytes, flush: bool = False):
         """Serialize all writes so chassis and arm frames never interleave."""
         with self._serial_lock:
+            if self._ser is None or not self._ser.is_open:
+                raise serial.SerialException("serial port is unavailable")
             self._ser.write(pkt)
             if flush:
                 self._ser.flush()
@@ -470,15 +566,16 @@ class CmdVelChassisSerial(Node):
 
     def _serial_rx_loop(self):
         while not self._rx_stop.is_set():
+            ser = self._get_serial()
+            if ser is None:
+                self._rx_stop.wait(0.1)
+                continue
             try:
-                if self._ser is None:
-                    self.get_logger().error("Serial port is None, stopping RX loop")
-                    break
-                chunk = self._ser.read(64)
+                chunk = ser.read(64)
             except (serial.SerialException, OSError, TypeError) as e:
                 if not self._rx_stop.is_set():
-                    self.get_logger().error(f"Serial read failed: {e}")
-                break
+                    self._handle_serial_fault(ser, "read", e)
+                continue
             if chunk:
                 self._feed_rx_bytes(chunk)
 
@@ -757,6 +854,10 @@ class CmdVelChassisSerial(Node):
         4. 超过 command_hold_timeout → 发送停止帧
         """
         now = time.monotonic()
+        if not self._try_reconnect_serial(now):
+            return
+
+        reconnect_zero_active = self._is_reconnect_zero_active()
         with self._lock:
             vision_age = now - self._vision_last_time if self._vision_last_time > 0 else self._vision_timeout + 1.0
             source = "stop"
@@ -806,6 +907,11 @@ class CmdVelChassisSerial(Node):
                     state = ROBOT_STATE_IDLE
                     source = "stop"
 
+            if reconnect_zero_active:
+                vx = wz = 0.0
+                state = ROBOT_STATE_IDLE
+                source = "reconnect_zero"
+
             transition = source != self._last_sent_source
             should_log = False
             if transition:
@@ -815,18 +921,23 @@ class CmdVelChassisSerial(Node):
                 should_log = True
             if should_log:
                 self._last_send_log_time = now
-            critical_pkt, critical_label = self._pop_critical_packet()
+            if reconnect_zero_active:
+                critical_pkt, critical_label = None, None
+            else:
+                critical_pkt, critical_label = self._pop_critical_packet()
 
         if should_log and (abs(vx) + abs(wz) > 1e-6 or transition):
             self.get_logger().info(f"send source={source} vx={vx:.3f} wz={wz:.3f}")
         pkt = self._build_packet(vx, wz, state)
         try:
             self._write_serial(pkt)
+            if reconnect_zero_active:
+                self._confirm_reconnect_zero_frame()
             if critical_pkt is not None:
                 self._write_serial(critical_pkt, flush=True)
                 self.get_logger().debug(f"repeat {critical_label}")
-        except serial.SerialException as e:
-            self.get_logger().error(f"Serial write failed: {e}")
+        except (serial.SerialException, OSError, TypeError) as e:
+            self._handle_serial_fault(self._get_serial(), "write", e)
 
     def destroy_node(self):
         """节点销毁时发送停止帧，确保机器人安全停车"""
