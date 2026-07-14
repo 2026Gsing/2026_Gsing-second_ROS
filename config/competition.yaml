@@ -54,6 +54,13 @@ arm:
   cache_max_size: 10          # 位置缓存上限
 
 # 物资类型名（日志显示）
+pick_recovery:
+  max_attempts: 1
+  approach_distance_m: 0.10
+  approach_speed_mps: 0.16
+  command_settle_sec: 0.20
+  settle_sec: 1.00
+
 box_type_names:
   1: "食品"
   2: "工具"
