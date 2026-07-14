@@ -103,16 +103,23 @@ AUTO_CMD_PLACE_DONE = 5
 AUTO_CMD_NEXT = 6
 AUTO_CMD_FINISH = 7
 AUTO_CMD_ESTOP = 8
+AUTO_CMD_RETRY_PICK = 9
 
 _CMD_NAMES = {
     AUTO_CMD_NONE: "NONE", AUTO_CMD_START: "START",
     AUTO_CMD_ARRIVED_BOX: "ARRIVED_BOX", AUTO_CMD_PICK_DONE: "PICK_DONE",
     AUTO_CMD_ARRIVED_ZONE: "ARRIVED_ZONE", AUTO_CMD_PLACE_DONE: "PLACE_DONE",
     AUTO_CMD_NEXT: "NEXT", AUTO_CMD_FINISH: "FINISH", AUTO_CMD_ESTOP: "ESTOP",
+    AUTO_CMD_RETRY_PICK: "RETRY_PICK",
 }
 
 ARM_EVENT_PICK_DONE = 1
 ARM_EVENT_PLACE_DONE = 2
+ARM_EVENT_MISSION_FAILED = 3
+
+ARM_FAILURE_TARGET_OUT_OF_RANGE = 1
+ARM_FAILURE_IK_UNREACHABLE = 2
+ARM_FAILURE_NO_CONTACT = 3
 
 ARM_MISSION_PICK_TO_BACK = 1
 ARM_MISSION_BACK_TO_PLACE = 2
@@ -139,12 +146,15 @@ class VS:
     WAIT_PLACE = 6
     NEXT_OR_FINISH = 7
     ERROR = 8
+    PICK_RECOVER_APPROACH = 9
+    PICK_RECOVER_SETTLE = 10
 
 _STATE_NAMES = {
     VS.IDLE: "IDLE", VS.SOLVE_TASK: "SOLVE_TASK", VS.FIND_BOX: "FIND_BOX",
     VS.NAV_BOX: "NAV_BOX", VS.WAIT_PICK: "WAIT_PICK", VS.NAV_ZONE: "NAV_ZONE",
     VS.WAIT_PLACE: "WAIT_PLACE", VS.NEXT_OR_FINISH: "NEXT_OR_FINISH",
-    VS.ERROR: "ERROR",
+    VS.ERROR: "ERROR", VS.PICK_RECOVER_APPROACH: "PICK_RECOVER_APPROACH",
+    VS.PICK_RECOVER_SETTLE: "PICK_RECOVER_SETTLE",
 }
 
 # 当前工作区路径
@@ -161,6 +171,7 @@ class VisionAutoTaskNode(Node):
 
         # ======================== 参数（默认值来自 competition.yaml）=======================
         _to = _CFG.get("timeouts", {})
+        _pick_recovery = _CFG.get("pick_recovery", {})
         self.declare_parameter("arrival_pos_threshold", _to.get("nav2_arrival_pos", 0.25))
         self.declare_parameter("arrival_angle_threshold", _to.get("nav2_arrival_angle", 0.30))
         self.declare_parameter("arrival_settle_frames", _to.get("nav2_arrival_frames", 5))
@@ -182,6 +193,19 @@ class VisionAutoTaskNode(Node):
         self.high_score_zone = None
         self.target_class = None
         self.math_timeout_sec = _to.get("math", 20.0)
+        self._pick_recovery_max_attempts = max(0, int(_pick_recovery.get("max_attempts", 1)))
+        self._pick_recovery_speed_mps = float(_pick_recovery.get("approach_speed_mps", 0.16))
+        self._pick_recovery_distance_m = max(0.0, float(_pick_recovery.get("approach_distance_m", 0.10)))
+        self._pick_recovery_command_settle_sec = max(
+            0.0, float(_pick_recovery.get("command_settle_sec", 0.20)))
+        self._pick_recovery_settle_sec = max(
+            0.4, float(_pick_recovery.get("settle_sec", 1.0)))
+        recovery_speed_abs = abs(self._pick_recovery_speed_mps)
+        self._pick_recovery_drive_sec = (
+            self._pick_recovery_distance_m / recovery_speed_abs
+            if recovery_speed_abs > 1.0e-3 else 0.0
+        )
+        self._pick_recovery_attempts = 0
         self.competition_start_time = 0.0
         self._last_time_log = 0.0
         self.arrival = ArrivalDetector(
@@ -373,6 +397,69 @@ class VisionAutoTaskNode(Node):
                 self._carrying_back_side = ARM_BACK_SIDE_UNKNOWN
                 self._pick_done = False
                 self._transition_to(VS.NEXT_OR_FINISH)
+            return
+
+        if event == ARM_EVENT_MISSION_FAILED or event_name == "mission_failed":
+            self._handle_arm_mission_failed(data)
+
+    def _start_pick_recovery(self, reason: str):
+        if self._pick_recovery_attempts >= self._pick_recovery_max_attempts:
+            self.get_logger().error(
+                f"[PICK_RECOVERY] {reason}; retry budget exhausted, stop task"
+            )
+            self.stop_all()
+            return
+
+        if self._pick_recovery_drive_sec <= 0.0:
+            self.get_logger().error("[PICK_RECOVERY] approach speed/distance invalid, stop task")
+            self.stop_all()
+            return
+
+        self._pick_recovery_attempts += 1
+        self._pick_done = False
+        self._cube_cache = []
+        self._latest_cube = None
+        self._cube_recv_time = 0.0
+        self.send_velocity(0.0, 0.0)
+        self.send_auto_cmd(AUTO_CMD_RETRY_PICK, self.current_step_idx, 0)
+        self.get_logger().warn(
+            f"[PICK_RECOVERY] {reason}; approach {self._pick_recovery_distance_m:.2f}m "
+            f"at vx={self._pick_recovery_speed_mps:.2f}, then reacquire target "
+            f"({self._pick_recovery_attempts}/{self._pick_recovery_max_attempts})"
+        )
+        self._transition_to(VS.PICK_RECOVER_APPROACH)
+
+    def _handle_arm_mission_failed(self, data):
+        mission_mode = int(data.get("mission_mode", 0))
+        failure_reason = int(data.get("failure_reason", 0))
+        failure_name = data.get("failure_name", f"unknown_{failure_reason}")
+
+        self.get_logger().error(
+            f"[ARM_EVENT] mission_failed mode={mission_mode} reason={failure_name}"
+        )
+
+        if self.state in (VS.PICK_RECOVER_APPROACH, VS.PICK_RECOVER_SETTLE):
+            self.get_logger().debug("[ARM_EVENT] duplicate pick failure ignored during recovery")
+            return
+
+        if self.state != VS.WAIT_PICK:
+            self.get_logger().warn("[ARM_EVENT] failure received outside WAIT_PICK")
+            self.stop_all()
+            return
+
+        if mission_mode != ARM_MISSION_PICK_TO_BACK:
+            self.stop_all()
+            return
+
+        if failure_reason in (ARM_FAILURE_TARGET_OUT_OF_RANGE,
+                              ARM_FAILURE_IK_UNREACHABLE):
+            self._start_pick_recovery(failure_name)
+            return
+
+        self.get_logger().error(
+            f"[PICK_RECOVERY] no automatic chassis move for failure={failure_name}"
+        )
+        self.stop_all()
 
     def _read_decision_file(self):
         """从 JSON 文件读取数学决策结果（文件 IPC 方式）"""
@@ -525,6 +612,8 @@ class VisionAutoTaskNode(Node):
         if new_state == VS.WAIT_PICK:
             self._pick_event_received = False
             self._carrying_back_side = ARM_BACK_SIDE_UNKNOWN
+            if old != VS.PICK_RECOVER_SETTLE:
+                self._pick_recovery_attempts = 0
 
     def _elapsed(self) -> float:
         return time.monotonic() - self._state_enter_time
@@ -649,6 +738,10 @@ class VisionAutoTaskNode(Node):
             self._run_nav_box()
         elif s == VS.WAIT_PICK:
             self._run_wait_pick()
+        elif s == VS.PICK_RECOVER_APPROACH:
+            self._run_pick_recover_approach()
+        elif s == VS.PICK_RECOVER_SETTLE:
+            self._run_pick_recover_settle()
         elif s == VS.NAV_ZONE:
             self._run_nav_zone()
         elif s == VS.WAIT_PLACE:
@@ -667,6 +760,7 @@ class VisionAutoTaskNode(Node):
             return
         self.current_step_idx = 0
         self.pickup_sequence = []
+        self._pick_recovery_attempts = 0
         self.competition_start_time = time.monotonic()
         self._last_time_log = 0.0
         self._transition_to(VS.SOLVE_TASK)
@@ -778,12 +872,43 @@ class VisionAutoTaskNode(Node):
                             f"[抓取] 坐标 ({arm_x:.3f}, {arm_y:.3f}, {arm_z:.3f}) 通过验证"
                         )
                     else:
-                        self.get_logger().warn(f"[抓取] 坐标超限({reason})，跳过")
+                        self._start_pick_recovery(f"vision_target_{reason}")
 
         # 阶段三: 超时 → 安全停止，不伪造 PICK_DONE
         if self._elapsed() > self.get_parameter("pick_timeout_sec").value:
             self.get_logger().error("[抓取] 等待 ARM_EVENT pick_done 超时，停止任务")
             self.stop_all()
+
+    def _run_pick_recover_approach(self):
+        elapsed = self._elapsed()
+        drive_start = self._pick_recovery_command_settle_sec
+        drive_end = drive_start + self._pick_recovery_drive_sec
+
+        if elapsed < drive_start:
+            self.send_velocity(0.0, 0.0)
+            return
+
+        if elapsed < drive_end:
+            self.send_velocity(self._pick_recovery_speed_mps, 0.0)
+            return
+
+        self.send_velocity(0.0, 0.0)
+        if self.current_step_idx >= len(self.pickup_sequence):
+            self.stop_all()
+            return
+
+        _, zone_id, *_ = self.pickup_sequence[self.current_step_idx]
+        self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, self.current_step_idx, zone_id)
+        self._transition_to(VS.PICK_RECOVER_SETTLE)
+
+    def _run_pick_recover_settle(self):
+        self.send_velocity(0.0, 0.0)
+        if self._elapsed() >= self._pick_recovery_settle_sec:
+            self._cube_cache = []
+            self._latest_cube = None
+            self._cube_recv_time = 0.0
+            self._pick_done = False
+            self._transition_to(VS.WAIT_PICK)
 
     # --- NAV_ZONE: 导航到归位区 ---
     def _run_nav_zone(self):

@@ -57,7 +57,7 @@ CMD_ARM_EVENT   = 0x22 # STM32 -> vision: arm mission event
 CMD_LEG_DEBUG   = 0x31 # STM32 -> upper: wheel-leg support debug
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
-LEN_ARM_EVENT_PAYLOAD = 16
+LEN_ARM_EVENT_PAYLOAD = 17
 ARM_MISSION_HAS_PICK = 0x01
 ARM_MISSION_HAS_BACK = 0x02
 ARM_MISSION_HAS_PLACE = 0x04
@@ -142,9 +142,21 @@ LEG_DEBUG_NAMES = {
 
 ARM_EVENT_PICK_DONE = 0x01
 ARM_EVENT_PLACE_DONE = 0x02
+ARM_EVENT_MISSION_FAILED = 0x03
 _ARM_EVENT_NAMES = {
     ARM_EVENT_PICK_DONE: "pick_done",
     ARM_EVENT_PLACE_DONE: "place_done",
+    ARM_EVENT_MISSION_FAILED: "mission_failed",
+}
+_ARM_FAILURE_NAMES = {
+    0: "none",
+    1: "target_out_of_range",
+    2: "ik_unreachable",
+    3: "no_contact",
+    4: "rejected_auto_state",
+    5: "rejected_arm_busy",
+    6: "pending_timeout",
+    7: "invalid_mission",
 }
 _ARM_BACK_SIDE_NAMES = {
     0: "unknown",
@@ -206,6 +218,7 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("stale_timeout_sec", 0.25)
         self.declare_parameter("command_hold_timeout_sec", 0.75)
         self.declare_parameter("vision_timeout_sec", 0.5)   # 视觉控速超时
+        self.declare_parameter("vision_zero_hold_sec", 1.0)
         self.declare_parameter("zero_on_shutdown", True)
         self.declare_parameter("log_period_sec", 1.0)
         self.declare_parameter("critical_repeat_count", 4)
@@ -238,6 +251,10 @@ class CmdVelChassisSerial(Node):
         if self._command_hold_timeout < self._stale_timeout:
             self._command_hold_timeout = self._stale_timeout
         self._vision_timeout = self.get_parameter("vision_timeout_sec").get_parameter_value().double_value
+        self._vision_zero_hold = max(
+            0.0,
+            self.get_parameter("vision_zero_hold_sec").get_parameter_value().double_value,
+        )
         self._log_period = self.get_parameter("log_period_sec").get_parameter_value().double_value
         self._critical_repeat_count = max(
             0, self.get_parameter("critical_repeat_count").get_parameter_value().integer_value
@@ -252,6 +269,7 @@ class CmdVelChassisSerial(Node):
         self._last_time = 0.0
         self._vision_twist = None       # 视觉控速（可选，优先于 Nav2）
         self._vision_last_time = 0.0
+        self._vision_zero_hold_until = 0.0
         self._vision_state = None       # 视觉状态（从 /vision/robot_state 接收，可选）
         self._last_sent_source = "none"
         self._last_send_log_time = 0.0
@@ -537,9 +555,10 @@ class CmdVelChassisSerial(Node):
             )
             return
 
-        event, mission_mode, back_slot, back_side, x, y, z = struct.unpack("<BBBBfff", payload)
+        event, mission_mode, back_slot, back_side, failure_reason, x, y, z = struct.unpack("<BBBBBfff", payload)
         event_name = _ARM_EVENT_NAMES.get(event, f"unknown_{event}")
         side_name = _ARM_BACK_SIDE_NAMES.get(back_side, f"unknown_{back_side}")
+        failure_name = _ARM_FAILURE_NAMES.get(failure_reason, f"unknown_{failure_reason}")
         data = {
             "event": event,
             "event_name": event_name,
@@ -547,13 +566,15 @@ class CmdVelChassisSerial(Node):
             "back_slot": back_slot,
             "back_side": back_side,
             "back_side_name": side_name,
+            "failure_reason": failure_reason,
+            "failure_name": failure_name,
             "target": {"x": x, "y": y, "z": z},
         }
         msg = String()
         msg.data = json.dumps(data, separators=(",", ":"))
         self.arm_event_pub.publish(msg)
         self.get_logger().info(
-            f"[ARM_EVENT] {event_name} slot={back_slot} side={side_name} "
+            f"[ARM_EVENT] {event_name} slot={back_slot} side={side_name} reason={failure_name} "
             f"target=({x:.3f},{y:.3f},{z:.3f})"
         )
 
@@ -576,7 +597,13 @@ class CmdVelChassisSerial(Node):
         """接收视觉 /vision_cmd_vel 消息（精细对位，覆盖 Nav2）"""
         with self._lock:
             self._vision_twist = msg
-            self._vision_last_time = time.monotonic()
+            now = time.monotonic()
+            self._vision_last_time = now
+            if (abs(msg.linear.x) < _STATE_EPSILON and
+                    abs(msg.angular.z) < _STATE_EPSILON):
+                self._vision_zero_hold_until = now + self._vision_zero_hold
+            else:
+                self._vision_zero_hold_until = 0.0
 
     def _vision_state_cb(self, msg: UInt8):
         """接收 /vision/robot_state 消息（test_move 等节点提供的状态，可选）"""
@@ -735,7 +762,11 @@ class CmdVelChassisSerial(Node):
                      or abs(self._vision_twist.angular.z) >= _STATE_EPSILON)
             )
 
-            if use_vision:
+            if now < self._vision_zero_hold_until:
+                vx = wz = 0.0
+                state = ROBOT_STATE_IDLE
+                source = "vision_stop"
+            elif use_vision:
                 vx = self._vision_twist.linear.x
                 wz = self._vision_twist.angular.z
                 source = "vision"
