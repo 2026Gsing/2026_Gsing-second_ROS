@@ -509,7 +509,7 @@ class CmdVelChassisSerial(Node):
         leg_id = unpacked[2]
         flags = unpacked[3]
         seq = unpacked[4]
-        values = list(unpacked[5:21])
+        values = list(unpacked[5:])
 
         self._write_leg_debug_csv(frame_type, leg_id, flags, seq, time_us, values)
 
