@@ -1,0 +1,47 @@
+[INFO] [1784043421.317312818] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784043421.397615454] [planner_server]: Creating
+[INFO] [1784043421.570836296] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784043421.572760334] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784043422.451129953] [planner_server]: Configuring
+[INFO] [1784043422.451245530] [global_costmap.global_costmap]: Configuring
+[INFO] [1784043422.622776066] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784043422.731091776] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784043422.757905270] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1784043423.107200526] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1784043423.107343056] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1784043423.108512215] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1784043427.182065758] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 57 X 42 at 0.050000 m/pix
+[INFO] [1784043427.518318360] [planner_server]: Activating
+[INFO] [1784043427.518437045] [global_costmap.global_costmap]: Activating
+[INFO] [1784043427.518483715] [global_costmap.global_costmap]: Checking transform
+[INFO] [1784043427.518596723] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043428.023710941] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043428.519374249] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043429.018741573] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043429.520731914] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043430.018687797] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043430.518685382] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043431.018681672] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784043431.518924663] [global_costmap.global_costmap]: start
+[INFO] [1784043431.569435192] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1784043431.572355575] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [1784043453.361492608] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784043453.361706374] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784043453.361867421] [planner_server]: Deactivating
+[INFO] [1784043453.362010191] [global_costmap.global_costmap]: Deactivating
+[INFO] [1784043453.519432892] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[INFO] [1784043453.519552753] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[INFO] [1784043453.533722075] [planner_server]: Cleaning up
+[INFO] [1784043453.750507563] [global_costmap.global_costmap]: Cleaning up
+[WARN] [1784043453.768275123] [rcl_lifecycle]: No transition matching 4 found for current state cleaningup
+[WARN] [1784043453.768346382] [rcl_lifecycle]: No transition matching 4 found for current state cleaningup
+[ERROR] [1784043453.768385551] [planner_server]: Unable to start transition 4 from current state cleaningup: Transition is not registered., at ./src/rcl_lifecycle.c:355
+[INFO] [1784043453.883969005] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[INFO] [1784043453.884655231] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[INFO] [1784043454.124178355] [planner_server]: Destroying bond (planner_server) to lifecycle manager.

@@ -1,0 +1,4 @@
+1784043332.5155711 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-23-35-32-509478-gsing-5883
+1784043332.5161955 [INFO] [launch]: Default logging verbosity is set to INFO
+1784043333.0112054 [INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [6004]
+1784043395.2128179 [ERROR] [cmd_vel_chassis_serial.py-1]: process has died [pid 6004, exit code 1, cmd '/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py --ros-args -r __node:=cmd_vel_chassis_serial --params-file /tmp/launch_params_30u7zhr0 --params-file /tmp/launch_params_bogyubbk --params-file /tmp/launch_params_67mh64i1 --params-file /tmp/launch_params_ddm05k62 --params-file /tmp/launch_params_oecsd9if --params-file /tmp/launch_params_77o82t0g --params-file /tmp/launch_params_sbj0dwx5 --params-file /tmp/launch_params_4e8zrnan'].

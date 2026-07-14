@@ -1,0 +1,23 @@
+1784043334.6717825 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-23-35-34-666986-gsing-5910
+1784043334.6725359 [INFO] [launch]: Default logging verbosity is set to INFO
+1784043335.3102648 [INFO] [fastlio_mapping-1]: process started with pid [6108]
+1784043335.3109419 [INFO] [env-2]: process started with pid [6109]
+1784043335.3114150 [INFO] [env-3]: process started with pid [6110]
+1784043335.3118753 [INFO] [pcd_to_pointcloud-4]: process started with pid [6111]
+1784043390.2838175 [INFO] [fastlio_mapping-1]: process has finished cleanly [pid 6108]
+1784043394.2824035 [ERROR] [env-3]: process has died [pid 6110, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+1784043394.7950134 [ERROR] [env-2]: process has died [pid 6109, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_d4s5rzr6 --params-file /tmp/launch_params_lhjvt6xm'].

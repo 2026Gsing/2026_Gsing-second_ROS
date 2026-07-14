@@ -1,0 +1,37 @@
+[INFO] [1784043420.371286231] [lifecycle_manager_navigation]: Creating
+[INFO] [1784043420.589956019] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1784043421.557017460] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1784043421.558531081] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[INFO] [1784043421.830947693] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[INFO] [1784043422.432936110] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[INFO] [1784043423.282555316] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[INFO] [1784043423.988814131] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[INFO] [1784043426.595474779] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[INFO] [1784043427.176937658] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[INFO] [1784043427.335178365] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[INFO] [1784043427.335349612] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[INFO] [1784043427.517328667] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[INFO] [1784043427.517496230] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[INFO] [1784043431.718576617] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[INFO] [1784043431.718796406] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[INFO] [1784043431.916544349] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[INFO] [1784043431.916799779] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[INFO] [1784043432.533884162] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[INFO] [1784043432.533997939] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[INFO] [1784043432.702131711] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[INFO] [1784043432.702249208] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[INFO] [1784043432.702299022] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[INFO] [1784043453.102498280] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from controller_server.[0m[0m
+[ERROR] [1784043453.102615513] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER controller_server IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[INFO] [1784043453.103190099] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[INFO] [1784043453.103291143] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[INFO] [1784043453.103333973] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[INFO] [1784043453.345104402] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[INFO] [1784043453.505613542] [lifecycle_manager_navigation]: [34m[1mDeactivating behavior_server[0m[0m
+[INFO] [1784043453.764253578] [lifecycle_manager_navigation]: [34m[1mDeactivating planner_server[0m[0m
+[ERROR] [1784043453.779601735] [lifecycle_manager_navigation]: Failed to change state for node: planner_server
+[INFO] [1784043453.779816485] [lifecycle_manager_navigation]: [34m[1mDeactivating controller_server[0m[0m
+[INFO] [1784043454.711552037] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784043454.711843818] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[ERROR] [1784043458.780567612] [lifecycle_manager_navigation]: Failed to change state for node: controller_server. Exception: change_state service is not available!.
+[INFO] [1784043458.780934120] [lifecycle_manager_navigation]: [34m[1mManaged nodes have been reset[0m[0m

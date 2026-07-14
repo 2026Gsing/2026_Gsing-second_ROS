@@ -1,0 +1,35 @@
+[INFO] [1784043339.926231145] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784043340.038517391] [bt_navigator]: Creating
+[INFO] [1784043343.464808691] [bt_navigator]: Configuring
+[INFO] [1784043343.635567705] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784043343.736298626] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784043345.351379014] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784043347.096926480] [bt_navigator]: Activating
+[INFO] [1784043347.606188337] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784043353.848174026] [bt_navigator]: Begin navigating from current location (0.00, 0.00) to (0.90, -0.06)
+[WARN] [1784043353.877786910] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784043353.890083478] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784043353.900882890] [bt_navigator]: Goal failed
+[INFO] [1784043353.901290924] [bt_navigator]: Begin navigating from current location (0.00, 0.00) to (0.90, -0.06)
+[WARN] [1784043353.942098198] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784043353.954448935] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784043353.957796573] [bt_navigator]: Goal failed
+[INFO] [1784043377.974751914] [bt_navigator]: Begin navigating from current location (0.26, -0.05) to (0.93, -0.14)
+[WARN] [1784043378.016589067] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784043378.026990164] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784043378.027662462] [bt_navigator]: Goal failed
+[INFO] [1784043378.028063851] [bt_navigator]: Begin navigating from current location (0.26, -0.05) to (0.93, -0.14)
+[WARN] [1784043378.092603634] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[WARN] [1784043378.093050913] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784043378.113457046] [bt_navigator]: Goal failed
+[INFO] [1784043392.735921333] [bt_navigator]: Deactivating
+[INFO] [1784043392.736098580] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [1784043393.238503092] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784043393.238684359] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[INFO] [1784043393.248187536] [bt_navigator]: Cleaning up
+[INFO] [1784043394.132102204] [bt_navigator]: Completed Cleaning up
+[INFO] [1784043394.132318404] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
