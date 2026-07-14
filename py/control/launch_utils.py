@@ -61,7 +61,7 @@ _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
-MAP_NAME = "map/PCD28"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/PCD29"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
 try:

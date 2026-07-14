@@ -1,0 +1,4 @@
+[INFO] [1784053953.606629948] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784053953.612330999] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784053961.623187398] [box_pick_node]: ✅ Published /initialpose: (0,0,0) facing X+ (inline)
+[INFO] [1784053992.662541049] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.635, -0.073) yaw=0.100
