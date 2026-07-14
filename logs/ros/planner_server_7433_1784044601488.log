@@ -1,0 +1,30 @@
+[INFO] [1784044601.999007754] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784044602.023277377] [planner_server]: Creating
+[INFO] [1784044602.181709081] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784044602.211946946] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784044604.309159604] [planner_server]: Configuring
+[INFO] [1784044604.309270152] [global_costmap.global_costmap]: Configuring
+[INFO] [1784044604.438630428] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784044604.532469763] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784044604.570003402] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1784044604.854547136] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1784044604.854660468] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1784044604.876422107] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1784044608.646083570] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 57 X 42 at 0.050000 m/pix
+[INFO] [1784044609.015466920] [planner_server]: Activating
+[INFO] [1784044609.015600604] [global_costmap.global_costmap]: Activating
+[INFO] [1784044609.015647130] [global_costmap.global_costmap]: Checking transform
+[INFO] [1784044609.015764710] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784044609.520537325] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784044610.016001683] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784044610.516156173] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784044611.019093619] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1784044611.516190904] [global_costmap.global_costmap]: start
+[INFO] [1784044611.868422860] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1784044611.899934194] [planner_server]: Creating bond (planner_server) to lifecycle manager.
