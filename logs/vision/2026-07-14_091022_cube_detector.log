@@ -1,0 +1,105 @@
+[INFO] [1783991423.601859010] [cube_detector]: ============================================================
+[INFO] [1783991423.602264371] [cube_detector]: 3D OBB 立方体检测已启动
+[INFO] [1783991423.602544097] [cube_detector]: 算法: 3D PCA → OBB包围盒 → 均值边长
+[INFO] [1783991423.602812087] [cube_detector]: ============================================================
+[INFO] [1783991424.347087014] [cube_detector]: [累积] 10帧合并为 48995 点
+[INFO] [1783991424.392286952] [cube_detector]: [DBG] 原始48995→ROI3256→去地面2999→滤波1569点 → 1聚类(13噪点)
+[INFO] [1783991424.394780282] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991424.395372052] [cube_detector]:   [0] pos=(0.161,0.284,0.227) edge=0.237 mode=三面 dims=[0.134,0.277,0.300] ratio=2.25 xy_dist=0.326
+[INFO] [1783991424.396696140] [cube_detector]: 已发布: x=0.161 y=0.284 z=0.227 边长=0.237m xy距离=0.326m
+[INFO] [1783991425.178000202] [cube_detector]: [累积] 10帧合并为 48942 点
+[INFO] [1783991425.208151594] [cube_detector]: [DBG] 原始48942→ROI3298→去地面3038→滤波1662点 → 1聚类(8噪点)
+[INFO] [1783991425.209618670] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991425.210035649] [cube_detector]:   [0] pos=(0.163,0.286,0.225) edge=0.242 mode=三面 dims=[0.136,0.278,0.312] ratio=2.28 xy_dist=0.329
+[INFO] [1783991425.210898275] [cube_detector]: 已发布: x=0.163 y=0.286 z=0.225 边长=0.242m xy距离=0.329m
+[INFO] [1783991426.014716524] [cube_detector]: [累积] 10帧合并为 48917 点
+[INFO] [1783991426.082357775] [cube_detector]: [DBG] 原始48917→ROI3560→去地面3271→滤波1938点 → 1聚类(29噪点)
+[INFO] [1783991426.084613104] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991426.085250776] [cube_detector]:   [0] pos=(0.164,0.281,0.228) edge=0.231 mode=三面 dims=[0.129,0.270,0.293] ratio=2.26 xy_dist=0.325
+[INFO] [1783991426.086440672] [cube_detector]: 已发布: x=0.164 y=0.281 z=0.228 边长=0.231m xy距离=0.325m
+[INFO] [1783991426.850296598] [cube_detector]: [累积] 10帧合并为 49044 点
+[INFO] [1783991426.895043175] [cube_detector]: [DBG] 原始49044→ROI3440→去地面3155→滤波1911点 → 1聚类(34噪点)
+[INFO] [1783991426.897067727] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991426.897607036] [cube_detector]:   [0] pos=(0.161,0.282,0.227) edge=0.235 mode=三面 dims=[0.130,0.273,0.302] ratio=2.32 xy_dist=0.325
+[INFO] [1783991426.898732212] [cube_detector]: 已发布: x=0.161 y=0.282 z=0.227 边长=0.235m xy距离=0.325m
+[INFO] [1783991427.684014730] [cube_detector]: [累积] 10帧合并为 48825 点
+[INFO] [1783991427.727114368] [cube_detector]: [DBG] 原始48825→ROI3263→去地面3004→滤波1771点 → 1聚类(45噪点)
+[INFO] [1783991427.728878412] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991427.729394157] [cube_detector]:   [0] pos=(0.158,0.280,0.229) edge=0.228 mode=三面 dims=[0.127,0.266,0.291] ratio=2.30 xy_dist=0.321
+[INFO] [1783991427.730397980] [cube_detector]: 已发布: x=0.158 y=0.280 z=0.229 边长=0.228m xy距离=0.321m
+[INFO] [1783991428.517235533] [cube_detector]: [累积] 10帧合并为 48791 点
+[INFO] [1783991428.555280563] [cube_detector]: [DBG] 原始48791→ROI3266→去地面2999→滤波1687点 → 1聚类(28噪点)
+[INFO] [1783991428.556979029] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991428.557483685] [cube_detector]:   [0] pos=(0.167,0.282,0.227) edge=0.237 mode=三面 dims=[0.130,0.273,0.309] ratio=2.37 xy_dist=0.327
+[INFO] [1783991428.558450875] [cube_detector]: 已发布: x=0.167 y=0.282 z=0.227 边长=0.237m xy距离=0.327m
+[INFO] [1783991429.361871401] [cube_detector]: [累积] 10帧合并为 48903 点
+[INFO] [1783991429.401304639] [cube_detector]: [DBG] 原始48903→ROI3729→去地面3438→滤波1918点 → 1聚类(21噪点)
+[INFO] [1783991429.403240753] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991429.403816025] [cube_detector]:   [0] pos=(0.162,0.282,0.227) edge=0.232 mode=三面 dims=[0.131,0.274,0.290] ratio=2.21 xy_dist=0.325
+[INFO] [1783991429.404876857] [cube_detector]: 已发布: x=0.162 y=0.282 z=0.227 边长=0.232m xy距离=0.325m
+[INFO] [1783991430.185806118] [cube_detector]: [累积] 10帧合并为 48994 点
+[INFO] [1783991430.227150403] [cube_detector]: [DBG] 原始48994→ROI3272→去地面3013→滤波1872点 → 1聚类(18噪点)
+[INFO] [1783991430.228846879] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991430.229334806] [cube_detector]:   [0] pos=(0.163,0.281,0.226) edge=0.229 mode=三面 dims=[0.128,0.270,0.289] ratio=2.26 xy_dist=0.325
+[INFO] [1783991430.230274189] [cube_detector]: 已发布: x=0.163 y=0.281 z=0.226 边长=0.229m xy距离=0.325m
+[INFO] [1783991431.019972931] [cube_detector]: [累积] 10帧合并为 48768 点
+[INFO] [1783991431.054134819] [cube_detector]: [DBG] 原始48768→ROI3248→去地面3000→滤波1776点 → 1聚类(21噪点)
+[INFO] [1783991431.055741475] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991431.056191984] [cube_detector]:   [0] pos=(0.165,0.281,0.225) edge=0.232 mode=三面 dims=[0.130,0.271,0.296] ratio=2.29 xy_dist=0.326
+[INFO] [1783991431.057097001] [cube_detector]: 已发布: x=0.165 y=0.281 z=0.225 边长=0.232m xy距离=0.326m
+[INFO] [1783991431.847877745] [cube_detector]: [累积] 10帧合并为 48731 点
+[INFO] [1783991431.884647610] [cube_detector]: [DBG] 原始48731→ROI3453→去地面3182→滤波1855点 → 1聚类(18噪点)
+[INFO] [1783991431.886213481] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991431.886677359] [cube_detector]:   [0] pos=(0.167,0.280,0.227) edge=0.234 mode=三面 dims=[0.133,0.271,0.299] ratio=2.26 xy_dist=0.326
+[INFO] [1783991431.887554670] [cube_detector]: 已发布: x=0.167 y=0.280 z=0.227 边长=0.234m xy距离=0.326m
+[INFO] [1783991432.688598474] [cube_detector]: [累积] 10帧合并为 49019 点
+[INFO] [1783991432.750062706] [cube_detector]: [DBG] 原始49019→ROI3654→去地面3380→滤波2142点 → 1聚类(27噪点)
+[INFO] [1783991432.752172874] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991432.752756406] [cube_detector]:   [0] pos=(0.158,0.284,0.223) edge=0.238 mode=三面 dims=[0.136,0.277,0.302] ratio=2.22 xy_dist=0.325
+[INFO] [1783991432.753884976] [cube_detector]: 已发布: x=0.158 y=0.284 z=0.223 边长=0.238m xy距离=0.325m
+[INFO] [1783991433.521489387] [cube_detector]: [累积] 10帧合并为 48723 点
+[INFO] [1783991433.549025854] [cube_detector]: [DBG] 原始48723→ROI3364→去地面3104→滤波1672点 → 2聚类(51噪点)
+[INFO] [1783991433.550931233] [cube_detector]:   [淘汰] 边长 0.057m 不在 [0.2, 0.3] 范围 dims=[0.030,0.055,0.086]
+[INFO] [1783991433.551322300] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991433.551704322] [cube_detector]:   [0] pos=(0.166,0.279,0.224) edge=0.235 mode=三面 dims=[0.127,0.274,0.305] ratio=2.40 xy_dist=0.325
+[INFO] [1783991433.552534970] [cube_detector]: 已发布: x=0.166 y=0.279 z=0.224 边长=0.235m xy距离=0.325m
+[INFO] [1783991434.371115107] [cube_detector]: [累积] 10帧合并为 48435 点
+[INFO] [1783991434.422144543] [cube_detector]: [DBG] 原始48435→ROI3258→去地面2990→滤波1887点 → 1聚类(39噪点)
+[INFO] [1783991434.424014924] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991434.424580639] [cube_detector]:   [0] pos=(0.162,0.280,0.224) edge=0.222 mode=三面 dims=[0.118,0.263,0.286] ratio=2.42 xy_dist=0.323
+[INFO] [1783991434.425658441] [cube_detector]: 已发布: x=0.162 y=0.280 z=0.224 边长=0.222m xy距离=0.323m
+[INFO] [1783991435.190546750] [cube_detector]: [累积] 10帧合并为 48580 点
+[INFO] [1783991435.231209623] [cube_detector]: [DBG] 原始48580→ROI2865→去地面2615→滤波1930点 → 1聚类(39噪点)
+[INFO] [1783991435.232893508] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991435.233337021] [cube_detector]:   [0] pos=(0.186,0.298,0.232) edge=0.217 mode=三面 dims=[0.114,0.250,0.288] ratio=2.53 xy_dist=0.351
+[INFO] [1783991435.234301869] [cube_detector]: 已发布: x=0.186 y=0.298 z=0.232 边长=0.217m xy距离=0.351m
+[INFO] [1783991436.026891124] [cube_detector]: [累积] 10帧合并为 48730 点
+[INFO] [1783991436.056289583] [cube_detector]: [DBG] 原始48730→ROI2720→去地面2499→滤波1512点 → 1聚类(40噪点)
+[INFO] [1783991436.859629583] [cube_detector]: [累积] 10帧合并为 48594 点
+[INFO] [1783991436.888863644] [cube_detector]: [DBG] 原始48594→ROI2477→去地面2277→滤波1510点 → 1聚类(21噪点)
+[INFO] [1783991437.695237656] [cube_detector]: [累积] 10帧合并为 48614 点
+[INFO] [1783991437.727872200] [cube_detector]: [DBG] 原始48614→ROI2384→去地面2180→滤波1500点 → 1聚类(60噪点)
+[INFO] [1783991437.734035166] [cube_detector]: 检测到 1 个立方体:
+[INFO] [1783991437.734611135] [cube_detector]:   [0] pos=(0.233,0.390,0.275) edge=0.207 mode=单面 dims=[0.097,0.241,0.284] ratio=2.92 xy_dist=0.455
+[INFO] [1783991437.735631303] [cube_detector]: 已发布: x=0.233 y=0.390 z=0.275 边长=0.207m xy距离=0.455m
+[INFO] [1783991438.528225003] [cube_detector]: [累积] 10帧合并为 48777 点
+[INFO] [1783991438.552793055] [cube_detector]: [DBG] 原始48777→ROI2533→去地面2312→滤波1428点 → 1聚类(10噪点)
+[INFO] [1783991438.554287821] [cube_detector]:   [淘汰] 边长 0.196m 不在 [0.2, 0.3] 范围 dims=[0.092,0.223,0.273]
+[INFO] [1783991439.366823829] [cube_detector]: [累积] 10帧合并为 48890 点
+[INFO] [1783991439.389948227] [cube_detector]: [DBG] 原始48890→ROI2176→去地面1977→滤波1291点 → 1聚类(8噪点)
+[INFO] [1783991439.391595415] [cube_detector]:   [淘汰] 边长 0.198m 不在 [0.2, 0.3] 范围 dims=[0.101,0.221,0.272]
+[INFO] [1783991440.200802358] [cube_detector]: [累积] 10帧合并为 48545 点
+[INFO] [1783991440.228800096] [cube_detector]: [DBG] 原始48545→ROI2186→去地面1972→滤波1319点 → 1聚类(9噪点)
+[INFO] [1783991440.230846122] [cube_detector]:   [淘汰] 边长 0.198m 不在 [0.2, 0.3] 范围 dims=[0.103,0.225,0.266]
+Traceback (most recent call last):
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/control/cube_detector.py", line 364, in <module>
+    main()
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/control/cube_detector.py", line 360, in main
+    rclpy.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 134, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/utilities.py", line 82, in shutdown
+    context.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/context.py", line 129, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:333

@@ -1,0 +1,24 @@
+1783986342.1232698 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-121996-hyper-Ubuntu-71363
+1783986342.1234472 [INFO] [launch]: Default logging verbosity is set to INFO
+1783986342.2164340 [INFO] [static_transform_publisher-1]: process started with pid [71444]
+1783986342.2171056 [INFO] [static_transform_publisher-2]: process started with pid [71445]
+1783986342.2172582 [INFO] [static_transform_publisher-3]: process started with pid [71446]
+1783986342.2179797 [INFO] [static_transform_publisher-4]: process started with pid [71447]
+1783986342.2180610 [INFO] [map_server-5]: process started with pid [71448]
+1783986342.2181208 [INFO] [rviz2-6]: process started with pid [71449]
+1783986347.2581968 [INFO] [controller_server-7]: process started with pid [71730]
+1783986347.2583897 [INFO] [planner_server-8]: process started with pid [71731]
+1783986347.2584765 [INFO] [behavior_server-9]: process started with pid [71732]
+1783986347.2585468 [INFO] [bt_navigator-10]: process started with pid [71733]
+1783986347.2586083 [INFO] [waypoint_follower-11]: process started with pid [71734]
+1783986347.2586780 [INFO] [lifecycle_manager-12]: process started with pid [71735]
+1783986347.2587321 [INFO] [goal_pose_to_nav2-13]: process started with pid [71736]
+1783986347.2587855 [INFO] [costmap_to_grid-14]: process started with pid [71737]
+1783986347.6859951 [ERROR] [costmap_to_grid-14]: process has died [pid 71737, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+1783986348.0581031 [ERROR] [goal_pose_to_nav2-13]: process has died [pid 71736, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+1783986353.2153633 [ERROR] [planner_server-8]: process has died [pid 71731, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_planner/planner_server --ros-args -r __node:=planner_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_d90r6f4d'].
+1783986357.4087501 [ERROR] [bt_navigator-10]: process has died [pid 71733, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator --ros-args -r __node:=bt_navigator --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_p5krpqay'].
+1783986361.5161586 [ERROR] [behavior_server-9]: process has died [pid 71732, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_behaviors/behavior_server --ros-args -r __node:=behavior_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_b7vnoe9r'].
+1783986365.8999629 [ERROR] [controller_server-7]: process has died [pid 71730, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args -r __node:=controller_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_zmh52he6'].
+1783986370.0317748 [ERROR] [lifecycle_manager-12]: process has died [pid 71735, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager_navigation --params-file /tmp/launch_params_2_w4z43k'].
+1783986377.8364406 [ERROR] [waypoint_follower-11]: process has died [pid 71734, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_waypoint_follower/waypoint_follower --ros-args -r __node:=waypoint_follower --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_hwhqnkcw'].

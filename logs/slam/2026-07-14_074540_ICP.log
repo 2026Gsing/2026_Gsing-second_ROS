@@ -1,0 +1,68 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-266477-hyper-Ubuntu-71372
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [71514]
+[INFO] [rviz2-2]: process started with pid [71515]
+[INFO] [env-3]: process started with pid [71516]
+[INFO] [env-4]: process started with pid [71517]
+[INFO] [pcd_to_pointcloud-5]: process started with pid [71518]
+[pcd_to_pointcloud-5] [INFO] [1783986342.440138870] [map_publisher]: Publishing data with 357133 points (x y z normal_x normal_y normal_z intensity curvature) on topic /cloud_pcd in frame map.
+[fastlio_mapping-1] 1783986342.487958 [0] fastlio_ma: Failed to find a free participant index for domain 0
+[fastlio_mapping-1] [ERROR] [1783986342.488069825] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[fastlio_mapping-1] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[fastlio_mapping-1]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[rviz2-2] 1783986342.622378 [0]      rviz2: Failed to find a free participant index for domain 0
+[rviz2-2] [ERROR] [1783986342.622479617] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[rviz2-2] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[rviz2-2]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[env-4] 1783986343.066891 [0] transform_: Failed to find a free participant index for domain 0
+[env-4] [ERROR] [1783986343.066969836] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[env-4] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[env-4]   self.__node = _rclpy.Node(
+[env-4] Traceback (most recent call last):
+[env-4]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion", line 33, in <module>
+[env-4]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'transform_fusion')())
+[env-4]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-4]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/transform_fusion.py", line 133, in main
+[env-4]     node = TransformFusion()
+[env-4]            ^^^^^^^^^^^^^^^^^
+[env-4]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/transform_fusion.py", line 34, in __init__
+[env-4]     super().__init__("transform_fusion")
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[env-4]     self.__node = _rclpy.Node(
+[env-4]                   ^^^^^^^^^^^^
+[env-4] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [env-4]: process has died [pid 71517, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+[ERROR] [fastlio_mapping-1]: process has died [pid 71514, exit code -6, cmd '/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio/lib/fast_lio/fastlio_mapping --ros-args -r __node:=fastlio_mapping --params-file /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/share/fast_lio_localization/config/unilidar_l2.yaml --params-file /tmp/launch_params_os60b1km -r /livox/lidar:=/unilidar/cloud -r /livox/imu:=/unilidar/imu'].
+[ERROR] [rviz2-2]: process has died [pid 71515, exit code -6, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/share/fast_lio_localization/rviz/fastlio_localization.rviz --ros-args'].
+[env-3] 1783986344.809974 [0] global_loc: Failed to find a free participant index for domain 0
+[env-3] [ERROR] [1783986344.810056206] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[env-3] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[env-3]   self.__node = _rclpy.Node(
+[env-3] Traceback (most recent call last):
+[env-3]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization", line 33, in <module>
+[env-3]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'global_localization')())
+[env-3]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 371, in main
+[env-3]     node = FastLIOLocalization()
+[env-3]            ^^^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 41, in __init__
+[env-3]     super().__init__("fast_lio_localization")
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[env-3]     self.__node = _rclpy.Node(
+[env-3]                   ^^^^^^^^^^^^
+[env-3] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [env-3]: process has died [pid 71516, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_7zdv4xz3 --params-file /tmp/launch_params_d99_09m7'].

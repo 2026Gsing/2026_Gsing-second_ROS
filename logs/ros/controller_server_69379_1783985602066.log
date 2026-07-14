@@ -1,0 +1,48 @@
+[INFO] [1783985602.074086288] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985602.077148960] [controller_server]: Creating controller server
+[INFO] [1783985602.080511716] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985602.081303548] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1783985602.100357209] [controller_server]: Configuring controller interface
+[INFO] [1783985602.100385359] [controller_server]: getting progress checker plugins..
+[INFO] [1783985602.100614431] [controller_server]: getting goal checker plugins..
+[INFO] [1783985602.100774412] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1783985602.100810103] [local_costmap.local_costmap]: Configuring
+[INFO] [1783985602.105323026] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1783985602.109565632] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1783985602.110698443] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1783985602.123612174] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1783985602.123848592] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[INFO] [1783985602.124278140] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1783985602.124532176] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1783985602.125574803] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1783985602.128593458] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1783985602.327871789] [local_costmap.local_costmap]: StaticLayer: Resizing costmap to 54 X 41 at 0.050000 m/pix
+[INFO] [1783985602.432459874] [controller_server]: Activating
+[INFO] [1783985602.432529872] [local_costmap.local_costmap]: Activating
+[INFO] [1783985602.432547315] [local_costmap.local_costmap]: Checking transform
+[INFO] [1783985602.432804043] [local_costmap.local_costmap]: start
+[INFO] [1783985602.482973365] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1783985602.483022812] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1783985607.892476015] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1783985607.892537822] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[WARN] [1783985607.892554249] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[INFO] [1783985608.942662847] [controller_server]: Passing new path to controller.
+[INFO] [1783985609.992647170] [controller_server]: Passing new path to controller.
+[INFO] [1783985609.992853271] [controller_server]: Reached the goal!
+[ERROR] [1783986317.636982159] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1783986317.622389 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+
+[ERROR] [1783986322.640676995] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1783986322.622984 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+
+[ERROR] [1783986327.645413848] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1783986326.634590 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+
+[ERROR] [1783986332.652778051] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1783986326.634590 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+
+[ERROR] [1783986337.653739465] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 1783986326.634590 but the earliest data is at time 1783986327.635307, when looking up transform from frame [base_link] to frame [odom]
+
+[INFO] [1783986342.395863582] [local_costmap.local_costmap]: StaticLayer: Resizing costmap to 107 X 66 at 0.050000 m/pix

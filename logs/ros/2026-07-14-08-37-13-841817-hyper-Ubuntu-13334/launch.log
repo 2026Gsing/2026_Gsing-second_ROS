@@ -1,0 +1,20 @@
+1783989433.8428998 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-37-13-841817-hyper-Ubuntu-13334
+1783989433.8430376 [INFO] [launch]: Default logging verbosity is set to INFO
+1783989433.9135070 [INFO] [static_transform_publisher-1]: process started with pid [13444]
+1783989433.9136546 [INFO] [static_transform_publisher-2]: process started with pid [13445]
+1783989433.9137185 [INFO] [static_transform_publisher-3]: process started with pid [13446]
+1783989433.9137683 [INFO] [static_transform_publisher-4]: process started with pid [13447]
+1783989433.9138086 [INFO] [map_server-5]: process started with pid [13448]
+1783989433.9138479 [INFO] [rviz2-6]: process started with pid [13449]
+1783989438.9414723 [INFO] [controller_server-7]: process started with pid [13778]
+1783989438.9416540 [INFO] [planner_server-8]: process started with pid [13779]
+1783989438.9417207 [INFO] [behavior_server-9]: process started with pid [13780]
+1783989438.9417739 [INFO] [bt_navigator-10]: process started with pid [13781]
+1783989438.9418230 [INFO] [waypoint_follower-11]: process started with pid [13782]
+1783989438.9418705 [INFO] [lifecycle_manager-12]: process started with pid [13783]
+1783989438.9419158 [INFO] [goal_pose_to_nav2-13]: process started with pid [13784]
+1783989438.9419625 [INFO] [costmap_to_grid-14]: process started with pid [13785]
+1783989439.2876322 [ERROR] [costmap_to_grid-14]: process has died [pid 13785, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+1783989439.5355189 [ERROR] [goal_pose_to_nav2-13]: process has died [pid 13784, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+1783989440.0993657 [ERROR] [controller_server-7]: process has died [pid 13778, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args -r __node:=controller_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_1ixel23r'].
+1783989443.4936445 [ERROR] [behavior_server-9]: process has died [pid 13780, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_behaviors/behavior_server --ros-args -r __node:=behavior_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_pugoiffv'].

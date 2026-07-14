@@ -1,0 +1,28 @@
+[INFO] [1783985602.076018821] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985602.077440204] [planner_server]: Creating
+[INFO] [1783985602.082039244] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985602.082446596] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1783985602.132392514] [planner_server]: Configuring
+[INFO] [1783985602.132434835] [global_costmap.global_costmap]: Configuring
+[INFO] [1783985602.137229865] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1783985602.141374439] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1783985602.142264816] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1783985602.153928371] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1783985602.153968381] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1783985602.154591292] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1783985602.327853288] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 54 X 41 at 0.050000 m/pix
+[INFO] [1783985602.587294876] [planner_server]: Activating
+[INFO] [1783985602.587335142] [global_costmap.global_costmap]: Activating
+[INFO] [1783985602.587344009] [global_costmap.global_costmap]: Checking transform
+[INFO] [1783985602.587460439] [global_costmap.global_costmap]: start
+[INFO] [1783985602.637598922] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1783985602.638660788] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [1783986330.921084408] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 107 X 66 at 0.050000 m/pix
+[ERROR] [1783986341.924146885] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 1783986326.634590 but the earliest data is at time 1783986331.915624, when looking up transform from frame [base_link] to frame [map]
+

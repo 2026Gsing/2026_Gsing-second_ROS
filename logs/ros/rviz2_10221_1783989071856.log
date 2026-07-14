@@ -1,0 +1,20 @@
+[INFO] [1783989072.918980053] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783989072.919080875] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[INFO] [1783989072.962655024] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783989073.025490964] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783989073.026052063] [rviz]: Subscribing to: /submap
+
+[INFO] [1783989073.026584981] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783989073.027279310] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783989073.045107507] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783989073.046132563] [rviz]: Subscribing to: /submap
+
+[INFO] [1783989073.047221789] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783989081.815252498] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989071.810 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783989084.579846105] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989071.810 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783989087.908335863] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989071.810 for reason 'the timestamp on the message is earlier than all the data in the transform cache'

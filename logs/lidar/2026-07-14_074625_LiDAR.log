@@ -1,0 +1,16 @@
+[INFO] [launch]: All log files can be found below /home/hyper/.ros/log/2026-07-14-07-46-27-067471-hyper-Ubuntu-72271
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [72319]
+[INFO] [rviz2-2]: process started with pid [72320]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2
+[rviz2-2] [INFO] [1783986388.239916801] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783986388.240047053] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1783986388.298187216] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783986388.349475186] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[rviz2-2] [INFO] [1783986388.357067600] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[unitree_lidar_ros2_node-1] [UDPHandler] create udp socket success.
+[unitree_lidar_ros2_node-1] [UDPHandler] bind udp port success. port 6201.
+[unitree_lidar_ros2_node-1] [UDPHandler] set udp recv timeout success. 1 sec.

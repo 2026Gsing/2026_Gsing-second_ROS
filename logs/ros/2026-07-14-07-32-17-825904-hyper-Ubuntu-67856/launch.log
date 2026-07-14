@@ -1,0 +1,24 @@
+1783985537.8268805 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-32-17-825904-hyper-Ubuntu-67856
+1783985537.8270569 [INFO] [launch]: Default logging verbosity is set to INFO
+1783985537.8975978 [INFO] [fastlio_mapping-1]: process started with pid [67968]
+1783985537.8977566 [INFO] [rviz2-2]: process started with pid [67969]
+1783985537.8978226 [INFO] [env-3]: process started with pid [67972]
+1783985537.8978732 [INFO] [env-4]: process started with pid [67973]
+1783985537.8979154 [INFO] [pcd_to_pointcloud-5]: process started with pid [67974]
+1783985539.0266342 [rviz2-2] [INFO] [1783985539.026332176] [rviz2]: Stereo is NOT SUPPORTED
+1783985539.0267916 [rviz2-2] [INFO] [1783985539.026394264] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+1783985539.0498106 [rviz2-2] [INFO] [1783985539.049542493] [rviz2]: Stereo is NOT SUPPORTED
+1783985539.1098752 [rviz2-2] [INFO] [1783985539.109614129] [rviz]: Subscribing to: /cur_scan_in_map
+1783985539.1100087 [rviz2-2] 
+1783985539.1102488 [rviz2-2] [INFO] [1783985539.110062989] [rviz]: Subscribing to: /submap
+1783985539.1103072 [rviz2-2] 
+1783985539.1105702 [rviz2-2] [INFO] [1783985539.110421259] [rviz]: Subscribing to: /cloud_pcd
+1783985539.1106589 [rviz2-2] 
+1783985539.1110339 [rviz2-2] [INFO] [1783985539.110934615] [rviz]: Subscribing to: /cloud_pcd
+1783985539.1110833 [rviz2-2] 
+1783985539.1273811 [rviz2-2] [INFO] [1783985539.127166838] [rviz]: Subscribing to: /cur_scan_in_map
+1783985539.1274867 [rviz2-2] 
+1783985539.1283722 [rviz2-2] [INFO] [1783985539.128210380] [rviz]: Subscribing to: /submap
+1783985539.1284518 [rviz2-2] 
+1783985539.1294322 [rviz2-2] [INFO] [1783985539.129293189] [rviz]: Subscribing to: /cloud_pcd
+1783985539.1294978 [rviz2-2] 

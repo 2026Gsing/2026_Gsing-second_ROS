@@ -1,0 +1,104 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-121996-hyper-Ubuntu-71363
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [71444]
+[INFO] [static_transform_publisher-2]: process started with pid [71445]
+[INFO] [static_transform_publisher-3]: process started with pid [71446]
+[INFO] [static_transform_publisher-4]: process started with pid [71447]
+[INFO] [map_server-5]: process started with pid [71448]
+[INFO] [rviz2-6]: process started with pid [71449]
+[static_transform_publisher-4] [INFO] [1783986342.250112724] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-1] [INFO] [1783986342.253776497] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-2] [INFO] [1783986342.258051953] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'camera_init' to 'base_link'
+[map_server-5] [INFO] [1783986342.279645045] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1783986342.280724508] [map_server]: Creating
+[static_transform_publisher-3] [INFO] [1783986342.304266729] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'body'
+[rviz2-6] [INFO] [1783986343.193511572] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1783986343.193606607] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1783986343.231385442] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-7]: process started with pid [71730]
+[INFO] [planner_server-8]: process started with pid [71731]
+[INFO] [behavior_server-9]: process started with pid [71732]
+[INFO] [bt_navigator-10]: process started with pid [71733]
+[INFO] [waypoint_follower-11]: process started with pid [71734]
+[INFO] [lifecycle_manager-12]: process started with pid [71735]
+[INFO] [goal_pose_to_nav2-13]: process started with pid [71736]
+[INFO] [costmap_to_grid-14]: process started with pid [71737]
+[lifecycle_manager-12] 1783986347.277838 [0] lifecycle_: Failed to find a free participant index for domain 0
+[lifecycle_manager-12] [ERROR] [1783986347.277919635] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[lifecycle_manager-12] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[lifecycle_manager-12]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[planner_server-8] 1783986347.281770 [0] planner_se: Failed to find a free participant index for domain 0
+[planner_server-8] [ERROR] [1783986347.281856043] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[planner_server-8] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[planner_server-8]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[waypoint_follower-11] 1783986347.292724 [0] waypoint_f: Failed to find a free participant index for domain 0
+[waypoint_follower-11] [ERROR] [1783986347.292876412] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[waypoint_follower-11] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[waypoint_follower-11]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[bt_navigator-10] 1783986347.295577 [0] bt_navigat: Failed to find a free participant index for domain 0
+[bt_navigator-10] [ERROR] [1783986347.296430266] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[bt_navigator-10] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[bt_navigator-10]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[controller_server-7] 1783986347.297658 [0] controller: Failed to find a free participant index for domain 0
+[controller_server-7] [ERROR] [1783986347.297829341] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[controller_server-7] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[controller_server-7]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[behavior_server-9] 1783986347.302900 [0] behavior_s: Failed to find a free participant index for domain 0
+[behavior_server-9] [ERROR] [1783986347.303081455] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[behavior_server-9] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[behavior_server-9]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[costmap_to_grid-14] 1783986347.584224 [0]    python3: Failed to find a free participant index for domain 0
+[costmap_to_grid-14] [ERROR] [1783986347.584305726] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[costmap_to_grid-14] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[costmap_to_grid-14]   self.__node = _rclpy.Node(
+[costmap_to_grid-14] Traceback (most recent call last):
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 77, in <module>
+[costmap_to_grid-14]     main()
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 70, in main
+[costmap_to_grid-14]     node = CostmapToGrid()
+[costmap_to_grid-14]            ^^^^^^^^^^^^^^^
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 28, in __init__
+[costmap_to_grid-14]     super().__init__("costmap_to_grid")
+[costmap_to_grid-14]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[costmap_to_grid-14]     self.__node = _rclpy.Node(
+[costmap_to_grid-14]                   ^^^^^^^^^^^^
+[costmap_to_grid-14] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [costmap_to_grid-14]: process has died [pid 71737, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+[goal_pose_to_nav2-13] 1783986347.943189 [0]    python3: Failed to find a free participant index for domain 0
+[goal_pose_to_nav2-13] [ERROR] [1783986347.943266782] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[goal_pose_to_nav2-13] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[goal_pose_to_nav2-13]   self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13] Traceback (most recent call last):
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 62, in <module>
+[goal_pose_to_nav2-13]     main()
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 55, in main
+[goal_pose_to_nav2-13]     node = GoalPoseToNav2()
+[goal_pose_to_nav2-13]            ^^^^^^^^^^^^^^^^
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 29, in __init__
+[goal_pose_to_nav2-13]     super().__init__("goal_pose_to_nav2")
+[goal_pose_to_nav2-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[goal_pose_to_nav2-13]     self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13]                   ^^^^^^^^^^^^
+[goal_pose_to_nav2-13] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [goal_pose_to_nav2-13]: process has died [pid 71736, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+[ERROR] [planner_server-8]: process has died [pid 71731, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_planner/planner_server --ros-args -r __node:=planner_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_d90r6f4d'].
+[ERROR] [bt_navigator-10]: process has died [pid 71733, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator --ros-args -r __node:=bt_navigator --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_p5krpqay'].
+[ERROR] [behavior_server-9]: process has died [pid 71732, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_behaviors/behavior_server --ros-args -r __node:=behavior_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_b7vnoe9r'].
+[ERROR] [controller_server-7]: process has died [pid 71730, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args -r __node:=controller_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_zmh52he6'].
+[ERROR] [lifecycle_manager-12]: process has died [pid 71735, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager_navigation --params-file /tmp/launch_params_2_w4z43k'].
+[ERROR] [waypoint_follower-11]: process has died [pid 71734, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_waypoint_follower/waypoint_follower --ros-args -r __node:=waypoint_follower --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_hwhqnkcw'].

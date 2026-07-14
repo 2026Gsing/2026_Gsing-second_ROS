@@ -1,0 +1,4 @@
+[INFO] [1783986410.537614581] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1783986410.538743537] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1783986420.408804304] [box_pick_node]: ✅ ICP 初始化为 (0,0,0) X正向
+[INFO] [1783986423.373682480] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.561, -0.082) yaw=0.039

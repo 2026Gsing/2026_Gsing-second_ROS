@@ -1,0 +1,16 @@
+1783984048.8982823 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-07-28-897679-hyper-Ubuntu-61357
+1783984048.8983607 [INFO] [launch]: Default logging verbosity is set to INFO
+1783984048.9430552 [INFO] [static_transform_publisher-1]: process started with pid [61470]
+1783984048.9431751 [INFO] [static_transform_publisher-2]: process started with pid [61471]
+1783984048.9432268 [INFO] [static_transform_publisher-3]: process started with pid [61472]
+1783984048.9432695 [INFO] [static_transform_publisher-4]: process started with pid [61473]
+1783984048.9433036 [INFO] [map_server-5]: process started with pid [61474]
+1783984048.9433362 [INFO] [rviz2-6]: process started with pid [61475]
+1783984053.9675405 [INFO] [controller_server-7]: process started with pid [61807]
+1783984053.9676955 [INFO] [planner_server-8]: process started with pid [61808]
+1783984053.9677773 [INFO] [behavior_server-9]: process started with pid [61809]
+1783984053.9678419 [INFO] [bt_navigator-10]: process started with pid [61810]
+1783984053.9678962 [INFO] [waypoint_follower-11]: process started with pid [61811]
+1783984053.9679472 [INFO] [lifecycle_manager-12]: process started with pid [61812]
+1783984053.9679925 [INFO] [goal_pose_to_nav2-13]: process started with pid [61813]
+1783984053.9680400 [INFO] [costmap_to_grid-14]: process started with pid [61814]

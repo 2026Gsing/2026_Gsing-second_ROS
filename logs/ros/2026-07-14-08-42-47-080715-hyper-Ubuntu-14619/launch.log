@@ -1,0 +1,12 @@
+1783989767.0817015 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-42-47-080715-hyper-Ubuntu-14619
+1783989767.0818291 [INFO] [launch]: Default logging verbosity is set to INFO
+1783989767.4921517 [INFO] [unitree_lidar_ros2_node-1]: process started with pid [14906]
+1783989767.4922898 [INFO] [rviz2-2]: process started with pid [14907]
+1783989768.1904068 [rviz2-2] [INFO] [1783989768.190150335] [rviz2]: Stereo is NOT SUPPORTED
+1783989768.1906703 [rviz2-2] [INFO] [1783989768.190267572] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+1783989768.2677689 [rviz2-2] [INFO] [1783989768.267585640] [rviz2]: Stereo is NOT SUPPORTED
+1783989768.3326223 [rviz2-2] [INFO] [1783989768.332440530] [rviz2]: Subscribing to: /unilidar/cloud
+1783989768.3327193 [rviz2-2] 
+1783989768.3457210 [rviz2-2] [INFO] [1783989768.345486060] [rviz2]: Subscribing to: /unilidar/cloud
+1783989768.3458216 [rviz2-2] 
+1783989772.8586850 [INFO] [unitree_lidar_ros2_node-1]: process has finished cleanly [pid 14906]

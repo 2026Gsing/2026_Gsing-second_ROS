@@ -1,0 +1,272 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-33-27-594533-hyper-Ubuntu-11236
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [11356]
+[INFO] [static_transform_publisher-2]: process started with pid [11357]
+[INFO] [static_transform_publisher-3]: process started with pid [11358]
+[INFO] [static_transform_publisher-4]: process started with pid [11359]
+[INFO] [map_server-5]: process started with pid [11360]
+[INFO] [rviz2-6]: process started with pid [11361]
+[static_transform_publisher-3] [INFO] [1783989207.676627548] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'body'
+[static_transform_publisher-1] [INFO] [1783989207.677633894] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-4] [INFO] [1783989207.680024346] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-2] [INFO] [1783989207.682281035] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'camera_init' to 'base_link'
+[map_server-5] [INFO] [1783989207.694639271] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1783989207.694705411] [map_server]: Creating
+[rviz2-6] [INFO] [1783989208.690354808] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1783989208.690448368] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1783989208.736946624] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-7]: process started with pid [11700]
+[INFO] [planner_server-8]: process started with pid [11701]
+[INFO] [behavior_server-9]: process started with pid [11702]
+[INFO] [bt_navigator-10]: process started with pid [11703]
+[INFO] [waypoint_follower-11]: process started with pid [11704]
+[INFO] [lifecycle_manager-12]: process started with pid [11705]
+[INFO] [goal_pose_to_nav2-13]: process started with pid [11706]
+[INFO] [costmap_to_grid-14]: process started with pid [11707]
+[bt_navigator-10] [INFO] [1783989212.707995034] [bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-12] [INFO] [1783989212.708281606] [lifecycle_manager_navigation]: Creating
+[bt_navigator-10] [INFO] [1783989212.709709172] [bt_navigator]: Creating
+[planner_server-8] [INFO] [1783989212.709815332] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-9] [INFO] [1783989212.711606582] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783989212.712117036] [planner_server]: Creating
+[lifecycle_manager-12] [INFO] [1783989212.715531981] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1783989212.717361611] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783989212.718069570] [global_costmap.global_costmap]: Creating Costmap
+[waypoint_follower-11] [INFO] [1783989212.724460649] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1783989212.724843091] [waypoint_follower]: Creating
+[controller_server-7] [INFO] [1783989212.756934871] [controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783989212.762285072] [controller_server]: Creating controller server
+[controller_server-7] [INFO] [1783989212.780199482] [local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783989212.781129760] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-12] [INFO] [1783989212.932696753] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1783989212.932746387] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[map_server-5] [INFO] [1783989212.932971271] [map_server]: Configuring
+[map_server-5] [INFO] [1783989212.933029202] [map_io]: Loading yaml file: /home/hyper/program/2026_Gsing-second_ROS/map/PCD25.yaml
+[map_server-5] [INFO] [1783989212.933225677] [map_io]: resolution: 0.05
+[map_server-5] [INFO] [1783989212.933231384] [map_io]: origin[0]: -0.079
+[map_server-5] [INFO] [1783989212.933235204] [map_io]: origin[1]: -1.214
+[map_server-5] [INFO] [1783989212.933237223] [map_io]: origin[2]: 0
+[map_server-5] [INFO] [1783989212.933239418] [map_io]: free_thresh: 0.196
+[map_server-5] [INFO] [1783989212.933241247] [map_io]: occupied_thresh: 0.65
+[map_server-5] [INFO] [1783989212.933244569] [map_io]: mode: trinary
+[map_server-5] [INFO] [1783989212.933247788] [map_io]: negate: 0
+[map_server-5] [INFO] [1783989212.933741998] [map_io]: Loading image_file: /home/hyper/program/2026_Gsing-second_ROS/map/PCD25.pgm
+[map_server-5] [INFO] [1783989212.933970120] [map_io]: Read map /home/hyper/program/2026_Gsing-second_ROS/map/PCD25.pgm: 91 X 54 map @ 0.05 m/cell
+[lifecycle_manager-12] [INFO] [1783989212.942196497] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-7] [INFO] [1783989212.946697993] [controller_server]: Configuring controller interface
+[controller_server-7] [INFO] [1783989212.946740554] [controller_server]: getting progress checker plugins..
+[controller_server-7] [INFO] [1783989212.947066822] [controller_server]: getting goal checker plugins..
+[controller_server-7] [INFO] [1783989212.947413415] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-7] [INFO] [1783989212.947463049] [local_costmap.local_costmap]: Configuring
+[controller_server-7] [INFO] [1783989212.961626973] [local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-7] [INFO] [1783989212.982293738] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[controller_server-7] [INFO] [1783989212.984962015] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[controller_server-7] [INFO] [1783989213.007865362] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-7] [INFO] [1783989213.008387154] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-7] [INFO] [1783989213.009082730] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-7] [INFO] [1783989213.009703967] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-7] [INFO] [1783989213.011347776] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1783989213.017897188] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-12] [INFO] [1783989213.024699524] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-8] [INFO] [1783989213.024919469] [planner_server]: Configuring
+[planner_server-8] [INFO] [1783989213.024957627] [global_costmap.global_costmap]: Configuring
+[planner_server-8] [INFO] [1783989213.030407722] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-8] [INFO] [1783989213.034628659] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-8] [INFO] [1783989213.035566999] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-8] [INFO] [1783989213.056286788] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-8] [INFO] [1783989213.056332331] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1783989213.056748717] [planner_server]: Planner Server has GridBased  planners available.
+[costmap_to_grid-14] [INFO] [1783989213.056830317] [costmap_to_grid]: Publishing /global_costmap_grid and /local_costmap_grid for RViz
+[lifecycle_manager-12] [INFO] [1783989213.065861541] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-9] [INFO] [1783989213.066063303] [behavior_server]: Configuring
+[behavior_server-9] [INFO] [1783989213.070509797] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-9] [INFO] [1783989213.072102848] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-9] [INFO] [1783989213.073533563] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-9] [INFO] [1783989213.074866948] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-9] [INFO] [1783989213.085495027] [behavior_server]: Configuring spin
+[behavior_server-9] [INFO] [1783989213.092522365] [behavior_server]: Configuring backup
+[behavior_server-9] [INFO] [1783989213.096685309] [behavior_server]: Configuring drive_on_heading
+[behavior_server-9] [INFO] [1783989213.100640093] [behavior_server]: Configuring wait
+[lifecycle_manager-12] [INFO] [1783989213.104830283] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1783989213.104992074] [bt_navigator]: Configuring
+[bt_navigator-10] [INFO] [1783989213.108728589] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-10] [WARN] [1783989213.112086649] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+[bt_navigator-10] Make sure these match your BT and there are not other sources of error codes youreported to your application
+[bt_navigator-10] [INFO] [1783989213.150097556] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-12] [INFO] [1783989213.161245736] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1783989213.161473142] [waypoint_follower]: Configuring
+[waypoint_follower-11] [INFO] [1783989213.176381341] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-11] [INFO] [1783989213.176942117] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-12] [INFO] [1783989213.177393409] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[map_server-5] [INFO] [1783989213.177536680] [map_server]: Activating
+[controller_server-7] [INFO] [1783989213.177694704] [local_costmap.local_costmap]: StaticLayer: Resizing costmap to 91 X 54 at 0.050000 m/pix
+[map_server-5] [INFO] [1783989213.177761915] [map_server]: Creating bond (map_server) to lifecycle manager.
+[planner_server-8] [INFO] [1783989213.177780028] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 91 X 54 at 0.050000 m/pix
+[rviz2-6] [INFO] [1783989213.209256701] [rviz2]: Trying to create a map of size 91 x 54 using 1 swatches
+[lifecycle_manager-12] [INFO] [1783989213.280141874] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783989213.280175022] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-7] [INFO] [1783989213.280412842] [controller_server]: Activating
+[controller_server-7] [INFO] [1783989213.280450539] [local_costmap.local_costmap]: Activating
+[controller_server-7] [INFO] [1783989213.280464287] [local_costmap.local_costmap]: Checking transform
+[controller_server-7] [INFO] [1783989213.280544106] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989213.228932 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[goal_pose_to_nav2-13] 1783989213.425579 [0]    python3: Failed to find a free participant index for domain 0
+[goal_pose_to_nav2-13] [ERROR] [1783989213.425664276] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[goal_pose_to_nav2-13] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[goal_pose_to_nav2-13]   self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13] Traceback (most recent call last):
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 62, in <module>
+[goal_pose_to_nav2-13]     main()
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 55, in main
+[goal_pose_to_nav2-13]     node = GoalPoseToNav2()
+[goal_pose_to_nav2-13]            ^^^^^^^^^^^^^^^^
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 29, in __init__
+[goal_pose_to_nav2-13]     super().__init__("goal_pose_to_nav2")
+[goal_pose_to_nav2-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[goal_pose_to_nav2-13]     self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13]                   ^^^^^^^^^^^^
+[goal_pose_to_nav2-13] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [goal_pose_to_nav2-13]: process has died [pid 11706, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+[controller_server-7] [INFO] [1783989213.780568964] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989213.726610 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989214.280776908] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989214.227604 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989214.780562631] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989214.727153 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989215.280559199] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989215.227867 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989215.780566561] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989215.727165 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989216.280568936] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989216.226822 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989216.780569894] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989216.726756 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989217.280563825] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989217.226878 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989217.780669656] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989217.727597 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989218.280561312] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989218.228066 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989218.780578543] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989218.726774 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989219.280569886] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989219.227645 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989219.780546376] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989219.727223 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989220.280568567] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989220.237375 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989220.780570814] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989220.726845 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[rviz2-6] [INFO] [1783989221.133069737] [rviz2]: Setting goal pose: Frame:map, Position(0.521835, -0.0499739, 0), Orientation(0, 0, -0.025245, 0.999681) = Angle: -0.0504954
+[bt_navigator-10] [INFO] [1783989221.133301488] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[controller_server-7] [INFO] [1783989221.280662819] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989221.227285 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989221.780578512] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989221.737333 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989222.280584660] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989222.237084 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989222.780580457] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989222.727071 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989223.280576411] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989223.237094 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989223.780569425] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989223.738085 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989224.280566588] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989224.237084 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989224.780566068] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989224.737130 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989225.280566345] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989225.237117 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989225.780713928] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989225.737266 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989226.280571676] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989226.238501 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989226.780658630] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989226.737170 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989227.280539245] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989227.237509 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989227.780672334] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989227.737370 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989228.280568065] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989228.237106 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989228.780583053] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989228.737661 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989229.280565684] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989229.237039 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989229.780565909] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989229.737350 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989230.280571287] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989230.247390 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989230.780570999] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989230.737061 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989231.280570752] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989231.247636 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989231.780683327] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989231.747521 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989232.280568374] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989232.247626 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989232.780572645] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989232.747203 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989233.280571231] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989233.247800 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989233.780569317] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989233.747104 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989234.280568372] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989234.247051 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989234.780647642] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989234.747516 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989235.280568006] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989235.247448 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989235.780679495] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989235.747650 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989236.280579943] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989236.257076 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989236.780590190] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989236.757864 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989237.280582783] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989237.257150 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989237.780570082] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989237.757322 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989238.280582387] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989238.258191 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989238.780582671] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989238.757072 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989239.280563740] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989239.258468 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989239.780596338] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989239.757509 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989240.280568646] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989240.267540 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989240.780567487] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989240.767349 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989241.280569676] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989241.267264 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989241.780570263] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989241.767299 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989242.280569587] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989242.268267 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989242.780562101] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989242.767588 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989243.280566837] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989243.267353 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989243.780591563] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989243.767608 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989244.281635525] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989244.267518 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989244.780573053] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989244.777621 but the latest data is at time 1783989244.770255, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989245.280581672] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989245.277388 but the latest data is at time 1783989245.270226, when looking up transform from frame [base_link] to frame [odom]
+[rviz2-6] [INFO] [1783989245.332603198] [rviz2]: Setting goal pose: Frame:map, Position(0.498887, -0.0471476, 0), Orientation(0, 0, -0.0676081, 0.997712) = Angle: -0.135319
+[bt_navigator-10] [INFO] [1783989245.332766411] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[controller_server-7] [INFO] [1783989245.780578762] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989245.777496 but the latest data is at time 1783989245.770234, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989246.280591717] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989246.197371 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989246.780578625] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989246.778528 but the latest data is at time 1783989246.770278, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989247.280569623] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989247.277107 but the latest data is at time 1783989247.270323, when looking up transform from frame [base_link] to frame [odom]
+[rviz2-6] [INFO] [1783989247.606013728] [rviz2]: Setting goal pose: Frame:map, Position(0.512055, -0.0701972, 0), Orientation(0, 0, -0.0233585, 0.999727) = Angle: -0.0467212
+[bt_navigator-10] [INFO] [1783989247.606227594] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[controller_server-7] [INFO] [1783989247.780584694] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989247.697687 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989248.280581645] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989248.197634 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989248.780571172] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989248.707462 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989249.280580750] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989249.197361 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989249.780581117] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989249.697671 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989250.280582823] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989250.207428 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989250.780590228] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989250.707396 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989251.280578473] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989251.207213 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989251.780570162] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989251.717587 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989252.280570915] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989252.207117 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989252.780567617] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989252.707463 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989253.280565372] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989253.217379 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989253.780568369] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989253.717775 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989254.280579938] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989254.217521 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989254.780571282] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989254.717704 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989255.280568366] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989255.217457 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989255.780583466] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989255.717409 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989256.280563834] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989256.218009 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989256.780754529] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989256.717507 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989257.280564567] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989257.227329 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989257.780567721] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989257.717641 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989258.280567167] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989258.218035 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989258.780591544] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989258.727727 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989259.280563541] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989259.227211 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989259.780701815] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989259.727883 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989260.280565866] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989260.227356 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989260.780585297] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989260.727434 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989261.280568716] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989261.228156 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989261.780544034] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989261.728760 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989262.280654767] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989262.147957 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989262.780581648] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989262.147957 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989263.280587192] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989262.147957 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989263.780591926] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989262.147957 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]
+[controller_server-7] [INFO] [1783989264.280588903] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Lookup would require extrapolation into the future.  Requested time 1783989262.147957 but the latest data is at time 0.000000, when looking up transform from frame [base_link] to frame [odom]

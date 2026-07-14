@@ -1,0 +1,50 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-23-20-470439-hyper-Ubuntu-7368
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [7717]
+[INFO] [rviz2-2]: process started with pid [7718]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2
+[rviz2-2] [INFO] [1783988602.309200904] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783988602.309357497] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1783988602.363219581] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783988602.435814740] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[rviz2-2] [INFO] [1783988602.462513100] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[unitree_lidar_ros2_node-1] [UDPHandler] create udp socket success.
+[unitree_lidar_ros2_node-1] [UDPHandler] bind udp port failed.
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!

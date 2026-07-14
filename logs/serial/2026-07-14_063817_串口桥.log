@@ -1,0 +1,593 @@
+[INFO] [launch]: All log files can be found below /home/hyper/.ros/log/2026-07-14-06-38-18-401269-hyper-Ubuntu-53417
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [53648]
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982298.747999305] [cmd_vel_chassis_serial]: Leg debug CSV logging enabled: /home/hyper/program/2026_Gsing-second_ROS/logs/2026-07-14_063817_leg.csv
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982298.748791634] [cmd_vel_chassis_serial]: Opened /dev/ttyACM0 @ 115200, cmd_vel=/cmd_vel, send=50.0Hz
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982298.751029150] [cmd_vel_chassis_serial]: Publishing STM32 arm events on /vision/arm_event
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982298.771737806] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982298.780820057] [cmd_vel_chassis_serial]: [LEG_DEBUG] | L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982299.295793915] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982299.816390640] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982300.332736475] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982300.845373377] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982301.368236429] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982301.880979085] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982302.384631098] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982302.891142248] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982303.405156557] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982303.910223717] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982304.428298793] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982304.933564245] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982305.443907658] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982305.946853951] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982306.464105491] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982306.964550885] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982307.479714244] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982307.993857126] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982308.505744776] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982309.006073790] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982309.509751003] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982310.021474036] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982310.530335962] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982311.061353941] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.85 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982311.585026746] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+40 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+35 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982312.104030641] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982312.609241893] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-2.4 pitch=-3.8 comp=0.86 | L0 ST ty/ay=24.8/25.3 ey=-0.4 Fy=+31 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=25.2/25.4 ey=-0.3 Fy=+39 sag=0.00 tauK=+1.1 ; L2 ST ty/ay=25.5/25.8 ey=-0.2 Fy=+43 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.1 ey=-0.4 Fy=+36 sag=0.00 tauK=+1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982312.879063347] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.904
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982312.891798944] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.904
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982313.140425966] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.77 stride=3.52 lift=2.69 roll=-2.5 pitch=-3.9 comp=0.88 | L0 ST ty/ay=24.9/25.4 ey=-0.5 Fy=+34 sag=0.00 tauK=-1.0 ; L1 ST ty/ay=25.1/25.5 ey=-0.4 Fy=+41 sag=0.00 tauK=+1.2 ; L2 ST ty/ay=25.3/25.8 ey=-0.4 Fy=+40 sag=0.00 tauK=-1.1 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+39 sag=0.00 tauK=+1.1
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982313.654087988] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+0.31 stride=3.48 lift=2.67 roll=-2.4 pitch=-4.8 comp=1.00 | L0 SW ty/ay=23.7/24.2 ey=-0.4 Fy=-7 sag=0.00 tauK=+0.2 ; L1 SW ty/ay=23.4/23.9 ey=-0.5 Fy=-9 sag=0.00 tauK=-0.3 ; L2 ST ty/ay=25.5/26.6 ey=-1.1 Fy=+96 sag=0.00 tauK=-2.5 ; L3 ST ty/ay=24.7/25.6 ey=-0.9 Fy=+85 sag=0.00 tauK=+2.5
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982313.879478546] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=0.305
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982313.892434809] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=0.305
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982314.154196805] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.49 stride=3.49 lift=2.68 roll=-0.7 pitch=-5.0 comp=1.00 | L0 ST ty/ay=24.7/25.8 ey=-1.1 Fy=+75 sag=0.00 tauK=-2.1 ; L1 ST|RES ty/ay=25.5/26.9 ey=-1.4 Fy=+81 sag=0.28 tauK=+2.0 ; L2 SW ty/ay=22.6/23.0 ey=-0.4 Fy=-3 sag=0.00 tauK=+0.1 ; L3 SW ty/ay=22.6/23.4 ey=-0.7 Fy=-5 sag=0.00 tauK=-0.2
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982314.661103071] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.03 stride=3.54 lift=2.71 roll=-6.9 pitch=-4.7 comp=0.85 | L0 SW ty/ay=22.8/23.7 ey=-0.9 Fy=-9 sag=0.00 tauK=+0.3 ; L1 SW ty/ay=22.4/22.9 ey=-0.6 Fy=-7 sag=0.04 tauK=-0.3 ; L2 ST|RES ty/ay=25.5/27.1 ey=-1.5 Fy=+75 sag=0.48 tauK=-1.6 ; L3 ST ty/ay=24.7/25.7 ey=-1.0 Fy=+83 sag=0.00 tauK=+2.4
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982314.880717994] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-1.034
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982314.911965723] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-1.034
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982315.172408023] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+5.7 pitch=-7.3 comp=1.00 | L0 ST ty/ay=24.6/25.4 ey=-0.8 Fy=+92 sag=0.00 tauK=-2.8 ; L1 ST|RES ty/ay=25.4/26.0 ey=-0.5 Fy=+89 sag=0.91 tauK=+1.8 ; L2 SW|RES ty/ay=22.9/23.3 ey=-0.4 Fy=-7 sag=0.06 tauK=+0.2 ; L3 SW ty/ay=22.7/23.4 ey=-0.7 Fy=-8 sag=0.00 tauK=-0.3
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982315.672627891] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-1.7 pitch=-1.3 comp=0.29 | L0 SW ty/ay=24.3/23.8 ey=+0.5 Fy=+6 sag=0.00 tauK=-0.2 ; L1 SW|RES ty/ay=23.8/24.3 ey=-0.5 Fy=-3 sag=0.14 tauK=-0.1 ; L2 ST|RES ty/ay=25.0/22.2 ey=+2.8 Fy=+320 sag=1.00 tauK=-9.0 ; L3 ST|LIM ty/ay=25.0/25.9 ey=-0.9 Fy=+85 sag=0.00 tauK=+2.6
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982315.913422233] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-1.360
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982315.930190259] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-1.360
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982316.183756858] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-0.4 pitch=-5.5 comp=1.00 | L0 ST ty/ay=24.7/25.6 ey=-0.9 Fy=+81 sag=0.00 tauK=-2.4 ; L1 ST|RES ty/ay=25.5/26.7 ey=-1.2 Fy=+90 sag=0.24 tauK=+2.3 ; L2 SW|RES ty/ay=22.1/21.9 ey=+0.2 Fy=+4 sag=0.12 tauK=-0.1 ; L3 SW ty/ay=22.3/22.8 ey=-0.5 Fy=-2 sag=0.00 tauK=-0.1
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982316.690718729] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-7.3 pitch=-7.3 comp=1.00 | L0 SW ty/ay=24.8/25.1 ey=-0.3 Fy=-6 sag=0.00 tauK=+0.2 ; L1 SW ty/ay=24.4/25.1 ey=-0.8 Fy=-14 sag=0.04 tauK=-0.4 ; L2 ST|RES ty/ay=25.9/27.1 ey=-1.2 Fy=+78 sag=0.64 tauK=-1.8 ; L3 ST|RES ty/ay=24.6/25.2 ey=-0.6 Fy=+92 sag=0.05 tauK=+2.7
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982316.931992610] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-4.324
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982316.979360135] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-4.324
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982317.208028777] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+1.1 pitch=-0.9 comp=0.11 | L0 ST|LIM ty/ay=25.0/25.9 ey=-0.9 Fy=+94 sag=0.00 tauK=-2.9 ; L1 ST|RES ty/ay=25.9/20.8 ey=+5.1 Fy=+435 sag=0.99 tauK=+13.7 ; L2 SW|RES ty/ay=23.5/24.3 ey=-0.8 Fy=-9 sag=0.07 tauK=+0.3 ; L3 SW ty/ay=23.6/23.9 ey=-0.3 Fy=-1 sag=0.01 tauK=-0.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982317.709698850] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-3.1 pitch=-4.8 comp=1.00 | L0 SW ty/ay=22.8/21.4 ey=+1.4 Fy=+13 sag=0.00 tauK=-0.4 ; L1 SW|RES ty/ay=22.1/22.4 ey=-0.3 Fy=-3 sag=0.19 tauK=-0.2 ; L2 ST|RES ty/ay=25.5/26.9 ey=-1.3 Fy=+87 sag=0.29 tauK=-2.1 ; L3 ST|RES ty/ay=24.7/25.6 ey=-0.9 Fy=+86 sag=0.06 tauK=+2.4
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982317.951826683] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=6.542
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982318.028982820] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-3.245
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982318.220595335] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-0.1 pitch=-5.9 comp=1.00 | L0 ST|RES ty/ay=24.7/25.8 ey=-1.1 Fy=+85 sag=0.06 tauK=-2.4 ; L1 ST|RES ty/ay=25.5/27.0 ey=-1.5 Fy=+82 sag=0.46 tauK=+1.8 ; L2 SW ty/ay=22.3/21.9 ey=+0.4 Fy=+7 sag=0.03 tauK=-0.1 ; L3 SW ty/ay=22.6/22.2 ey=+0.3 Fy=+4 sag=0.01 tauK=+0.1
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982318.732937274] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-2.5 pitch=-6.2 comp=1.00 | L0 SW ty/ay=23.4/22.0 ey=+1.4 Fy=+17 sag=0.00 tauK=-0.5 ; L1 SW|RES ty/ay=22.1/22.4 ey=-0.3 Fy=+0 sag=0.08 tauK=-0.0 ; L2 ST|RES ty/ay=25.5/27.2 ey=-1.6 Fy=+79 sag=0.53 tauK=-1.8 ; L3 ST ty/ay=24.7/25.6 ey=-0.9 Fy=+84 sag=0.00 tauK=+2.4
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982318.952102758] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-2.612
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982319.029423687] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-2.150
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982319.238607014] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+1.3 pitch=-6.7 comp=1.00 | L0 ST ty/ay=24.6/24.8 ey=-0.2 Fy=+105 sag=0.00 tauK=-3.2 ; L1 ST|RES ty/ay=25.9/25.8 ey=+0.1 Fy=+118 sag=0.67 tauK=+3.0 ; L2 SW|RES ty/ay=24.9/25.3 ey=-0.4 Fy=-13 sag=0.07 tauK=+0.5 ; L3 SW ty/ay=24.9/25.3 ey=-0.4 Fy=-10 sag=0.00 tauK=-0.3
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982319.760872098] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-6.0 pitch=-6.6 comp=1.00 | L0 SW ty/ay=24.6/25.1 ey=-0.5 Fy=-7 sag=0.00 tauK=+0.3 ; L1 SW|RES ty/ay=24.2/25.3 ey=-1.0 Fy=-15 sag=0.06 tauK=-0.5 ; L2 ST|RES ty/ay=25.9/24.4 ey=+1.5 Fy=+219 sag=0.88 tauK=-6.7 ; L3 ST ty/ay=24.6/25.5 ey=-0.9 Fy=+78 sag=0.00 tauK=+2.4
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982319.971813675] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=1.916
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982320.078958446] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-1.707
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982320.272993003] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+6.9 pitch=-9.4 comp=1.00 | L0 ST ty/ay=24.6/26.7 ey=-2.1 Fy=+30 sag=0.00 tauK=-0.8 ; L1 ST|RES ty/ay=25.9/20.8 ey=+5.1 Fy=+431 sag=1.00 tauK=+13.4 ; L2 SW|RES ty/ay=24.9/26.3 ey=-1.4 Fy=-33 sag=0.11 tauK=+1.0 ; L3 SW ty/ay=24.9/25.3 ey=-0.4 Fy=-3 sag=0.00 tauK=-0.1
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982320.776709306] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-0.4 pitch=-0.4 comp=0.01 | L0 SW ty/ay=23.0/23.1 ey=-0.2 Fy=+6 sag=0.00 tauK=-0.1 ; L1 SW|RES ty/ay=23.3/22.9 ey=+0.4 Fy=+15 sag=0.25 tauK=+0.4 ; L2 ST|RES ty/ay=25.1/25.5 ey=-0.3 Fy=+110 sag=0.61 tauK=-2.9 ; L3 ST|RES ty/ay=25.0/25.5 ey=-0.5 Fy=+58 sag=0.39 tauK=+1.7
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982320.991805108] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=1.456
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982321.079128702] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.721
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982321.284622601] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.72 stride=3.51 lift=2.69 roll=-5.6 pitch=-4.9 comp=1.00 | L0 ST ty/ay=25.1/27.8 ey=-2.7 Fy=+26 sag=0.00 tauK=-0.6 ; L1 ST ty/ay=24.9/28.1 ey=-3.1 Fy=+28 sag=0.03 tauK=+0.6 ; L2 SW|RES ty/ay=22.8/21.8 ey=+1.0 Fy=+15 sag=0.13 tauK=-0.4 ; L3 SW ty/ay=23.0/22.1 ey=+0.9 Fy=+11 sag=0.05 tauK=+0.3
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982321.797436698] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-1.9 pitch=-2.7 comp=0.58 | L0 SW ty/ay=23.8/22.6 ey=+1.2 Fy=+13 sag=0.00 tauK=-0.4 ; L1 SW ty/ay=24.1/22.8 ey=+1.3 Fy=+14 sag=0.00 tauK=+0.4 ; L2 ST ty/ay=25.3/28.6 ey=-3.3 Fy=+22 sag=0.03 tauK=-0.5 ; L3 ST ty/ay=24.8/27.7 ey=-3.0 Fy=+20 sag=0.01 tauK=+0.5
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982322.011719120] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-3.779
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982322.079262287] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-21.604
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982322.314080282] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+0.0 pitch=+0.0 comp=0.00 | L0 ST ty/ay=25.0/27.4 ey=-2.4 Fy=+48 sag=0.00 tauK=-1.1 ; L1 ST|LIM|RES ty/ay=25.0/28.5 ey=-3.5 Fy=+18 sag=0.06 tauK=+0.3 ; L2 SW ty/ay=22.8/21.4 ey=+1.4 Fy=+19 sag=0.00 tauK=-0.6 ; L3 ST|LIM|RES ty/ay=24.6/22.9 ey=+1.7 Fy=+117 sag=0.93 tauK=+3.7
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982322.814660622] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-1.0 pitch=-5.4 comp=1.00 | L0 SW ty/ay=24.5/23.5 ey=+1.0 Fy=+10 sag=0.00 tauK=-0.3 ; L1 SW ty/ay=23.0/22.2 ey=+0.8 Fy=+11 sag=0.01 tauK=+0.3 ; L2 ST|RES ty/ay=25.5/28.5 ey=-2.9 Fy=+36 sag=0.17 tauK=-0.8 ; L3 ST|RES ty/ay=24.7/27.6 ey=-2.9 Fy=+22 sag=0.16 tauK=+0.5
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982323.011730748] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-21.604
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982323.100085612] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-21.604
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982323.320043950] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-1.4 pitch=-7.2 comp=1.00 | L0 ST ty/ay=24.7/26.0 ey=-1.3 Fy=+7 sag=0.00 tauK=-0.2 ; L1 ST ty/ay=25.4/26.8 ey=-1.4 Fy=+9 sag=0.00 tauK=+0.2 ; L2 ST ty/ay=25.5/28.6 ey=-3.0 Fy=-43 sag=0.00 tauK=+1.6 ; L3 ST ty/ay=24.7/27.6 ey=-2.9 Fy=-35 sag=0.00 tauK=-1.2
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982323.828618461] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.38 wz=+0.81 stride=3.52 lift=2.70 roll=-0.3 pitch=-9.5 comp=1.00 | L0 SW ty/ay=24.5/23.7 ey=+0.8 Fy=+9 sag=0.00 tauK=-0.3 ; L1 SW ty/ay=24.7/23.9 ey=+0.8 Fy=+8 sag=0.00 tauK=+0.3 ; L2 ST ty/ay=25.9/28.6 ey=-2.7 Fy=+43 sag=0.00 tauK=-0.8 ; L3 ST ty/ay=24.6/27.6 ey=-3.0 Fy=+18 sag=0.00 tauK=+0.3
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982324.032233820] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.383 wz=0.811
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982324.150173719] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982324.341120774] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.42 wz=+1.15 stride=3.55 lift=2.72 roll=-0.5 pitch=-7.6 comp=1.00 | L0 ST ty/ay=24.6/27.5 ey=-2.9 Fy=+20 sag=0.00 tauK=-0.5 ; L1 ST ty/ay=25.7/28.8 ey=-3.1 Fy=+29 sag=0.04 tauK=+0.6 ; L2 SW ty/ay=24.3/28.6 ey=-4.3 Fy=-41 sag=0.00 tauK=+1.5 ; L3 SW ty/ay=24.6/27.6 ey=-3.0 Fy=-20 sag=0.00 tauK=-0.9
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982324.851249806] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.42 wz=+1.15 stride=3.55 lift=2.72 roll=-1.3 pitch=-9.9 comp=1.00 | L0 SW ty/ay=23.7/22.7 ey=+1.0 Fy=+12 sag=0.00 tauK=-0.4 ; L1 SW ty/ay=24.0/22.8 ey=+1.1 Fy=+15 sag=0.01 tauK=+0.4 ; L2 ST ty/ay=25.9/28.6 ey=-2.7 Fy=+42 sag=0.00 tauK=-0.9 ; L3 ST ty/ay=24.6/27.6 ey=-3.0 Fy=+19 sag=0.00 tauK=+0.4
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982325.032205260] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.171093478] [cmd_vel_chassis_serial]: Serial read failed: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.172072869] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.192153020] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982325.199933389] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.212036731] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.232037337] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.252079714] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.272128222] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.292206353] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.312118637] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.332091934] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.354838402] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.371793147] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.391763468] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.412588693] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.432041012] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.451724484] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.471764840] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.491881042] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.511923575] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.532242842] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.552022125] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.571965380] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.592182184] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.611826168] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.632467991] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.651762284] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.672119389] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.692135726] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.711713072] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.732174889] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.752219923] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.772127888] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.792187613] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.812196278] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.832123917] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.851892615] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.871914572] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.891899909] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.911915645] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.931895342] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.951713461] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.971767824] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982325.991747433] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.011810922] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.031966486] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982326.051920645] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.052264096] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.071903895] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.092143384] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.112152269] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.132020708] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.151912255] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.172045254] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.191996665] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982326.200211724] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.212028946] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.232024287] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.252157762] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.272156585] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.292104060] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.312048416] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.332071436] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.351919383] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.371932671] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.392006731] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.411913979] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.431971519] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.451646496] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.471740480] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.492130805] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.512211484] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.532147414] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.552112238] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.572104532] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.592098385] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.612070645] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.632206908] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.652006658] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.672040563] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.692035298] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.712061182] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.732015500] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.751989019] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.771984391] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.792096888] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.812269259] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.832139422] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.852306804] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.871978247] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.891949545] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.912996779] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.931886215] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.951775726] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.971906594] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982326.991760679] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.012009929] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.031922585] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982327.052006976] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.052368091] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.072088974] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.091947540] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.112104508] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.132084120] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.152035492] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.172056632] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.192200016] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.212122696] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.232005487] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982327.250106159] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.251935688] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.272247676] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.292114242] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.312145634] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.332004337] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.351966531] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.371982073] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.393097391] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.411734856] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.431798922] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.451796098] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.471657661] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.491966930] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.511929966] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.531982019] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.551982026] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.572033743] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.592115662] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.612023038] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.632079831] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.651958451] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.672022011] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.692000340] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.712091030] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.731945605] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.751937512] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.772019751] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.792001663] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.812058893] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.832002709] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.851877786] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.871909781] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.892655054] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.911875793] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.931888876] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.951685285] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.971871692] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982327.991864259] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.011611808] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.032129444] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982328.052010328] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.052512785] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.072109255] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.091957891] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.112092724] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.131990840] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.151951465] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.171995034] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.192043054] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.211995216] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.232007766] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982328.250247022] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.251960968] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.272042680] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.292023966] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.312047533] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.332018747] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.351689634] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.371923045] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.392398789] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.412765906] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.431725838] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.451763973] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.471704517] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.491887563] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.512074928] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.531926795] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.551657619] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.571788189] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.592006957] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.612015681] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.632114807] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.652074547] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.671969429] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.692088280] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.712083824] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.731979572] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.751909373] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.771741962] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.791825302] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.812099931] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.832162207] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.852018832] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.871964394] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.891902761] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.911861220] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.931937642] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.951688134] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.971730381] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982328.992116528] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.012139435] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.032272867] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.052131936] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982329.072085009] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.072702256] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.092089486] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.112061574] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.132108341] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.152059121] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.172097635] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.192064292] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.212130197] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.232099660] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.252084106] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.272125523] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.291903027] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982329.299932217] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.311764298] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.331845627] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.351915886] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.373357542] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.391910230] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.412629944] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.431861539] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.451716778] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.471725099] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.492031463] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.512089522] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.532066188] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.552003578] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.572064138] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.592018705] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.612195214] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.632151073] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.651970222] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.672040089] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.692141822] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.712128858] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.732115674] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.752088097] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.772140444] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.792031149] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.812092173] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.832165740] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.851871934] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.871873046] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.893261749] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.911890359] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.931890682] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.951673676] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.971719332] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982329.991976576] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.012079387] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.032133227] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.051993999] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.072044255] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982330.091953236] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.092527587] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.112020441] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.132098361] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.152100918] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.172060822] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.192119845] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.212168540] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.232107168] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.252125805] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.272139820] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.292086160] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.312113922] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.332161947] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982330.349755062] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.351722113] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.373294649] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.391969116] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.411860502] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.431829834] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.451675825] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.471727959] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.491938617] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.512128112] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.532153204] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.552036712] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.572139621] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.592105932] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.612173431] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.632096721] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.652064862] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.672167066] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.692047391] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.712121317] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.732143602] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.752057428] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.772221778] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.792179919] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.812021796] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.832140301] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.851778778] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.871916630] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.891923081] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.911885504] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.931952238] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.951716018] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.971750579] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982330.992032219] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.011866137] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.031791975] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.052205338] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.072207050] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982331.092100539] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.092693140] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.112133181] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.131859058] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.151835845] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.172153430] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.192087370] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.212113725] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.232162208] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.252082583] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.272190723] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.292192756] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.312140388] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.332313073] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982331.350239273] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.351845796] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.371984020] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.392763733] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.412249522] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.431938552] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.451871927] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.471767937] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.492031592] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.512094073] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.532096612] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.552104777] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.572189195] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.592188050] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.612291124] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.631848160] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.651758580] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.672087936] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.692025428] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.711983394] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.731809634] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.751967985] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.772122508] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.792126496] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.812139378] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.832099184] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.852114010] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.872440732] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.892045878] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.911890604] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.932255430] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.951719369] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.971841787] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982331.991917677] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.011982797] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.031872074] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.052110944] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.072168757] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.092154183] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982332.112086005] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.112724236] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.132389722] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.152164618] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.172027079] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.192224752] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.212087904] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.232131170] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.252076347] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.272140019] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.292103544] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.312107238] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.332118302] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.352347919] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.371923600] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.391914074] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982332.399998112] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.413440529] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.431955681] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.451829103] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.471777879] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.491826135] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.512078541] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.532084681] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.552158639] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.572126009] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.592145186] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.612221317] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.632190133] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.651884467] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.671827268] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.691994583] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.712009267] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.731901600] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.752072164] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.772122714] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.792213324] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.812116943] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.832032905] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.851778437] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.872074717] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.893341496] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.911920280] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.932005545] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.951856050] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.971784844] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982332.991932606] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.011970587] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.032074293] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.052242849] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.071805961] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.091987731] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.111875224] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.132117863] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.152062143] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.171829730] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.192030888] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982333.211923489] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.212396067] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982333.232034212] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.232584826] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.251827060] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.272015574] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.292043166] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.312113252] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.332212005] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.351915602] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.371811745] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.391866819] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.413650777] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982333.418466097] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.431762181] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.451705552] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.471695991] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.491686091] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.511804439] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.531644606] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.551701202] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.572182696] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.592090947] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.612077810] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.632156168] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.652020165] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.671955549] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.691953448] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.712087995] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.732255733] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.752115739] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.772056143] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.791948895] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.811989564] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.832017274] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.851974172] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.871846513] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.891770984] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.911974904] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.931867500] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.951752415] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.971749075] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982333.991789743] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.012282968] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.031942701] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.052244104] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.072069659] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.092143456] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.112057760] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.132045161] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.151944010] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.172018536] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.192060321] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.212108045] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.232054930] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982334.252061505] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.252680158] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.272001730] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.292210005] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.312149784] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.332104891] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.351973570] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.373792686] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.392005491] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.412417856] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.431858234] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.451766684] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [INFO] [1783982334.468243517] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.461 wz=1.405
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.471599868] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.492034633] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.512183840] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.532161713] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.552021677] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.572112367] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.591960921] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.612019379] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.632154579] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.652037940] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.672094864] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.692133336] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.711979248] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.731777598] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.751878834] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.772061147] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.792225284] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.812110509] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.832112302] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.851913061] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.871960430] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.893210653] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[cmd_vel_chassis_serial.py-1] [ERROR] [1783982334.915210430] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error

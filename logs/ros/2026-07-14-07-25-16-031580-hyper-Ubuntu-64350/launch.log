@@ -1,0 +1,3 @@
+1783985116.0331724 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-25-16-031580-hyper-Ubuntu-64350
+1783985116.0337479 [INFO] [launch]: Default logging verbosity is set to INFO
+1783985116.1253746 [INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [64591]

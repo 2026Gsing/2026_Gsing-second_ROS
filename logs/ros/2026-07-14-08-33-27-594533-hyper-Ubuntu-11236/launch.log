@@ -1,0 +1,17 @@
+1783989207.5954027 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-33-27-594533-hyper-Ubuntu-11236
+1783989207.5955129 [INFO] [launch]: Default logging verbosity is set to INFO
+1783989207.6630340 [INFO] [static_transform_publisher-1]: process started with pid [11356]
+1783989207.6632025 [INFO] [static_transform_publisher-2]: process started with pid [11357]
+1783989207.6632912 [INFO] [static_transform_publisher-3]: process started with pid [11358]
+1783989207.6633751 [INFO] [static_transform_publisher-4]: process started with pid [11359]
+1783989207.6634481 [INFO] [map_server-5]: process started with pid [11360]
+1783989207.6635129 [INFO] [rviz2-6]: process started with pid [11361]
+1783989212.6865606 [INFO] [controller_server-7]: process started with pid [11700]
+1783989212.6866765 [INFO] [planner_server-8]: process started with pid [11701]
+1783989212.6867189 [INFO] [behavior_server-9]: process started with pid [11702]
+1783989212.6867511 [INFO] [bt_navigator-10]: process started with pid [11703]
+1783989212.6867805 [INFO] [waypoint_follower-11]: process started with pid [11704]
+1783989212.6868098 [INFO] [lifecycle_manager-12]: process started with pid [11705]
+1783989212.6868362 [INFO] [goal_pose_to_nav2-13]: process started with pid [11706]
+1783989212.6868620 [INFO] [costmap_to_grid-14]: process started with pid [11707]
+1783989213.5518653 [ERROR] [goal_pose_to_nav2-13]: process has died [pid 11706, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].

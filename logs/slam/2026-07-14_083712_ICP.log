@@ -1,0 +1,349 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-37-13-810093-hyper-Ubuntu-13314
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [13432]
+[INFO] [rviz2-2]: process started with pid [13433]
+[INFO] [env-3]: process started with pid [13434]
+[INFO] [env-4]: process started with pid [13435]
+[INFO] [pcd_to_pointcloud-5]: process started with pid [13436]
+[pcd_to_pointcloud-5] [INFO] [1783989433.941525505] [map_publisher]: Publishing data with 275382 points (x y z normal_x normal_y normal_z intensity curvature) on topic /cloud_pcd in frame map.
+[fastlio_mapping-1] [INFO] [1783989433.998425175] [fastlio_mapping]: p_pre->lidar_type 5
+[fastlio_mapping-1] Multi thread started 
+[fastlio_mapping-1] ~~~~/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[fastlio_mapping-1] [INFO] [1783989434.008563524] [fastlio_mapping]: Node init finished.
+[fastlio_mapping-1] IMU Initial Done
+[fastlio_mapping-1] [WARN] [1783989434.158301624] [fastlio_mapping]: No point, skip this scan!
+[fastlio_mapping-1] 
+[fastlio_mapping-1] [INFO] [1783989434.239292479] [fastlio_mapping]: Initialize the map kdtree
+[rviz2-2] [INFO] [1783989434.974665129] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783989434.974750893] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1783989435.004210902] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783989435.063112937] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.063673720] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.064130661] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.065050792] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.085659868] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.087288438] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989435.088955734] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[env-3] [INFO] [1783989435.993336943] [global_localization]: Waiting for global map...
+[env-3] [INFO] [1783989435.993683522] [global_localization]: Loading map: /home/hyper/program/2026_Gsing-second_ROS/map/PCD26.pcd, voxel_size=0.01
+[env-3] [INFO] [1783989436.143021108] [global_localization]: Map loaded: raw=275382 pts, downsampled=65515 pts
+[env-3] [INFO] [1783989436.143359167] [global_localization]: Global map received.
+[env-3] [INFO] [1783989436.646474133] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989437.146570879] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989437.646528363] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989438.146456886] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989438.646802966] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989439.147068468] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989439.646501558] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989440.146467629] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989440.646463269] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989440.891708516] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989440.897104194] [global_localization]: ICP input: scan=49929 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989441.118098159] [global_localization]: ICP fitness: coarse=1.000, fine=0.982, threshold=0.9
+[env-3] [INFO] [1783989441.118483627] [global_localization]: map→odom: x=0.134 y=0.055 z=-0.081
+[env-3] [INFO] [1783989441.149442906] [global_localization]: ICP input: scan=14873 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989441.333860214] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989441.334309212] [global_localization]: map→odom: x=0.242 y=0.127 z=-0.077
+[env-3] [INFO] [1783989441.651767042] [global_localization]: ICP input: scan=29755 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989441.851510506] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989441.851920787] [global_localization]: map→odom: x=0.151 y=0.090 z=-0.074
+[env-3] [INFO] [1783989442.149955343] [global_localization]: ICP input: scan=30003 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989442.372742949] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989442.373204231] [global_localization]: map→odom: x=0.147 y=0.064 z=-0.075
+[env-3] [INFO] [1783989442.653077359] [global_localization]: ICP input: scan=29912 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989442.874951043] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989442.875410973] [global_localization]: map→odom: x=0.162 y=0.080 z=-0.080
+[env-3] [INFO] [1783989443.152828127] [global_localization]: ICP input: scan=29742 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989443.352323176] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989443.352781212] [global_localization]: map→odom: x=0.149 y=0.067 z=-0.079
+[env-3] [INFO] [1783989443.650900270] [global_localization]: ICP input: scan=29994 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989443.874992090] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989443.875434230] [global_localization]: map→odom: x=0.148 y=0.064 z=-0.080
+[env-3] [INFO] [1783989443.894990050] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989443.901698062] [global_localization]: ICP input: scan=14931 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989444.006012159] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989444.074414292] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-3] [INFO] [1783989444.074869889] [global_localization]: map→odom: x=0.182 y=0.095 z=-0.079
+[env-3] [INFO] [1783989444.151800280] [global_localization]: ICP input: scan=14870 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989444.323206266] [global_localization]: ICP fitness: coarse=1.000, fine=0.988, threshold=0.9
+[env-3] [INFO] [1783989444.323667670] [global_localization]: map→odom: x=0.154 y=0.112 z=-0.073
+[env-3] [INFO] [1783989444.650747337] [global_localization]: ICP input: scan=29883 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989444.863367115] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989444.863864134] [global_localization]: map→odom: x=0.151 y=0.069 z=-0.079
+[env-3] [INFO] [1783989445.151033875] [global_localization]: ICP input: scan=30001 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989445.341087413] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989445.341514147] [global_localization]: map→odom: x=0.144 y=0.064 z=-0.076
+[env-3] [INFO] [1783989445.650402527] [global_localization]: ICP input: scan=29891 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989445.872913426] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989445.873403960] [global_localization]: map→odom: x=0.161 y=0.083 z=-0.080
+[env-3] [INFO] [1783989446.150707555] [global_localization]: ICP input: scan=29910 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989446.365551351] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989446.366058846] [global_localization]: map→odom: x=0.149 y=0.079 z=-0.078
+[env-3] [INFO] [1783989446.651080064] [global_localization]: ICP input: scan=29913 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989446.771828512] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989446.861323839] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989446.861782494] [global_localization]: map→odom: x=0.149 y=0.059 z=-0.081
+[env-3] [INFO] [1783989446.900062935] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989446.907646853] [global_localization]: ICP input: scan=14831 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989447.076164370] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-3] [INFO] [1783989447.076669689] [global_localization]: map→odom: x=0.163 y=0.135 z=-0.070
+[env-3] [INFO] [1783989447.150213783] [global_localization]: ICP input: scan=14909 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989447.339257121] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989447.339851518] [global_localization]: map→odom: x=0.231 y=0.056 z=-0.083
+[env-3] [INFO] [1783989447.651676939] [global_localization]: ICP input: scan=30007 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989447.888511881] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989447.889123150] [global_localization]: map→odom: x=0.154 y=0.088 z=-0.076
+[env-3] [INFO] [1783989448.152532419] [global_localization]: ICP input: scan=29920 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989448.383418984] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989448.383870468] [global_localization]: map→odom: x=0.151 y=0.051 z=-0.079
+[env-3] [INFO] [1783989448.653494119] [global_localization]: ICP input: scan=29882 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989448.877700158] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989448.878301859] [global_localization]: map→odom: x=0.150 y=0.078 z=-0.078
+[env-3] [INFO] [1783989449.153333355] [global_localization]: ICP input: scan=30083 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989449.300451650] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989449.388955714] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989449.389480748] [global_localization]: map→odom: x=0.161 y=0.072 z=-0.083
+[env-3] [INFO] [1783989449.651966082] [global_localization]: ICP input: scan=29912 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989449.936496274] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989449.936972988] [global_localization]: map→odom: x=0.156 y=0.078 z=-0.081
+[env-3] [INFO] [1783989449.939856601] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989449.945753184] [global_localization]: ICP input: scan=5085 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989450.044551601] [global_localization]: ICP fitness: coarse=1.000, fine=1.000, threshold=0.9
+[env-3] [INFO] [1783989450.045084659] [global_localization]: map→odom: x=0.124 y=0.060 z=-0.069
+[env-3] [INFO] [1783989450.151831293] [global_localization]: ICP input: scan=24783 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989450.339029106] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989450.339646235] [global_localization]: map→odom: x=0.148 y=0.064 z=-0.078
+[env-3] [INFO] [1783989450.653352337] [global_localization]: ICP input: scan=30028 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989450.906825105] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989450.907338235] [global_localization]: map→odom: x=0.147 y=0.066 z=-0.077
+[env-3] [INFO] [1783989451.152658149] [global_localization]: ICP input: scan=29912 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989451.389357239] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989451.389868474] [global_localization]: map→odom: x=0.150 y=0.079 z=-0.074
+[env-3] [INFO] [1783989451.653144473] [global_localization]: ICP input: scan=29904 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989451.864617545] [global_localization]: ICP fitness: coarse=1.000, fine=0.983, threshold=0.9
+[env-3] [INFO] [1783989451.865062654] [global_localization]: map→odom: x=0.153 y=0.072 z=-0.075
+[env-3] [INFO] [1783989452.150923645] [global_localization]: ICP input: scan=29963 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989452.359751841] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989452.360377757] [global_localization]: map→odom: x=0.166 y=0.071 z=-0.078
+[rviz2-2] [INFO] [1783989452.627862891] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989452.650923356] [global_localization]: ICP input: scan=29729 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989452.898228894] [global_localization]: ICP fitness: coarse=1.000, fine=0.982, threshold=0.9
+[env-3] [INFO] [1783989452.898829073] [global_localization]: map→odom: x=0.143 y=0.061 z=-0.074
+[env-3] [INFO] [1783989452.906833850] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989452.911818803] [global_localization]: ICP input: scan=14984 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989453.103350007] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-3] [INFO] [1783989453.103800253] [global_localization]: map→odom: x=0.164 y=0.120 z=-0.069
+[env-3] [INFO] [1783989453.151232767] [global_localization]: ICP input: scan=15018 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989453.319905038] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-3] [INFO] [1783989453.320357726] [global_localization]: map→odom: x=0.143 y=0.086 z=-0.068
+[env-3] [INFO] [1783989453.653139074] [global_localization]: ICP input: scan=29958 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989453.887251258] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989453.887833244] [global_localization]: map→odom: x=0.162 y=0.056 z=-0.077
+[env-3] [INFO] [1783989454.151173696] [global_localization]: ICP input: scan=29841 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989454.349256059] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989454.349752268] [global_localization]: map→odom: x=0.157 y=0.087 z=-0.076
+[env-3] [INFO] [1783989454.651227734] [global_localization]: ICP input: scan=30017 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989454.832486775] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989454.833086389] [global_localization]: map→odom: x=0.157 y=0.068 z=-0.076
+[env-3] [INFO] [1783989455.150636844] [global_localization]: ICP input: scan=29900 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989455.353073016] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989455.353623679] [global_localization]: map→odom: x=0.167 y=0.074 z=-0.079
+[env-3] [INFO] [1783989455.650821587] [global_localization]: ICP input: scan=29863 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989455.891105846] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989455.891606799] [global_localization]: map→odom: x=0.158 y=0.073 z=-0.076
+[rviz2-2] [INFO] [1783989455.955991594] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989456.153101571] [global_localization]: ICP input: scan=29999 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989456.337030246] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989456.337621295] [global_localization]: map→odom: x=0.153 y=0.065 z=-0.074
+[env-3] [INFO] [1783989456.652922517] [global_localization]: ICP input: scan=29952 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989456.859115761] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989456.859627507] [global_localization]: map→odom: x=0.167 y=0.054 z=-0.078
+[env-3] [INFO] [1783989457.150423868] [global_localization]: ICP input: scan=29890 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989457.330847806] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989457.331357500] [global_localization]: map→odom: x=0.161 y=0.076 z=-0.075
+[env-3] [INFO] [1783989457.650503618] [global_localization]: ICP input: scan=30047 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989457.829931152] [global_localization]: ICP fitness: coarse=1.000, fine=0.988, threshold=0.9
+[env-3] [INFO] [1783989457.830424028] [global_localization]: map→odom: x=0.162 y=0.064 z=-0.076
+[env-3] [INFO] [1783989458.152356395] [global_localization]: ICP input: scan=29731 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989458.343789347] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989458.344285329] [global_localization]: map→odom: x=0.151 y=0.061 z=-0.076
+[env-3] [INFO] [1783989458.651713853] [global_localization]: ICP input: scan=29948 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989458.831671335] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989458.832173540] [global_localization]: map→odom: x=0.157 y=0.078 z=-0.074
+[env-3] [INFO] [1783989459.151500484] [global_localization]: ICP input: scan=29968 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989459.316413963] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989459.365776417] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989459.366219967] [global_localization]: map→odom: x=0.154 y=0.049 z=-0.077
+[env-3] [INFO] [1783989459.651313009] [global_localization]: ICP input: scan=29887 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989459.881232411] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989459.881679192] [global_localization]: map→odom: x=0.154 y=0.072 z=-0.076
+[env-3] [INFO] [1783989460.152545097] [global_localization]: ICP input: scan=30008 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989460.392075957] [global_localization]: ICP fitness: coarse=1.000, fine=0.988, threshold=0.9
+[env-3] [INFO] [1783989460.392655282] [global_localization]: map→odom: x=0.171 y=0.080 z=-0.077
+[env-3] [INFO] [1783989460.650956348] [global_localization]: ICP input: scan=29911 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989460.884566212] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989460.885021249] [global_localization]: map→odom: x=0.187 y=0.077 z=-0.082
+[env-3] [INFO] [1783989461.154798959] [global_localization]: ICP input: scan=29791 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989461.383677715] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989461.384113892] [global_localization]: map→odom: x=0.147 y=0.077 z=-0.076
+[env-3] [INFO] [1783989461.650295897] [global_localization]: ICP input: scan=30027 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989461.863404089] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989461.863939076] [global_localization]: map→odom: x=0.157 y=0.078 z=-0.075
+[env-3] [INFO] [1783989462.151631601] [global_localization]: ICP input: scan=29999 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989462.347684877] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989462.348176738] [global_localization]: map→odom: x=0.155 y=0.062 z=-0.078
+[rviz2-2] [INFO] [1783989462.644249443] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989462.650683232] [global_localization]: ICP input: scan=29894 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989462.861954691] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989462.862490367] [global_localization]: map→odom: x=0.152 y=0.070 z=-0.077
+[env-3] [INFO] [1783989463.152003476] [global_localization]: ICP input: scan=30041 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989463.348782807] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989463.349353601] [global_localization]: map→odom: x=0.171 y=0.072 z=-0.079
+[env-3] [INFO] [1783989463.651182454] [global_localization]: ICP input: scan=29787 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989463.853531404] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989463.854182371] [global_localization]: map→odom: x=0.153 y=0.055 z=-0.080
+[env-3] [INFO] [1783989464.151545488] [global_localization]: ICP input: scan=29885 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989464.345186356] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989464.345775143] [global_localization]: map→odom: x=0.147 y=0.065 z=-0.075
+[env-3] [INFO] [1783989464.651636320] [global_localization]: ICP input: scan=30003 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989464.847718585] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989464.848139011] [global_localization]: map→odom: x=0.183 y=0.067 z=-0.079
+[rviz2-2] [INFO] [1783989465.130107599] [rviz2]: Setting estimate pose: Frame:map, Position(0.11491, -0.0069312, 0), Orientation(0, 0, 0.00160113, 0.999999) = Angle: 0.00320226
+[env-3] [INFO] [1783989465.131168060] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[env-3] [INFO] [1783989465.136183642] [global_localization]: ICP input: scan=29928 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989465.339729665] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989465.340308050] [global_localization]: map→odom: x=0.160 y=0.088 z=-0.074
+[env-3] [INFO] [1783989465.345819512] [global_localization]: ICP input: scan=5045 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989465.507517017] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989465.508024673] [global_localization]: map→odom: x=0.414 y=-0.041 z=-0.081
+[env-3] [INFO] [1783989465.654047312] [global_localization]: ICP input: scan=29961 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989465.834905969] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989465.835338045] [global_localization]: map→odom: x=0.162 y=0.070 z=-0.077
+[rviz2-2] [INFO] [1783989465.972042502] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989466.151254631] [global_localization]: ICP input: scan=29939 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989466.346309770] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989466.346767771] [global_localization]: map→odom: x=0.167 y=0.057 z=-0.080
+[env-3] [INFO] [1783989466.652932956] [global_localization]: ICP input: scan=29773 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989466.886601739] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989466.887075075] [global_localization]: map→odom: x=0.145 y=0.070 z=-0.075
+[env-3] [INFO] [1783989467.151899745] [global_localization]: ICP input: scan=30051 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989467.363103240] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989467.363563835] [global_localization]: map→odom: x=0.158 y=0.072 z=-0.075
+[env-3] [INFO] [1783989467.650371817] [global_localization]: ICP input: scan=30035 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989467.853977685] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989467.854475140] [global_localization]: map→odom: x=0.155 y=0.072 z=-0.075
+[env-3] [INFO] [1783989468.156877692] [global_localization]: ICP input: scan=29916 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989468.370704141] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989468.371241244] [global_localization]: map→odom: x=0.165 y=0.093 z=-0.076
+[rviz2-2] [INFO] [1783989468.500834783] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989468.650908267] [global_localization]: ICP input: scan=30128 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989468.931060233] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989468.931522347] [global_localization]: map→odom: x=0.148 y=0.064 z=-0.076
+[env-3] [INFO] [1783989469.151201037] [global_localization]: ICP input: scan=29869 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989469.406954641] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989469.407491875] [global_localization]: map→odom: x=0.158 y=0.039 z=-0.082
+[env-3] [INFO] [1783989469.651395164] [global_localization]: ICP input: scan=29981 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989469.873881452] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989469.874638277] [global_localization]: map→odom: x=0.158 y=0.077 z=-0.077
+[env-3] [INFO] [1783989470.150540796] [global_localization]: ICP input: scan=30001 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989470.376401019] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989470.377100150] [global_localization]: map→odom: x=0.152 y=0.058 z=-0.075
+[env-3] [INFO] [1783989470.654784045] [global_localization]: ICP input: scan=29934 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989470.918635784] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989470.919169583] [global_localization]: map→odom: x=0.151 y=0.078 z=-0.076
+[env-3] [INFO] [1783989471.150764100] [global_localization]: ICP input: scan=29988 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989471.346429854] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989471.346950088] [global_localization]: map→odom: x=0.174 y=0.078 z=-0.079
+[env-3] [INFO] [1783989471.650797364] [global_localization]: ICP input: scan=29979 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989471.828736988] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989471.918730997] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989471.919182589] [global_localization]: map→odom: x=0.156 y=0.053 z=-0.080
+[env-3] [INFO] [1783989472.153007794] [global_localization]: ICP input: scan=29817 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989472.360861832] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989472.361285702] [global_localization]: map→odom: x=0.156 y=0.066 z=-0.076
+[env-3] [INFO] [1783989472.652633714] [global_localization]: ICP input: scan=30059 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989472.862880126] [global_localization]: ICP fitness: coarse=1.000, fine=0.990, threshold=0.9
+[env-3] [INFO] [1783989472.863387601] [global_localization]: map→odom: x=0.159 y=0.044 z=-0.080
+[env-3] [INFO] [1783989473.151459466] [global_localization]: ICP input: scan=30060 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989473.330419346] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989473.330914298] [global_localization]: map→odom: x=0.146 y=0.058 z=-0.077
+[env-3] [INFO] [1783989473.650213835] [global_localization]: ICP input: scan=29855 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989473.833746321] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989473.834249228] [global_localization]: map→odom: x=0.150 y=0.078 z=-0.075
+[env-3] [INFO] [1783989474.151243504] [global_localization]: ICP input: scan=30016 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989474.344315929] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989474.344900411] [global_localization]: map→odom: x=0.145 y=0.059 z=-0.076
+[env-3] [INFO] [1783989474.653133533] [global_localization]: ICP input: scan=29894 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989474.853337789] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989474.853836874] [global_localization]: map→odom: x=0.190 y=0.089 z=-0.078
+[env-3] [INFO] [1783989475.156476948] [global_localization]: ICP input: scan=29876 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989475.156712374] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989475.359668212] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989475.360266179] [global_localization]: map→odom: x=0.146 y=0.056 z=-0.074
+[env-3] [INFO] [1783989475.650635140] [global_localization]: ICP input: scan=30092 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989475.880819721] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989475.881258563] [global_localization]: map→odom: x=0.149 y=0.057 z=-0.076
+[env-3] [INFO] [1783989476.153787315] [global_localization]: ICP input: scan=30001 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989476.350469387] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989476.351020845] [global_localization]: map→odom: x=0.149 y=0.053 z=-0.078
+[env-3] [INFO] [1783989476.654443845] [global_localization]: ICP input: scan=29901 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989476.841545871] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989476.842057452] [global_localization]: map→odom: x=0.147 y=0.067 z=-0.076
+[env-3] [INFO] [1783989477.155432187] [global_localization]: ICP input: scan=29982 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989477.396232127] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989477.396766191] [global_localization]: map→odom: x=0.153 y=0.072 z=-0.075
+[env-3] [INFO] [1783989477.652323129] [global_localization]: ICP input: scan=29894 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989477.683854464] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989477.893169185] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989477.893627184] [global_localization]: map→odom: x=0.192 y=0.097 z=-0.078
+[env-3] [INFO] [1783989478.153206693] [global_localization]: ICP input: scan=30102 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989478.362968106] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989478.363769594] [global_localization]: map→odom: x=0.158 y=0.081 z=-0.074
+[env-3] [INFO] [1783989478.652268026] [global_localization]: ICP input: scan=29961 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989478.892235720] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989478.892954216] [global_localization]: map→odom: x=0.160 y=0.064 z=-0.073
+[env-3] [INFO] [1783989479.152365604] [global_localization]: ICP input: scan=29910 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989479.365119217] [global_localization]: ICP fitness: coarse=1.000, fine=0.983, threshold=0.9
+[env-3] [INFO] [1783989479.365653744] [global_localization]: map→odom: x=0.159 y=0.066 z=-0.075
+[env-3] [INFO] [1783989479.653991801] [global_localization]: ICP input: scan=30127 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989479.908057967] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989479.908599998] [global_localization]: map→odom: x=0.154 y=0.070 z=-0.075
+[env-3] [INFO] [1783989480.153093562] [global_localization]: ICP input: scan=24933 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989480.343396949] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989480.343844743] [global_localization]: map→odom: x=0.175 y=0.096 z=-0.076
+[env-3] [INFO] [1783989480.650981261] [global_localization]: ICP input: scan=30130 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989480.890074575] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989480.890523229] [global_localization]: map→odom: x=0.154 y=0.068 z=-0.077
+[rviz2-2] [INFO] [1783989481.012683914] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989481.157197044] [global_localization]: ICP input: scan=29837 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989481.425423044] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989481.425975758] [global_localization]: map→odom: x=0.162 y=0.081 z=-0.078
+[env-3] [INFO] [1783989481.651698932] [global_localization]: ICP input: scan=29926 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989481.866333950] [global_localization]: ICP fitness: coarse=1.000, fine=0.984, threshold=0.9
+[env-3] [INFO] [1783989481.867096305] [global_localization]: map→odom: x=0.166 y=0.081 z=-0.075
+[env-3] [INFO] [1783989482.150325380] [global_localization]: ICP input: scan=30126 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989482.365690116] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989482.366251944] [global_localization]: map→odom: x=0.168 y=0.079 z=-0.073
+[env-3] [INFO] [1783989482.652518546] [global_localization]: ICP input: scan=29968 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989482.855702854] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989482.856221026] [global_localization]: map→odom: x=0.143 y=0.052 z=-0.074
+[env-3] [INFO] [1783989483.153481937] [global_localization]: ICP input: scan=29991 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989483.343566063] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989483.344002852] [global_localization]: map→odom: x=0.154 y=0.073 z=-0.076
+[env-3] [INFO] [1783989483.650916619] [global_localization]: ICP input: scan=29975 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989483.859926657] [global_localization]: ICP fitness: coarse=1.000, fine=0.986, threshold=0.9
+[env-3] [INFO] [1783989483.860359573] [global_localization]: map→odom: x=0.148 y=0.055 z=-0.075
+[env-3] [INFO] [1783989484.153212239] [global_localization]: ICP input: scan=29879 pts, map_FOV=65515 pts
+[rviz2-2] [INFO] [1783989484.340591278] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783989433.999 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[env-3] [INFO] [1783989484.347039079] [global_localization]: ICP fitness: coarse=1.000, fine=0.985, threshold=0.9
+[env-3] [INFO] [1783989484.347465881] [global_localization]: map→odom: x=0.189 y=0.096 z=-0.076
+[env-3] [INFO] [1783989484.651054105] [global_localization]: ICP input: scan=30080 pts, map_FOV=65515 pts
+[env-3] [INFO] [1783989484.859020555] [global_localization]: ICP fitness: coarse=1.000, fine=0.987, threshold=0.9
+[env-3] [INFO] [1783989484.859562524] [global_localization]: map→odom: x=0.161 y=0.088 z=-0.075

@@ -1,0 +1,17 @@
+[INFO] [1783989984.725915458] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783989984.725978183] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[INFO] [1783989984.783510075] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783989984.834915032] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783989984.835300532] [rviz]: Subscribing to: /submap
+
+[INFO] [1783989984.835665715] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783989984.836079564] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783989984.850304313] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783989984.850560148] [rviz]: Subscribing to: /submap
+
+[INFO] [1783989984.851647049] [rviz]: Subscribing to: /cloud_pcd
+

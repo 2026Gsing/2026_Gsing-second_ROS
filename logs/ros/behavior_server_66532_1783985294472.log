@@ -1,0 +1,19 @@
+[INFO] [1783985294.481186739] [behavior_server]: 
+	behavior_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985294.561868031] [behavior_server]: Configuring
+[INFO] [1783985294.564063042] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[INFO] [1783985294.564996493] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[INFO] [1783985294.566036265] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[INFO] [1783985294.566806390] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[INFO] [1783985294.571866792] [behavior_server]: Configuring spin
+[INFO] [1783985294.574525199] [behavior_server]: Configuring backup
+[INFO] [1783985294.576208323] [behavior_server]: Configuring drive_on_heading
+[INFO] [1783985294.578251846] [behavior_server]: Configuring wait
+[INFO] [1783985295.131851243] [behavior_server]: Activating
+[INFO] [1783985295.131882698] [behavior_server]: Activating spin
+[INFO] [1783985295.131896689] [behavior_server]: Activating backup
+[INFO] [1783985295.131907711] [behavior_server]: Activating drive_on_heading
+[INFO] [1783985295.131917865] [behavior_server]: Activating wait
+[INFO] [1783985295.131932925] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.

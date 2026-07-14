@@ -1,0 +1,34 @@
+[INFO] [1783991425.068101824] [arm_state_machine]: ============================================================
+[INFO] [1783991425.068497210] [arm_state_machine]: Arm State Machine Started (含自动任务状态机推进)
+[INFO] [1783991425.068795460] [arm_state_machine]: State: IDLE
+[INFO] [1783991425.069080065] [arm_state_machine]: ============================================================
+[INFO] [1783991425.211626665] [arm_state_machine]: 缓存 #1/10: 原始(0.163, 0.286, 0.225) → 最终(-0.210, 0.286, -0.413)
+[INFO] [1783991426.086691950] [arm_state_machine]: 缓存 #2/10: 原始(0.164, 0.281, 0.228) → 最终(-0.213, 0.281, -0.414)
+[INFO] [1783991426.900374934] [arm_state_machine]: 缓存 #3/10: 原始(0.161, 0.282, 0.227) → 最终(-0.212, 0.282, -0.411)
+[INFO] [1783991426.901087436] [arm_state_machine]: ============================================================
+[INFO] [1783991426.901475853] [arm_state_machine]: ✓ 视觉检测稳定！锁定平均目标: (-0.212, 0.283, -0.413)
+[INFO] [1783991426.901834849] [arm_state_machine]: ============================================================
+[INFO] [1783991426.902196628] [arm_state_machine]: [SEQ] 发送 AUTO_CMD_START...
+[INFO] [1783991426.902615421] [arm_state_machine]: >>> 已发布 AUTO_CMD: cmd=1 target=0 zone=0
+[INFO] [1783991427.003414652] [arm_state_machine]: [SEQ] 发送 AUTO_CMD_ARRIVED_BOX...
+[INFO] [1783991427.003894103] [arm_state_machine]: >>> 已发布 AUTO_CMD: cmd=2 target=1 zone=0
+[INFO] [1783991427.004290659] [arm_state_machine]: [SEQ] 等待 0.6s 让 STM32 进入 PICK 状态...
+[INFO] [1783991427.605048622] [arm_state_machine]: [SEQ] STM32 应已进入 PICK，发送机械臂坐标...
+[INFO] [1783991427.605529335] [arm_state_machine]: >>> 已发布坐标到 /vision/arm_control: (-0.212, 0.283, -0.413)
+[INFO] [1783991427.605812193] [arm_state_machine]: [等待] 坐标已发送，等待 STM32 回传 ARM_EVENT pick_done
+[INFO] [1783991430.055996923] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783991435.055974514] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783991440.055965300] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783991440.128862591] [arm_state_machine]: [ARM_EVENT] 抓取完成: back_slot=1 side=left
+Traceback (most recent call last):
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/control/catch.py", line 410, in <module>
+    main()
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/control/catch.py", line 406, in main
+    rclpy.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 134, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/utilities.py", line 82, in shutdown
+    context.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/context.py", line 127, in shutdown
+    raise RuntimeError('Context must be initialized before it can be shutdown')
+RuntimeError: Context must be initialized before it can be shutdown

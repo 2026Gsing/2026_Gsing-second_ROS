@@ -1,0 +1,29 @@
+1783986342.2680023 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-266477-hyper-Ubuntu-71372
+1783986342.2681863 [INFO] [launch]: Default logging verbosity is set to INFO
+1783986342.3653297 [INFO] [fastlio_mapping-1]: process started with pid [71514]
+1783986342.3655241 [INFO] [rviz2-2]: process started with pid [71515]
+1783986342.3656170 [INFO] [env-3]: process started with pid [71516]
+1783986342.3656974 [INFO] [env-4]: process started with pid [71517]
+1783986342.3657615 [INFO] [pcd_to_pointcloud-5]: process started with pid [71518]
+1783986342.6230810 [rviz2-2] 1783986342.622378 [0]      rviz2: Failed to find a free participant index for domain 0
+1783986342.6232557 [rviz2-2] [ERROR] [1783986342.622479617] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+1783986342.6233158 [rviz2-2] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+1783986342.6233637 [rviz2-2]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+1783986343.1647546 [ERROR] [env-4]: process has died [pid 71517, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+1783986343.7030144 [ERROR] [fastlio_mapping-1]: process has died [pid 71514, exit code -6, cmd '/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio/lib/fast_lio/fastlio_mapping --ros-args -r __node:=fastlio_mapping --params-file /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/share/fast_lio_localization/config/unilidar_l2.yaml --params-file /tmp/launch_params_os60b1km -r /livox/lidar:=/unilidar/cloud -r /livox/imu:=/unilidar/imu'].
+1783986344.7290454 [ERROR] [rviz2-2]: process has died [pid 71515, exit code -6, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/share/fast_lio_localization/rviz/fastlio_localization.rviz --ros-args'].
+1783986345.2391264 [ERROR] [env-3]: process has died [pid 71516, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_7zdv4xz3 --params-file /tmp/launch_params_d99_09m7'].

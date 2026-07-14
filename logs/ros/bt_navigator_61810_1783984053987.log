@@ -1,0 +1,16 @@
+[INFO] [1783984053.996411403] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783984053.997341271] [bt_navigator]: Creating
+[INFO] [1783984054.202333271] [bt_navigator]: Configuring
+[INFO] [1783984054.205500668] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1783984054.209339161] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1783984054.243711393] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1783984054.770131580] [bt_navigator]: Activating
+[INFO] [1783984054.793132127] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1783984059.001020162] [bt_navigator]: Begin navigating from current location (0.17, 0.05) to (0.46, -0.07)
+[INFO] [1783984059.011408846] [bt_navigator]: Received goal preemption request
+[INFO] [1783984059.011621256] [bt_navigator]: Begin navigating from current location (0.17, 0.05) to (0.46, -0.07)
+[INFO] [1783984063.211335991] [bt_navigator]: Goal succeeded

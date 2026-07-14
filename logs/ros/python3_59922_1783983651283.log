@@ -1,0 +1,421 @@
+[INFO] [1783983651.324657149] [cmd_vel_chassis_serial]: Leg debug CSV logging enabled: /home/hyper/program/2026_Gsing-second_ROS/logs/serial/2026-07-14_070050_leg.csv
+[INFO] [1783983651.325689703] [cmd_vel_chassis_serial]: Opened /dev/ttyACM0 @ 115200, cmd_vel=/cmd_vel, send=50.0Hz
+[INFO] [1783983651.327842486] [cmd_vel_chassis_serial]: Publishing STM32 arm events on /vision/arm_event
+[INFO] [1783983651.348938378] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000
+[INFO] [1783983651.365516400] [cmd_vel_chassis_serial]: [LEG_DEBUG] | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9
+[INFO] [1783983651.886721597] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983652.391449034] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983652.907996743] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983653.418207123] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+45 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983653.931609482] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983654.448251571] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983654.962854553] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983655.479207849] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983655.995772999] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983656.500803228] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983657.009682164] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983657.514853189] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983658.047355446] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983658.578523457] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983659.111495451] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983659.619518940] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983660.128521328] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983660.626718039] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983661.135031508] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983661.652778234] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983662.153576551] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983662.670487994] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+44 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983663.186544227] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.00 wz=+0.00 stride=3.00 lift=2.45 roll=-3.9 pitch=+0.6 comp=0.88 | L0 ST ty/ay=25.5/25.9 ey=-0.5 Fy=+33 sag=0.00 tauK=-0.9 ; L1 ST ty/ay=24.7/24.8 ey=-0.1 Fy=+43 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.4/25.6 ey=-0.2 Fy=+45 sag=0.00 tauK=-1.3 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+33 sag=0.00 tauK=+1.0
+[INFO] [1783983663.400810094] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.776
+[INFO] [1783983663.409216132] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.776
+[INFO] [1783983663.716111280] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.78 stride=3.52 lift=2.69 roll=-3.9 pitch=+0.5 comp=0.89 | L0 ST ty/ay=25.2/25.8 ey=-0.5 Fy=+34 sag=0.00 tauK=-1.0 ; L1 ST ty/ay=24.8/25.0 ey=-0.2 Fy=+45 sag=0.00 tauK=+1.3 ; L2 ST ty/ay=25.2/25.5 ey=-0.3 Fy=+44 sag=0.00 tauK=-1.2 ; L3 ST ty/ay=24.8/25.3 ey=-0.6 Fy=+38 sag=0.00 tauK=+1.1
+[INFO] [1783983664.217421310] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.86 stride=3.52 lift=2.70 roll=-4.4 pitch=+0.2 comp=0.96 | L0 SW ty/ay=23.0/23.2 ey=-0.2 Fy=-0 sag=0.00 tauK=+0.0 ; L1 SW ty/ay=22.9/23.2 ey=-0.3 Fy=+1 sag=0.00 tauK=+0.0 ; L2 ST ty/ay=25.4/26.2 ey=-0.8 Fy=+101 sag=0.00 tauK=-2.7 ; L3 ST ty/ay=24.7/25.5 ey=-0.8 Fy=+88 sag=0.00 tauK=+2.6
+[INFO] [1783983664.400922695] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.993
+[INFO] [1783983664.429270244] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.993
+[INFO] [1783983664.717656527] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.99 stride=3.54 lift=2.71 roll=-3.6 pitch=-0.4 comp=0.82 | L0 ST ty/ay=25.3/26.1 ey=-0.9 Fy=+87 sag=0.00 tauK=-2.5 ; L1 ST|RES ty/ay=24.7/26.2 ey=-1.5 Fy=+81 sag=0.20 tauK=+2.2 ; L2 SW ty/ay=22.4/22.8 ey=-0.4 Fy=-4 sag=0.00 tauK=+0.2 ; L3 SW ty/ay=22.6/23.0 ey=-0.4 Fy=-4 sag=0.00 tauK=-0.2
+[INFO] [1783983665.221407726] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.90 stride=3.53 lift=2.70 roll=-4.0 pitch=+1.4 comp=0.89 | L0 SW ty/ay=22.3/22.1 ey=+0.2 Fy=+2 sag=0.00 tauK=-0.0 ; L1 SW ty/ay=22.3/22.1 ey=+0.2 Fy=+7 sag=0.03 tauK=+0.2 ; L2 ST|RES ty/ay=25.0/23.8 ey=+1.2 Fy=+186 sag=0.99 tauK=-4.6 ; L3 ST ty/ay=24.9/25.4 ey=-0.5 Fy=+104 sag=0.00 tauK=+3.2
+[INFO] [1783983665.449244199] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.940
+[INFO] [1783983665.450788367] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.940
+[INFO] [1783983665.743086201] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.94 stride=3.53 lift=2.70 roll=-2.0 pitch=-0.3 comp=0.36 | L0 ST|RES ty/ay=25.1/26.3 ey=-1.2 Fy=+76 sag=0.13 tauK=-2.2 ; L1 ST|RES ty/ay=24.9/26.3 ey=-1.4 Fy=+84 sag=0.53 tauK=+2.1 ; L2 SW|RES ty/ay=22.1/22.3 ey=-0.1 Fy=-0 sag=0.12 tauK=+0.1 ; L3 SW ty/ay=22.3/22.5 ey=-0.2 Fy=-0 sag=0.00 tauK=-0.1
+[INFO] [1783983666.243622542] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.78 stride=3.52 lift=2.69 roll=-11.5 pitch=-4.6 comp=1.00 | L0 SW ty/ay=22.7/22.6 ey=+0.1 Fy=-3 sag=0.02 tauK=+0.1 ; L1 SW|RES ty/ay=22.2/22.2 ey=+0.1 Fy=-3 sag=0.08 tauK=-0.1 ; L2 ST|RES ty/ay=25.9/27.2 ey=-1.3 Fy=+85 sag=0.60 tauK=-1.5 ; L3 ST ty/ay=24.6/25.0 ey=-0.4 Fy=+108 sag=0.00 tauK=+3.3
+[INFO] [1783983666.450951859] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-1.013
+[INFO] [1783983666.469193243] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-1.013
+[INFO] [1783983666.754450071] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.01 stride=3.54 lift=2.71 roll=+5.5 pitch=-4.9 comp=0.35 | L0 ST ty/ay=24.7/26.3 ey=-1.6 Fy=+62 sag=0.03 tauK=-1.8 ; L1 ST|RES ty/ay=25.0/20.7 ey=+4.3 Fy=+395 sag=1.00 tauK=+11.6 ; L2 SW|LIM|RES ty/ay=22.9/22.1 ey=+0.8 Fy=+12 sag=0.10 tauK=-0.3 ; L3 SW ty/ay=23.4/23.9 ey=-0.5 Fy=-4 sag=0.00 tauK=-0.1
+[INFO] [1783983667.255690642] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.54 stride=3.50 lift=2.68 roll=-6.0 pitch=-0.1 comp=1.00 | L0 SW ty/ay=22.7/22.0 ey=+0.7 Fy=+8 sag=0.00 tauK=-0.2 ; L1 SW|RES ty/ay=23.7/21.7 ey=+1.9 Fy=+20 sag=0.13 tauK=+0.5 ; L2 ST|RES ty/ay=25.5/26.7 ey=-1.1 Fy=+90 sag=0.33 tauK=-2.2 ; L3 ST|RES ty/ay=24.7/25.7 ey=-1.0 Fy=+82 sag=0.05 tauK=+2.4
+[INFO] [1783983667.451114749] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.963
+[INFO] [1783983667.469199702] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.963
+[INFO] [1783983667.771632072] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.96 stride=3.53 lift=2.71 roll=-1.5 pitch=-2.3 comp=0.44 | L0 ST|RES ty/ay=25.0/25.9 ey=-1.0 Fy=+78 sag=0.05 tauK=-2.2 ; L1 ST|RES ty/ay=25.0/26.5 ey=-1.4 Fy=+81 sag=0.51 tauK=+1.9 ; L2 SW ty/ay=22.3/21.9 ey=+0.5 Fy=+8 sag=0.04 tauK=-0.2 ; L3 SW ty/ay=22.6/22.3 ey=+0.3 Fy=+5 sag=0.01 tauK=+0.1
+[INFO] [1783983668.303938897] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-6.9 pitch=-2.2 comp=1.00 | L0 SW|LIM ty/ay=23.1/22.8 ey=+0.3 Fy=+7 sag=0.01 tauK=-0.2 ; L1 SW|RES ty/ay=22.5/22.3 ey=+0.2 Fy=+6 sag=0.08 tauK=+0.2 ; L2 ST|RES ty/ay=25.6/27.3 ey=-1.7 Fy=+71 sag=0.40 tauK=-1.4 ; L3 ST ty/ay=24.7/25.2 ey=-0.5 Fy=+91 sag=0.00 tauK=+2.7
+[INFO] [1783983668.489291810] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-3.099
+[INFO] [1783983668.500815188] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-3.099
+[INFO] [1783983668.814199515] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+4.5 pitch=-4.7 comp=0.35 | L0 ST ty/ay=24.7/25.5 ey=-0.8 Fy=+92 sag=0.00 tauK=-2.8 ; L1 ST|RES ty/ay=25.8/23.9 ey=+1.9 Fy=+257 sag=1.00 tauK=+6.8 ; L2 SW|RES ty/ay=22.2/22.8 ey=-0.6 Fy=-8 sag=0.06 tauK=+0.3 ; L3 SW ty/ay=23.6/24.1 ey=-0.5 Fy=-3 sag=0.00 tauK=-0.1
+[INFO] [1783983669.345933364] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-10.0 pitch=-3.6 comp=0.93 | L0 SW ty/ay=23.5/24.5 ey=-1.1 Fy=-8 sag=0.00 tauK=+0.3 ; L1 SW|RES ty/ay=22.9/23.6 ey=-0.7 Fy=-10 sag=0.16 tauK=-0.4 ; L2 ST|RES ty/ay=25.9/26.1 ey=-0.2 Fy=+123 sag=0.93 tauK=-2.8 ; L3 ST ty/ay=24.6/25.3 ey=-0.7 Fy=+87 sag=0.00 tauK=+2.6
+[INFO] [1783983669.500991844] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-8.456
+[INFO] [1783983669.509205816] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-8.456
+[INFO] [1783983669.852554714] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+5.8 pitch=-5.3 comp=1.00 | L0 ST|RES ty/ay=24.6/27.1 ey=-2.5 Fy=+32 sag=0.11 tauK=-0.8 ; L1 ST|RES ty/ay=25.9/18.8 ey=+7.1 Fy=+520 sag=1.00 tauK=+16.2 ; L2 SW|RES ty/ay=22.8/22.5 ey=+0.3 Fy=+6 sag=0.11 tauK=-0.2 ; L3 SW ty/ay=22.6/22.4 ey=+0.2 Fy=+3 sag=0.00 tauK=+0.1
+[INFO] [1783983670.375855751] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-6.7 pitch=-1.8 comp=1.00 | L0 SW ty/ay=22.6/23.3 ey=-0.7 Fy=-9 sag=0.01 tauK=+0.3 ; L1 SW|RES ty/ay=23.3/24.4 ey=-1.1 Fy=-21 sag=0.32 tauK=-0.7 ; L2 ST|RES ty/ay=25.8/25.9 ey=-0.1 Fy=+119 sag=0.66 tauK=-3.1 ; L3 ST ty/ay=24.6/25.4 ey=-0.8 Fy=+88 sag=0.00 tauK=+2.6
+[INFO] [1783983670.509307646] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=2.208
+[INFO] [1783983670.551033337] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=2.208
+[INFO] [1783983670.877981758] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=+7.2 pitch=-6.7 comp=1.00 | L0 ST ty/ay=24.6/26.9 ey=-2.3 Fy=+38 sag=0.00 tauK=-1.0 ; L1 ST|RES ty/ay=25.9/18.0 ey=+7.9 Fy=+556 sag=1.00 tauK=+17.8 ; L2 SW|RES ty/ay=23.5/23.9 ey=-0.4 Fy=-2 sag=0.07 tauK=+0.1 ; L3 SW ty/ay=23.4/23.4 ey=+0.1 Fy=+3 sag=0.00 tauK=+0.1
+[INFO] [1783983671.390373989] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-2.8 pitch=-0.3 comp=0.61 | L0 SW ty/ay=24.8/24.1 ey=+0.7 Fy=+8 sag=0.00 tauK=-0.1 ; L1 SW|RES ty/ay=24.9/23.7 ey=+1.3 Fy=+13 sag=0.31 tauK=+0.2 ; L2 ST|RES ty/ay=25.4/26.0 ey=-0.7 Fy=+38 sag=0.51 tauK=-0.8 ; L3 ST|LIM|RES ty/ay=25.0/26.1 ey=-1.1 Fy=+73 sag=0.10 tauK=+2.2
+[INFO] [1783983671.529197117] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=1.155
+[INFO] [1783983671.600963341] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=1.155
+[INFO] [1783983671.894298096] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-5.0 pitch=-1.1 comp=0.64 | L0 ST|RES ty/ay=25.2/27.4 ey=-2.1 Fy=+40 sag=0.07 tauK=-0.9 ; L1 ST|RES ty/ay=24.7/26.6 ey=-1.9 Fy=+59 sag=0.08 tauK=+1.3 ; L2 ST|RES ty/ay=25.4/23.4 ey=+2.1 Fy=+124 sag=0.34 tauK=-3.9 ; L3 SW ty/ay=24.8/22.9 ey=+1.8 Fy=+17 sag=0.01 tauK=+0.5
+[INFO] [1783983672.405363342] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-1.15 stride=3.55 lift=2.72 roll=-4.6 pitch=+0.5 comp=0.99 | L0 SW|RES ty/ay=24.9/25.8 ey=-0.9 Fy=+2 sag=0.07 tauK=+0.0 ; L1 ST|RES ty/ay=24.7/26.2 ey=-1.5 Fy=+21 sag=0.14 tauK=+0.6 ; L2 ST|RES ty/ay=25.5/27.9 ey=-2.5 Fy=-15 sag=0.07 tauK=+0.6 ; L3 ST ty/ay=24.7/27.7 ey=-3.0 Fy=+12 sag=0.00 tauK=+0.3
+[INFO] [1783983672.549191439] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-1.413
+[INFO] [1783983672.652139926] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-1.413
+[INFO] [1783983672.927611214] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+0.00 stride=3.45 lift=2.65 roll=-2.9 pitch=-1.0 comp=0.63 | L0 ST ty/ay=25.1/27.8 ey=-2.7 Fy=+25 sag=0.01 tauK=-0.5 ; L1 ST ty/ay=24.9/28.0 ey=-3.1 Fy=-41 sag=0.02 tauK=-1.3 ; L2 ST|RES ty/ay=25.2/25.1 ey=+0.1 Fy=+36 sag=0.08 tauK=-1.1 ; L3 SW ty/ay=24.9/23.5 ey=+1.4 Fy=+11 sag=0.00 tauK=+0.3
+[INFO] [1783983673.445328012] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=-0.18 stride=3.47 lift=2.66 roll=-4.5 pitch=+0.9 comp=0.97 | L0 ST|RES ty/ay=25.4/25.0 ey=+0.4 Fy=+43 sag=0.52 tauK=-1.3 ; L1 ST|RES ty/ay=24.7/25.0 ey=-0.3 Fy=+29 sag=0.16 tauK=+0.9 ; L2 ST ty/ay=25.3/27.6 ey=-2.4 Fy=-5 sag=0.01 tauK=+0.2 ; L3 ST ty/ay=24.7/27.6 ey=-2.9 Fy=+19 sag=0.00 tauK=+0.4
+[INFO] [1783983673.568918603] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=-0.181
+[INFO] [1783983673.670792355] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=-0.181
+[INFO] [1783983673.970997503] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-3.0 pitch=+0.7 comp=0.65 | L0 ST ty/ay=25.1/26.5 ey=-1.4 Fy=+7 sag=0.00 tauK=-0.2 ; L1 ST ty/ay=24.9/26.3 ey=-1.4 Fy=+9 sag=0.00 tauK=+0.2 ; L2 ST ty/ay=25.1/26.4 ey=-1.3 Fy=+11 sag=0.00 tauK=-0.3 ; L3 ST ty/ay=24.9/26.5 ey=-1.6 Fy=+57 sag=0.00 tauK=+1.6
+[INFO] [1783983674.476155947] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-1.2 pitch=+2.1 comp=0.39 | L0 ST ty/ay=25.1/25.6 ey=-0.5 Fy=+25 sag=0.00 tauK=-0.7 ; L1 ST ty/ay=24.9/24.7 ey=+0.2 Fy=+53 sag=0.00 tauK=+1.6 ; L2 ST ty/ay=25.0/26.5 ey=-1.5 Fy=+3 sag=0.00 tauK=-0.2 ; L3 ST ty/ay=25.0/26.5 ey=-1.5 Fy=+9 sag=0.00 tauK=+0.3
+[INFO] [1783983674.568918300] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.201
+[INFO] [1783983674.720914903] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[INFO] [1783983674.986476636] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-0.2 pitch=+2.4 comp=0.49 | L0 ST ty/ay=25.1/27.2 ey=-2.1 Fy=-10 sag=0.00 tauK=+0.3 ; L1 ST ty/ay=24.9/27.3 ey=-2.4 Fy=-15 sag=0.00 tauK=-0.5 ; L2 ST ty/ay=24.9/26.5 ey=-1.6 Fy=+1 sag=0.00 tauK=+0.1 ; L3 ST ty/ay=25.1/26.5 ey=-1.4 Fy=+11 sag=0.00 tauK=+0.1
+[INFO] [1783983675.500147910] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-0.7 pitch=+3.8 comp=0.30 | L0 ST|RES ty/ay=25.1/26.3 ey=-1.2 Fy=+60 sag=0.09 tauK=-1.7 ; L1 ST ty/ay=24.8/24.9 ey=-0.1 Fy=+42 sag=0.00 tauK=+1.2 ; L2 ST ty/ay=24.7/26.5 ey=-1.7 Fy=-4 sag=0.00 tauK=-0.0 ; L3 ST ty/ay=25.3/26.5 ey=-1.2 Fy=+17 sag=0.00 tauK=+0.6
+[INFO] [1783983675.568937906] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[INFO] [1783983675.770633525] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[INFO] [1783983676.005285479] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-1.0 pitch=+3.0 comp=0.65 | L0 ST ty/ay=25.2/27.2 ey=-1.9 Fy=-6 sag=0.03 tauK=+0.2 ; L1 ST ty/ay=24.8/26.9 ey=-2.1 Fy=-6 sag=0.00 tauK=-0.2 ; L2 ST ty/ay=24.9/26.5 ey=-1.5 Fy=+74 sag=0.00 tauK=-2.1 ; L3 ST ty/ay=25.1/26.5 ey=-1.4 Fy=+12 sag=0.00 tauK=+0.2
+[INFO] [1783983676.513572494] [cmd_vel_chassis_serial]: [LEG_DEBUG] vx=+0.35 wz=+1.15 stride=3.55 lift=2.72 roll=-1.7 pitch=+2.4 comp=0.48 | L0 ST|RES ty/ay=25.1/25.8 ey=-0.7 Fy=+22 sag=0.07 tauK=-0.6 ; L1 ST ty/ay=24.8/25.9 ey=-1.0 Fy=+16 sag=0.00 tauK=+0.4 ; L2 SW ty/ay=24.9/26.5 ey=-1.5 Fy=-56 sag=0.00 tauK=+1.5 ; L3 SW ty/ay=24.9/26.5 ey=-1.6 Fy=-39 sag=0.00 tauK=-1.1
+[INFO] [1783983676.569284458] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983676.660966343] [cmd_vel_chassis_serial]: Serial read failed: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+[ERROR] [1783983676.668973480] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.688957837] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.708850279] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.728996365] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.749003734] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.769032132] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.789001444] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.808845150] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983676.820773838] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983676.829121069] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.849258251] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.869226686] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.889065367] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.909126090] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.929312700] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.949158769] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.969577184] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983676.989304512] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.009237745] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.029287124] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.049238820] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.069241008] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.089250549] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.110138535] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.129115392] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.149112398] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.169097582] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.188972851] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.208985028] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.229106382] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.249113213] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.269375445] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.289352875] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.309322003] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.329313646] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.349284150] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.369344682] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.389287602] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.409303267] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.429407309] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.449343398] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.469345318] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.489315747] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.509212500] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.529083442] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.549171762] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983677.569125920] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983677.569601147] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.589319649] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.609304662] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.629141490] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.649012864] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.669106056] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.688979856] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.708959184] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.728843493] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.749240938] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.769209164] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.789098313] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.809283333] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.829177711] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.849044303] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.869134412] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983677.870627527] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983677.888855561] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.909241109] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.929304310] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.949157462] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.969194896] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983677.989337364] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.009242463] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.029303833] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.049305721] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.069341795] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.089121967] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.109055165] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.129142114] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.149187392] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.169031953] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.188930590] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.209022100] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.229294192] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.249305971] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.269351074] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.289286191] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.309229805] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.329245298] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.349352556] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.369276580] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.389191985] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.409233109] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.429345113] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.449288353] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.469303705] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.489271968] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.509215644] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.529355343] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.549314114] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.569317409] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983678.589317788] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983678.591130123] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.609189553] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.635782019] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.649079932] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.669167180] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.689119907] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.709138212] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.729429427] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.749225634] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.769359567] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.789290686] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.809243614] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.829290773] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.849290042] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.869243960] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983678.870926630] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983678.888898835] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.909081892] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.928999329] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.949296006] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.969309481] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983678.988970828] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.009132560] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.029168538] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.049276755] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.069053459] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.089063926] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.109273818] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.129122138] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.149144844] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.169031645] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.189085161] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.209165470] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.229496474] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.249347871] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.269351932] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.288988225] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.309412188] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.328991180] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.349071296] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.369108099] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.388945756] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.409140661] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.429129342] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.449322566] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.468993087] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.489185381] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.509252621] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.529139662] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.549142209] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.569266020] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983679.589147670] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983679.590595933] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.609367479] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.628999989] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.649122107] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.669014197] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.688795133] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.708919923] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.729127136] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.749356036] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.769294682] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.789359728] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.809205360] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.829210583] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.849354017] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.869370604] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983679.870902925] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983679.889254848] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.909290960] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.929296372] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.949302204] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.969217875] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983679.989272749] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.009543757] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.029360760] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.049340412] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.069233989] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.089247970] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.109200529] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.128915967] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.149148324] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.168943295] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.188957453] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.208880528] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.228969126] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.248877571] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.268997787] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.288915093] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.309134730] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.329251382] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.348870385] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.368955881] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.389029570] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.408854411] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.429125731] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.448831208] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.468820582] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.488936064] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.508922902] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.528840381] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.548965670] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.568939819] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.589115554] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983680.609093504] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983680.609518221] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.629602507] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.649158896] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.669045306] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.689153045] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.709132659] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.729057965] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.748984564] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.769282334] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.789042681] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.809312539] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.829271441] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.849146274] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.869213335] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983680.870913110] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983680.888843690] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.909134477] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.929249209] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.948984857] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.969252562] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983680.989079507] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.009336165] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.029324077] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.049061964] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.069017549] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.089066096] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.109056837] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.129714607] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.149031010] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.169879621] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.188941721] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.209018535] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.229239591] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.249344164] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.269333243] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.289159402] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.309057642] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.329112632] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.349259358] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.369329102] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.389342058] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.409444830] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.429319925] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.449132636] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.469173141] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.489212656] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.509299348] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.529475828] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.549356086] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.568981138] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.589146784] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.609108773] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983681.629097351] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983681.630332806] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.649121419] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.669046750] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.689267070] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.708961062] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.729094014] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.749221368] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.769345183] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.789090652] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.809415917] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.829061237] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.849007726] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.868977706] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983681.870836816] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983681.889276521] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.909308982] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.929314210] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.949334115] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.969328008] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983681.989318731] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.009022971] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.028931826] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.049247333] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.069309138] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.089149708] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.109515815] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.129182630] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.149446419] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.169114047] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.188997517] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.208969049] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.229215910] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.249122467] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.269318712] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.289377632] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.309200751] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.329120765] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.349212687] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.369362301] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.389340935] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.409459432] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.429321864] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.449422052] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.469312632] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.489198859] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.509402949] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.529295589] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.549204087] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.568887698] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.589135431] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.609201394] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983682.632116542] [cmd_vel_chassis_serial]: send source=cmd_vel vx=0.350 wz=5.836
+[ERROR] [1783983682.632583402] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.649191921] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.669242509] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.689060578] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.708966807] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.729361279] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.749351534] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.769352301] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.789497776] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.809202380] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.829341172] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.849321350] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.869498593] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.889332640] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.909203501] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[INFO] [1783983682.920769512] [cmd_vel_chassis_serial]: 收到 /cmd_vel: vx=0.350 wz=5.836
+[ERROR] [1783983682.929348460] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.949248344] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.969104199] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983682.989324863] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.009357206] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.028976853] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.048936647] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.069149613] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.089151161] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.109020324] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.129095721] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.150058008] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error
+[ERROR] [1783983683.169109022] [cmd_vel_chassis_serial]: Serial write failed: write failed: [Errno 5] Input/output error

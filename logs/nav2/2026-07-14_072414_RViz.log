@@ -1,0 +1,8 @@
+[INFO] [1783985055.298273436] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783985055.298392121] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[INFO] [1783985055.367633077] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783985055.425686893] [rviz]: Subscribing to: /cloud_registered
+
+[INFO] [1783985055.439787772] [rviz]: Subscribing to: /cloud_registered
+
+[INFO] [1783985072.456169179] [rclcpp]: signal_handler(SIGINT/SIGTERM)

@@ -1,0 +1,37 @@
+[INFO] [1783989983.020568231] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1783989983.020880927] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1783989991.023513974] [box_pick_node]: [ICP] 发布 /initialpose (1/5)
+[INFO] [1783989993.025559408] [box_pick_node]: ⏳ ICP 未响应，1.0s 后重试...
+[INFO] [1783989994.026310554] [box_pick_node]: [ICP] 发布 /initialpose (2/5)
+[INFO] [1783989996.028509023] [box_pick_node]: ⏳ ICP 未响应，1.0s 后重试...
+[INFO] [1783989997.029305194] [box_pick_node]: [ICP] 发布 /initialpose (3/5)
+[INFO] [1783989999.031799688] [box_pick_node]: ⏳ ICP 未响应，1.0s 后重试...
+[INFO] [1783990000.032666670] [box_pick_node]: [ICP] 发布 /initialpose (4/5)
+[INFO] [1783990002.037050238] [box_pick_node]: ⏳ ICP 未响应，1.0s 后重试...
+[INFO] [1783990003.037844809] [box_pick_node]: [ICP] 发布 /initialpose (5/5)
+[WARN] [1783990005.039927436] [box_pick_node]: ⚠ ICP 初始化失败：发布 5 次后仍未收到定位数据
+  可点击 RViz 中的「2D Pose Estimate」手动初始化
+[INFO] [1783990005.041771889] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.546, -0.087) yaw=-0.070
+[INFO] [1783990005.042424056] [box_pick_node]: [自动到达] 到达目标 (0.55, -0.09) 当前位置 (0.552, -0.059) 距离=0.029m
+[INFO] [1783990005.042622308] [box_pick_node]: ============================================================
+[INFO] [1783990005.043082435] [box_pick_node]: [开始] 状态: DETECTING → DETECTING，启动 cube_detector.py
+[INFO] [1783990005.043285475] [box_pick_node]: ============================================================
+[INFO] [1783990005.043616152] [box_pick_node]: [停止] 已发送停止指令
+[INFO] [1783990005.044828025] [box_pick_node]: [CUBE] cube_detector PID=16441 → /home/hyper/program/2026_Gsing-second_ROS/logs/vision/2026-07-14_084645_cube_detector.log
+[INFO] [1783990005.049272315] [box_pick_node]: [检测] 等待 cube_detector 数据（最多 15 秒）...
+[INFO] [1783990008.050852331] [box_pick_node]: [检测] 第6/30 帧收到数据
+[INFO] [1783990008.051288460] [box_pick_node]: [原始] 雷达系坐标: x=0.136  y=0.262  z=0.224  xy距离=0.295m
+[INFO] [1783990008.051703076] [box_pick_node]: [变换] 机械臂系(未补偿): x=-0.334  y=0.262  z=-0.386  距离=0.574m
+[INFO] [1783990008.052242470] [box_pick_node]: [补偿] 加半高后: x=-0.209  y=0.262  z=-0.386
+[INFO] [1783990008.052632132] [box_pick_node]: [ROS侧] 轴边界+IK检查: 通过
+[INFO] [1783990008.053001497] [box_pick_node]: [STM32] 补偿后检查: 通过
+[INFO] [1783990008.053379633] [box_pick_node]: → 判定: 可达，直接抓取
+[INFO] [1783990008.054570523] [box_pick_node]: [抓取] ✓ 可达，启动 catch.py
+[INFO] [1783990008.054956644] [box_pick_node]: [抓取] catch.py 流程: 稳定检测(3-5s) → AUTO_CMD推进 → 发坐标 → 自动退出
+[INFO] [1783990008.056139874] [box_pick_node]: [CATCH] catch.py PID=16492 → /home/hyper/program/2026_Gsing-second_ROS/logs/arm/2026-07-14_084648_catch.log
+[INFO] [1783990008.056868500] [box_pick_node]: [抓取] 等待 catch.py (PID=16492) 完成...
+[INFO] [1783990026.927467979] [box_pick_node]: [抓取] catch.py 已正常退出
+[INFO] [1783990027.428134786] [box_pick_node]: [抓取] ✅ 抓取流程完成，回到 IDLE
+[INFO] [1783990027.795546731] [box_pick_node]: [CUBE] 已停止
+[INFO] [1783990027.795919207] [box_pick_node]: [CATCH] 已停止
+[INFO] [1783990027.796216685] [box_pick_node]: [结束] 已回到 IDLE，可开始下一箱

@@ -1,0 +1,4 @@
+[INFO] [1783985597.123491891] [fastlio_mapping]: p_pre->lidar_type 5
+[INFO] [1783985597.139226287] [fastlio_mapping]: Node init finished.
+[INFO] [1783986326.683283468] [fastlio_mapping]: Saving map to ./map.pcd...
+[WARN] [1783986326.683337276] [laser_mapping]: Map cloud is empty, skip saving.

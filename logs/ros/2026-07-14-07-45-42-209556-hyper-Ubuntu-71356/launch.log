@@ -1,0 +1,10 @@
+1783986342.2109931 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-209556-hyper-Ubuntu-71356
+1783986342.2111688 [INFO] [launch]: Default logging verbosity is set to INFO
+1783986342.6989677 [INFO] [unitree_lidar_ros2_node-1]: process started with pid [71597]
+1783986342.6991537 [INFO] [rviz2-2]: process started with pid [71598]
+1783986342.9742866 [rviz2-2] 1783986342.974020 [0]      rviz2: Failed to find a free participant index for domain 0
+1783986342.9749269 [rviz2-2] [ERROR] [1783986342.974204242] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+1783986342.9751067 [rviz2-2] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+1783986342.9751823 [rviz2-2]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+1783986345.7475007 [ERROR] [unitree_lidar_ros2_node-1]: process has died [pid 71597, exit code -6, cmd '/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/lib/unitree_lidar_ros2/unitree_lidar_ros2_node --ros-args -r __node:=unitree_lidar_ros2_node --params-file /tmp/launch_params_4l6rb68g --params-file /tmp/launch_params_3fo2nz7f --params-file /tmp/launch_params_kjpukct_ --params-file /tmp/launch_params_8wnwo4q6 --params-file /tmp/launch_params_7hz8f8dd --params-file /tmp/launch_params_cgazky73 --params-file /tmp/launch_params_arqbpcvq --params-file /tmp/launch_params_v9wlhyu6 --params-file /tmp/launch_params_jkr0290b --params-file /tmp/launch_params_kel4v453 --params-file /tmp/launch_params_hnaxog7n --params-file /tmp/launch_params_bebcvrdt --params-file /tmp/launch_params_hslm_346 --params-file /tmp/launch_params_zi8v6tse --params-file /tmp/launch_params_9dbjil8d --params-file /tmp/launch_params_du4ymblf --params-file /tmp/launch_params_6o1maood'].
+1783986346.7759042 [ERROR] [rviz2-2]: process has died [pid 71598, exit code -6, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz --ros-args -r __node:=rviz2'].

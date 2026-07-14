@@ -1,0 +1,19 @@
+1783988600.4626639 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-23-20-460707-hyper-Ubuntu-7355
+1783988600.4629140 [INFO] [launch]: Default logging verbosity is set to INFO
+1783988600.5776801 [INFO] [static_transform_publisher-1]: process started with pid [7531]
+1783988600.5778680 [INFO] [static_transform_publisher-2]: process started with pid [7532]
+1783988600.5779471 [INFO] [static_transform_publisher-3]: process started with pid [7533]
+1783988600.5780077 [INFO] [static_transform_publisher-4]: process started with pid [7534]
+1783988600.5780606 [INFO] [map_server-5]: process started with pid [7535]
+1783988600.5781119 [INFO] [rviz2-6]: process started with pid [7536]
+1783988605.6410575 [INFO] [controller_server-7]: process started with pid [7872]
+1783988605.6413445 [INFO] [planner_server-8]: process started with pid [7873]
+1783988605.6414859 [INFO] [behavior_server-9]: process started with pid [7874]
+1783988605.6416097 [INFO] [bt_navigator-10]: process started with pid [7875]
+1783988605.6417143 [INFO] [waypoint_follower-11]: process started with pid [7876]
+1783988605.6418145 [INFO] [lifecycle_manager-12]: process started with pid [7877]
+1783988605.6419144 [INFO] [goal_pose_to_nav2-13]: process started with pid [7878]
+1783988605.6420264 [INFO] [costmap_to_grid-14]: process started with pid [7879]
+1783988606.1124616 [ERROR] [costmap_to_grid-14]: process has died [pid 7879, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+1783988606.4069190 [ERROR] [goal_pose_to_nav2-13]: process has died [pid 7878, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+1783988611.7318215 [ERROR] [bt_navigator-10]: process has died [pid 7875, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator --ros-args -r __node:=bt_navigator --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_00my5c13'].

@@ -1,0 +1,125 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-23-20-460707-hyper-Ubuntu-7355
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [7531]
+[INFO] [static_transform_publisher-2]: process started with pid [7532]
+[INFO] [static_transform_publisher-3]: process started with pid [7533]
+[INFO] [static_transform_publisher-4]: process started with pid [7534]
+[INFO] [map_server-5]: process started with pid [7535]
+[INFO] [rviz2-6]: process started with pid [7536]
+[static_transform_publisher-1] [INFO] [1783988600.600945197] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-3] [INFO] [1783988600.603169572] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'body'
+[static_transform_publisher-4] [INFO] [1783988600.604527850] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-2] [INFO] [1783988600.609175313] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'camera_init' to 'base_link'
+[map_server-5] [INFO] [1783988600.631286108] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1783988600.631408036] [map_server]: Creating
+[rviz2-6] [INFO] [1783988602.169065933] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1783988602.169158243] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1783988602.208890401] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-7]: process started with pid [7872]
+[INFO] [planner_server-8]: process started with pid [7873]
+[INFO] [behavior_server-9]: process started with pid [7874]
+[INFO] [bt_navigator-10]: process started with pid [7875]
+[INFO] [waypoint_follower-11]: process started with pid [7876]
+[INFO] [lifecycle_manager-12]: process started with pid [7877]
+[INFO] [goal_pose_to_nav2-13]: process started with pid [7878]
+[INFO] [costmap_to_grid-14]: process started with pid [7879]
+[planner_server-8] [INFO] [1783988605.686005741] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783988605.687455555] [controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783988605.695876081] [planner_server]: Creating
+[controller_server-7] [INFO] [1783988605.699249409] [controller_server]: Creating controller server
+[waypoint_follower-11] [INFO] [1783988605.702932533] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1783988605.705030979] [waypoint_follower]: Creating
+[bt_navigator-10] 1783988605.711425 [0] bt_navigat: Failed to find a free participant index for domain 0
+[bt_navigator-10] [ERROR] [1783988605.711509241] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[bt_navigator-10] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[bt_navigator-10]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[controller_server-7] [INFO] [1783988605.719369779] [local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783988605.724823490] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-12] [INFO] [1783988605.743111198] [lifecycle_manager_navigation]: Creating
+[behavior_server-9] [INFO] [1783988605.750876301] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783988605.752878379] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783988605.753516716] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-12] [INFO] [1783988605.753206713] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[costmap_to_grid-14] 1783988606.006226 [0]    python3: Failed to find a free participant index for domain 0
+[costmap_to_grid-14] [ERROR] [1783988606.006317230] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[costmap_to_grid-14] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[costmap_to_grid-14]   self.__node = _rclpy.Node(
+[costmap_to_grid-14] Traceback (most recent call last):
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 77, in <module>
+[costmap_to_grid-14]     main()
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 70, in main
+[costmap_to_grid-14]     node = CostmapToGrid()
+[costmap_to_grid-14]            ^^^^^^^^^^^^^^^
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 28, in __init__
+[costmap_to_grid-14]     super().__init__("costmap_to_grid")
+[costmap_to_grid-14]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[costmap_to_grid-14]     self.__node = _rclpy.Node(
+[costmap_to_grid-14]                   ^^^^^^^^^^^^
+[costmap_to_grid-14] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [costmap_to_grid-14]: process has died [pid 7879, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+[goal_pose_to_nav2-13] 1783988606.290482 [0]    python3: Failed to find a free participant index for domain 0
+[goal_pose_to_nav2-13] [ERROR] [1783988606.290564362] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[goal_pose_to_nav2-13] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[goal_pose_to_nav2-13]   self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13] Traceback (most recent call last):
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 62, in <module>
+[goal_pose_to_nav2-13]     main()
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 55, in main
+[goal_pose_to_nav2-13]     node = GoalPoseToNav2()
+[goal_pose_to_nav2-13]            ^^^^^^^^^^^^^^^^
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 29, in __init__
+[goal_pose_to_nav2-13]     super().__init__("goal_pose_to_nav2")
+[goal_pose_to_nav2-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[goal_pose_to_nav2-13]     self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13]                   ^^^^^^^^^^^^
+[goal_pose_to_nav2-13] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [goal_pose_to_nav2-13]: process has died [pid 7878, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+[lifecycle_manager-12] [INFO] [1783988607.920846516] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988609.921212763] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[ERROR] [bt_navigator-10]: process has died [pid 7875, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator --ros-args -r __node:=bt_navigator --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_00my5c13'].
+[lifecycle_manager-12] [INFO] [1783988611.921440000] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988613.921812376] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988615.922011743] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988617.922233262] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988619.922446662] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988621.922668488] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988623.922885578] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988625.923110464] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988627.923326928] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988629.923540580] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988631.923768269] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988633.923987381] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...
+[lifecycle_manager-12] [INFO] [1783988635.924202852] [lifecycle_manager_navigation]: Waiting for service bt_navigator/get_state...

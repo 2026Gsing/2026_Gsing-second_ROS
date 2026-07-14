@@ -1,0 +1,90 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-42-47-090899-hyper-Ubuntu-14625
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [14747]
+[INFO] [rviz2-2]: process started with pid [14754]
+[INFO] [env-3]: process started with pid [14761]
+[INFO] [env-4]: process started with pid [14768]
+[INFO] [pcd_to_pointcloud-5]: process started with pid [14771]
+[pcd_to_pointcloud-5] [INFO] [1783989767.189973477] [map_publisher]: Publishing data with 275382 points (x y z normal_x normal_y normal_z intensity curvature) on topic /cloud_pcd in frame map.
+[fastlio_mapping-1] [INFO] [1783989767.225727856] [fastlio_mapping]: p_pre->lidar_type 5
+[fastlio_mapping-1] Multi thread started 
+[fastlio_mapping-1] ~~~~/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[fastlio_mapping-1] [INFO] [1783989767.233966520] [fastlio_mapping]: Node init finished.
+[rviz2-2] [INFO] [1783989768.027772713] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783989768.027840285] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1783989768.076489920] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783989768.119474001] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.120046247] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.120439486] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.120851021] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.137492148] [rviz]: Subscribing to: /cloud_pcd
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.138518194] [rviz]: Subscribing to: /submap
+[rviz2-2] 
+[rviz2-2] [INFO] [1783989768.139888937] [rviz]: Subscribing to: /cur_scan_in_map
+[rviz2-2] 
+[env-3] [INFO] [1783989768.918160077] [global_localization]: Waiting for global map...
+[env-3] [INFO] [1783989768.918504737] [global_localization]: Loading map: /home/hyper/program/2026_Gsing-second_ROS/map/PCD26.pcd, voxel_size=0.01
+[env-3] [INFO] [1783989769.059692864] [global_localization]: Map loaded: raw=275382 pts, downsampled=65515 pts
+[env-3] [INFO] [1783989769.059921271] [global_localization]: Global map received.
+[env-3] [INFO] [1783989769.562019747] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989770.061719917] [global_localization]: Waiting for initial pose...
+[env-3] [INFO] [1783989770.562047491] [global_localization]: Waiting for initial pose...
+[env-3] Traceback (most recent call last):
+[env-3]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization", line 33, in <module>
+[env-3]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'global_localization')())
+[env-3]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 372, in main
+[env-3]     rclpy.spin(node)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[env-3]     executor.spin_once()
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[env-3]     self._spin_once_impl(timeout_sec)
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[env-3]     handler, entity, node = self.wait_for_ready_callbacks(
+[env-3]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[env-3]     return next(self._cb_iter)
+[env-3]            ^^^^^^^^^^^^^^^^^^^
+[env-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+[env-3]     raise ExternalShutdownException()
+[env-3] rclpy.executors.ExternalShutdownException
+[env-4] Traceback (most recent call last):
+[env-4]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion", line 33, in <module>
+[env-4]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'transform_fusion')())
+[env-4]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-4]   File "/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/transform_fusion.py", line 134, in main
+[env-4]     rclpy.spin(node)
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[env-4]     executor.spin_once()
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[env-4]     self._spin_once_impl(timeout_sec)
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[env-4]     handler, entity, node = self.wait_for_ready_callbacks(
+[env-4]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[env-4]     return next(self._cb_iter)
+[env-4]            ^^^^^^^^^^^^^^^^^^^
+[env-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+[env-4]     raise ExternalShutdownException()
+[env-4] rclpy.executors.ExternalShutdownException
+[ERROR] [env-4]: process has died [pid 14768, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+[ERROR] [env-3]: process has died [pid 14761, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_li0ktzj8 --params-file /tmp/launch_params_klke11o4'].

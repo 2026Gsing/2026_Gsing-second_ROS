@@ -1,0 +1,30 @@
+[INFO] [launch]: All log files can be found below /home/hyper/.ros/log/2026-07-14-07-45-10-005756-hyper-Ubuntu-70675
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [70722]
+[INFO] [rviz2-2]: process started with pid [70723]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2
+[rviz2-2] [INFO] [1783986311.259635644] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783986311.259762583] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1783986311.302873355] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1783986311.377261470] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[rviz2-2] [INFO] [1783986311.397733883] [rviz2]: Subscribing to: /unilidar/cloud
+[rviz2-2] 
+[unitree_lidar_ros2_node-1] [UDPHandler] create udp socket success.
+[unitree_lidar_ros2_node-1] [UDPHandler] bind udp port failed.
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!
+[unitree_lidar_ros2_node-1] [WARNING] Unilidar is not initialized!

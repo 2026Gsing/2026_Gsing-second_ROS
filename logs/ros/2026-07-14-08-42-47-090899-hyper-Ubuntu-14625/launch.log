@@ -1,0 +1,40 @@
+1783989767.0917375 [INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-42-47-090899-hyper-Ubuntu-14625
+1783989767.0918417 [INFO] [launch]: Default logging verbosity is set to INFO
+1783989767.1469009 [INFO] [fastlio_mapping-1]: process started with pid [14747]
+1783989767.1470342 [INFO] [rviz2-2]: process started with pid [14754]
+1783989767.1470785 [INFO] [env-3]: process started with pid [14761]
+1783989767.1471124 [INFO] [env-4]: process started with pid [14768]
+1783989767.1471412 [INFO] [pcd_to_pointcloud-5]: process started with pid [14771]
+1783989768.0281417 [rviz2-2] [INFO] [1783989768.027772713] [rviz2]: Stereo is NOT SUPPORTED
+1783989768.0282409 [rviz2-2] [INFO] [1783989768.027840285] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+1783989768.0768023 [rviz2-2] [INFO] [1783989768.076489920] [rviz2]: Stereo is NOT SUPPORTED
+1783989768.1197650 [rviz2-2] [INFO] [1783989768.119474001] [rviz]: Subscribing to: /cloud_pcd
+1783989768.1198692 [rviz2-2] 
+1783989768.1202090 [rviz2-2] [INFO] [1783989768.120046247] [rviz]: Subscribing to: /cloud_pcd
+1783989768.1202953 [rviz2-2] 
+1783989768.1205981 [rviz2-2] [INFO] [1783989768.120439486] [rviz]: Subscribing to: /submap
+1783989768.1206584 [rviz2-2] 
+1783989768.1209149 [rviz2-2] [INFO] [1783989768.120851021] [rviz]: Subscribing to: /cur_scan_in_map
+1783989768.1209495 [rviz2-2] 
+1783989768.1377852 [rviz2-2] [INFO] [1783989768.137492148] [rviz]: Subscribing to: /cloud_pcd
+1783989768.1379344 [rviz2-2] 
+1783989768.1387486 [rviz2-2] [INFO] [1783989768.138518194] [rviz]: Subscribing to: /submap
+1783989768.1388464 [rviz2-2] 
+1783989768.1400750 [rviz2-2] [INFO] [1783989768.139888937] [rviz]: Subscribing to: /cur_scan_in_map
+1783989768.1401572 [rviz2-2] 
+1783989771.9928524 [ERROR] [env-4]: process has died [pid 14768, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
+1783989772.2944732 [ERROR] [env-3]: process has died [pid 14761, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_li0ktzj8 --params-file /tmp/launch_params_klke11o4'].

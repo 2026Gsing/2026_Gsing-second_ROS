@@ -1,0 +1,29 @@
+[INFO] [1783988602.202335947] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783988602.202446086] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[INFO] [1783988602.257037075] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1783988602.335297348] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783988602.335956109] [rviz]: Subscribing to: /submap
+
+[INFO] [1783988602.336508066] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783988602.337509917] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783988602.361009399] [rviz]: Subscribing to: /cur_scan_in_map
+
+[INFO] [1783988602.363039460] [rviz]: Subscribing to: /submap
+
+[INFO] [1783988602.365391136] [rviz]: Subscribing to: /cloud_pcd
+
+[INFO] [1783988602.689759795] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986889.383 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988605.424608008] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986927.814 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988608.028615830] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986964.774 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988610.788301658] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988613.564851791] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988616.892558047] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988619.996258952] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986964.774 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988622.716739305] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988625.276878556] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986889.383 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988628.284765797] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783986927.814 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988631.036504767] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[INFO] [1783988633.564689741] [rviz]: Message Filter dropping message: frame 'camera_init' at time 1783988600.782 for reason 'the timestamp on the message is earlier than all the data in the transform cache'

@@ -1,0 +1,25 @@
+[INFO] [1783985294.478788963] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985294.480965836] [planner_server]: Creating
+[INFO] [1783985294.487849393] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783985294.488261494] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1783985294.538645863] [planner_server]: Configuring
+[INFO] [1783985294.538688899] [global_costmap.global_costmap]: Configuring
+[INFO] [1783985294.541979370] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1783985294.545344273] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1783985294.546364018] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1783985294.557014912] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1783985294.557051685] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1783985294.557561256] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1783985294.721274046] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 58 X 53 at 0.050000 m/pix
+[INFO] [1783985294.978199756] [planner_server]: Activating
+[INFO] [1783985294.978244075] [global_costmap.global_costmap]: Activating
+[INFO] [1783985294.978253211] [global_costmap.global_costmap]: Checking transform
+[INFO] [1783985294.978397855] [global_costmap.global_costmap]: start
+[INFO] [1783985295.028582023] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1783985295.029352445] [planner_server]: Creating bond (planner_server) to lifecycle manager.

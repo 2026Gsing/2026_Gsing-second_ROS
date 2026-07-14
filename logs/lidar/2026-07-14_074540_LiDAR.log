@@ -1,0 +1,15 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-07-45-42-209556-hyper-Ubuntu-71356
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [71597]
+[INFO] [rviz2-2]: process started with pid [71598]
+[unitree_lidar_ros2_node-1] 1783986342.724128 [0] unitree_li: Failed to find a free participant index for domain 0
+[unitree_lidar_ros2_node-1] [ERROR] [1783986342.724249028] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[unitree_lidar_ros2_node-1] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[unitree_lidar_ros2_node-1]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[rviz2-2] 1783986342.974020 [0]      rviz2: Failed to find a free participant index for domain 0
+[rviz2-2] [ERROR] [1783986342.974204242] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[rviz2-2] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[rviz2-2]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[ERROR] [unitree_lidar_ros2_node-1]: process has died [pid 71597, exit code -6, cmd '/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/lib/unitree_lidar_ros2/unitree_lidar_ros2_node --ros-args -r __node:=unitree_lidar_ros2_node --params-file /tmp/launch_params_4l6rb68g --params-file /tmp/launch_params_3fo2nz7f --params-file /tmp/launch_params_kjpukct_ --params-file /tmp/launch_params_8wnwo4q6 --params-file /tmp/launch_params_7hz8f8dd --params-file /tmp/launch_params_cgazky73 --params-file /tmp/launch_params_arqbpcvq --params-file /tmp/launch_params_v9wlhyu6 --params-file /tmp/launch_params_jkr0290b --params-file /tmp/launch_params_kel4v453 --params-file /tmp/launch_params_hnaxog7n --params-file /tmp/launch_params_bebcvrdt --params-file /tmp/launch_params_hslm_346 --params-file /tmp/launch_params_zi8v6tse --params-file /tmp/launch_params_9dbjil8d --params-file /tmp/launch_params_du4ymblf --params-file /tmp/launch_params_6o1maood'].
+[ERROR] [rviz2-2]: process has died [pid 71598, exit code -6, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz --ros-args -r __node:=rviz2'].

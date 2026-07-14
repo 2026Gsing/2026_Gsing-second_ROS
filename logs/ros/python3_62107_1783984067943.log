@@ -1,0 +1,23 @@
+[INFO] [1783984068.087846713] [arm_state_machine]: ============================================================
+[INFO] [1783984068.088136570] [arm_state_machine]: Arm State Machine Started (含自动任务状态机推进)
+[INFO] [1783984068.088342246] [arm_state_machine]: State: IDLE
+[INFO] [1783984068.088534026] [arm_state_machine]: ============================================================
+[INFO] [1783984070.725242226] [arm_state_machine]: 缓存 #1/10: 原始(0.176, 0.248, 0.230) → 最终(-0.215, 0.248, -0.426)
+[INFO] [1783984071.559647543] [arm_state_machine]: 缓存 #2/10: 原始(0.175, 0.244, 0.227) → 最终(-0.212, 0.244, -0.425)
+[INFO] [1783984072.407088572] [arm_state_machine]: 缓存 #3/10: 原始(0.182, 0.239, 0.228) → 最终(-0.213, 0.239, -0.432)
+[INFO] [1783984072.407925941] [arm_state_machine]: ============================================================
+[INFO] [1783984072.408283803] [arm_state_machine]: ✓ 视觉检测稳定！锁定平均目标: (-0.213, 0.244, -0.428)
+[INFO] [1783984072.408616624] [arm_state_machine]: ============================================================
+[INFO] [1783984072.408960647] [arm_state_machine]: [SEQ] 发送 AUTO_CMD_START...
+[INFO] [1783984072.409318839] [arm_state_machine]: >>> 已发布 AUTO_CMD: cmd=1 target=0 zone=0
+[INFO] [1783984072.509951162] [arm_state_machine]: [SEQ] 发送 AUTO_CMD_ARRIVED_BOX...
+[INFO] [1783984072.510388258] [arm_state_machine]: >>> 已发布 AUTO_CMD: cmd=2 target=1 zone=0
+[INFO] [1783984072.510795882] [arm_state_machine]: [SEQ] 等待 0.6s 让 STM32 进入 PICK 状态...
+[INFO] [1783984073.078706633] [arm_state_machine]: [STATUS] State: WAITING_PICK
+[INFO] [1783984073.111264500] [arm_state_machine]: [SEQ] STM32 应已进入 PICK，发送机械臂坐标...
+[INFO] [1783984073.111610177] [arm_state_machine]: >>> 已发布坐标到 /vision/arm_control: (-0.213, 0.244, -0.428)
+[INFO] [1783984073.111812509] [arm_state_machine]: [等待] 坐标已发送，等待 STM32 回传 ARM_EVENT pick_done
+[INFO] [1783984078.078611722] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783984083.078713581] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783984088.078729733] [arm_state_machine]: [STATUS] State: COMPLETED
+[INFO] [1783984088.091060973] [arm_state_machine]: [ARM_EVENT] 抓取完成: back_slot=1 side=left

@@ -14,6 +14,7 @@ launch_utils.py — 前置 ROS 节点启动/清理工具
 
 import atexit
 import os
+import platform
 import signal
 import subprocess
 import time
@@ -53,8 +54,10 @@ _LOG_CATEGORIES = {
 }
 
 # ============ 开关 ============
-# 全局 RViz 开关：可通过环境变量 GSING_RVIZ=0/false 一次性关闭所有 RViz
-ENABLE_RVIZ = os.environ.get("GSING_RVIZ", "true").lower() not in ("0", "false", "off")
+# RViz 默认：miniPC(gsing) 不启动，主机(hyper) 启动
+# 可通过环境变量 GSING_RVIZ=1 或 GSING_RVIZ=0 临时覆盖
+_HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
+ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
 MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图

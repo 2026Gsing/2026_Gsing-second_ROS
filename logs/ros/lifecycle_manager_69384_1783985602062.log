@@ -1,0 +1,23 @@
+[INFO] [1783985602.072953183] [lifecycle_manager_navigation]: Creating
+[INFO] [1783985602.079415880] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1783985602.092061575] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1783985602.092120879] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[INFO] [1783985602.100135063] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[INFO] [1783985602.132193880] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[INFO] [1783985602.159529512] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[INFO] [1783985602.182745606] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[INFO] [1783985602.287855693] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[INFO] [1783985602.327419323] [lifecycle_manager_navigation]: [34m[1mActivating map_server[0m[0m
+[INFO] [1783985602.432024266] [lifecycle_manager_navigation]: Server map_server connected with bond.
+[INFO] [1783985602.432083780] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[INFO] [1783985602.586933264] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[INFO] [1783985602.586982768] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[INFO] [1783985602.741314199] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[INFO] [1783985602.741360901] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[INFO] [1783985602.844698057] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[INFO] [1783985602.844751867] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[INFO] [1783985602.976008090] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[INFO] [1783985602.976062582] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[INFO] [1783985603.080317827] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[INFO] [1783985603.080365967] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[INFO] [1783985603.080380240] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m

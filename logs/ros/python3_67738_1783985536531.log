@@ -1,0 +1,18 @@
+[INFO] [1783985536.765835833] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1783985536.766117187] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1783985546.535536366] [box_pick_node]: ✅ ICP 初始化为 (0,0,0) X正向
+[INFO] [1783985550.755928143] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.485, 0.017) yaw=-0.052
+[INFO] [1783985554.731786331] [box_pick_node]: [自动到达] 到达目标 (0.49, 0.02) 当前位置 (0.377, 0.059) 距离=0.116m
+[INFO] [1783985554.732113085] [box_pick_node]: ============================================================
+[INFO] [1783985554.732370262] [box_pick_node]: [开始] 状态: DETECTING → DETECTING，启动 cube_detector.py
+[INFO] [1783985554.732624783] [box_pick_node]: ============================================================
+[INFO] [1783985554.733021388] [box_pick_node]: [停止] 已发送停止指令
+[INFO] [1783985554.734015422] [box_pick_node]: [CUBE] cube_detector PID=68609 → /home/hyper/program/2026_Gsing-second_ROS/logs/vision/2026-07-14_073234_cube_detector.log
+[INFO] [1783985554.735108542] [box_pick_node]: [检测] 等待 cube_detector 数据（最多 15 秒）...
+[INFO] [1783985559.736853674] [box_pick_node]: [检测] 等待中...(5s)
+[INFO] [1783985564.738632063] [box_pick_node]: [检测] 等待中...(10s)
+[INFO] [1783985569.741458510] [box_pick_node]: [检测] 等待中...(15s)
+[WARN] [1783985569.741978537] [box_pick_node]: [检测] ⏰ 超时: 15 秒未检测到立方体
+[INFO] [1783985570.108377565] [box_pick_node]: [CUBE] 已停止
+[INFO] [1783985570.109056427] [box_pick_node]: [结束] 已回到 IDLE，可开始下一箱
+[INFO] [1783985582.198687376] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.562, 0.009) yaw=-0.078

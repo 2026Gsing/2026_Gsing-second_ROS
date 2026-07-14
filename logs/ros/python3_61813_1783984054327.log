@@ -1,0 +1,2 @@
+[INFO] [1783984054.410751039] [goal_pose_to_nav2]: Bridge ready: goal_pose -> NavigateToPose (navigate_to_pose)
+[INFO] [1783984059.001330584] [goal_pose_to_nav2]: Received goal (0.46, -0.07) in frame 'map'

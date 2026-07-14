@@ -1,0 +1,27 @@
+[INFO] [1783985288.370491524] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1783985288.370923627] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1783985298.038675545] [box_pick_node]: ✅ ICP 初始化为 (0,0,0) X正向
+[INFO] [1783985300.074614104] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.521, 0.041) yaw=-0.048
+[INFO] [1783985304.385307108] [box_pick_node]: [自动到达] 到达目标 (0.52, 0.04) 当前位置 (0.395, 0.066) 距离=0.128m
+[INFO] [1783985304.385649982] [box_pick_node]: ============================================================
+[INFO] [1783985304.385935917] [box_pick_node]: [开始] 状态: DETECTING → DETECTING，启动 cube_detector.py
+[INFO] [1783985304.386208667] [box_pick_node]: ============================================================
+[INFO] [1783985304.386616132] [box_pick_node]: [停止] 已发送停止指令
+[INFO] [1783985304.387671991] [box_pick_node]: [CUBE] cube_detector PID=66788 → /home/hyper/program/2026_Gsing-second_ROS/logs/vision/2026-07-14_072824_cube_detector.log
+[INFO] [1783985304.388648037] [box_pick_node]: [检测] 等待 cube_detector 数据（最多 15 秒）...
+[INFO] [1783985306.389525390] [box_pick_node]: [检测] 第4/30 帧收到数据
+[INFO] [1783985306.389933554] [box_pick_node]: [原始] 雷达系坐标: x=0.172  y=0.144  z=0.212  xy距离=0.224m
+[INFO] [1783985306.390283183] [box_pick_node]: [变换] 机械臂系(未补偿): x=-0.322  y=0.144  z=-0.422  距离=0.550m
+[INFO] [1783985306.390621670] [box_pick_node]: [补偿] 加半高后: x=-0.197  y=0.144  z=-0.422
+[INFO] [1783985306.390974996] [box_pick_node]: [ROS侧] 轴边界+IK检查: 通过
+[INFO] [1783985306.391332545] [box_pick_node]: [STM32] 补偿后检查: 通过
+[INFO] [1783985306.391701594] [box_pick_node]: → 判定: 可达，直接抓取
+[INFO] [1783985306.391930228] [box_pick_node]: [抓取] ✓ 可达，启动 catch.py
+[INFO] [1783985306.392156749] [box_pick_node]: [抓取] catch.py 流程: 稳定检测(3-5s) → AUTO_CMD推进 → 发坐标 → 自动退出
+[INFO] [1783985306.393305080] [box_pick_node]: [CATCH] catch.py PID=66833 → /home/hyper/program/2026_Gsing-second_ROS/logs/arm/2026-07-14_072826_catch.log
+[INFO] [1783985306.394380939] [box_pick_node]: [抓取] 等待 catch.py (PID=66833) 完成...
+[INFO] [1783985332.342156103] [box_pick_node]: [抓取] catch.py 已正常退出
+[INFO] [1783985332.842867037] [box_pick_node]: [抓取] ✅ 抓取流程完成，回到 IDLE
+[INFO] [1783985333.257710056] [box_pick_node]: [CUBE] 已停止
+[INFO] [1783985333.258131496] [box_pick_node]: [CATCH] 已停止
+[INFO] [1783985333.258489899] [box_pick_node]: [结束] 已回到 IDLE，可开始下一箱

@@ -1,0 +1,325 @@
+[INFO] [1783988575.733044400] [laser_mapping]: p_pre->lidar_type 5
+Multi thread started 
+~~~~/home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[INFO] [1783988575.738898300] [laser_mapping]: Node init finished.
+[INFO] [1783988575.785453988] [pointcloud_x_filter]: 点云过滤器已启动，仅保留 x > 0.0, 半径 > 0.0 的点
+[INFO] [1783988576.738345919] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1783988577.738357385] [laser_mapping]: publish_map: frame pts=0, total=0
+[WARN] [1783988578.238325080] [laser_mapping]: No point, skip this scan!
+
+[WARN] [1783988578.248339068] [laser_mapping]: No point, skip this scan!
+
+[WARN] [1783988578.258376457] [laser_mapping]: No point, skip this scan!
+
+IMU Initial Done
+[WARN] [1783988578.298654008] [laser_mapping]: No point, skip this scan!
+
+[WARN] [1783988578.308463058] [laser_mapping]: No point, skip this scan!
+
+[WARN] [1783988578.318311701] [laser_mapping]: No point, skip this scan!
+
+[WARN] [1783988578.328497625] [laser_mapping]: No point, skip this scan!
+
+[INFO] [1783988578.390572756] [laser_mapping]: Initialize the map kdtree
+[INFO] [1783988578.401630084] [laser_mapping]: publish_map: frame pts=2484, total=0
+[INFO] [1783988578.452758662] [laser_mapping]: publish_map: frame pts=2484, total=2484
+[INFO] [1783988578.475491193] [laser_mapping]: publish_map: frame pts=2484, total=4968
+[INFO] [1783988578.521607591] [laser_mapping]: publish_map: frame pts=2902, total=7452
+[INFO] [1783988578.572588518] [laser_mapping]: publish_map: frame pts=2902, total=10354
+[INFO] [1783988578.608259568] [laser_mapping]: publish_map: frame pts=2902, total=13256
+[INFO] [1783988578.670012661] [laser_mapping]: publish_map: frame pts=2902, total=16158
+[INFO] [1783988578.697236491] [laser_mapping]: publish_map: frame pts=2679, total=19060
+[INFO] [1783988578.722496635] [laser_mapping]: publish_map: frame pts=2679, total=21739
+[INFO] [1783988578.767181475] [laser_mapping]: publish_map: frame pts=2626, total=24418
+[INFO] [1783988578.769317881] [laser_mapping]: publish_map: frame pts=2626, total=27044
+[INFO] [1783988578.798859653] [laser_mapping]: publish_map: frame pts=2626, total=29670
+[INFO] [1783988578.844699132] [laser_mapping]: publish_map: frame pts=2918, total=32296
+[INFO] [1783988578.874050944] [laser_mapping]: publish_map: frame pts=2918, total=35214
+[INFO] [1783988578.906190693] [laser_mapping]: publish_map: frame pts=2509, total=38132
+[INFO] [1783988578.951012768] [laser_mapping]: publish_map: frame pts=2509, total=40641
+[INFO] [1783988578.977331299] [laser_mapping]: publish_map: frame pts=2509, total=43150
+[INFO] [1783988579.025932238] [laser_mapping]: publish_map: frame pts=2679, total=45659
+[INFO] [1783988579.055079753] [laser_mapping]: publish_map: frame pts=2679, total=48338
+[INFO] [1783988579.097917457] [laser_mapping]: publish_map: frame pts=2916, total=51017
+[INFO] [1783988579.132623344] [laser_mapping]: publish_map: frame pts=2916, total=53933
+[INFO] [1783988579.181475159] [laser_mapping]: publish_map: frame pts=2602, total=56849
+[INFO] [1783988579.214430427] [laser_mapping]: publish_map: frame pts=2602, total=59451
+[INFO] [1783988579.263448731] [laser_mapping]: publish_map: frame pts=2602, total=62053
+[INFO] [1783988579.298809350] [laser_mapping]: publish_map: frame pts=2792, total=64655
+[INFO] [1783988579.336344643] [laser_mapping]: publish_map: frame pts=2734, total=67447
+[INFO] [1783988579.369966481] [laser_mapping]: publish_map: frame pts=2734, total=70181
+[INFO] [1783988579.403297896] [laser_mapping]: publish_map: frame pts=2482, total=72915
+[INFO] [1783988579.451216238] [laser_mapping]: publish_map: frame pts=2482, total=75397
+[INFO] [1783988579.457592090] [laser_mapping]: publish_map: frame pts=2482, total=77879
+[INFO] [1783988579.528127650] [laser_mapping]: publish_map: frame pts=2900, total=80361
+[INFO] [1783988579.562228713] [laser_mapping]: publish_map: frame pts=2900, total=83261
+[INFO] [1783988579.609254243] [laser_mapping]: publish_map: frame pts=2900, total=86161
+[INFO] [1783988579.643913445] [laser_mapping]: publish_map: frame pts=2691, total=89061
+[INFO] [1783988579.693465796] [laser_mapping]: publish_map: frame pts=2587, total=91752
+[INFO] [1783988579.728203892] [laser_mapping]: publish_map: frame pts=2587, total=94339
+[INFO] [1783988579.773812450] [laser_mapping]: publish_map: frame pts=2801, total=96926
+[INFO] [1783988579.780472780] [laser_mapping]: publish_map: frame pts=2801, total=99727
+[INFO] [1783988579.815627157] [laser_mapping]: publish_map: frame pts=2801, total=102528
+[INFO] [1783988579.860773502] [laser_mapping]: publish_map: frame pts=2567, total=105329
+[INFO] [1783988579.871502963] [laser_mapping]: publish_map: frame pts=2567, total=107896
+[INFO] [1783988579.939783924] [laser_mapping]: publish_map: frame pts=2678, total=110463
+[INFO] [1783988579.974345777] [laser_mapping]: publish_map: frame pts=2678, total=113141
+[INFO] [1783988580.022011966] [laser_mapping]: publish_map: frame pts=2678, total=115819
+[INFO] [1783988580.051770439] [laser_mapping]: publish_map: frame pts=2916, total=118497
+[INFO] [1783988580.066834878] [laser_mapping]: publish_map: frame pts=2491, total=121413
+[INFO] [1783988580.126736983] [laser_mapping]: publish_map: frame pts=2491, total=123904
+[INFO] [1783988580.179007042] [laser_mapping]: publish_map: frame pts=2771, total=126395
+[INFO] [1783988580.211813076] [laser_mapping]: publish_map: frame pts=2771, total=129166
+[INFO] [1783988580.252674304] [laser_mapping]: publish_map: frame pts=2735, total=131937
+[INFO] [1783988580.286123420] [laser_mapping]: publish_map: frame pts=2735, total=134672
+[INFO] [1783988580.319686121] [laser_mapping]: publish_map: frame pts=2593, total=137407
+[INFO] [1783988580.327794277] [laser_mapping]: publish_map: frame pts=2593, total=140000
+[INFO] [1783988580.398214607] [laser_mapping]: publish_map: frame pts=2593, total=142593
+[INFO] [1783988580.445955878] [laser_mapping]: publish_map: frame pts=2899, total=145186
+[INFO] [1783988580.480144881] [laser_mapping]: publish_map: frame pts=2899, total=148085
+[INFO] [1783988580.522471867] [laser_mapping]: publish_map: frame pts=2698, total=150984
+[INFO] [1783988580.557226712] [laser_mapping]: publish_map: frame pts=2698, total=153682
+[INFO] [1783988580.566305931] [laser_mapping]: publish_map: frame pts=2493, total=156380
+[INFO] [1783988580.634075708] [laser_mapping]: publish_map: frame pts=2493, total=158873
+[INFO] [1783988580.676470305] [laser_mapping]: publish_map: frame pts=2914, total=161366
+[INFO] [1783988580.716337755] [laser_mapping]: publish_map: frame pts=2914, total=164280
+[INFO] [1783988580.762219313] [laser_mapping]: publish_map: frame pts=2914, total=167194
+[INFO] [1783988580.770892772] [laser_mapping]: publish_map: frame pts=2914, total=170108
+[INFO] [1783988580.797565857] [laser_mapping]: publish_map: frame pts=2600, total=173022
+[INFO] [1783988580.842067650] [laser_mapping]: publish_map: frame pts=2674, total=175622
+[INFO] [1783988580.852501621] [laser_mapping]: publish_map: frame pts=2674, total=178296
+[INFO] [1783988580.894287912] [laser_mapping]: publish_map: frame pts=2674, total=180970
+[INFO] [1783988580.940318990] [laser_mapping]: publish_map: frame pts=2800, total=183644
+[INFO] [1783988580.969907654] [laser_mapping]: publish_map: frame pts=2800, total=186444
+[INFO] [1783988581.019117894] [laser_mapping]: publish_map: frame pts=2593, total=189244
+[INFO] [1783988581.053720125] [laser_mapping]: publish_map: frame pts=2593, total=191837
+[INFO] [1783988581.104649400] [laser_mapping]: publish_map: frame pts=2868, total=194430
+[INFO] [1783988581.134895645] [laser_mapping]: publish_map: frame pts=2868, total=197298
+[INFO] [1783988581.181127956] [laser_mapping]: publish_map: frame pts=2744, total=200166
+[INFO] [1783988581.210045381] [laser_mapping]: publish_map: frame pts=2744, total=202910
+[INFO] [1783988581.224001157] [laser_mapping]: publish_map: frame pts=2482, total=205654
+[INFO] [1783988581.285806786] [laser_mapping]: publish_map: frame pts=2482, total=208136
+[INFO] [1783988581.335441331] [laser_mapping]: publish_map: frame pts=2894, total=210618
+[INFO] [1783988581.369520360] [laser_mapping]: publish_map: frame pts=2894, total=213512
+[INFO] [1783988581.414429027] [laser_mapping]: publish_map: frame pts=2710, total=216406
+[INFO] [1783988581.444044693] [laser_mapping]: publish_map: frame pts=2710, total=219116
+[INFO] [1783988581.476576600] [laser_mapping]: publish_map: frame pts=2507, total=221826
+[INFO] [1783988581.520958979] [laser_mapping]: publish_map: frame pts=2507, total=224333
+[INFO] [1783988581.534233816] [laser_mapping]: publish_map: frame pts=2507, total=226840
+[INFO] [1783988581.591737541] [laser_mapping]: publish_map: frame pts=2803, total=229347
+[INFO] [1783988581.624471422] [laser_mapping]: publish_map: frame pts=2803, total=232150
+[INFO] [1783988581.669759537] [laser_mapping]: publish_map: frame pts=2627, total=234953
+[INFO] [1783988581.684544488] [laser_mapping]: publish_map: frame pts=2627, total=237580
+[INFO] [1783988581.724625469] [laser_mapping]: publish_map: frame pts=2670, total=240207
+[INFO] [1783988581.768620685] [laser_mapping]: publish_map: frame pts=2670, total=242877
+[INFO] [1783988581.780930229] [laser_mapping]: publish_map: frame pts=2670, total=245547
+[INFO] [1783988581.794804247] [laser_mapping]: publish_map: frame pts=2670, total=248217
+[INFO] [1783988581.854531965] [laser_mapping]: publish_map: frame pts=2883, total=250887
+[INFO] [1783988581.879512035] [laser_mapping]: publish_map: frame pts=2883, total=253770
+[INFO] [1783988581.932743160] [laser_mapping]: publish_map: frame pts=2493, total=256653
+[INFO] [1783988581.965695092] [laser_mapping]: publish_map: frame pts=2493, total=259146
+[INFO] [1783988582.012420159] [laser_mapping]: publish_map: frame pts=2855, total=261639
+[INFO] [1783988582.045512096] [laser_mapping]: publish_map: frame pts=2855, total=264494
+[INFO] [1783988582.098479703] [laser_mapping]: publish_map: frame pts=2752, total=267349
+[INFO] [1783988582.132211544] [laser_mapping]: publish_map: frame pts=2752, total=270101
+[INFO] [1783988582.148059635] [laser_mapping]: publish_map: frame pts=2510, total=272853
+[INFO] [1783988582.197223921] [laser_mapping]: publish_map: frame pts=2510, total=275363
+[INFO] [1783988582.244299283] [laser_mapping]: publish_map: frame pts=2781, total=277873
+[INFO] [1783988582.276493612] [laser_mapping]: publish_map: frame pts=2781, total=280654
+[INFO] [1783988582.308568893] [laser_mapping]: publish_map: frame pts=2781, total=283435
+[INFO] [1783988582.353333156] [laser_mapping]: publish_map: frame pts=2713, total=286216
+[INFO] [1783988582.388560721] [laser_mapping]: publish_map: frame pts=2713, total=288929
+[INFO] [1783988582.438214269] [laser_mapping]: publish_map: frame pts=2594, total=291642
+[INFO] [1783988582.476940382] [laser_mapping]: publish_map: frame pts=2594, total=294236
+[INFO] [1783988582.522563333] [laser_mapping]: publish_map: frame pts=2913, total=296830
+[INFO] [1783988582.563349758] [laser_mapping]: publish_map: frame pts=2913, total=299743
+[INFO] [1783988582.581095744] [laser_mapping]: publish_map: frame pts=2521, total=302656
+[INFO] [1783988582.632980736] [laser_mapping]: publish_map: frame pts=2521, total=305177
+[INFO] [1783988582.678954412] [laser_mapping]: publish_map: frame pts=2665, total=307698
+[INFO] [1783988582.712148808] [laser_mapping]: publish_map: frame pts=2665, total=310363
+[INFO] [1783988582.766181227] [laser_mapping]: publish_map: frame pts=2917, total=313028
+[INFO] [1783988582.786334093] [laser_mapping]: publish_map: frame pts=2917, total=315945
+[INFO] [1783988582.824022459] [laser_mapping]: publish_map: frame pts=2917, total=318862
+[INFO] [1783988582.844160774] [laser_mapping]: publish_map: frame pts=2526, total=321779
+[INFO] [1783988582.876256329] [laser_mapping]: publish_map: frame pts=2526, total=324305
+[INFO] [1783988582.923145406] [laser_mapping]: publish_map: frame pts=2712, total=326831
+[INFO] [1783988582.963260247] [laser_mapping]: publish_map: frame pts=2712, total=329543
+[INFO] [1783988583.013414915] [laser_mapping]: publish_map: frame pts=2776, total=332255
+[INFO] [1783988583.033011131] [laser_mapping]: publish_map: frame pts=2776, total=335031
+[INFO] [1783988583.087073361] [laser_mapping]: publish_map: frame pts=2591, total=337807
+[INFO] [1783988583.105511028] [laser_mapping]: publish_map: frame pts=2591, total=340398
+[INFO] [1783988583.137203488] [laser_mapping]: publish_map: frame pts=2892, total=342989
+[INFO] [1783988583.191636589] [laser_mapping]: publish_map: frame pts=2892, total=345881
+[INFO] [1783988583.241167022] [laser_mapping]: publish_map: frame pts=2892, total=348773
+[INFO] [1783988583.281958071] [laser_mapping]: publish_map: frame pts=2721, total=351665
+[INFO] [1783988583.302699689] [laser_mapping]: publish_map: frame pts=2721, total=354386
+[INFO] [1783988583.350580443] [laser_mapping]: publish_map: frame pts=2481, total=357107
+[INFO] [1783988583.383396418] [laser_mapping]: publish_map: frame pts=2825, total=359588
+[INFO] [1783988583.428585532] [laser_mapping]: publish_map: frame pts=2825, total=362413
+[INFO] [1783988583.470606466] [laser_mapping]: publish_map: frame pts=2825, total=365238
+[INFO] [1783988583.490539350] [laser_mapping]: publish_map: frame pts=2635, total=368063
+[INFO] [1783988583.527077075] [laser_mapping]: publish_map: frame pts=2635, total=370698
+[INFO] [1783988583.557564096] [laser_mapping]: publish_map: frame pts=2663, total=373333
+[INFO] [1783988583.581458177] [laser_mapping]: publish_map: frame pts=2663, total=375996
+[INFO] [1783988583.630253156] [laser_mapping]: publish_map: frame pts=2832, total=378659
+[INFO] [1783988583.681387757] [laser_mapping]: publish_map: frame pts=2832, total=381491
+[INFO] [1783988583.735061679] [laser_mapping]: publish_map: frame pts=2832, total=384323
+[INFO] [1783988583.754107759] [laser_mapping]: publish_map: frame pts=2832, total=387155
+[INFO] [1783988583.777958866] [laser_mapping]: publish_map: frame pts=2496, total=389987
+[INFO] [1783988583.802653058] [laser_mapping]: publish_map: frame pts=2496, total=392483
+[INFO] [1783988583.855270416] [laser_mapping]: publish_map: frame pts=2700, total=394979
+[INFO] [1783988583.902841279] [laser_mapping]: publish_map: frame pts=2903, total=397679
+[INFO] [1783988583.948381012] [laser_mapping]: publish_map: frame pts=2903, total=400582
+[INFO] [1783988583.976058041] [laser_mapping]: publish_map: frame pts=2484, total=403485
+[INFO] [1783988584.022919931] [laser_mapping]: publish_map: frame pts=2484, total=405969
+[INFO] [1783988584.049776352] [laser_mapping]: publish_map: frame pts=2796, total=408453
+[INFO] [1783988584.077629797] [laser_mapping]: publish_map: frame pts=2796, total=411249
+[INFO] [1783988584.108678058] [laser_mapping]: publish_map: frame pts=2722, total=414045
+[INFO] [1783988584.135541601] [laser_mapping]: publish_map: frame pts=2722, total=416767
+[INFO] [1783988584.185961967] [laser_mapping]: publish_map: frame pts=2722, total=419489
+[INFO] [1783988584.213762750] [laser_mapping]: publish_map: frame pts=2593, total=422211
+[INFO] [1783988584.269140852] [laser_mapping]: publish_map: frame pts=2593, total=424804
+[INFO] [1783988584.294571623] [laser_mapping]: publish_map: frame pts=2802, total=427397
+[INFO] [1783988584.346414948] [laser_mapping]: publish_map: frame pts=2802, total=430199
+[INFO] [1783988584.385368608] [laser_mapping]: publish_map: frame pts=2802, total=433001
+[INFO] [1783988584.413119756] [laser_mapping]: publish_map: frame pts=2529, total=435803
+[INFO] [1783988584.463883718] [laser_mapping]: publish_map: frame pts=2529, total=438332
+[INFO] [1783988584.519147750] [laser_mapping]: publish_map: frame pts=2658, total=440861
+[INFO] [1783988584.543905535] [laser_mapping]: publish_map: frame pts=2658, total=443519
+[INFO] [1783988584.597206918] [laser_mapping]: publish_map: frame pts=2917, total=446177
+[INFO] [1783988584.637654450] [laser_mapping]: publish_map: frame pts=2917, total=449094
+[INFO] [1783988584.661550706] [laser_mapping]: publish_map: frame pts=2501, total=452011
+[INFO] [1783988584.692895552] [laser_mapping]: publish_map: frame pts=2501, total=454512
+[INFO] [1783988584.719555999] [laser_mapping]: publish_map: frame pts=2689, total=457013
+[INFO] [1783988584.742705543] [laser_mapping]: publish_map: frame pts=2689, total=459702
+[INFO] [1783988584.767734048] [laser_mapping]: publish_map: frame pts=2689, total=462391
+[INFO] [1783988584.794496093] [laser_mapping]: publish_map: frame pts=2801, total=465080
+[INFO] [1783988584.828215367] [laser_mapping]: publish_map: frame pts=2801, total=467881
+[INFO] [1783988584.856216962] [laser_mapping]: publish_map: frame pts=2801, total=470682
+[INFO] [1783988584.891620628] [laser_mapping]: publish_map: frame pts=2598, total=473483
+[INFO] [1783988584.955616790] [laser_mapping]: publish_map: frame pts=2598, total=476081
+[INFO] [1783988585.007029908] [laser_mapping]: publish_map: frame pts=2837, total=478679
+[INFO] [1783988585.048766388] [laser_mapping]: publish_map: frame pts=2837, total=481516
+[INFO] [1783988585.076201361] [laser_mapping]: publish_map: frame pts=2726, total=484353
+[INFO] [1783988585.116676906] [laser_mapping]: publish_map: frame pts=2726, total=487079
+[INFO] [1783988585.147626409] [laser_mapping]: publish_map: frame pts=2482, total=489805
+[INFO] [1783988585.176477301] [laser_mapping]: publish_map: frame pts=2482, total=492287
+[INFO] [1783988585.221308046] [laser_mapping]: publish_map: frame pts=2905, total=494769
+[INFO] [1783988585.266910579] [laser_mapping]: publish_map: frame pts=2905, total=497674
+[INFO] [1783988585.330833324] [laser_mapping]: publish_map: frame pts=2905, total=500579
+[INFO] [1783988585.359497078] [laser_mapping]: publish_map: frame pts=2540, total=503484
+[INFO] [1783988585.391486566] [laser_mapping]: publish_map: frame pts=2647, total=506024
+[INFO] [1783988585.421256619] [laser_mapping]: publish_map: frame pts=2647, total=508671
+[INFO] [1783988585.467421829] [laser_mapping]: publish_map: frame pts=2815, total=511318
+[INFO] [1783988585.513963722] [laser_mapping]: publish_map: frame pts=2815, total=514133
+[INFO] [1783988585.545335351] [laser_mapping]: publish_map: frame pts=2815, total=516948
+[INFO] [1783988585.603148325] [laser_mapping]: publish_map: frame pts=2614, total=519763
+[INFO] [1783988585.633480334] [laser_mapping]: publish_map: frame pts=2684, total=522377
+[INFO] [1783988585.664883729] [laser_mapping]: publish_map: frame pts=2684, total=525061
+[INFO] [1783988585.714331084] [laser_mapping]: publish_map: frame pts=2819, total=527745
+[INFO] [1783988585.743368936] [laser_mapping]: publish_map: frame pts=2819, total=530564
+[INFO] [1783988585.786953108] [laser_mapping]: publish_map: frame pts=2819, total=533383
+[INFO] [1783988585.834066991] [laser_mapping]: publish_map: frame pts=2819, total=536202
+[INFO] [1783988585.867322901] [laser_mapping]: publish_map: frame pts=2488, total=539021
+[INFO] [1783988585.915925089] [laser_mapping]: publish_map: frame pts=2877, total=541509
+[INFO] [1783988585.947274545] [laser_mapping]: publish_map: frame pts=2877, total=544386
+[INFO] [1783988585.978772681] [laser_mapping]: publish_map: frame pts=2732, total=547263
+[INFO] [1783988586.010056729] [laser_mapping]: publish_map: frame pts=2732, total=549995
+[INFO] [1783988586.042229980] [laser_mapping]: publish_map: frame pts=2480, total=552727
+[INFO] [1783988586.075100262] [laser_mapping]: publish_map: frame pts=2480, total=555207
+[INFO] [1783988586.109347193] [laser_mapping]: publish_map: frame pts=2480, total=557687
+[INFO] [1783988586.143565188] [laser_mapping]: publish_map: frame pts=2793, total=560167
+[INFO] [1783988586.176102468] [laser_mapping]: publish_map: frame pts=2793, total=562960
+[INFO] [1783988586.211697693] [laser_mapping]: publish_map: frame pts=2677, total=565753
+[INFO] [1783988586.265271121] [laser_mapping]: publish_map: frame pts=2677, total=568430
+[INFO] [1783988586.302204104] [laser_mapping]: publish_map: frame pts=2627, total=571107
+[INFO] [1783988586.363217520] [laser_mapping]: publish_map: frame pts=2627, total=573734
+[INFO] [1783988586.435002748] [laser_mapping]: publish_map: frame pts=2819, total=576361
+[INFO] [1783988586.482435136] [laser_mapping]: publish_map: frame pts=2819, total=579180
+[INFO] [1783988586.516645026] [laser_mapping]: publish_map: frame pts=2506, total=581999
+[INFO] [1783988586.550060747] [laser_mapping]: publish_map: frame pts=2679, total=584505
+[INFO] [1783988586.580500128] [laser_mapping]: publish_map: frame pts=2679, total=587184
+[INFO] [1783988586.623482645] [laser_mapping]: publish_map: frame pts=2916, total=589863
+[INFO] [1783988586.670643075] [laser_mapping]: publish_map: frame pts=2916, total=592779
+[INFO] [1783988586.733344694] [laser_mapping]: publish_map: frame pts=2916, total=595695
+[INFO] [1783988586.764585655] [laser_mapping]: publish_map: frame pts=2916, total=598611
+[INFO] [1783988586.798640026] [laser_mapping]: publish_map: frame pts=2550, total=601527
+[INFO] [1783988586.831460098] [laser_mapping]: publish_map: frame pts=2550, total=604077
+[INFO] [1783988586.864412947] [laser_mapping]: publish_map: frame pts=2757, total=606627
+[INFO] [1783988586.896731862] [laser_mapping]: publish_map: frame pts=2734, total=609384
+[INFO] [1783988586.929915754] [laser_mapping]: publish_map: frame pts=2734, total=612118
+[INFO] [1783988586.963422509] [laser_mapping]: publish_map: frame pts=2539, total=614852
+[INFO] [1783988586.999618048] [laser_mapping]: publish_map: frame pts=2539, total=617391
+[INFO] [1783988587.040288055] [laser_mapping]: publish_map: frame pts=2901, total=619930
+[INFO] [1783988587.099021821] [laser_mapping]: publish_map: frame pts=2901, total=622831
+[INFO] [1783988587.156196192] [laser_mapping]: publish_map: frame pts=2901, total=625732
+[INFO] [1783988587.193433717] [laser_mapping]: publish_map: frame pts=2697, total=628633
+[INFO] [1783988587.232528354] [laser_mapping]: publish_map: frame pts=2496, total=631330
+[INFO] [1783988587.267434931] [laser_mapping]: publish_map: frame pts=2496, total=633826
+[INFO] [1783988587.325506203] [laser_mapping]: publish_map: frame pts=2819, total=636322
+[INFO] [1783988587.360491133] [laser_mapping]: publish_map: frame pts=2819, total=639141
+[INFO] [1783988587.398608878] [laser_mapping]: publish_map: frame pts=2621, total=641960
+[INFO] [1783988587.449985182] [laser_mapping]: publish_map: frame pts=2621, total=644581
+[INFO] [1783988587.491853425] [laser_mapping]: publish_map: frame pts=2677, total=647202
+[INFO] [1783988587.530092033] [laser_mapping]: publish_map: frame pts=2677, total=649879
+[INFO] [1783988587.570606656] [laser_mapping]: publish_map: frame pts=2805, total=652556
+[INFO] [1783988587.610144651] [laser_mapping]: publish_map: frame pts=2805, total=655361
+[INFO] [1783988587.648608654] [laser_mapping]: Saving map to /home/hyper/program/2026_Gsing-second_ROS/map/PCD25.pcd...
+[INFO] [1783988590.299527861] [laser_mapping]: publish_map: frame pts=2805, total=658166
+[INFO] [1783988590.350267746] [laser_mapping]: publish_map: frame pts=2490, total=660971
+[INFO] [1783988590.405773399] [laser_mapping]: publish_map: frame pts=2490, total=663461
+[INFO] [1783988590.460533450] [laser_mapping]: publish_map: frame pts=2498, total=665951
+[INFO] [1783988590.515155878] [laser_mapping]: publish_map: frame pts=2498, total=668449
+[INFO] [1783988590.569674330] [laser_mapping]: publish_map: frame pts=2498, total=670947
+[INFO] [1783988590.624924333] [laser_mapping]: publish_map: frame pts=2498, total=673445
+[INFO] [1783988590.679967702] [laser_mapping]: publish_map: frame pts=2597, total=675943
+[INFO] [1783988590.735395555] [laser_mapping]: publish_map: frame pts=2772, total=678540
+[INFO] [1783988590.789175385] [laser_mapping]: publish_map: frame pts=2772, total=681312
+[INFO] [1783988590.845069957] [laser_mapping]: publish_map: frame pts=2772, total=684084
+[INFO] [1783988590.902231098] [laser_mapping]: publish_map: frame pts=2721, total=686856
+[INFO] [1783988590.959156569] [laser_mapping]: publish_map: frame pts=2583, total=689577
+[INFO] [1783988591.033227332] [laser_mapping]: publish_map: frame pts=2909, total=692160
+[INFO] [1783988591.085866297] [laser_mapping]: publish_map: frame pts=2909, total=695069
+[INFO] [1783988591.150571297] [laser_mapping]: publish_map: frame pts=2909, total=697978
+[INFO] [1783988591.191968409] [laser_mapping]: publish_map: frame pts=2657, total=700887
+[INFO] [1783988591.242411804] [laser_mapping]: publish_map: frame pts=2918, total=703544
+[INFO] [1783988591.302342338] [laser_mapping]: publish_map: frame pts=2918, total=706462
+[INFO] [1783988591.344858661] [laser_mapping]: publish_map: frame pts=2595, total=709380
+[INFO] [1783988591.388557023] [laser_mapping]: publish_map: frame pts=2595, total=711975
+[INFO] [1783988591.431757683] [laser_mapping]: publish_map: frame pts=2691, total=714570
+[INFO] [1783988591.475911868] [laser_mapping]: publish_map: frame pts=2793, total=717261
+[INFO] [1783988591.514734017] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+Traceback (most recent call last):
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 108, in main
+    rclpy.spin(node)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 117, in <module>
+    main()
+  File "/home/hyper/program/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 113, in main
+    rclpy.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 134, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/utilities.py", line 82, in shutdown
+    context.shutdown()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/context.py", line 129, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:333
+current scan saved to /PCD/map.pcd
+terminate called after throwing an instance of 'pcl::IOException'
+  what():  : [pcl::PCDWriter::writeBinary] Error during open!

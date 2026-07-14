@@ -20,6 +20,7 @@ map_scan.py — 一键建图脚本
 import re
 import subprocess
 import os
+import platform
 import signal
 import sys
 import threading
@@ -127,7 +128,13 @@ def find_next_pcd():
 
 
 def main():
-    use_rviz = "--no-rviz" not in sys.argv
+    # RViz 开关：命令行 --no-rviz 优先，其次环境变量 GSING_RVIZ，其次按机器默认
+    # miniPC(gsing) 默认不启动，主机(hyper) 默认启动
+    cli_no_rviz = "--no-rviz" in sys.argv
+    _default_rviz = "1" if platform.node().lower() != "gsing" else "0"
+    env_rviz = os.environ.get("GSING_RVIZ", _default_rviz)
+    use_rviz = not cli_no_rviz and env_rviz.lower() not in ("0", "false", "off")
+    rviz_arg = "true" if use_rviz else "false"
 
     print("=" * 50)
     print("  一键建图")
@@ -139,11 +146,11 @@ def main():
     print(f"  本次保存: {pcd_path}")
     print()
 
-    # === 终端 1: LiDAR 驱动 ===
+    # === 终端 1: LiDAR 驱动（支持 start_rviz:=false 关闭其 RViz）===
     print("[1/3] 启动 LiDAR 驱动...")
     launch(
         f"cd {_FASTLIO_DIR} && {_ROS_SETUP} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
         name="LiDAR",
     )
     time.sleep(2)

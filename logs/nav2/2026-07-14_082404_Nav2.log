@@ -1,0 +1,129 @@
+[INFO] [launch]: All log files can be found below /home/hyper/program/2026_Gsing-second_ROS/logs/ros/2026-07-14-08-24-06-219197-hyper-Ubuntu-8319
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [8429]
+[INFO] [static_transform_publisher-2]: process started with pid [8430]
+[INFO] [static_transform_publisher-3]: process started with pid [8431]
+[INFO] [static_transform_publisher-4]: process started with pid [8432]
+[INFO] [map_server-5]: process started with pid [8433]
+[INFO] [rviz2-6]: process started with pid [8434]
+[static_transform_publisher-4] [INFO] [1783988646.344462541] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-4] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-4] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-4] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-1] [INFO] [1783988646.351130833] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-2] [INFO] [1783988646.357549177] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'camera_init' to 'base_link'
+[static_transform_publisher-3] [INFO] [1783988646.376523210] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'body'
+[map_server-5] [INFO] [1783988646.388692025] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1783988646.388831304] [map_server]: Creating
+[rviz2-6] [INFO] [1783988648.050883580] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1783988648.051019198] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1783988648.122116609] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-7]: process started with pid [8845]
+[INFO] [planner_server-8]: process started with pid [8846]
+[INFO] [behavior_server-9]: process started with pid [8847]
+[INFO] [bt_navigator-10]: process started with pid [8848]
+[INFO] [waypoint_follower-11]: process started with pid [8849]
+[INFO] [lifecycle_manager-12]: process started with pid [8850]
+[INFO] [goal_pose_to_nav2-13]: process started with pid [8851]
+[INFO] [costmap_to_grid-14]: process started with pid [8852]
+[waypoint_follower-11] [INFO] [1783988651.402780660] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1783988651.403853603] [waypoint_follower]: Creating
+[controller_server-7] 1783988651.406224 [0] controller: Failed to find a free participant index for domain 0
+[controller_server-7] [ERROR] [1783988651.406377087] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[bt_navigator-10] [INFO] [1783988651.416992170] [bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1783988651.419686997] [bt_navigator]: Creating
+[controller_server-7] terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+[controller_server-7]   what():  failed to initialize rcl node: error not set, at ./src/rcl/node.c:252
+[behavior_server-9] [INFO] [1783988651.446104312] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-12] [INFO] [1783988651.465309423] [lifecycle_manager_navigation]: Creating
+[planner_server-8] [INFO] [1783988651.471151266] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783988651.473308911] [planner_server]: Creating
+[lifecycle_manager-12] [INFO] [1783988651.476989667] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1783988651.504639247] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783988651.506515685] [global_costmap.global_costmap]: Creating Costmap
+[costmap_to_grid-14] 1783988651.672219 [0]    python3: Failed to find a free participant index for domain 0
+[costmap_to_grid-14] [ERROR] [1783988651.672299091] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[costmap_to_grid-14] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[costmap_to_grid-14]   self.__node = _rclpy.Node(
+[costmap_to_grid-14] Traceback (most recent call last):
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 77, in <module>
+[costmap_to_grid-14]     main()
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 70, in main
+[costmap_to_grid-14]     node = CostmapToGrid()
+[costmap_to_grid-14]            ^^^^^^^^^^^^^^^
+[costmap_to_grid-14]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py", line 28, in __init__
+[costmap_to_grid-14]     super().__init__("costmap_to_grid")
+[costmap_to_grid-14]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[costmap_to_grid-14]     self.__node = _rclpy.Node(
+[costmap_to_grid-14]                   ^^^^^^^^^^^^
+[costmap_to_grid-14] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [costmap_to_grid-14]: process has died [pid 8852, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/costmap_to_grid.py'].
+[goal_pose_to_nav2-13] 1783988652.167116 [0]    python3: Failed to find a free participant index for domain 0
+[goal_pose_to_nav2-13] [ERROR] [1783988652.167230374] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+[goal_pose_to_nav2-13] /opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py:188: RuntimeWarning: Failed to fini rosout publisher: rcl node implementation is invalid, at ./src/rcl/node.c:390
+[goal_pose_to_nav2-13]   self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13] Traceback (most recent call last):
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 62, in <module>
+[goal_pose_to_nav2-13]     main()
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 55, in main
+[goal_pose_to_nav2-13]     node = GoalPoseToNav2()
+[goal_pose_to_nav2-13]            ^^^^^^^^^^^^^^^^
+[goal_pose_to_nav2-13]   File "/home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py", line 29, in __init__
+[goal_pose_to_nav2-13]     super().__init__("goal_pose_to_nav2")
+[goal_pose_to_nav2-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 188, in __init__
+[goal_pose_to_nav2-13]     self.__node = _rclpy.Node(
+[goal_pose_to_nav2-13]                   ^^^^^^^^^^^^
+[goal_pose_to_nav2-13] rclpy._rclpy_pybind11.RCLError: error creating node: error not set, at ./src/rcl/node.c:252
+[ERROR] [goal_pose_to_nav2-13]: process has died [pid 8851, exit code 1, cmd '/usr/bin/python3 /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/goal_pose_to_nav2.py'].
+[lifecycle_manager-12] [INFO] [1783988653.488073509] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988655.488332950] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[ERROR] [controller_server-7]: process has died [pid 8845, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args -r __node:=controller_server --params-file /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/share/dog_nav2_bringup/params/nav2_fastlio_static_map_params.yaml --params-file /tmp/launch_params_izqsw81y'].
+[lifecycle_manager-12] [INFO] [1783988657.488551800] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988659.488801574] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988661.489022739] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988663.489290430] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988665.489535742] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988667.489782966] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988669.490001271] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988671.490240681] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988673.490473745] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988675.490691733] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988677.491064226] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988679.491315172] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988681.491550437] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988683.491794983] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988685.492036464] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988687.492305902] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988689.492551103] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988691.492794321] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988693.493039457] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988695.493276897] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988697.493530893] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
+[lifecycle_manager-12] [INFO] [1783988699.493803233] [lifecycle_manager_navigation]: Waiting for service controller_server/get_state...
