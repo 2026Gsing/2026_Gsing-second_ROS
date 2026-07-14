@@ -114,6 +114,18 @@ _CMD_NAMES = {
 ARM_EVENT_PICK_DONE = 1
 ARM_EVENT_PLACE_DONE = 2
 
+ARM_MISSION_PICK_TO_BACK = 1
+ARM_MISSION_BACK_TO_PLACE = 2
+ARM_MISSION_HAS_PICK = 0x01
+ARM_MISSION_HAS_BACK = 0x02
+ARM_MISSION_HAS_PLACE = 0x04
+ARM_MISSION_HAS_BACK_SIDE = 0x08
+
+ARM_BACK_SIDE_UNKNOWN = 0
+ARM_BACK_SIDE_LEFT = 1
+ARM_BACK_SIDE_RIGHT = 2
+ARM_BACK_SIDE_CENTER = 3
+
 # ============================================================
 # 视觉状态枚举
 # ============================================================
@@ -210,8 +222,8 @@ class VisionAutoTaskNode(Node):
         # ======================== 发布 ========================
         # auto_cmd_payload: JSON {"cmd":2,"target":0,"zone":1} 发给 serial 桥
         self.auto_cmd_pub = self.create_publisher(String, "/vision/auto_cmd", 10)
-        # 机械臂坐标（由串口桥转发 0x12）
-        self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)
+        # 机械臂任务（由串口桥转发 0x14，mode 区分抓取/放置）
+        self.arm_pub = self.create_publisher(String, "/vision/arm_mission", 10)
         # 精细对位速度（替代 Nav2 的最后一段）
         self.vel_pub = self.create_publisher(Twist, "/vision_cmd_vel", 10)
         # 状态发布
@@ -237,6 +249,7 @@ class VisionAutoTaskNode(Node):
         self._last_arm_event = None
         self._last_arm_event_time = 0.0
         self._pick_event_received = False
+        self._carrying_back_side = ARM_BACK_SIDE_UNKNOWN
 
         self.get_logger().info("VisionAutoTaskNode 已启动，等待 START 命令")
         self._publish_state()
@@ -343,6 +356,7 @@ class VisionAutoTaskNode(Node):
         if event == ARM_EVENT_PICK_DONE or event_name == "pick_done":
             side_name = data.get("back_side_name", "unknown")
             back_slot = int(data.get("back_slot", 0))
+            self._carrying_back_side = int(data.get("back_side", ARM_BACK_SIDE_UNKNOWN))
             self._pick_event_received = True
             self.get_logger().info(
                 f"[ARM_EVENT] pick_done: back_slot={back_slot} side={side_name}"
@@ -355,6 +369,10 @@ class VisionAutoTaskNode(Node):
 
         if event == ARM_EVENT_PLACE_DONE or event_name == "place_done":
             self.get_logger().info("[ARM_EVENT] place_done")
+            if self.state == VS.WAIT_PLACE:
+                self._carrying_back_side = ARM_BACK_SIDE_UNKNOWN
+                self._pick_done = False
+                self._transition_to(VS.NEXT_OR_FINISH)
 
     def _read_decision_file(self):
         """从 JSON 文件读取数学决策结果（文件 IPC 方式）"""
@@ -438,12 +456,38 @@ class VisionAutoTaskNode(Node):
         msg.angular.z = float(wz)
         self.vel_pub.publish(msg)
 
-    def send_arm_target(self, x: float, y: float, z: float):
-        """发布机械臂坐标到 /vision/arm_control（串口桥转发 0x12）"""
+    def send_arm_mission(self, mode: int, flags: int, *, pick=None, back=None, place=None, back_side=None):
+        """发布机械臂任务到 /vision/arm_mission（串口桥转发 0x14）。"""
+        data = {"mode": int(mode), "flags": int(flags)}
+        if back_side is not None:
+            data["back_side"] = int(back_side)
+            data["flags"] = int(data["flags"]) | ARM_MISSION_HAS_BACK_SIDE
+        if pick is not None:
+            data["pick"] = [float(pick[0]), float(pick[1]), float(pick[2])]
+        if back is not None:
+            data["back"] = [float(back[0]), float(back[1]), float(back[2])]
+        if place is not None:
+            data["place"] = [float(place[0]), float(place[1]), float(place[2])]
+
         msg = String()
-        msg.data = json.dumps({"x": x, "y": y, "z": z})
+        msg.data = json.dumps(data)
         self.arm_pub.publish(msg)
-        self.get_logger().info(f"[ARM] 坐标 ({x:.3f}, {y:.3f}, {z:.3f})")
+        self.get_logger().info(f"[ARM_MISSION] mode={mode} flags={flags} {data}")
+
+    def send_arm_pick_to_back(self, x: float, y: float, z: float):
+        self.send_arm_mission(
+            ARM_MISSION_PICK_TO_BACK,
+            ARM_MISSION_HAS_PICK,
+            pick=(x, y, z),
+        )
+
+    def send_arm_back_to_place(self, x: float, y: float, z: float, back_side: int):
+        self.send_arm_mission(
+            ARM_MISSION_BACK_TO_PLACE,
+            ARM_MISSION_HAS_PLACE | ARM_MISSION_HAS_BACK_SIDE,
+            place=(x, y, z),
+            back_side=back_side,
+        )
 
     def _publish_state(self):
         msg = String()
@@ -480,6 +524,7 @@ class VisionAutoTaskNode(Node):
             self._latest_cube = None
         if new_state == VS.WAIT_PICK:
             self._pick_event_received = False
+            self._carrying_back_side = ARM_BACK_SIDE_UNKNOWN
 
     def _elapsed(self) -> float:
         return time.monotonic() - self._state_enter_time
@@ -590,18 +635,9 @@ class VisionAutoTaskNode(Node):
 
         if elapsed >= timeout:
             self.get_logger().warn(f"[计时] 比赛结束（{timeout:.0f}秒到）")
-            if self.state in (VS.WAIT_PICK, VS.WAIT_PLACE):
-                # 正在等待 → 跳过等待进入下一步
-                if self.state == VS.WAIT_PICK:
-                    self.send_auto_cmd(AUTO_CMD_PICK_DONE)
-                else:
-                    self.send_auto_cmd(AUTO_CMD_PLACE_DONE)
-                self._transition_to(VS.NEXT_OR_FINISH)
-            else:
-                # 其它状态 → 直接结束
-                self.send_velocity(0.0, 0.0)
-                self.send_auto_cmd(AUTO_CMD_FINISH)
-                self._transition_to(VS.IDLE)
+            self.send_velocity(0.0, 0.0)
+            self.send_auto_cmd(AUTO_CMD_FINISH)
+            self._transition_to(VS.IDLE)
 
     def _state_dispatch(self):
         s = self.state
@@ -736,7 +772,7 @@ class VisionAutoTaskNode(Node):
                     # 使用 catch 模块的工作空间检查
                     ok, reason = validate_arm_target(arm_x, arm_y, arm_z)
                     if ok:
-                        self.send_arm_target(arm_x, arm_y, arm_z)
+                        self.send_arm_pick_to_back(arm_x, arm_y, arm_z)
                         self._pick_done = True
                         self.get_logger().info(
                             f"[抓取] 坐标 ({arm_x:.3f}, {arm_y:.3f}, {arm_z:.3f}) 通过验证"
@@ -744,13 +780,10 @@ class VisionAutoTaskNode(Node):
                     else:
                         self.get_logger().warn(f"[抓取] 坐标超限({reason})，跳过")
 
-        # 阶段三: 超时 → 发送 PICK_DONE
+        # 阶段三: 超时 → 安全停止，不伪造 PICK_DONE
         if self._elapsed() > self.get_parameter("pick_timeout_sec").value:
-            self.get_logger().warn("[抓取] 等待 ARM_EVENT pick_done 超时，使用 PICK_DONE 兜底")
-            self.send_auto_cmd(AUTO_CMD_PICK_DONE)
-            self._cube_cache = []
-            self._pick_done = False
-            self._transition_to(VS.NAV_ZONE)
+            self.get_logger().error("[抓取] 等待 ARM_EVENT pick_done 超时，停止任务")
+            self.stop_all()
 
     # --- NAV_ZONE: 导航到归位区 ---
     def _run_nav_zone(self):
@@ -793,15 +826,17 @@ class VisionAutoTaskNode(Node):
                 place_x = -0.1   # 地面高度补偿（机械臂系 X 向下）
                 place_y = 0.0    # 居中
                 place_z = 0.3    # 前向伸到箱子位置
-                self.send_arm_target(place_x, place_y, place_z)
+                if self._carrying_back_side not in (ARM_BACK_SIDE_LEFT, ARM_BACK_SIDE_RIGHT):
+                    self.get_logger().error("[放置] 未收到有效背负点方向(left/right)，停止任务")
+                    self.stop_all()
+                    return
+                self.send_arm_back_to_place(place_x, place_y, place_z, self._carrying_back_side)
                 self._pick_done = True
                 self.get_logger().info(f"[放置] 发送放置坐标 区位置({zx:.1f},{zy:.1f})")
 
         if self._elapsed() > self.get_parameter("place_timeout_sec").value:
-            self.get_logger().info("[放置] 等待超时，发送 PLACE_DONE")
-            self.send_auto_cmd(AUTO_CMD_PLACE_DONE)
-            self._pick_done = False
-            self._transition_to(VS.NEXT_OR_FINISH)
+            self.get_logger().error("[放置] 等待 ARM_EVENT place_done 超时，停止任务")
+            self.stop_all()
 
     # --- NEXT_OR_FINISH: 下一箱或结束 ---
     def _run_next_or_finish(self):

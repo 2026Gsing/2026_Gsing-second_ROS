@@ -6,18 +6,14 @@ cmd_vel_chassis_serial.py — Nav2 /cmd_vel + Vision → STM32 串口协议转�
   1. 订阅 /cmd_vel (Nav2) → 发送 0x10 底盘速度帧（原有功能）
   2. 订阅 /vision_cmd_vel → 发送 0x10（视觉精细对位，优先级高于 Nav2）
   3. 订阅 /vision/auto_cmd → 发送 0x15 自动任务事件帧
-  4. 订阅 /vision/arm_control → 发送 0x12 机械臂单次控制（x/y/z）
-  5. 订阅 /vision/arm_mission → 发送 0x14 机械臂多段任务（pick/back/place）
-  6. 超时保护：底盘命令超时自动停车
+  4. 订阅 /vision/arm_mission → 发送 0x14 机械臂任务（mode 区分 pick/place）
+  5. 超时保护：底盘命令超时自动停车
 
 协议帧格式 0x10（底盘速度）：
   [0x55][0xAA][0x10][0x09][vx(f32)][wz(f32)][state(u8)][CheckSum]
 
-协议帧格式 0x12（机械臂单次控制 FUNC_ARM_CONTROL）：
-  [0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][CheckSum]
-
-协议帧格式 0x14（机械臂多段任务 FUNC_ARM_MISSION）：
-  [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][pick(12B)]...[back(12B)]...[place(12B)][CheckSum]
+协议帧格式 0x14（机械臂任务 FUNC_ARM_MISSION）：
+  [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][back_side(u8 可选)][pick(12B)]...[back(12B)]...[place(12B)][CheckSum]
 
 协议帧格式 0x15（自动任务事件）：
   [0x55][0xAA][0x15][0x03][cmd(u8)][target(u8)][zone(u8)][CheckSum]
@@ -54,7 +50,6 @@ HEAD1 = 0x55           # 帧头 1
 HEAD2 = 0xAA           # 帧头 2
 CMD_CHASSIS_VEL = 0x10 # 功能码：底盘速度控制
 CMD_GAIT_SWITCH = 0x11 # 功能码：步态切换
-CMD_ARM_CONTROL = 0x12 # 功能码：机械臂单次控制
 CMD_SUCTION     = 0x13 # 功能码：吸盘控制
 CMD_ARM_MISSION = 0x14 # 功能码：机械臂多段任务（pick/back/place）
 CMD_AUTO_TASK   = 0x15 # 功能码：自动任务事件
@@ -63,6 +58,14 @@ CMD_LEG_DEBUG   = 0x31 # STM32 -> upper: wheel-leg support debug
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 LEN_ARM_EVENT_PAYLOAD = 16
+ARM_MISSION_HAS_PICK = 0x01
+ARM_MISSION_HAS_BACK = 0x02
+ARM_MISSION_HAS_PLACE = 0x04
+ARM_MISSION_HAS_BACK_SIDE = 0x08
+ARM_BACK_SIDE_UNKNOWN = 0x00
+ARM_BACK_SIDE_LEFT = 0x01
+ARM_BACK_SIDE_RIGHT = 0x02
+ARM_BACK_SIDE_CENTER = 0x03
 LEG_DEBUG_FMT = "<IBBBB18f"
 LEN_LEG_DEBUG_PAYLOAD = struct.calcsize(LEG_DEBUG_FMT)
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
@@ -194,7 +197,6 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("vision_state_topic", "/vision/robot_state")
         self.declare_parameter("auto_cmd_topic", "/vision/auto_cmd")
         self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
-        self.declare_parameter("arm_control_topic", "/vision/arm_control")
         self.declare_parameter("arm_mission_topic", "/vision/arm_mission")
         self.declare_parameter("arm_event_topic", "/vision/arm_event")
         self.declare_parameter("leg_debug_csv_path", "")
@@ -218,7 +220,6 @@ class CmdVelChassisSerial(Node):
         vision_state_topic = self.get_parameter("vision_state_topic").get_parameter_value().string_value
         auto_topic = self.get_parameter("auto_cmd_topic").get_parameter_value().string_value
         gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
-        arm_control_topic = self.get_parameter("arm_control_topic").get_parameter_value().string_value
         arm_mission_topic = self.get_parameter("arm_mission_topic").get_parameter_value().string_value
         arm_event_topic = self.get_parameter("arm_event_topic").get_parameter_value().string_value
         leg_debug_csv_path = self.get_parameter("leg_debug_csv_path").get_parameter_value().string_value
@@ -291,7 +292,6 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(UInt8, vision_state_topic, self._vision_state_cb, _qos)
         self.create_subscription(String, auto_topic, self._auto_cmd_cb, _qos)
         self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
-        self.create_subscription(String, arm_control_topic, self._arm_control_cb, _qos)
         self.create_subscription(String, arm_mission_topic, self._arm_mission_cb, _qos)
         self.arm_event_pub = self.create_publisher(String, arm_event_topic, 10)
         self.get_logger().info(f"Publishing STM32 arm events on {arm_event_topic}")
@@ -612,58 +612,36 @@ class CmdVelChassisSerial(Node):
         except Exception as e:
             self.get_logger().error(f"[GAIT] 发送失败: {e}")
 
-    def _arm_control_cb(self, msg: String):
-        """
-        接收 /vision/arm_control JSON → 组装 0x12 帧发送（FUNC_ARM_CONTROL）
-
-        STM32 协议格式（与 protocol_handler.c FUNC_ARM_CONTROL 匹配）：
-          [0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][checksum]
-
-        JSON 格式：
-          {"x": 0.1, "y": 0.2, "z": -0.15}
-        """
-        try:
-            data = json.loads(msg.data)
-            x = float(data.get("x", 0.0))
-            y = float(data.get("y", 0.0))
-            z = float(data.get("z", 0.0))
-            pkt = self._build_arm_control_packet(x, y, z)
-            with self._lock:
-                self._queue_critical_packet(pkt, "0x12 arm_control")
-            self._write_serial(pkt, flush=True)
-            # 节流日志：坐标变化或 5s 没打印才输出
-            now = time.monotonic()
-            if (x, y, z) != getattr(self, '_last_arm_log_xyz', None) or \
-               (now - getattr(self, '_last_arm_log_time', 0.0)) >= 5.0:
-                self._last_arm_log_xyz = (x, y, z)
-                self._last_arm_log_time = now
-                self.get_logger().info(
-                    f"[ARM] 发送 0x12: x={x:.3f} y={y:.3f} z={z:.3f}"
-                )
-        except Exception as e:
-            self.get_logger().error(f"[ARM] 解析/发送失败: {e}")
-
     def _arm_mission_cb(self, msg: String):
         """
         接收 /vision/arm_mission JSON → 组装 0x14 帧发送（FUNC_ARM_MISSION）
 
         STM32 协议格式（与 protocol_handler.c FUNC_ARM_MISSION 匹配）：
-          [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][pick(xyz=12B)]...[back(xyz=12B)]...[place(xyz=12B)][checksum]
+          [0x55][0xAA][0x14][len][mode(u8)][flags(u8)][back_side(u8 可选)][pick(xyz=12B)]...[back(xyz=12B)]...[place(xyz=12B)][checksum]
 
-        flags 位：0x01=HAS_PICK, 0x02=HAS_BACK, 0x04=HAS_PLACE
+        flags 位：0x01=HAS_PICK, 0x02=HAS_BACK, 0x04=HAS_PLACE, 0x08=HAS_BACK_SIDE
 
         JSON 格式示例：
           {"mode":1, "flags":7,
            "pick":[0.1,0.2,0.3], "back":[0.15,0.25,0.1], "place":[0.2,0.1,0.05]}
 
           {"mode":1, "flags":1, "pick":[0.1,0.2,0.3]}  # 仅 pick
+          {"mode":2, "flags":12, "back_side":"left", "place":[-0.1,0.0,0.3]}
         """
         try:
             data = json.loads(msg.data)
             mode = int(data.get("mode", 0)) & 0xFF
             flags = int(data.get("flags", 0)) & 0xFF
+            back_side = None
+            if "back_side" in data:
+                back_side = self._parse_back_side(data["back_side"])
+                flags |= ARM_MISSION_HAS_BACK_SIDE
+            elif (flags & ARM_MISSION_HAS_BACK_SIDE) != 0:
+                raise ValueError("flags HAS_BACK_SIDE set but JSON missing back_side")
 
             payload = bytes([mode, flags])
+            if (flags & ARM_MISSION_HAS_BACK_SIDE) != 0:
+                payload += bytes([back_side & 0xFF])
 
             for key in ("pick", "back", "place"):
                 if key in data:
@@ -681,6 +659,21 @@ class CmdVelChassisSerial(Node):
             )
         except Exception as e:
             self.get_logger().error(f"[ARM_MISSION] 解析/发送失败: {e}")
+
+    @staticmethod
+    def _parse_back_side(value) -> int:
+        if isinstance(value, str):
+            key = value.strip().lower()
+            if key in ("left", "l", "+y", "1"):
+                return ARM_BACK_SIDE_LEFT
+            if key in ("right", "r", "-y", "2"):
+                return ARM_BACK_SIDE_RIGHT
+            if key in ("center", "middle", "c", "3"):
+                return ARM_BACK_SIDE_CENTER
+            if key in ("unknown", "none", "0"):
+                return ARM_BACK_SIDE_UNKNOWN
+            raise ValueError(f"unknown back_side {value!r}")
+        return int(value) & 0xFF
 
     def _build_packet(self, vx: float, wz: float, state: int) -> bytes:
         """
@@ -709,16 +702,6 @@ class CmdVelChassisSerial(Node):
         """
         payload = bytes([gait_id & 0xFF])
         frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_GAIT_SWITCH, 1]) + payload
-        checksum = sum(frame_wo_checksum) & 0xFF
-        return frame_wo_checksum + bytes([checksum])
-
-    def _build_arm_control_packet(self, x: float, y: float, z: float) -> bytes:
-        """
-        组装 0x12 串口协议帧（FUNC_ARM_CONTROL）
-        格式：[0x55][0xAA][0x12][0x0C][x(f32)][y(f32)][z(f32)][checksum]
-        """
-        payload = struct.pack("<3f", float(x), float(y), float(z))
-        frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_ARM_CONTROL, 12]) + payload
         checksum = sum(frame_wo_checksum) & 0xFF
         return frame_wo_checksum + bytes([checksum])
 

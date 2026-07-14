@@ -7,15 +7,15 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
   2. 将雷达坐标系坐标变换到机械臂坐标系（含偏移补偿）
   3. 使用滑动窗口标准差法判断位置是否稳定
   4. 位置稳定后，先推进 STM32 自动任务状态机到 PICK 状态
-  5. 再通过 /vision/arm_control 发布坐标给串口桥转发给 STM32
+  5. 再通过 /vision/arm_mission 发布 PICK_TO_BACK 任务给串口桥转发给 STM32
 
 自动任务状态机推进：
   catch.py 单独运行时，STM32 的 auto_task 默认在 IDLE 状态。
-  Auto_Task_ArmAcceptsNewTarget() 要求只能是 PICK 或 PLACE 状态才接受 0x12 坐标，
+  Auto_Task_ArmAcceptsNewTarget() 要求只能是 PICK 或 PLACE 状态才接受 0x14 任务，
   所以需要先发两条 auto_cmd 推进状态机：
     AUTO_CMD_START (cmd=1)      → IDLE → START → NAV_TO_BOX
     AUTO_CMD_ARRIVED_BOX (cmd=2) → NAV_TO_BOX → ARRIVED_BOX (400ms settle) → PICK
-  进入 PICK 后，再发 0x12 坐标，机械臂才会执行抓取。
+  进入 PICK 后，再发 0x14 PICK_TO_BACK 任务，机械臂才会执行抓取。
 
 坐标变换：
   雷达系 (unilidar_lidar): x=前进, y=左, z=上
@@ -25,11 +25,11 @@ catch.py — 机械臂抓取控制节点（通过串口桥转发）
         final_z =  radar_x + offset_z
 
 串口协议（由 cmd_vel_chassis_serial.py 转发）：
-  [0x55][0xAA][0x12][len=12][x(float32)][y(float32)][z(float32)][checksum]
+  [0x55][0xAA][0x14][len][mode=1][flags=HAS_PICK][pick xyz][checksum]
 
 依赖：
   cube_detector.py（提供 /detected_cube 话题）
-  cmd_vel_chassis_serial.py（串口桥，转发 /vision/arm_control → STM32）
+  cmd_vel_chassis_serial.py（串口桥，转发 /vision/arm_mission → STM32）
 
 使用方式：
   python3 py/catch.py
@@ -87,10 +87,12 @@ AUTO_CMD_START = 1
 AUTO_CMD_ARRIVED_BOX = 2
 AUTO_CMD_ARRIVED_ZONE = 4
 ARM_EVENT_PICK_DONE = 1
+ARM_MISSION_PICK_TO_BACK = 1
+ARM_MISSION_HAS_PICK = 0x01
 
 # ARRIVED_BOX settle 400ms + 200ms 裕量，等 STM32 进入 PICK
 ARM_DELAY_AFTER_ARRIVE_SEC = 0.6
-ARM_EVENT_WAIT_TIMEOUT_SEC = 20.0
+ARM_EVENT_WAIT_TIMEOUT_SEC = 30.0
 
 
 # ============================================================
@@ -168,7 +170,7 @@ def validate_arm_target(x, y, z):
 
 def stm32_will_accept(x, y, z):
     """
-    模拟 STM32 接收 0x12 目标后的拒绝逻辑。
+    模拟 STM32 接收 0x14 PICK_TO_BACK 目标后的拒绝逻辑。
     STM32 内部：add suction_cup_l(0.03) to X → arm_target_in_range → Arm_IK
     """
     comp_x = x + 0.03
@@ -208,12 +210,12 @@ class ArmStateMachine(Node):
         serial_device = os.environ.get("STM32_SERIAL_PORT", "/dev/ttyACM0")
         if not os.path.exists(serial_device):
             self.get_logger().warn(
-                f"{serial_device} not found; catch.py will still publish /vision/arm_control. "
+                f"{serial_device} not found; catch.py will still publish /vision/arm_mission. "
                 "Start cmd_vel_chassis_serial.py with the real serial_port."
             )
 
         # ============ 发布器（通过串口桥转发） ============
-        self.arm_pub = self.create_publisher(String, "/vision/arm_control", 10)
+        self.arm_pub = self.create_publisher(String, "/vision/arm_mission", 10)
         self.auto_cmd_pub = self.create_publisher(String, "/vision/auto_cmd", 10)
 
         # ============ 状态机变量 ============
@@ -258,11 +260,15 @@ class ArmStateMachine(Node):
         return find_stable_points(positions, threshold_xy, required_count)
 
     def send_arm_position(self, x, y, z):
-        """通过 /vision/arm_control 发布坐标 → 串口桥转发 → STM32"""
+        """通过 /vision/arm_mission 发布 PICK_TO_BACK 任务 → 串口桥转发 → STM32"""
         msg = String()
-        msg.data = json.dumps({"x": x, "y": y, "z": z})
+        msg.data = json.dumps({
+            "mode": ARM_MISSION_PICK_TO_BACK,
+            "flags": ARM_MISSION_HAS_PICK,
+            "pick": [float(x), float(y), float(z)],
+        })
         self.arm_pub.publish(msg)
-        self.get_logger().info(f">>> 已发布坐标到 /vision/arm_control: ({x:.3f}, {y:.3f}, {z:.3f})")
+        self.get_logger().info(f">>> 已发布 PICK_TO_BACK 到 /vision/arm_mission: ({x:.3f}, {y:.3f}, {z:.3f})")
 
     def arm_event_callback(self, msg):
         """接收 STM32 完成抓取后的 0x22 回传事件。"""

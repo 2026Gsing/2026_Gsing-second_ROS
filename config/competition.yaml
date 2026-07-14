@@ -35,8 +35,8 @@ coordinates:
 timeouts:
   competition: 180       # 比赛总时长 (秒)
   math: 20               # 智力题识别超时 (秒)
-  pick: 5.0              # 抓取等待超时 (秒)
-  place: 5.0             # 放置等待超时 (秒)
+  pick: 25.0             # 抓取到背负完成等待超时 (秒)
+  place: 25.0            # 背负到投放完成等待超时 (秒)
   nav2_action: 30.0      # Nav2 导航超时 (秒)
   nav2_arrival_pos: 0.25 # 到达位置阈值 (m)
   nav2_arrival_angle: 0.30 # 到达角度阈值 (rad)
