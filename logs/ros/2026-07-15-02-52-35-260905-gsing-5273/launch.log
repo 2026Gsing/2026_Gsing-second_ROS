@@ -1,0 +1,4 @@
+1784055155.2678561 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-02-52-35-260905-gsing-5273
+1784055155.2691081 [INFO] [launch]: Default logging verbosity is set to INFO
+1784055160.3461473 [INFO] [unitree_lidar_ros2_node-1]: process started with pid [5574]
+1784055211.3728604 [INFO] [unitree_lidar_ros2_node-1]: process has finished cleanly [pid 5574]

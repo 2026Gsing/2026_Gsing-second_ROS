@@ -1,0 +1,19 @@
+[INFO] [1784055157.193837667] [map_server]: 
+	map_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784055157.194138242] [map_server]: Creating
+[INFO] [1784055164.174605021] [map_server]: Configuring
+[INFO] [1784055164.174846460] [map_io]: Loading yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD30.yaml
+[INFO] [1784055164.176046937] [map_io]: resolution: 0.05
+[INFO] [1784055164.176132617] [map_io]: origin[0]: -0.017
+[INFO] [1784055164.176163954] [map_io]: origin[1]: -1.009
+[INFO] [1784055164.176189853] [map_io]: origin[2]: 0
+[INFO] [1784055164.176214985] [map_io]: free_thresh: 0.196
+[INFO] [1784055164.176240681] [map_io]: occupied_thresh: 0.65
+[INFO] [1784055164.176271489] [map_io]: mode: trinary
+[INFO] [1784055164.176298961] [map_io]: negate: 0
+[INFO] [1784055164.181453238] [map_io]: Loading image_file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD30.pgm
+[INFO] [1784055164.186243056] [map_io]: Read map /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD30.pgm: 56 X 42 map @ 0.05 m/cell
+[INFO] [1784055169.173674089] [map_server]: Activating
+[INFO] [1784055169.174172182] [map_server]: Creating bond (map_server) to lifecycle manager.

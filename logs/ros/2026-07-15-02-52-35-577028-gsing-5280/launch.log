@@ -1,0 +1,15 @@
+1784055155.5825486 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-02-52-35-577028-gsing-5280
+1784055155.5861151 [INFO] [launch]: Default logging verbosity is set to INFO
+1784055156.3019707 [INFO] [static_transform_publisher-1]: process started with pid [5419]
+1784055156.3026114 [INFO] [static_transform_publisher-2]: process started with pid [5420]
+1784055156.3030577 [INFO] [static_transform_publisher-3]: process started with pid [5421]
+1784055156.3034906 [INFO] [static_transform_publisher-4]: process started with pid [5422]
+1784055156.3171465 [INFO] [map_server-5]: process started with pid [5423]
+1784055156.3179502 [INFO] [rviz2-6]: process started with pid [5424]
+1784055161.4741426 [INFO] [controller_server-7]: process started with pid [5589]
+1784055161.4808855 [INFO] [planner_server-8]: process started with pid [5590]
+1784055161.4814246 [INFO] [behavior_server-9]: process started with pid [5591]
+1784055161.4833751 [INFO] [bt_navigator-10]: process started with pid [5592]
+1784055161.4916685 [INFO] [waypoint_follower-11]: process started with pid [5593]
+1784055161.4922364 [INFO] [lifecycle_manager-12]: process started with pid [5596]
+1784055161.4927170 [INFO] [costmap_to_grid-13]: process started with pid [5597]
