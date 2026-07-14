@@ -28,7 +28,7 @@ import signal
 import atexit
 from pathlib import Path
 
-from launch_utils import launch, cleanup_all
+from launch_utils import start_prerequisites, cleanup_all
 
 import rclpy
 from rclpy.node import Node
@@ -870,74 +870,10 @@ def main(args=None):
     # === 赛前配置 ===
     field_id = _prompt_config()
 
-    # === 项目路径 ===
-    fastlio_dir = str(_PROJECT / "fastlio2_v2")
-    nav2_dir = str(_PROJECT / "nav2_ws1")
-    map_dir = _PROJECT / "map"
-    pcd_map = str(map_dir / "map.pcd")
-    pgm_map = str(map_dir / "map.yaml")
-
-    ros_setup = "source /opt/ros/jazzy/setup.bash"
-
-    print("╔══════════════════════════════════════════════╗")
-    print("║  启动比赛全流程 ROS 节点                      ║")
-    print("╚══════════════════════════════════════════════╝")
-
-    # LiDAR 驱动
-    launch(
-        f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py",
-        name="LiDAR",
-    )
-
-    # ICP 定位 (FAST-LIO2 + transform_fusion)
-    launch(
-        f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
-        f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
-        f"ros2 launch fast_lio_localization 1.launch.py "
-        f"  map:={pcd_map} config_file:=unilidar_l2.yaml rviz:=true "
-        f"  map_voxel_size:=0.01 scan_voxel_size:=0.03 "
-        f"  freq_localization:=2.0 localization_threshold:=0.9",
-        name="ICP",
-    )
-
-    # odometry→TF 桥
-    odom_bin = f"{fastlio_dir}/build/fast_lio/odometry_to_tf"
-    if os.path.isfile(odom_bin):
-        launch(f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && {odom_bin}", name="TF桥")
-    else:
-        print(f"  [TF桥] 未找到 {odom_bin}，跳过")
-
-    # Nav2
-    launch(
-        f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "
-        f"  map:={pgm_map}",
-        name="Nav2",
-    )
-
-    # 串口桥
-    launch(
-        f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
-        f"  serial_port:=/dev/ttyACM0 baud_rate:=115200 "
-        f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
-        f"  active_state:=1 idle_state:=0",
-        name="串口桥",
-    )
-
-    # 注册清理
-    atexit.register(cleanup_all)
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        try:
-            signal.signal(sig, lambda *_: (cleanup_all(), sys.exit(0)))
-        except Exception:
-            pass
-
+    # 启动所有前置 ROS 节点（自动杀残留、清理 DDS 共享内存）
+    start_prerequisites()
     print("  ⏳ 等待节点启动（8 秒）...")
     time.sleep(8)
-    print("  ➤ 自动初始化 ICP 定位（原点, X正向）...")
 
     # 发布 /initialpose 自动初始化 ICP（替代手动点击 RViz）
     init_pose_script = _PROJECT / "py" / "control" / "init_pose.py"

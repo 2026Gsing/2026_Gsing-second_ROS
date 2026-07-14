@@ -9,6 +9,7 @@ launch_utils.py — 前置 ROS 节点启动/清理工具
   - 串口桥 (cmd_vel_chassis_serial.py)
 
 日志输出：所有子进程的 stdout/stderr 写入 logs/ 目录，按节点名+时间命名。
+启动前自动杀残留进程，退出时自动清理。
 """
 
 import atexit
@@ -23,6 +24,21 @@ _LOG_DIR = _PROJECT / "logs"
 _LOG_DIR.mkdir(parents=True, exist_ok=True)
 os.environ["ROS_LOG_DIR"] = str(_LOG_DIR / "ros")
 _PROCESSES = []
+
+# ============ 退出/启动时杀的 ROS 进程模式列表 ============
+_KILL_PATTERNS = [
+    "unitree_lidar_ros2_node",
+    "fastlio_mapping",
+    "global_localization",
+    "transform_fusion",
+    "odometry_to_tf",
+    "cmd_vel_chassis_serial",
+    "controller_server",
+    "planner_server",
+    "bt_navigator",
+    "lifecycle_manager",
+    "rviz2",
+]
 
 # ============ 分类映射（name→子目录） ============
 _LOG_CATEGORIES = {
@@ -40,7 +56,7 @@ _LOG_CATEGORIES = {
 ENABLE_RVIZ = True     # ICP 定位启动时是否打开 RViz 可视化
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径
-MAP_NAME = "map/PCD24"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML
+MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 
 def _log_path(name):
@@ -80,6 +96,29 @@ def launch(cmd, cwd=None, name=""):
     return p
 
 
+def _clean_cyclone_shm():
+    """清理 CycloneDDS 共享内存（防止 participant 索引耗尽）"""
+    import shutil
+    for pat in ["*cyclone*", "*dds*"]:
+        for p in Path("/dev/shm").glob(pat):
+            try:
+                if p.is_dir():
+                    shutil.rmtree(p, ignore_errors=True)
+                else:
+                    p.unlink(missing_ok=True)
+            except Exception:
+                pass
+
+
+def _kill_existing():
+    """杀残留 ROS 进程（启动前 + 退出时均调用）"""
+    for pattern in _KILL_PATTERNS:
+        try:
+            subprocess.run(["pkill", "-f", pattern], timeout=5, capture_output=True)
+        except Exception:
+            pass
+
+
 def cleanup_all():
     """清理所有子进程"""
     for p in _PROCESSES:
@@ -88,6 +127,10 @@ def cleanup_all():
         except Exception:
             pass
     _PROCESSES.clear()
+
+    # 杀终端窗口内的 ROS 进程 + 清理 DDS 共享内存
+    _kill_existing()
+    _clean_cyclone_shm()
 
 
 def _register_cleanup():
@@ -105,6 +148,10 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         map_pcd: PCD 地图路径（用于 ICP 定位），默认 MAP_NAME + ".pcd"
         map_yaml: YAML 地图路径（用于 Nav2），默认 MAP_NAME + ".yaml"
     """
+    # 启动前杀残留进程 + 清理 DDS 共享内存
+    _kill_existing()
+    _clean_cyclone_shm()
+
     fastlio_dir = str(_PROJECT / "fastlio2_v2")
     nav2_dir = str(_PROJECT / "nav2_ws1")
 

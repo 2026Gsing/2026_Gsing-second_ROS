@@ -67,7 +67,7 @@ sudo ip addr add 192.168.1.2/24 dev enp129s0
 
 ```bash
 cd 2026_Gsing-second_ROS
-python3 py/control/box_pick_node.py
+./ros-run.sh py/control/box_pick_node.py
 ```
 
 功能：
@@ -80,14 +80,14 @@ python3 py/control/box_pick_node.py
 ### 竞赛全自动
 
 ```bash
-python3 py/control/auto_task.py field_id:=1
+./ros-run.sh py/control/auto_task.py field_id:=1
 ```
 
 ### 建图
 
 ```bash
-python3 py/tools/map_scan.py
-python3 py/tools/map_scan.py --no-rviz
+./ros-run.sh py/tools/map_scan.py
+./ros-run.sh py/tools/map_scan.py --no-rviz
 ```
 
 按 Enter 保存 PCD + 自动 PCD→PGM 转换，输出 `logs/` 有点云数量监控。
@@ -95,8 +95,8 @@ python3 py/tools/map_scan.py --no-rviz
 ### 底盘测试
 
 ```bash
-python3 py/tools/test_move.py           # 交互模式
-python3 py/tools/test_move.py --auto    # 自动序列
+./ros-run.sh py/tools/test_move.py           # 交互模式
+./ros-run.sh py/tools/test_move.py --auto    # 自动序列
 ```
 
 自动启动串口桥（使用 `launch_utils`，与 box_pick_node 一致），显示定位和串口反馈。
