@@ -27,7 +27,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion, Twist
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
@@ -281,6 +281,10 @@ class FastLIOLocalization(Node):
         self.pub_submap = self.create_publisher(PointCloud2, "/submap", 10)
         self.pub_map_to_odom = self.create_publisher(Odometry, "/map_to_odom", 10)
 
+        # ============ 运动预测状态 ============
+        self.cmd_vel = None          # 最新 /cmd_vel 速度指令
+        self.last_icp_time = None    # 上一次 ICP 完成时间
+
         # ============ 加载全局地图 ============
         self.get_logger().info("Waiting for global map...")
         self.initialize_global_map()
@@ -290,6 +294,7 @@ class FastLIOLocalization(Node):
         self.create_subscription(PointCloud2, "/unilidar/cloud", self.cb_save_cur_scan, 10)
         self.create_subscription(Odometry, "/Odometry", self.cb_save_cur_odom, 10)
         self.create_subscription(PoseWithCovarianceStamped, "/initialpose", self.cb_initialize_pose, 10)
+        self.create_subscription(Twist, "/cmd_vel", self.cb_cmd_vel, 10)
 
         # ============ 定时器 ============
         self.timer_localisation = self.create_timer(
@@ -409,8 +414,7 @@ class FastLIOLocalization(Node):
         if self.cur_odom is not None:
             T_odom_to_base_link = self.pose_to_mat(self.cur_odom.pose.pose)
         else:
-            T_odom_to_base_link = np.eye(4)
-            self.get_logger().warn("No odometry yet, skip odom transform in crop")
+            T_odom_to_base_link = self.predict_motion()
         T_map_to_base_link = np.matmul(pose_estimation, T_odom_to_base_link)
         T_base_link_to_map = self.inverse_se3(T_map_to_base_link)
 
@@ -517,6 +521,7 @@ class FastLIOLocalization(Node):
                 )
             else:
                 self.T_map_to_odom = transformation
+                self.last_icp_time = self.get_clock().now()
                 self.publish_odom(transformation)
         else:
             self.get_logger().warn(
@@ -527,6 +532,33 @@ class FastLIOLocalization(Node):
     def cb_save_cur_odom(self, msg):
         """保存最新的 FAST-LIO2 里程计"""
         self.cur_odom = msg
+
+    def cb_cmd_vel(self, msg):
+        """保存最新的 /cmd_vel 速度指令，用于运动预测"""
+        self.cmd_vel = msg
+
+    def predict_motion(self):
+        """根据上一次 ICP 结果和 /cmd_vel 速度，预测当前位姿
+
+        在没有里程计时，用速度指令 × 时间差推算位移，
+        作为 ICP 初始猜测，减少纯 scan matching 的偏差。
+        """
+        if self.cmd_vel is None or self.last_icp_time is None:
+            return np.eye(4)
+        dt = (self.get_clock().now() - self.last_icp_time).nanoseconds / 1e9
+        dt = max(0.0, min(dt, 2.0))  # 限制最大 2s，防止长时间无更新后跳变
+        vx = self.cmd_vel.linear.x
+        wz = self.cmd_vel.angular.z
+        dx = vx * dt
+        dtheta = wz * dt
+        T = np.eye(4)
+        T[0, 3] = dx
+        T[:3, :3] = np.array([
+            [np.cos(dtheta), -np.sin(dtheta), 0],
+            [np.sin(dtheta),  np.cos(dtheta), 0],
+            [0, 0, 1]
+        ])
+        return T
 
     def cb_save_cur_scan(self, msg):
         """保存原始雷达点云，累积到缓存中。对 raw scan 做 Y/Z 翻转以匹配地图坐标系"""
