@@ -1,0 +1,21 @@
+[INFO] [1784023496.266931967] [map_server]: 
+	map_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784023496.267306839] [map_server]: Creating
+[INFO] [1784023502.436643141] [map_server]: Configuring
+[INFO] [1784023502.436850134] [map_io]: Loading yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/map.yaml
+[INFO] [1784023502.438575297] [map_io]: resolution: 0.05
+[INFO] [1784023502.438636923] [map_io]: origin[0]: -0.131
+[INFO] [1784023502.438666177] [map_io]: origin[1]: -2.121
+[INFO] [1784023502.438690786] [map_io]: origin[2]: 0
+[INFO] [1784023502.438737570] [map_io]: free_thresh: 0.196
+[INFO] [1784023502.438763608] [map_io]: occupied_thresh: 0.65
+[INFO] [1784023502.438812071] [map_io]: mode: trinary
+[INFO] [1784023502.438838001] [map_io]: negate: 0
+[INFO] [1784023502.455905898] [map_io]: Loading image_file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD13.pgm
+[ERROR] [1784023502.467597480] [map_io]: Failed to load image file /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD13.pgm for reason: Magick: Unable to open file (/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD13.pgm) reported by magick/blob.c:3118 (OpenBlob)
+[ERROR] [1784023502.467943491] [map_server]: Caught exception in callback for transition 10
+[ERROR] [1784023502.468107816] [map_server]: Original error: Failed to load map yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/map.yaml
+[WARN] [1784023502.468318217] [map_server]: Callback returned ERROR during the transition: configure
+[FATAL] [1784023502.468378955] [map_server]: Lifecycle node map_server does not have error state implemented

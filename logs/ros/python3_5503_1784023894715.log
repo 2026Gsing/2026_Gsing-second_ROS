@@ -1,0 +1,3 @@
+[INFO] [1784023896.376729584] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784023896.380667543] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784023910.881520805] [box_pick_node]: ✅ ICP 初始化为 (0,0,0) X正向

@@ -6,6 +6,9 @@ global_localization.py — FAST-LIO2 全局重定位节点
   将 FAST-LIO2 实时扫描点云与预存的全局 PCD 地图进行 ICP 配准，
   计算 map→odom 变换矩阵，为 Nav2 提供全局定位信息。
 
+不依赖 open3d / ros2_numpy（这些库在 Bay Trail CPU 上因 AVX 指令崩溃），
+改用 numpy + scipy.spatial.KDTree 实现 ICP。
+
 工作流程：
   1. 启动时加载预存的全局 PCD 地图（体素下采样）
   2. 订阅 FAST-LIO2 的 /Odometry（里程计）和 /cloud_registered（配准点云）
@@ -18,20 +21,225 @@ global_localization.py — FAST-LIO2 全局重定位节点
 """
 
 import copy
+import struct
 import threading
 import time
 
-import open3d as o3d
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
 import numpy as np
 import tf2_ros
 import tf_transformations
-import ros2_numpy
+
+
+# ======================================================================
+# open3d 替代工具函数（纯 numpy/scipy，避免 AVX 指令崩溃）
+# ======================================================================
+
+_SCIPY_KD = None  # 延后导入（第一次用时才 import）
+
+
+def _get_kdtree():
+    """延后导入 scipy.spatial.KDTree，避免影响 ROS2 节点启动速度"""
+    global _SCIPY_KD
+    if _SCIPY_KD is None:
+        from scipy.spatial import KDTree
+        _SCIPY_KD = KDTree
+    return _SCIPY_KD
+
+
+def read_pcd(path):
+    """
+    读取二进制 PCD 文件，返回 (N, 3) float64 点云数组。
+    支持大部分标准字段排列，仅提取 x/y/z。
+    """
+    with open(path, "rb") as f:
+        header = {}
+        fields = None
+        size = None
+        typ = None
+        count = None
+        points = 0
+        data_fmt = None
+
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            line = line.decode("ascii", errors="replace").strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.upper().startswith("DATA"):
+                header["DATA"] = line.split(" ", 1)[-1].strip()
+                break
+            parts = line.split(" ", 1)
+            if len(parts) == 2:
+                key, val = parts
+                if key == "FIELDS":
+                    fields = val.split()
+                elif key == "SIZE":
+                    size = list(map(int, val.split()))
+                elif key == "TYPE":
+                    typ = val.split()
+                elif key == "COUNT":
+                    count = list(map(int, val.split()))
+                elif key == "POINTS":
+                    points = int(val)
+                elif key == "WIDTH":
+                    width = int(val)
+                elif key == "HEIGHT":
+                    height = int(val)
+                    points = width * height
+
+        data_type = header.get("DATA", "binary")
+
+        # 构建结构化 dtype
+        if fields and size:
+            dtype_fields = []
+            xyz_indices = []
+            for i, (name, sz, t) in enumerate(
+                zip(fields, size, typ or ["F"] * len(fields))
+            ):
+                np_t = {4: "<f4", 8: "<f8"}.get(sz, "<f4")
+                dtype_fields.append((name, np_t))
+                if name.lower() in ("x", "y", "z"):
+                    xyz_indices.append(i)
+            dtype = np.dtype(dtype_fields)
+
+            if data_type == "binary":
+                raw = np.fromfile(f, dtype=dtype, count=points)
+            else:
+                # ASCII
+                raw = np.loadtxt(f, dtype=dtype, max_rows=points)
+
+            # 提取 x/y/z
+            xyz = np.column_stack([raw[name] for name in ("x", "y", "z")])
+            return np.asarray(xyz, dtype=np.float64)
+        else:
+            # 退化为纯二进制点云
+            raw = np.fromfile(f, dtype="<f4", count=points * 3).reshape(-1, 3)
+            return np.asarray(raw, dtype=np.float64)
+
+
+def voxel_down_sample(points, voxel_size):
+    """
+    体素下采样，返回 (M, 3) float64 数组。
+    - 将点云划分到体素网格中
+    - 每个体素取所有点的重心作为输出点
+    """
+    if len(points) == 0 or voxel_size <= 0:
+        return points.copy()
+
+    # 计算体素坐标
+    voxel = np.floor(points / voxel_size).astype(np.int64)
+
+    # 将三维体素坐标哈希为一维（用位移防碰撞）
+    shift = 20  # 2^20 足够区分 ~1000km @ 1mm
+    hashed = (voxel[:, 0].astype(np.int64) << (2 * shift)) \
+           ^ (voxel[:, 1].astype(np.int64) << shift) \
+           ^ voxel[:, 2].astype(np.int64)
+
+    # 按哈希分组，取每组平均
+    _, inverse, counts = np.unique(hashed, return_inverse=True, return_counts=True)
+    sums = np.zeros((len(counts), 3), dtype=np.float64)
+    np.add.at(sums, inverse, points)
+    centroids = sums / counts[:, np.newaxis]
+    return centroids
+
+
+def transform_points(points, T):
+    """
+    用 4x4 变换矩阵 T 变换 (N,3) 点云。
+    """
+    pts = np.column_stack([points, np.ones(len(points), dtype=points.dtype)])
+    return (pts @ T.T)[:, :3]
+
+
+def icp_registration(source, target, initial, max_distance, max_iteration=50):
+    """
+    点对点 ICP 配准。
+
+    参数:
+        source: (N,3) 源点云（将被变换到 target 系）
+        target: (M,3) 目标点云（参考系）
+        initial: (4,4) 初始变换矩阵
+        max_distance: 有效对应点最大距离
+        max_iteration: 最大迭代次数
+
+    返回:
+        transformation: (4,4) 累积变换矩阵（source→target）
+        fitness: 内点比例（有对应点的点占总点数比例）
+    """
+    if len(source) < 3 or len(target) < 3:
+        return initial.copy(), 0.0
+
+    KDTree = _get_kdtree()
+    tree = KDTree(target)
+
+    # 用初始变换预处理源点云
+    src = transform_points(source, initial)
+    T = initial.copy()
+
+    prev_count = -1
+    for _ in range(max_iteration):
+        # 最近邻搜索（带距离上限，KDTree 的 distance_upper_bound 不兼容 cKDTree 的老参数）
+        dists, indices = tree.query(src, k=1, distance_upper_bound=max_distance)
+        valid = np.isfinite(dists) & (indices < len(target))
+        good = np.where(valid)[0]
+
+        n_valid = len(good)
+        if n_valid < 3:
+            break
+
+        # 对应点对
+        src_pts = src[good]
+        tgt_pts = target[indices[good]]
+
+        # 去质心
+        s_cent = src_pts.mean(axis=0)
+        t_cent = tgt_pts.mean(axis=0)
+        s_dev = src_pts - s_cent
+        t_dev = tgt_pts - t_cent
+
+        # SVD 求解旋转
+        H = s_dev.T @ t_dev
+        U, _, Vt = np.linalg.svd(H)
+        R = Vt.T @ U.T
+        if np.linalg.det(R) < 0:
+            Vt[-1, :] *= -1
+            R = Vt.T @ U.T
+
+        t = t_cent - R @ s_cent
+
+        # 构造增量变换
+        delta = np.eye(4)
+        delta[:3, :3] = R
+        delta[:3, 3] = t
+        T = delta @ T
+
+        # 更新变换后点云
+        src = transform_points(src, delta)
+
+        # 收敛判断
+        if n_valid == prev_count:
+            break
+        prev_count = n_valid
+
+    # 计算 fitness
+    dists, indices = tree.query(src, k=1, distance_upper_bound=max_distance)
+    valid = np.isfinite(dists) & (indices < len(target))
+    fitness = float(np.sum(valid)) / len(source) if len(source) > 0 else 0.0
+
+    return T, fitness
+
+
+# ======================================================================
+# 主类
+# ======================================================================
 
 
 class FastLIOLocalization(Node):
@@ -41,10 +249,10 @@ class FastLIOLocalization(Node):
         super().__init__("fast_lio_localization")
 
         # ============ 状态变量 ============
-        self.global_map = None          # 预存的全局 PCD 地图（Open3D 点云）
+        self.global_map = None          # 预存的全局 PCD 地图（numpy 数组 (N,3)）
         self.T_map_to_odom = np.eye(4)  # map→odom 变换矩阵（ICP 配准结果）
         self.cur_odom = None            # 最新的 FAST-LIO2 里程计
-        self.cur_scan = None            # 最新的 FAST-LIO2 扫描点云
+        self.cur_scan = None            # 最新的 FAST-LIO2 扫描点云 (numpy (N,3))
         self.scan_buffer = []           # 多帧扫描累积缓存（提升 ICP 稳定性）
         self.initialized = False        # 是否已收到初始位姿
 
@@ -89,13 +297,6 @@ class FastLIOLocalization(Node):
             self.localisation_timer_callback
         )
 
-    def global_map_callback(self):
-        """（未启用）将全局地图发布到话题"""
-        header = Header()
-        header.stamp = self.get_clock().now().to_msg()
-        header.frame_id = "map"
-        self.publish_point_cloud(self.pub_global_map, header, np.array(self.global_map.points))
-
     def pose_to_mat(self, pose):
         """将 ROS Pose 消息转为 4×4 齐次变换矩阵"""
         trans = np.eye(4)
@@ -103,20 +304,28 @@ class FastLIOLocalization(Node):
         quat = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
         trans[:3, :3] = tf_transformations.quaternion_matrix(quat)[:3, :3]
         return trans
-    
+
     def msg_to_array(self, pc_msg):
-        """将 ROS PointCloud2 消息转为 numpy 点云数组"""
-        pc_array = ros2_numpy.numpify(pc_msg)
-        if "xyz" in pc_array.dtype.names:
-            return pc_array["xyz"]
-        # FAST-LIO2 点云字段为 x, y, z 分开的格式
-        pts = np.zeros((len(pc_array), 3), dtype=np.float32)
-        pts[:, 0] = pc_array["x"]
-        pts[:, 1] = pc_array["y"]
-        pts[:, 2] = pc_array["z"]
+        """将 ROS PointCloud2 消息转为 numpy 点云数组 (N,3)，不依赖 ros2_numpy"""
+        # 获取字段名→偏移映射
+        offsets = {}
+        for f in pc_msg.fields:
+            offsets[f.name] = f.offset
+
+        # 按 point_step 切分二进制数据
+        ps = pc_msg.point_step
+        raw = np.frombuffer(pc_msg.data, dtype=np.uint8).reshape(-1, ps)
+        n = raw.shape[0]
+        pts = np.zeros((n, 3), dtype=np.float64)
+
+        for i, name in enumerate(("x", "y", "z")):
+            off = offsets.get(name)
+            if off is not None and off + 4 <= ps:
+                pts[:, i] = raw[:, off:off + 4].view("<f4").flatten().astype(np.float64)
+
         return pts
 
-    def registration_at_scale(self, scan, map, initial, scale):
+    def registration_at_scale(self, scan, map_, initial, scale):
         """
         在指定尺度下执行 ICP 配准
 
@@ -124,15 +333,20 @@ class FastLIOLocalization(Node):
         - 大尺度 (scale=5)：粗配准，用大体素快速收敛到大体位置
         - 小尺度 (scale=1)：精配准，用小体素精确微调位姿
         """
-        result_icp = o3d.pipelines.registration.registration_icp(
-            self.voxel_down_sample(scan, self.get_parameter("scan_voxel_size").value * scale),
-            self.voxel_down_sample(map, self.get_parameter("map_voxel_size").value * scale),
-            0.5 * scale,
-            initial,
-            o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-            o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=50),
+        src_down = voxel_down_sample(
+            scan, self.get_parameter("scan_voxel_size").value * scale
         )
-        return result_icp.transformation, result_icp.fitness
+        tgt_down = voxel_down_sample(
+            map_, self.get_parameter("map_voxel_size").value * scale
+        )
+
+        transformation, fitness = icp_registration(
+            src_down, tgt_down,
+            initial=initial,
+            max_distance=0.5 * scale,
+            max_iteration=50,
+        )
+        return transformation, fitness
 
     def inverse_se3(self, trans):
         """计算 SE3 变换的逆变换：
@@ -144,23 +358,38 @@ class FastLIOLocalization(Node):
         return trans_inverse
 
     def publish_point_cloud(self, publisher, header, pc):
-        """将 numpy 点云发布为 ROS PointCloud2 消息"""
-        # 构建结构化数组（字段名 x, y, z 与 ros2_numpy 兼容）
+        """将 numpy 点云发布为 ROS PointCloud2 消息，不依赖 ros2_numpy"""
         n = pc.shape[0]
-        dtype = [("x", np.float32), ("y", np.float32), ("z", np.float32)]
-        if pc.shape[1] >= 4:
-            dtype.append(("intensity", np.float32))
-        data = np.zeros(n, dtype=dtype)
-        data["x"] = pc[:, 0]
-        data["y"] = pc[:, 1]
-        data["z"] = pc[:, 2]
-        if pc.shape[1] >= 4:
-            data["intensity"] = pc[:, 3]
+        has_intensity = pc.shape[1] >= 4
 
-        msg = ros2_numpy.msgify(PointCloud2, data)
+        fields = [
+            PointField(name="x", offset=0, datatype=PointField.FLOAT32, count=1),
+            PointField(name="y", offset=4, datatype=PointField.FLOAT32, count=1),
+            PointField(name="z", offset=8, datatype=PointField.FLOAT32, count=1),
+        ]
+        point_step = 12
+        if has_intensity:
+            fields.append(PointField(name="intensity", offset=12, datatype=PointField.FLOAT32, count=1))
+            point_step = 16
+
+        # 构建连续二进制 buffer
+        buf = np.empty((n, 4 if has_intensity else 3), dtype=np.float32)
+        buf[:, 0] = pc[:, 0].astype(np.float32)
+        buf[:, 1] = pc[:, 1].astype(np.float32)
+        buf[:, 2] = pc[:, 2].astype(np.float32)
+        if has_intensity:
+            buf[:, 3] = pc[:, 3].astype(np.float32)
+
+        msg = PointCloud2()
         msg.header = header
-        msg.point_step = 12 + (4 if pc.shape[1] >= 4 else 0)
-
+        msg.height = 1
+        msg.width = n
+        msg.fields = fields
+        msg.is_bigendian = False
+        msg.point_step = point_step
+        msg.row_step = point_step * n
+        msg.data = buf.tobytes()
+        msg.is_dense = True
         publisher.publish(msg)
 
     def crop_global_map_in_FOV(self, pose_estimation):
@@ -171,7 +400,7 @@ class FastLIOLocalization(Node):
         1. 将全局地图点云变换到 base_link 坐标系
         2. 根据 FOV 角度和距离过滤（只保留传感器视野内的点）
         3. 发布子地图用于可视化
-        4. 返回裁剪后的 Open3D 点云用于 ICP 配准
+        4. 返回裁剪后的点云用于 ICP 配准
         """
         if self.cur_odom is not None:
             T_odom_to_base_link = self.pose_to_mat(self.cur_odom.pose.pose)
@@ -182,32 +411,42 @@ class FastLIOLocalization(Node):
         T_base_link_to_map = self.inverse_se3(T_map_to_base_link)
 
         # 将全局地图变换到 base_link 系
-        global_map_in_map = np.array(self.global_map.points)
-        global_map_in_map = np.column_stack([global_map_in_map, np.ones(len(global_map_in_map))])
-        global_map_in_base_link = np.matmul(T_base_link_to_map, global_map_in_map.T).T
+        global_map_in_map = self.global_map
+        ones = np.ones((len(global_map_in_map), 1), dtype=np.float64)
+        global_map_h = np.column_stack([global_map_in_map, ones])
+        global_map_in_base_link = (T_base_link_to_map @ global_map_h.T).T
 
         # 根据 FOV 过滤
-        if self.get_parameter("fov").value > 3.14:
+        fov = self.get_parameter("fov").value
+        fov_far = self.get_parameter("fov_far").value
+
+        if fov > 3.14:
             # 全向模式：只做距离过滤
-            indices = np.where(
-                global_map_in_base_link[:, 0] < self.get_parameter("fov_far").value
-            )
+            mask = global_map_in_base_link[:, 0] < fov_far
         else:
             # 有限 FOV：做距离 + 角度过滤
-            indices = np.where(
+            angles = np.abs(np.arctan2(
+                global_map_in_base_link[:, 1],
+                global_map_in_base_link[:, 0]
+            ))
+            mask = (
                 (global_map_in_base_link[:, 0] > 0)
-                & (global_map_in_base_link[:, 0] < self.get_parameter("fov_far").value)
-                & (np.abs(np.arctan2(global_map_in_base_link[:, 1], global_map_in_base_link[:, 0])) < self.get_parameter("fov").value / 2.0)
+                & (global_map_in_base_link[:, 0] < fov_far)
+                & (angles < fov / 2.0)
             )
 
-        global_map_in_FOV = o3d.geometry.PointCloud()
-        global_map_in_FOV.points = o3d.utility.Vector3dVector(np.squeeze(global_map_in_map[indices, :3]))
+        global_map_in_FOV = global_map_in_map[mask]
 
         # 发布子地图（降采样到 1/10 用于 RViz 可视化）
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
         header.frame_id = "map"
-        self.publish_point_cloud(self.pub_submap, header, np.array(global_map_in_FOV.points)[::10])
+        if len(global_map_in_FOV) > 0:
+            self.publish_point_cloud(
+                self.pub_submap, header, global_map_in_FOV[::10]
+            )
+        else:
+            self.get_logger().warn("FOV crop returned empty point cloud")
 
         return global_map_in_FOV
 
@@ -220,26 +459,29 @@ class FastLIOLocalization(Node):
         2. 精配准 (scale=1)：小尺度体素下采样，精确微调
         3. 如果 fitness > 阈值则更新 map→odom 变换
         """
-        scan_tobe_mapped = copy.copy(self.cur_scan)
+        scan_tobe_mapped = self.cur_scan.copy()
         # 合并累积缓存中的多帧扫描点云，提升 ICP 稳定性
         if len(self.scan_buffer) > 1:
             merged = np.concatenate(self.scan_buffer, axis=0)
-            scan_tobe_mapped = o3d.geometry.PointCloud()
-            scan_tobe_mapped.points = o3d.utility.Vector3dVector(merged)
+            scan_tobe_mapped = merged
         # 清空缓存，开始下一轮累积
         self.scan_buffer = []
 
-        n_scan = len(np.array(scan_tobe_mapped.points))
+        n_scan = len(scan_tobe_mapped)
         # 跳过单帧（< 2000 点），点数太少 ICP 不可靠
         if n_scan < 2000:
             self.get_logger().warn(f"Skipping ICP: only {n_scan} pts, need >= 2000")
             return
 
         global_map_in_FOV = self.crop_global_map_in_FOV(pose_estimation)
-        n_map = len(np.array(global_map_in_FOV.points))
+        n_map = len(global_map_in_FOV)
         self.get_logger().info(
             f"ICP input: scan={n_scan} pts, map_FOV={n_map} pts"
         )
+
+        if n_map < 100:
+            self.get_logger().warn(f"FOV map too small ({n_map} pts), skip ICP")
+            return
 
         # 粗配准
         transformation, fitness_coarse = self.registration_at_scale(
@@ -278,16 +520,6 @@ class FastLIOLocalization(Node):
                 f"{self.get_parameter('localization_threshold').value}"
             )
 
-    def voxel_down_sample(self, pcd, voxel_size):
-        """体素下采样（兼容 Open3D 不同版本 API）"""
-        try:
-            pcd_down = pcd.voxel_down_sample(voxel_size)
-        except Exception:
-            # Open3D <=0.7 的低版本兼容
-            pcd_down = o3d.geometry.voxel_down_sample(pcd, voxel_size)
-            
-        return pcd_down
-
     def cb_save_cur_odom(self, msg):
         """保存最新的 FAST-LIO2 里程计"""
         self.cur_odom = msg
@@ -297,8 +529,7 @@ class FastLIOLocalization(Node):
         pc = self.msg_to_array(msg)
         # Y/Z 翻转：匹配 fastlio preprocess 的 default_handler 坐标系
         pc = pc * [1.0, -1.0, -1.0]
-        self.cur_scan = o3d.geometry.PointCloud()
-        self.cur_scan.points = o3d.utility.Vector3dVector(pc)
+        self.cur_scan = pc
         # 累积多帧到缓存（上限 10 帧 ≈ 1 秒 @ 10Hz，避免淹没稀疏地图）
         self.scan_buffer.append(pc)
         if len(self.scan_buffer) > 10:
@@ -314,11 +545,14 @@ class FastLIOLocalization(Node):
         path = self.get_parameter("pcd_map_path").value
         v_size = self.get_parameter("map_voxel_size").value
         self.get_logger().info(f"Loading map: {path}, voxel_size={v_size}")
-        self.global_map = o3d.io.read_point_cloud(path)
-        n_raw = len(np.array(self.global_map.points))
-        self.global_map = self.voxel_down_sample(self.global_map, v_size)
-        n_down = len(np.array(self.global_map.points))
-        self.get_logger().info(f"Map loaded: raw={n_raw} pts, downsampled={n_down} pts")
+
+        pcd = read_pcd(path)
+        n_raw = len(pcd)
+        self.get_logger().info(f"Map loaded: raw={n_raw} pts")
+
+        self.global_map = voxel_down_sample(pcd, v_size)
+        n_down = len(self.global_map)
+        self.get_logger().info(f"Map downsampled: {n_down} pts")
 
     def cb_initialize_pose(self, msg):
         """

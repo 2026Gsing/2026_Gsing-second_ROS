@@ -63,7 +63,7 @@
 │   └── src/
 │       ├── unilidar_fastlio_ros2-ros2/   # FAST-LIO2 核心（建图 + 里程计）
 │       ├── fast_lio_localization/         # 全局重定位（ICP 配准）
-│       │   ├── global_localization.py     #   ICP 配准节点
+│       │   ├── global_localization.py     #   ICP 配准（numpy/scipy，无open3d）
 │       │   ├── transform_fusion.py        #   TF 变换融合节点
 │       │   └── publish_initial_pose.py    #   初始位姿发布工具
 │       ├── unitree_lidar_ros2/            # 宇树科技激光雷达驱动
@@ -148,7 +148,7 @@
 | 建图 | FAST-LIO2 |
 | 导航 | Nav2 (Planner + Controller + BT) |
 | 依赖包 | nav2-bringup, nav2-msgs |
-| Python 依赖 | open3d, tf_transformations, ultralytics, pyserial |
+| Python 依赖 | tf_transformations, ultralytics, pyserial |
 | 视觉 | YOLOv8/YOLO11 (ultralytics), OpenCV |
 
 ---
@@ -177,7 +177,7 @@ sudo ip addr add 192.168.1.2/24 dev enp129s0
 ```bash
 # 安装系统依赖（首次）
 sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
-pip install open3d tf_transformations
+pip install tf_transformations
 
 # 克隆 pcd2pgm（首次）
 cd fastlio2_v2/src
@@ -219,7 +219,7 @@ python3 py/tools/map_scan.py
 cd fastlio2_v2
 source install/setup.bash
 ros2 launch fast_lio_localization 1.launch.py \
-  map:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd \
+  map:=/home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD20.pcd \
   config_file:=unilidar_l2.yaml \
   rviz:=true
 ```

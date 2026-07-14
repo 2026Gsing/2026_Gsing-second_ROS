@@ -1,0 +1,10 @@
+[INFO] [1784023502.254309037] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784023502.312538148] [controller_server]: Creating controller server
+[INFO] [1784023502.361693164] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784023502.367050893] [local_costmap.local_costmap]: Creating Costmap

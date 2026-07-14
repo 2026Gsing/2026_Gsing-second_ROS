@@ -90,16 +90,16 @@ sudo chmod 666 /dev/ttyACM0              # 临时
 sudo usermod -aG dialout $USER           # 永久（需重登录）
 ```
 
-## Global RViz Switch
+## RViz 控制
 
-环境变量 `GSING_RVIZ=0` 可一次性关闭所有 RViz（LiDAR + ICP + Nav2）：
+LiDAR 和 ICP 强制不开 RViz（`launch_utils.py` 中硬编码 `start_rviz:=false` / `rviz:=false`），只有 Nav2 受 `GSING_RVIZ` 控制。
 
 ```bash
-GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py
-GSING_RVIZ=0 ./ros-run.sh py/tools/map_scan.py
+GSING_RVIZ=1 ./ros-run.sh py/control/auto_task.py     # 强制开 Nav2 RViz
+GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关 Nav2 RViz
 ```
 
-默认行为：主机开（`hyper-Ubuntu`），miniPC 关（`gsing`）。`launch_utils.py` 和 `map_scan.py` 都支持。
+默认行为：主机开（`hyper-Ubuntu`），miniPC 关（`gsing`）。
 
 ## Architecture
 
@@ -170,7 +170,7 @@ Top-level switches:
 ENABLE_RVIZ = True      # GSING_RVIZ env var overrides; hostname-based default
 USE_TERMINAL = True     # gnome-terminal per node (vs background)
 SERIAL_PORT = "/dev/ttyACM0"
-MAP_NAME = "map/map"    # standard competition map
+MAP_NAME = "map/PCD20"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 ```
 
 ## Serial Protocol (ROS ↔ STM32)

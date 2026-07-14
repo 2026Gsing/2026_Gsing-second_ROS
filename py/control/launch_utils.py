@@ -61,7 +61,7 @@ _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
-MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/PCD20"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
 try:
@@ -165,6 +165,8 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     """
     启动所有前置 ROS 节点。
 
+    LiDAR/ICP 不开 RViz，仅 Nav2 按 GSING_RVIZ 设置决定是否开 RViz。
+
     Args:
         map_pcd: PCD 地图路径（用于 ICP 定位），默认 MAP_NAME + ".pcd"
         map_yaml: YAML 地图路径（用于 Nav2），默认 MAP_NAME + ".yaml"
@@ -185,24 +187,26 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
 
     print("╔══════════════════════════════════════════════╗")
     print("║  启动前置 ROS 节点                            ║")
+    print("║  LiDAR/ICP → 不开 RViz                       ║")
+    print("║  Nav2      → 按 GSING_RVIZ 决定              ║")
     print("╚══════════════════════════════════════════════╝")
 
     rviz_arg = "true" if ENABLE_RVIZ else "false"
 
-    # LiDAR 驱动（支持 start_rviz:=false 关闭其 RViz）
+    # LiDAR 驱动（不开 RViz）
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false",
         name="LiDAR",
     )
 
-    # ICP 定位 (FAST-LIO2 + transform_fusion)
+    # ICP 定位 (FAST-LIO2 + transform_fusion，不开 RViz)
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
         f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
         f"ros2 launch fast_lio_localization 1.launch.py "
-        f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
+        f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:=false "
         f"  map_voxel_size:=0.01 scan_voxel_size:=0.03 "
         f"  freq_localization:=2.0 localization_threshold:=0.9",
         name="ICP",
@@ -215,7 +219,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     else:
         print(f"  [TF桥] 未找到 {odom_bin}，跳过")
 
-    # Nav2
+    # Nav2（按 ENABLE_RVIZ 决定是否开 RViz）
     launch(
         f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "

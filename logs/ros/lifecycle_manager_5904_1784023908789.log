@@ -1,0 +1,6 @@
+[INFO] [1784023909.350204009] [lifecycle_manager_navigation]: Creating
+[INFO] [1784023909.622556994] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1784023909.921043354] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1784023909.921201626] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[ERROR] [1784023909.946798878] [lifecycle_manager_navigation]: Failed to change state for node: map_server
+[ERROR] [1784023909.947358054] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.

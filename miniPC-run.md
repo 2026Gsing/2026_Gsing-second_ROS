@@ -7,6 +7,9 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 sudo chmod 666 /dev/ttyACM0
 ```
 
+> 默认地图: `map/PCD20.pcd` + `map/PCD20.yaml`（`launch_utils.py` 中 `MAP_NAME` 指定）
+> ICP 全局定位已不再依赖 open3d（该库在 Bay Trail CPU 上因 AVX 指令崩溃），改用纯 numpy/scipy ICP。
+
 ## 构建
 ```bash
 cd 2026_Gsing-second_ROS
@@ -30,16 +33,17 @@ cd 2026_Gsing-second_ROS
 ```bash
 cd 2026_Gsing-second_ROS
 ./ros-run.sh py/control/auto_task.py              # 竞赛全自动
-./ros-run.sh py/control/box_pick_node.py          # 物资箱抓取
+./ros-run.sh py/control/box_pick_node.py          # 物资箱抓取（仅 Nav2 开 RViz）
 ./ros-run.sh py/tools/map_scan.py                 # 建图（带 RViz）
 ./ros-run.sh py/tools/map_scan.py --no-rviz       # 建图（无 RViz）
 ./ros-run.sh py/tools/test_move.py                # 底盘测试
 ```
 
 ## RViz 控制
+LiDAR 和 ICP 强制不开 RViz（硬编码 `start_rviz:=false`），只有 Nav2 受 `GSING_RVIZ` 控制。
 ```bash
-GSING_RVIZ=1 ./ros-run.sh py/control/auto_task.py     # 强制开
-GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关
+GSING_RVIZ=1 ./ros-run.sh py/control/auto_task.py     # 强制开 Nav2 RViz
+GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关 Nav2 RViz
 ```
 
 ## 日志
