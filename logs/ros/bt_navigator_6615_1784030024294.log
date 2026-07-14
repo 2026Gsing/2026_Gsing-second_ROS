@@ -1,0 +1,25 @@
+[INFO] [1784030024.569478075] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784030024.605985412] [bt_navigator]: Creating
+[INFO] [1784030029.796905323] [bt_navigator]: Configuring
+[INFO] [1784030029.999775713] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784030030.117284983] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784030031.509246878] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784030033.880467329] [bt_navigator]: Activating
+[INFO] [1784030035.262610526] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784030048.840391229] [bt_navigator]: Begin navigating from current location (0.00, 0.00) to (0.44, -0.06)
+[INFO] [1784030048.861199213] [bt_navigator]: Received goal preemption request
+[INFO] [1784030048.865551305] [bt_navigator]: Begin navigating from current location (0.00, 0.00) to (0.44, -0.06)
+[WARN] [1784030058.183183790] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[WARN] [1784030058.189927963] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[ERROR] [1784030058.190436722] [bt_navigator]: Goal failed
+[INFO] [1784030070.480626899] [bt_navigator]: Deactivating
+[INFO] [1784030070.480747380] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [1784030070.960734633] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784030070.960898795] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[INFO] [1784030070.961126569] [bt_navigator]: Cleaning up
+[INFO] [1784030071.752458201] [bt_navigator]: Completed Cleaning up
+[INFO] [1784030071.752616567] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.

@@ -1,0 +1,4 @@
+[INFO] [1784030008.790288166] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784030008.798907688] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[WARN] [1784030026.998667684] [box_pick_node]: ⚠ ICP 初始化失败: Command '['bash', '-c', 'source /opt/ros/jazzy/setup.bash && RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /usr/bin/python3 /home/gsing/2026Gsing/2026_Gsing-second_ROS/py/control/init_pose.py']' timed out after 9.999970064000081 seconds
+[INFO] [1784030048.857765419] [box_pick_node]: [目标] 收到 Nav2 Goal: (0.442, -0.057) yaw=-0.048
