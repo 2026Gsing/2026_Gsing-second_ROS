@@ -14,3 +14,8 @@
 1784030998.0114276 [INFO] [lifecycle_manager-12]: process started with pid [11025]
 1784030998.0304859 [INFO] [goal_pose_to_nav2-13]: process started with pid [11026]
 1784030998.0363295 [INFO] [costmap_to_grid-14]: process started with pid [11027]
+1784031068.0634353 [INFO] [controller_server-7]: process has finished cleanly [pid 11002]
+1784031069.1252036 [INFO] [planner_server-8]: process has finished cleanly [pid 11003]
+1784031069.5998833 [INFO] [rviz2-6]: process has finished cleanly [pid 10865]
+1784031070.1247060 [INFO] [bt_navigator-10]: process has finished cleanly [pid 11011]
+1784031070.5410957 [INFO] [lifecycle_manager-12]: process has finished cleanly [pid 11025]

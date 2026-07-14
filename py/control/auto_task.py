@@ -22,7 +22,6 @@ import math
 import sys
 import time
 import json
-import subprocess
 import os
 import signal
 import atexit
@@ -35,7 +34,7 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 from rclpy.callback_groups import ReentrantCallbackGroup
 from nav2_msgs.action import NavigateToPose
-from geometry_msgs.msg import PoseStamped, Twist
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 import yaml
@@ -875,17 +874,6 @@ def main(args=None):
     print("  ⏳ 等待节点启动（8 秒）...")
     time.sleep(8)
 
-    # 发布 /initialpose 自动初始化 ICP（替代手动点击 RViz）
-    init_pose_script = _PROJECT / "py" / "control" / "init_pose.py"
-    subprocess.run(
-        ["bash", "-c",
-         f"source /opt/ros/jazzy/setup.bash && "
-         f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /usr/bin/python3 {init_pose_script}"],
-    )
-    time.sleep(1)  # 等 ICP 处理完初始位姿
-    print("  ✅ ICP 初始化完成（如需重新定位，在 RViz 中点 2D Pose Estimate）")
-    print()
-
     # === 启动本节点 ===
     rclpy.init(args=args)
 
@@ -895,6 +883,21 @@ def main(args=None):
     # 清除旧序列
     node.pickup_sequence = []
     node.zone_sequence = []
+
+    # 发布 /initialpose 自动初始化 ICP（替代手动点击 RViz）
+    # 直接在本节点发布，避免子进程 DDS 发现延迟 + rclpy.shutdown 挂死
+    _init_pub = node.create_publisher(PoseWithCovarianceStamped, "/initialpose", 1)
+    _msg = PoseWithCovarianceStamped()
+    _msg.header.frame_id = "map"
+    _msg.pose.pose.orientation.w = 1.0  # yaw=0 → X正向
+    _msg.pose.covariance[0] = 0.25
+    _msg.pose.covariance[7] = 0.25
+    _msg.pose.covariance[35] = 0.25
+    _init_pub.publish(_msg)
+    print("  ✅ Published /initialpose: (0,0,0) facing X+ (inline)")
+    time.sleep(1)  # 等 ICP 处理完初始位姿
+    print("  ✅ ICP 初始化完成（如需重新定位，在 RViz 中点 2D Pose Estimate）")
+    print()
 
     executor = rclpy.executors.MultiThreadedExecutor()
     executor.add_node(node)

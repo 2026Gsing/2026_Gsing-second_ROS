@@ -29,3 +29,13 @@
 [INFO] [1784031006.956289025] [local_costmap.local_costmap]: start
 [INFO] [1784031007.109279096] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
 [INFO] [1784031007.109472113] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784031066.146946729] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784031066.147204320] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[INFO] [1784031066.147408006] [controller_server]: Deactivating
+[INFO] [1784031066.147484749] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784031066.147570817] [local_costmap.local_costmap]: Deactivating
+[INFO] [1784031066.158442023] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[INFO] [1784031066.175529496] [controller_server]: Cleaning up
+[INFO] [1784031066.175618648] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784031066.175756510] [local_costmap.local_costmap]: Cleaning up
+[INFO] [1784031066.451909799] [controller_server]: Destroying bond (controller_server) to lifecycle manager.

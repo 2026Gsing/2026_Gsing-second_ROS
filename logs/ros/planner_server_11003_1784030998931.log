@@ -23,3 +23,10 @@
 [INFO] [1784031007.285579029] [global_costmap.global_costmap]: start
 [INFO] [1784031007.336129792] [planner_server]: Activating plugin GridBased of type NavfnPlanner
 [INFO] [1784031007.340707215] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[INFO] [1784031066.885242541] [planner_server]: Deactivating
+[INFO] [1784031066.885450702] [global_costmap.global_costmap]: Deactivating
+[INFO] [1784031066.954862967] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[INFO] [1784031066.955074657] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[INFO] [1784031067.019182695] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784031067.019395309] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784031067.019574261] [planner_server]: Destroying bond (planner_server) to lifecycle manager.

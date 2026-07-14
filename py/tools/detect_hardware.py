@@ -86,7 +86,7 @@ def detect_lidar(verbose=True):
         print(_bold("  LiDAR 网络扫描"))
         print(_bold("═" * 50))
 
-    # 1. 找物理网卡
+    # 1. 找物理网卡（排除回环/docker/vbox）
     rc, out, _ = _run("ip -o link show | grep -v LOOPBACK | grep -v docker | grep -v vbox | awk -F': ' '{print $2}'")
     ifaces = [l.strip() for l in out.split("\n") if l.strip()] if out else []
 
@@ -98,9 +98,15 @@ def detect_lidar(verbose=True):
     if verbose:
         print(f"  {_green('✓')} 检测到网卡: {', '.join(ifaces)}")
 
-    # 2. 找 192.168.1.x 网段接口，优先有线
-    candidates = []
-    for iface in ifaces:
+    # ============ 分类：有线 (enp*/eth*) vs 无线/其他 ============
+    eth_ifaces = [i for i in ifaces if i.startswith("enp") or i.startswith("eth")]
+    other_ifaces = [i for i in ifaces if i not in eth_ifaces]
+
+    # ============ 2. 优先找有线网卡（即使没配 IP） ============
+    lidar_iface = None
+    lidar_ip = None
+
+    for iface in eth_ifaces:
         rc, out, _ = _run(f"ip addr show {iface} 2>/dev/null | grep 'inet '")
         if out:
             ip = out.split()[1]  # e.g. "192.168.1.2/24"
@@ -108,34 +114,49 @@ def detect_lidar(verbose=True):
                 print(f"  {_green('✓')} {iface}: {ip}", end="")
             if ip.startswith("192.168.1."):
                 if verbose:
-                    print(f"  ← {_yellow('LiDAR 网段')}")
-                candidates.append((iface, ip))
-            elif verbose:
-                print()
-
-    if not candidates:
-        if verbose:
-            print(f"  {_yellow('!')} 未找到 192.168.1.x 网段的接口")
-        return result
-
-    # 选择：优先有线(enp/eth)
-    lidar_iface = None
-    lidar_ip = None
-    for pref in ["enp", "eth"]:
-        for iface, ip in candidates:
-            if iface.startswith(pref):
+                    print(f"  ← {_yellow('LiDAR 网段（已配）')}")
                 lidar_iface = iface
                 lidar_ip = ip
                 break
-        if lidar_iface:
-            break
-    if not lidar_iface:
-        lidar_iface, lidar_ip = candidates[0]  # fallback 第一个
+            elif verbose:
+                print(f"  ← {_yellow('非 LiDAR 网段')}")
+                # 有线的非标准 IP 也优先使用（用户可能手动改过）
+                lidar_iface = iface
+                lidar_ip = ip
+                break
+        else:
+            # 有线网卡无 IP — 这就是我们要的 LiDAR 口，待配置
+            if verbose:
+                print(f"  {_yellow('!')} {iface}: {_yellow('未配置 IP — 待配置为 LiDAR 网卡')}")
+            if lidar_iface is None:
+                lidar_iface = iface
+                # 暂不设 lidar_ip，launch_utils 会用默认 192.168.1.2 配置
 
-    result["iface"] = lidar_iface
-    result["local_ip"] = lidar_ip.split("/")[0] if lidar_ip else None
+    # ============ 3. 无有线网卡 → 回退到已有 192.168.1.x 的接口（含 WiFi） ============
+    if lidar_iface is None:
+        if verbose:
+            print(f"  {_yellow('!')} 无有线网卡，搜索 192.168.1.x 网段...")
+        for iface in other_ifaces + eth_ifaces:
+            rc, out, _ = _run(f"ip addr show {iface} 2>/dev/null | grep 'inet '")
+            if out:
+                ip = out.split()[1]
+                if ip.startswith("192.168.1."):
+                    if verbose:
+                        print(f"  {_green('✓')} {iface}: {ip}  ← {_yellow('回退 LiDAR 网段')}")
+                    lidar_iface = iface
+                    lidar_ip = ip
+                    break
 
-    # 3. ping LiDAR IP
+    if lidar_iface:
+        result["iface"] = lidar_iface
+        if lidar_ip:
+            result["local_ip"] = lidar_ip.split("/")[0]
+        else:
+            result["local_ip"] = LIDAR_LOCAL_IP  # 默认 192.168.1.2（待配置）
+    elif verbose:
+        print(f"  {_red('✗')} 未找到合适的 LiDAR 网卡")
+
+    # 4. ping LiDAR IP
     if verbose:
         print()
     for lip in LIDAR_KNOWN_IPS:

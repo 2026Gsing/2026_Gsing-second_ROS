@@ -8,3 +8,5 @@
 [INFO] [1784031006.807803020] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
 [INFO] [1784031008.896740757] [waypoint_follower]: Activating
 [INFO] [1784031008.896877119] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[INFO] [1784031066.317313371] [waypoint_follower]: Deactivating
+[INFO] [1784031066.317424280] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.

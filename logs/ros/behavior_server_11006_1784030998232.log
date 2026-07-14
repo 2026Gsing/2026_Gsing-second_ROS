@@ -17,3 +17,5 @@
 [INFO] [1784031007.481336892] [behavior_server]: Activating drive_on_heading
 [INFO] [1784031007.481380958] [behavior_server]: Activating wait
 [INFO] [1784031007.481435933] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[INFO] [1784031066.636291596] [behavior_server]: Deactivating
+[INFO] [1784031066.636447759] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.

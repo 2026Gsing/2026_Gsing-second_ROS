@@ -1,0 +1,42 @@
+[INFO] [1784034311.085769648] [laser_mapping]: p_pre->lidar_type 5
+Multi thread started 
+~~~~/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[INFO] [1784034311.157862572] [laser_mapping]: Node init finished.
+[INFO] [1784034311.619402026] [pointcloud_x_filter]: 点云过滤器已启动，仅保留 x > 0.0, 半径 > 0.0 的点
+[INFO] [1784034312.148236169] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034313.148086767] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034314.148398384] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034315.148092134] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034316.148672358] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034317.149593408] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034318.148728416] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034319.148268498] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034320.148525795] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034321.148344824] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034322.148574218] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034323.148191972] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034324.148175560] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034325.148142058] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034326.149907372] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034327.148085204] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034328.148140141] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784034329.121644380] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+Rebuild thread terminated normally
+Traceback (most recent call last):
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 118, in <module>
+    main()
+  File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/py/tools/pointcloud_x_filter.py", line 108, in main
+    rclpy.spin(node)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

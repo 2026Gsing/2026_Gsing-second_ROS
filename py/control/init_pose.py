@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """发布 /initialpose 自动初始化 ICP 定位（原点, X正向）"""
+import os
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseWithCovarianceStamped
@@ -21,4 +22,5 @@ msg.pose.covariance[35] = 0.25
 pub.publish(msg)
 n.get_logger().info("Published /initialpose: (0,0,0) facing X+")
 time.sleep(0.3)
-rclpy.shutdown()
+# 直接 exit，避免 CycloneDDS rclpy.shutdown() 在 Celeron 上挂死
+os._exit(0)

@@ -55,17 +55,15 @@ _LOG_CATEGORIES = {
 }
 
 # ============ 开关 ============
-# RViz 默认：Nav2 默认开 RViz（LiDAR/ICP 已硬编码不开）
+# RViz 默认：miniPC(gsing) 不启动，主机(hyper) 启动
 # 可通过环境变量 GSING_RVIZ=1 或 GSING_RVIZ=0 临时覆盖
-_HOST_RVIZ_DEFAULT = "1"
+_HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
-MAP_NAME = "map/PCD20"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/PCD21"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
-_LIDAR_IP = "192.168.1.1"   # LiDAR 传感器 IP
-_LOCAL_IP = "192.168.1.2"   # 本机 LiDAR 网卡 IP（默认有线）
 try:
     sys.path.insert(0, str(_PROJECT / "py"))
     from tools.detect_hardware import detect_all
@@ -75,26 +73,9 @@ try:
         print(f"  [硬件] 自动检测到 STM32 串口: {_hw['serial_port']}")
         SERIAL_PORT = _hw["serial_port"]
     if _hw["lidar_iface"]:
-        _LOCAL_IP = _hw["lidar_local_ip"]
         print(f"  [硬件] LiDAR 网卡: {_hw['lidar_iface']}  IP: {_hw['lidar_local_ip']}")
-        # 自动配置网卡（如果还没配好）
-        _hw_iface = _hw["lidar_iface"]
-        _check = subprocess.run(
-            f"ip addr show {_hw_iface} 2>/dev/null | grep '{_hw['lidar_local_ip']}'",
-            shell=True, capture_output=True, text=True, timeout=5)
-        if not _check.stdout:
-            print(f"  [网络] 配置 {_hw_iface}: {_hw['lidar_local_ip']}/24")
-            # 尝试用 sudo 配置（密码已通过 ! 前缀由用户输入）
-            for cmd in [
-                f"sudo nmcli device set {_hw_iface} managed no",
-                f"sudo ip addr add {_hw['lidar_local_ip']}/24 dev {_hw_iface}",
-            ]:
-                r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
-                if r.returncode != 0:
-                    print(f"  ⚠ {cmd}: {r.stderr.strip()}")
     if _hw["lidar_reachable"]:
         print(f"  [硬件] LiDAR {_hw['lidar_ip']} → 可达")
-        _LIDAR_IP = _hw["lidar_ip"]
 except Exception:
     pass
 
@@ -184,8 +165,6 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     """
     启动所有前置 ROS 节点。
 
-    LiDAR/ICP 不开 RViz，仅 Nav2 按 GSING_RVIZ 设置决定是否开 RViz。
-
     Args:
         map_pcd: PCD 地图路径（用于 ICP 定位），默认 MAP_NAME + ".pcd"
         map_yaml: YAML 地图路径（用于 Nav2），默认 MAP_NAME + ".yaml"
@@ -206,27 +185,24 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
 
     print("╔══════════════════════════════════════════════╗")
     print("║  启动前置 ROS 节点                            ║")
-    print("║  LiDAR/ICP → 不开 RViz                       ║")
-    print("║  Nav2      → 按 GSING_RVIZ 决定              ║")
     print("╚══════════════════════════════════════════════╝")
 
     rviz_arg = "true" if ENABLE_RVIZ else "false"
 
-    # LiDAR 驱动（不开 RViz，使用自动检测的 IP）
-    lidar_ip_args = f"lidar_ip:={_LIDAR_IP} local_ip:={_LOCAL_IP}"
+    # LiDAR 驱动（支持 start_rviz:=false 关闭其 RViz）
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false {lidar_ip_args}",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
         name="LiDAR",
     )
 
-    # ICP 定位 (FAST-LIO2 + transform_fusion，不开 RViz)
+    # ICP 定位 (FAST-LIO2 + transform_fusion)
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
         f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
         f"ros2 launch fast_lio_localization 1.launch.py "
-        f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:=false "
+        f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
         f"  map_voxel_size:=0.01 scan_voxel_size:=0.03 "
         f"  freq_localization:=2.0 localization_threshold:=0.9",
         name="ICP",
@@ -239,7 +215,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     else:
         print(f"  [TF桥] 未找到 {odom_bin}，跳过")
 
-    # Nav2（按 ENABLE_RVIZ 决定是否开 RViz）
+    # Nav2
     launch(
         f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "

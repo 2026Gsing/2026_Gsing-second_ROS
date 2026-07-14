@@ -19,7 +19,7 @@ import rclpy
 from rclpy.node import Node
 from visualization_msgs.msg import Marker
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import PoseStamped, Twist
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Twist
 from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateToPose
 from arrival_detector import quaternion_to_yaw
@@ -80,25 +80,20 @@ class BoxPickNode(Node):
         self.get_logger().info("BoxPickNode 已启动")
 
         # 等待节点启动 → 自动初始化 ICP 定位（原点, X正向）
+        # 直接在本节点发布 /initialpose，避免子进程 DDS 发现延迟 + rclpy.shutdown 挂死
         self.get_logger().info("⏳ 等待 8 秒让节点就绪...")
         time.sleep(8)
-        self._init_icp_pose()
+        self._init_pose_pub = self.create_publisher(PoseWithCovarianceStamped, "/initialpose", 1)
+        _msg = PoseWithCovarianceStamped()
+        _msg.header.frame_id = "map"
+        _msg.pose.pose.orientation.w = 1.0  # yaw=0 → X正向
+        _msg.pose.covariance[0] = 0.25
+        _msg.pose.covariance[7] = 0.25
+        _msg.pose.covariance[35] = 0.25
+        self._init_pose_pub.publish(_msg)
+        self.get_logger().info("✅ Published /initialpose: (0,0,0) facing X+ (inline)")
 
         self._print_help()
-
-    def _init_icp_pose(self):
-        """发布 /initialpose 自动初始化 ICP（原点, X正向）"""
-        init_script = str(_HERE / "init_pose.py")
-        try:
-            subprocess.run(
-                ["bash", "-c",
-                 f"source /opt/ros/jazzy/setup.bash && "
-                 f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /usr/bin/python3 {init_script}"],
-                timeout=10,
-            )
-            self.get_logger().info("✅ ICP 初始化为 (0,0,0) X正向")
-        except Exception as e:
-            self.get_logger().warn(f"⚠ ICP 初始化失败: {e}")
 
     # ================================================================
     # CLI 帮助
@@ -582,7 +577,8 @@ def main():
 
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except BaseException:
+        # 捕获所有异常（包括 CLI 线程 rclpy.shutdown 触发的 InvalidHandle 竞态）
         pass
     finally:
         node._cleanup_detection()

@@ -21,3 +21,15 @@
 [INFO] [1784031009.110986551] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
 [INFO] [1784031009.111177095] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
 [INFO] [1784031009.111235946] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[INFO] [1784031066.312914969] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from controller_server.[0m[0m
+[ERROR] [1784031066.313073088] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER controller_server IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[INFO] [1784031066.313186757] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[INFO] [1784031066.313227511] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[INFO] [1784031066.313284382] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[INFO] [1784031066.453062067] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[INFO] [1784031066.631068001] [lifecycle_manager_navigation]: [34m[1mDeactivating behavior_server[0m[0m
+[INFO] [1784031066.880726581] [lifecycle_manager_navigation]: [34m[1mDeactivating planner_server[0m[0m
+[INFO] [1784031068.430337652] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784031068.430593516] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[ERROR] [1784031069.110702630] [lifecycle_manager_navigation]: Failed to change state for node: planner_server. Exception: planner_server/get_state service client: async_send_request failed.
+[INFO] [1784031069.111038129] [lifecycle_manager_navigation]: [34m[1mManaged nodes have been reset[0m[0m
