@@ -291,7 +291,7 @@ class CmdVelChassisSerial(Node):
 
         # ============ 打开串口 ============
         try:
-            self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.02)
+            self._ser = serial.Serial(port=port, baudrate=baud, timeout=0.05, write_timeout=0.10)
         except serial.SerialException as e:
             self.get_logger().error(f"串口 {port} 打开失败: {e}")
             self.get_logger().error("请检查: 1) STM32 是否已连接  2) sudo chmod 666 {port}")
