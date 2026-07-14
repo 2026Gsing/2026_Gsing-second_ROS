@@ -1,0 +1,12 @@
+[INFO] [1784027773.460250381] [cmd_vel_chassis_serial]: Leg debug CSV logging enabled: /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/serial/2026-07-14_191559_leg.csv
+[INFO] [1784027773.469995323] [cmd_vel_chassis_serial]: Opened /dev/ttyACM0 @ 115200, cmd_vel=/cmd_vel, send=50.0Hz
+[INFO] [1784027773.528390782] [cmd_vel_chassis_serial]: Publishing STM32 arm events on /vision/arm_event
+[INFO] [1784027773.544809944] [cmd_vel_chassis_serial]: [LEG_DEBUG] | L0 ST ty/ay=25.0/25.3 ey=-0.3 Fy=+34 rel=0.00 sag=0.00 tauK=-1.0
+[INFO] [1784027773.556916507] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000
+[ERROR] [1784027775.428351543] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027775.710087911] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027775.885282773] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027776.142867802] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027776.495988718] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027777.269159535] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[ERROR] [1784027784.778241626] [cmd_vel_chassis_serial]: Serial write failed: Write timeout

@@ -1,0 +1,33 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-19-16-08-844683-gsing-4621
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [4757]
+[cmd_vel_chassis_serial.py-1] [INFO] [1784027773.460250381] [cmd_vel_chassis_serial]: Leg debug CSV logging enabled: /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/serial/2026-07-14_191559_leg.csv
+[cmd_vel_chassis_serial.py-1] [INFO] [1784027773.469995323] [cmd_vel_chassis_serial]: Opened /dev/ttyACM0 @ 115200, cmd_vel=/cmd_vel, send=50.0Hz
+[cmd_vel_chassis_serial.py-1] [INFO] [1784027773.528390782] [cmd_vel_chassis_serial]: Publishing STM32 arm events on /vision/arm_event
+[cmd_vel_chassis_serial.py-1] [INFO] [1784027773.544809944] [cmd_vel_chassis_serial]: [LEG_DEBUG] | L0 ST ty/ay=25.0/25.3 ey=-0.3 Fy=+34 rel=0.00 sag=0.00 tauK=-1.0
+[cmd_vel_chassis_serial.py-1] [INFO] [1784027773.556916507] [cmd_vel_chassis_serial]: send source=stop vx=0.000 wz=0.000
+[cmd_vel_chassis_serial.py-1] Exception in thread Thread-1 (_serial_rx_loop):
+[cmd_vel_chassis_serial.py-1] Traceback (most recent call last):
+[cmd_vel_chassis_serial.py-1]   File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+[cmd_vel_chassis_serial.py-1]     self.run()
+[cmd_vel_chassis_serial.py-1]   File "/usr/lib/python3.12/threading.py", line 1010, in run
+[cmd_vel_chassis_serial.py-1]     self._target(*self._args, **self._kwargs)
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 458, in _serial_rx_loop
+[cmd_vel_chassis_serial.py-1]     self._feed_rx_bytes(chunk)
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 491, in _feed_rx_bytes
+[cmd_vel_chassis_serial.py-1]     self._handle_rx_frame(frame[2], frame[4:-1])
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 497, in _handle_rx_frame
+[cmd_vel_chassis_serial.py-1]     self._handle_leg_debug(payload)
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 531, in _handle_leg_debug
+[cmd_vel_chassis_serial.py-1]     self._log_leg_debug_snapshot()
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 391, in _log_leg_debug_snapshot
+[cmd_vel_chassis_serial.py-1]     f" raw={a[16]:+.1f}/{a[17]:+.1f}"
+[cmd_vel_chassis_serial.py-1]             ~^^^^
+[cmd_vel_chassis_serial.py-1] IndexError: list index out of range
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027775.428351543] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027775.710087911] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027775.885282773] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027776.142867802] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027776.495988718] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027777.269159535] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027784.778241626] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
