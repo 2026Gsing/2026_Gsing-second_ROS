@@ -187,9 +187,12 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     print("║  启动前置 ROS 节点                            ║")
     print("╚══════════════════════════════════════════════╝")
 
-    rviz_arg = "true" if ENABLE_RVIZ else "false"
+    # LiDAR / ICP 始终不开 RViz（终端 + 日志）
+    rviz_arg = "false"
+    # Nav2 的 RViz 受 GSING_RVIZ 环境变量控制（默认 miniPC 关，主机开）
+    nav2_rviz_arg = "true" if ENABLE_RVIZ else "false"
 
-    # LiDAR 驱动（支持 start_rviz:=false 关闭其 RViz）
+    # LiDAR 驱动
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
@@ -215,11 +218,11 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     else:
         print(f"  [TF桥] 未找到 {odom_bin}，跳过")
 
-    # Nav2
+    # Nav2（按 GSING_RVIZ 决定是否开 RViz）
     launch(
         f"cd {nav2_dir} && {ros_setup} && source install/setup.bash && "
         f"ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py "
-        f"  map:={map_yaml} start_rviz:={rviz_arg}",
+        f"  map:={map_yaml} start_rviz:={nav2_rviz_arg}",
         name="Nav2",
     )
 

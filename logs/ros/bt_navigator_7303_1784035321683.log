@@ -1,0 +1,19 @@
+[INFO] [1784035322.215421688] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784035322.300871371] [bt_navigator]: Creating
+[INFO] [1784035324.601423117] [bt_navigator]: Configuring
+[INFO] [1784035324.762775670] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784035324.899802247] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784035326.512127075] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784035328.668507192] [bt_navigator]: Activating
+[INFO] [1784035330.011024806] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784035366.784956124] [bt_navigator]: Deactivating
+[INFO] [1784035366.785136882] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[INFO] [1784035367.529111449] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784035367.529627676] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[INFO] [1784035367.529808747] [bt_navigator]: Cleaning up
+[INFO] [1784035368.424588964] [bt_navigator]: Completed Cleaning up
+[INFO] [1784035368.424834892] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.

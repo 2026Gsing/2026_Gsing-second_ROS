@@ -30,7 +30,8 @@ cd 2026_Gsing-second_ROS
 ```bash
 cd 2026_Gsing-second_ROS
 ./ros-run.sh py/control/auto_task.py              # 竞赛全自动
-./ros-run.sh py/control/box_pick_node.py          # 物资箱抓取（仅 Nav2 开 RViz）
+./ros-run.sh py/control/box_pick_node.py         
+GSING_RVIZ=1 ./ros-run.sh py/control/box_pick_node.py  # 物资箱抓取（仅 Nav2 开 RViz）
 ./ros-run.sh py/tools/map_scan.py --no-rviz       # 建图（无 RViz）
 ./ros-run.sh py/tools/test_move.py                # 底盘测试
 ```

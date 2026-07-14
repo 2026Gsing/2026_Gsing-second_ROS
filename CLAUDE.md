@@ -170,7 +170,7 @@ Top-level switches:
 ENABLE_RVIZ = True      # GSING_RVIZ env var overrides; hostname-based default
 USE_TERMINAL = True     # gnome-terminal per node (vs background)
 SERIAL_PORT = "/dev/ttyACM0"
-MAP_NAME = "map/PCD20"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/PCD21"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 ```
 
 ## Serial Protocol (ROS ↔ STM32)
@@ -188,9 +188,11 @@ Frame: `[0x55][0xAA][func_id][len][payload...][checksum]`
 
 ## Common Pitfalls
 
-- **LiDAR network**: `sudo nmcli device set enp129s0 managed no && sudo ip addr add 192.168.1.2/24 dev enp129s0`
+- **LiDAR network**: `sudo nmcli device set enp4s0 managed no && sudo ip addr add 192.168.1.2/24 dev enp4s0`（笔记本用 `enp129s0`）
+- **LiDAR no data**: Check with `ping 192.168.1.1` and `timeout 5 tcpdump -i enp4s0 port 6201 -X`
 - **RMW mismatch**: All terminals MUST set `export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`
 - **Nav2 params out of sync**: After `colcon build`, manually `cp` params YAML to install/
 - **DDS participant exhaustion**: Script auto-cleans `/dev/shm/*cyclone*` on startup and exit
 - **conda Python**: Always use `./ros-run.sh` or explicit `/usr/bin/python3`, never bare `python3`
 - **Serial port**: `sudo chmod 666 /dev/ttyACM0`
+- **ICP not initialized**: `box_pick_node.py` publishes `/initialpose` after 8s, but ICP takes ~15s to load map — message is often dropped. ICP auto-initializes once LiDAR data flows, so this is usually non-blocking.
