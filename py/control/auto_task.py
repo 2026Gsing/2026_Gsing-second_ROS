@@ -944,7 +944,7 @@ def main(args=None):
     subprocess.run(
         ["bash", "-c",
          f"source /opt/ros/jazzy/setup.bash && "
-         f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp python3 {init_pose_script}"],
+         f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /usr/bin/python3 {init_pose_script}"],
     )
     time.sleep(1)  # 等 ICP 处理完初始位姿
     print("  ✅ ICP 初始化完成（如需重新定位，在 RViz 中点 2D Pose Estimate）")

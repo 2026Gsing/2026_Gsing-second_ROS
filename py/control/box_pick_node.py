@@ -93,7 +93,7 @@ class BoxPickNode(Node):
             subprocess.run(
                 ["bash", "-c",
                  f"source /opt/ros/jazzy/setup.bash && "
-                 f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp python3 {init_script}"],
+                 f"RMW_IMPLEMENTATION=rmw_cyclonedds_cpp /usr/bin/python3 {init_script}"],
                 timeout=10,
             )
             self.get_logger().info("✅ ICP 初始化为 (0,0,0) X正向")
