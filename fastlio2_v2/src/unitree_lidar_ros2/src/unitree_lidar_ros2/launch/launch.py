@@ -12,6 +12,10 @@ def generate_launch_description():
     # 是否启动 RViz（可通过 start_rviz:=false 关闭）
     start_rviz = LaunchConfiguration('start_rviz', default='true')
 
+    # LiDAR 网络参数（由 launch_utils.py 自动检测传入，或手动指定）
+    lidar_ip = LaunchConfiguration('lidar_ip', default='192.168.1.1')
+    local_ip = LaunchConfiguration('local_ip', default='192.168.1.2')
+
     # Run unitree lidar
     node1 = Node(
         package='unitree_lidar_ros2',
@@ -19,13 +23,8 @@ def generate_launch_description():
         name='unitree_lidar_ros2_node',
         output='screen',
         parameters= [
-                # 添加或修改数据格式参数，关键步骤！
-                {'xfer_format': 1},  # 将值设置为1，代表启用CustomMsg格式
-                # 如果'xfer_format'参数无效，可以尝试以下可能的参数名之一：
-                # {'data_type': 1},
-                # {'publish_format': 1},
+                {'xfer_format': 1},
 
-                # 以下是您原有的参数
                 {'initialize_type': 2},
                 {'work_mode': 0},
                 {'use_system_timestamp': False},
@@ -36,9 +35,9 @@ def generate_launch_description():
                 {'baudrate': 4000000},
 
                 {'lidar_port': 6101},
-                {'lidar_ip': '192.168.1.62'},
+                {'lidar_ip': lidar_ip},
                 {'local_port': 6201},
-                {'local_ip': '192.168.1.2'},
+                {'local_ip': local_ip},
 
                 {'cloud_frame': "unilidar_lidar"},
                 {'cloud_topic': "unilidar/cloud"},
@@ -61,5 +60,7 @@ def generate_launch_description():
     )
     return LaunchDescription([
         DeclareLaunchArgument('start_rviz', default_value='true', description='Launch RViz2'),
+        DeclareLaunchArgument('lidar_ip', default_value='192.168.1.1', description='LiDAR sensor IP'),
+        DeclareLaunchArgument('local_ip', default_value='192.168.1.2', description='Local machine IP'),
         node1, rviz_node,
     ])

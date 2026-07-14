@@ -64,6 +64,8 @@ SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检�
 MAP_NAME = "map/PCD20"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
+_LIDAR_IP = "192.168.1.1"   # LiDAR 传感器 IP
+_LOCAL_IP = "192.168.1.2"   # 本机 LiDAR 网卡 IP（默认有线）
 try:
     sys.path.insert(0, str(_PROJECT / "py"))
     from tools.detect_hardware import detect_all
@@ -73,9 +75,26 @@ try:
         print(f"  [硬件] 自动检测到 STM32 串口: {_hw['serial_port']}")
         SERIAL_PORT = _hw["serial_port"]
     if _hw["lidar_iface"]:
+        _LOCAL_IP = _hw["lidar_local_ip"]
         print(f"  [硬件] LiDAR 网卡: {_hw['lidar_iface']}  IP: {_hw['lidar_local_ip']}")
+        # 自动配置网卡（如果还没配好）
+        _hw_iface = _hw["lidar_iface"]
+        _check = subprocess.run(
+            f"ip addr show {_hw_iface} 2>/dev/null | grep '{_hw['lidar_local_ip']}'",
+            shell=True, capture_output=True, text=True, timeout=5)
+        if not _check.stdout:
+            print(f"  [网络] 配置 {_hw_iface}: {_hw['lidar_local_ip']}/24")
+            # 尝试用 sudo 配置（密码已通过 ! 前缀由用户输入）
+            for cmd in [
+                f"sudo nmcli device set {_hw_iface} managed no",
+                f"sudo ip addr add {_hw['lidar_local_ip']}/24 dev {_hw_iface}",
+            ]:
+                r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
+                if r.returncode != 0:
+                    print(f"  ⚠ {cmd}: {r.stderr.strip()}")
     if _hw["lidar_reachable"]:
         print(f"  [硬件] LiDAR {_hw['lidar_ip']} → 可达")
+        _LIDAR_IP = _hw["lidar_ip"]
 except Exception:
     pass
 
@@ -193,10 +212,11 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
 
     rviz_arg = "true" if ENABLE_RVIZ else "false"
 
-    # LiDAR 驱动（不开 RViz）
+    # LiDAR 驱动（不开 RViz，使用自动检测的 IP）
+    lidar_ip_args = f"lidar_ip:={_LIDAR_IP} local_ip:={_LOCAL_IP}"
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false {lidar_ip_args}",
         name="LiDAR",
     )
 
