@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 cmd_vel_chassis_serial.py — Nav2 /cmd_vel + Vision → STM32 串口协议转发
 

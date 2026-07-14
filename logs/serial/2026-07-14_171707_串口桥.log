@@ -1,0 +1,23 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-17-17-13-063216-gsing-5191
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [5231]
+[cmd_vel_chassis_serial.py-1] Traceback (most recent call last):
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py", line 38, in <module>
+[cmd_vel_chassis_serial.py-1]     import rclpy
+[cmd_vel_chassis_serial.py-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 49, in <module>
+[cmd_vel_chassis_serial.py-1]     from rclpy.signals import install_signal_handlers
+[cmd_vel_chassis_serial.py-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/signals.py", line 15, in <module>
+[cmd_vel_chassis_serial.py-1]     from rclpy.exceptions import InvalidHandle
+[cmd_vel_chassis_serial.py-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/exceptions.py", line 16, in <module>
+[cmd_vel_chassis_serial.py-1]     from rclpy.impl.implementation_singleton import rclpy_implementation as _rclpy
+[cmd_vel_chassis_serial.py-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/impl/implementation_singleton.py", line 32, in <module>
+[cmd_vel_chassis_serial.py-1]     rclpy_implementation = import_c_library('._rclpy_pybind11', package)
+[cmd_vel_chassis_serial.py-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rpyutils/import_c_library.py", line 39, in import_c_library
+[cmd_vel_chassis_serial.py-1]     return importlib.import_module(name, package=package)
+[cmd_vel_chassis_serial.py-1]            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+[cmd_vel_chassis_serial.py-1]   File "/home/gsing/miniconda3/lib/python3.14/importlib/__init__.py", line 88, in import_module
+[cmd_vel_chassis_serial.py-1]     return _bootstrap._gcd_import(name[level:], package, level)
+[cmd_vel_chassis_serial.py-1]            ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[cmd_vel_chassis_serial.py-1] ModuleNotFoundError: No module named 'rclpy._rclpy_pybind11'
+[cmd_vel_chassis_serial.py-1] The C extension '/opt/ros/jazzy/lib/python3.12/site-packages/_rclpy_pybind11.cpython-314-x86_64-linux-gnu.so' isn't present on the system. Please refer to 'https://docs.ros.org/en/jazzy/How-To-Guides/Installation-Troubleshooting.html#import-failing-without-library-present-on-the-system' for possible solutions
+[ERROR] [cmd_vel_chassis_serial.py-1]: process has died [pid 5231, exit code 1, cmd '/home/gsing/2026Gsing/2026_Gsing-second_ROS/nav2_ws1/install/dog_nav2_bringup/lib/dog_nav2_bringup/cmd_vel_chassis_serial.py --ros-args -r __node:=cmd_vel_chassis_serial --params-file /tmp/launch_params_t9apmvev --params-file /tmp/launch_params_1h7nmo4y --params-file /tmp/launch_params_7_bx0_pm --params-file /tmp/launch_params_b8mgllpv --params-file /tmp/launch_params_vnkb7kpb --params-file /tmp/launch_params_4x90a_v2 --params-file /tmp/launch_params_7i92besg --params-file /tmp/launch_params_rr2b6fj8'].

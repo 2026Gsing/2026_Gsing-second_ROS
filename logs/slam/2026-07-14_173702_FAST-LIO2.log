@@ -1,0 +1,46 @@
+[INFO] [1784021829.216446564] [laser_mapping]: p_pre->lidar_type 5
+Multi thread started 
+~~~~/home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[INFO] [1784021829.273741748] [laser_mapping]: Node init finished.
+[INFO] [1784021829.697268897] [pointcloud_x_filter]: 点云过滤器已启动，仅保留 x > 0.0, 半径 > 0.0 的点
+[INFO] [1784021830.268036754] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021831.267963471] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021832.268484454] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021833.267949582] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021834.267909380] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021835.268106967] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021836.270150825] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021837.268433609] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021838.268150245] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021839.268198802] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021840.267952564] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021841.268113115] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021842.268240957] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021843.269095005] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021844.268569893] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021845.270123042] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021846.268223460] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021847.268414886] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021848.268071995] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021849.268469895] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021850.268164607] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021851.267907122] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021852.268419099] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021853.268560498] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021854.267913530] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021855.268225543] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021856.268074881] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021857.268261463] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021858.267913299] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021859.267872281] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021860.267928932] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021861.267933768] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021862.267918230] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021863.268238443] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021864.268071690] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021865.267958781] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021866.268078444] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021867.268221806] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021868.268096905] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021869.268102744] [laser_mapping]: publish_map: frame pts=0, total=0
+[INFO] [1784021870.269501430] [laser_mapping]: publish_map: frame pts=0, total=0
