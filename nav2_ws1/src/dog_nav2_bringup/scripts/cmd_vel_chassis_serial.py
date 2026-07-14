@@ -63,7 +63,7 @@ CMD_LEG_DEBUG   = 0x31 # STM32 -> upper: wheel-leg support debug
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 LEN_ARM_EVENT_PAYLOAD = 16
-LEG_DEBUG_FMT = "<IBBBB16f"
+LEG_DEBUG_FMT = "<IBBBB18f"
 LEN_LEG_DEBUG_PAYLOAD = struct.calcsize(LEG_DEBUG_FMT)
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
 
@@ -84,6 +84,8 @@ LEG_DEBUG_FIELDS = [
     "stance_support_ramp",
     "sag_rescue",
     "tau_ff_knee_nm",
+    "error_x_cm",
+    "knee_torque_limit_nm",
 ]
 
 LEG_DEBUG_GLOBAL_FIELDS = [
@@ -103,6 +105,8 @@ LEG_DEBUG_GLOBAL_FIELDS = [
     "support_force_bias_leg1_n",
     "support_force_bias_leg2_n",
     "support_force_bias_leg3_n",
+    "gait_rear_x_relief_cm",
+    "gait_rear_x_relief_cmps",
 ]
 
 LEG_DEBUG_ATTITUDE_FIELDS = [
@@ -122,6 +126,8 @@ LEG_DEBUG_ATTITUDE_FIELDS = [
     "att_pitch_moment_cmd_nm",
     "att_accel_dev_mps2",
     "att_gyro_abs_dps",
+    "att_roll_raw_deg",
+    "att_pitch_raw_deg",
 ]
 
 LEG_DEBUG_NAMES = {
@@ -382,6 +388,8 @@ class CmdVelChassisSerial(Node):
                 f" att={int(a[0])}/{int(a[1])}/{int(a[2])}"
                 f" mode={int(a[3])}"
                 f" proj={int(a[4])}"
+                f" raw={a[16]:+.1f}/{a[17]:+.1f}"
+                f" zero={a[8]:+.1f}/{a[9]:+.1f}"
             )
 
         leg_parts = []
