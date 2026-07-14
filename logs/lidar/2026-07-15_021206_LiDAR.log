@@ -1,0 +1,10 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-02-12-15-595525-gsing-7124
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [7448]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2
+[unitree_lidar_ros2_node-1] [UDPHandler] create udp socket success.
+[unitree_lidar_ros2_node-1] [UDPHandler] bind udp port success. port 6201.
+[unitree_lidar_ros2_node-1] [UDPHandler] set udp recv timeout success. 1 sec.
+[unitree_lidar_ros2_node-1] [INFO] [1784052808.847740102] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [unitree_lidar_ros2_node-1]: process has finished cleanly [pid 7448]

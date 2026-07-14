@@ -224,15 +224,10 @@ def generate_launch_description():
 
     # ============ 辅助脚本 ============
 
-    # goal_pose_to_nav2.py: 桥接 RViz 的 "2D Goal Pose" 点击
-    #   订阅 /goal_pose (PoseStamped) → 发送 NavigateToPose action 给 bt_navigator
+    # 注意：goal_pose_to_nav2.py 桥已移除。
+    # RViz 的 nav2_rviz_plugins/GoalTool 已直接发 NavigateToPose action，
+    # 再加上桥会导致重复 goal → preemption → action client DDS 发现中断 → 超时失败
     pkg_prefix = get_package_prefix('dog_nav2_bringup')
-    goal_bridge_script = os.path.join(pkg_prefix, 'lib', 'dog_nav2_bringup', 'goal_pose_to_nav2.py')
-    goal_pose_bridge = ExecuteProcess(
-        cmd=[sys.executable, goal_bridge_script],
-        name='goal_pose_to_nav2',
-        output='screen',
-    )
 
     # costmap_to_grid.py: 将 Nav2 costmap 话题重发布为 /global_costmap_grid 和
     #   /local_costmap_grid，使 RViz 可以直接显示 costmap（因为原始 costmap 话题
@@ -276,7 +271,6 @@ def generate_launch_description():
                 bt_navigator,
                 waypoint_follower,
                 lifecycle_manager,
-                goal_pose_bridge,
                 costmap_grid_bridge,
             ],
         )

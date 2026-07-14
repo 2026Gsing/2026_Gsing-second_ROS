@@ -186,25 +186,28 @@ Frame: `[0x55][0xAA][func_id][len][payload...][checksum]`
 | `0x15` | AUTO_TASK | `cmd(u8)+target(u8)+zone(u8)` = 3B | ROS→STM32 | auto_task.py |
 | `0x22` | ARM_EVENT | `event+mode+slot+side+xyz` = 16B | STM32→ROS | serial bridge |
 
-## Custom BT XML — server_timeout Fix
+## Navigation: ComputePathToPose Timeout — duplicate goal preemption
 
-**Problem**: `navigate_w_replanning_and_recovery.xml` does not exist in ROS2 Jazzy. The correct filename is `navigate_to_pose_w_replanning_and_recovery.xml`. When bt_navigator can't find the specified XML, it falls back to a simplified default behavior tree where `ComputePathToPose` has an implicit 0s `server_timeout`, causing the planner action to fail immediately (~0.03s).
+**Problem**: bt_navigator logs "Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose", navigation fails within ~22ms.
 
-**Fix**: Three layers:
+**Root Cause**: RViz Nav2 plugin (nav2_rviz_plugins/GoalTool) sends a NavigateToPose action goal directly to bt_navigator. Simultaneously, rviz_default_plugins/SetGoal (also in the RViz toolbar) publishes to /goal_pose, which was subscribed by goal_pose_to_nav2.py bridge — causing a **second** NavigateToPose goal that preempts the first.
 
-1. **Filename correction** — All 6 files referencing the old name now use `navigate_to_pose_w_replanning_and_recovery.xml` (params YAMLs, shell heredocs, Python inline YAML)
-2. **Custom BT XML** — `nav2_ws1/src/dog_nav2_bringup/behavior_trees/custom_navigate_to_pose_w_replanning_and_recovery.xml` is a copy of the system default with `server_timeout="5.0"` added to `<ComputePathToPose>`, giving the planner action server sufficient time to respond
-3. **Launch override** — `nav2_fastlio_static_map.launch.py` computes `custom_bt_xml` via `get_package_share_directory` and overrides `default_bt_xml_filename` in the bt_navigator parameters
+The preemption cancels the first BT execution while ComputePathToPose's action client is mid-DDS-discovery (wait_for_action_server). The second BT creates a fresh client, but on this slow CPU (Celeron N2940) discovery hasn't completed in ~22ms → wait_for_action_server returns "server not found" → entire navigation fails.
 
-If you create a new params YAML or launch file, reference the custom BT XML via:
-```python
-custom_bt_xml = os.path.join(bringup_share, 'behavior_trees', 'custom_navigate_to_pose_w_replanning_and_recovery.xml')
+Note: `server_timeout="5.0"` on the ComputePathToPose BT node does NOT fix this — it controls the timeout for the action **result**, but the failure is at the **goal acknowledgment** stage before the server processes the request.
+
+**Fix** (2026-07-15):
+- **Removed** `goal_pose_to_nav2.py` bridge from `nav2_fastlio_static_map.launch.py` — GoalTool already sends NavigateToPose directly, the bridge was redundant
+- Custom BT XML (`custom_navigate_to_pose_w_replanning_and_recovery.xml` with `server_timeout="5.0"`) retained as safety net
+
+**RViz Tools** in `nav2_fastlio_static_map.rviz`:
+```yaml
+Tools:
+  - Class: nav2_rviz_plugins/GoalTool       # ← sends NavigateToPose action (USE THIS)
+  - Class: rviz_default_plugins/SetGoal     # ← publishes /goal_pose only, no subscriber anymore
+    Topic: goal_pose
 ```
-Or use the standard system filename if you don't need the explicit timeout:
-```
-default_bt_xml_filename: "navigate_to_pose_w_replanning_and_recovery.xml"
-```
-(relative path resolved by bt_navigator from `nav2_bt_navigator/share/nav2_bt_navigator/behavior_trees/`)
+SetGoal still appears in the toolbar but has no subscriber — harmless. Always select GoalTool for navigation.
 
 ## Common Pitfalls
 
