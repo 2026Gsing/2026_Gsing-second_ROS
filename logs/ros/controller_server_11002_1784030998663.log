@@ -1,0 +1,31 @@
+[INFO] [1784030999.533339249] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784030999.797390054] [controller_server]: Creating controller server
+[INFO] [1784031000.329538846] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784031000.356591301] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784031000.722380866] [controller_server]: Configuring controller interface
+[INFO] [1784031000.722456505] [controller_server]: getting progress checker plugins..
+[INFO] [1784031000.738341455] [controller_server]: getting goal checker plugins..
+[INFO] [1784031000.754895723] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784031000.755282512] [local_costmap.local_costmap]: Configuring
+[INFO] [1784031000.950307524] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784031001.269768613] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784031001.336425804] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784031001.968800637] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784031001.983116758] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[INFO] [1784031002.024045309] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784031002.050210421] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784031002.085766466] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784031002.323377848] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784031006.819928936] [local_costmap.local_costmap]: StaticLayer: Resizing costmap to 57 X 42 at 0.050000 m/pix
+[INFO] [1784031006.953876114] [controller_server]: Activating
+[INFO] [1784031006.954768930] [local_costmap.local_costmap]: Activating
+[INFO] [1784031006.954918900] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784031006.956289025] [local_costmap.local_costmap]: start
+[INFO] [1784031007.109279096] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784031007.109472113] [controller_server]: Creating bond (controller_server) to lifecycle manager.

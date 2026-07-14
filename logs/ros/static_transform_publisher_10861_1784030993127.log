@@ -1,0 +1,4 @@
+[INFO] [1784030993.466666312] [static_tf_camerainit_baselink]: Spinning until stopped - publishing transform
+translation: ('0.000000', '0.000000', '0.000000')
+rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+from 'camera_init' to 'base_link'

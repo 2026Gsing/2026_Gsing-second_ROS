@@ -1,0 +1,9 @@
+[INFO] [1784030995.978786166] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1784030995.979070267] [rviz2]: OpenGl version: 4.2 (GLSL 4.2)
+[INFO] [1784030996.110867738] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [1784031006.856893965] [rviz2]: Trying to create a map of size 57 x 42 using 1 swatches
+[ERROR] [1784031006.909655922] [rviz2]: rviz/glsl120/indexed_8bit_image.vert
+rviz/glsl120/indexed_8bit_image.frag
+ GLSL link result : 
+active samplers with a different type refer to the same texture image unit
+[INFO] [1784031007.328338409] [rviz2]: Trying to create a map of size 57 x 42 using 1 swatches
