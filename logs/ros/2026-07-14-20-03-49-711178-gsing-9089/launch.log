@@ -1,0 +1,23 @@
+1784030629.7167370 [INFO] [launch]: All log files can be found below /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/ros/2026-07-14-20-03-49-711178-gsing-9089
+1784030629.7181008 [INFO] [launch]: Default logging verbosity is set to INFO
+1784030630.3257418 [INFO] [fastlio_mapping-1]: process started with pid [9288]
+1784030630.3366134 [INFO] [env-2]: process started with pid [9289]
+1784030630.3372071 [INFO] [env-3]: process started with pid [9290]
+1784030630.3376808 [INFO] [pcd_to_pointcloud-4]: process started with pid [9292]
+1784030675.1278455 [INFO] [fastlio_mapping-1]: process has finished cleanly [pid 9288]
+1784030679.6197860 [ERROR] [env-2]: process has died [pid 9289, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.03
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.9
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_2kv30k8g --params-file /tmp/launch_params_cojawv7b'].
+1784030679.6888244 [ERROR] [env-3]: process has died [pid 9290, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026Gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
