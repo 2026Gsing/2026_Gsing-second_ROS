@@ -31,3 +31,5 @@
 [cmd_vel_chassis_serial.py-1] [ERROR] [1784027776.495988718] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
 [cmd_vel_chassis_serial.py-1] [ERROR] [1784027777.269159535] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
 [cmd_vel_chassis_serial.py-1] [ERROR] [1784027784.778241626] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027811.791023204] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
+[cmd_vel_chassis_serial.py-1] [ERROR] [1784027812.916757529] [cmd_vel_chassis_serial]: Serial write failed: Write timeout
