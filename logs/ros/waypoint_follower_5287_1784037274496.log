@@ -1,0 +1,12 @@
+[INFO] [1784037275.959991215] [waypoint_follower]: 
+	waypoint_follower lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784037276.024897936] [waypoint_follower]: Creating
+[INFO] [1784037281.747725740] [waypoint_follower]: Configuring
+[INFO] [1784037282.315410081] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[INFO] [1784037282.331512866] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[INFO] [1784037284.678331910] [waypoint_follower]: Activating
+[INFO] [1784037284.678511044] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[INFO] [1784037327.058007584] [waypoint_follower]: Deactivating
+[INFO] [1784037327.058162949] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
