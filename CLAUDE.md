@@ -256,6 +256,28 @@ SetGoal still appears in the toolbar but has no subscriber — harmless. Always 
 - **Serial port**: `sudo chmod 666 /dev/ttyACM0`
 - **ICP not initialized**: `box_pick_node.py` publishes `/initialpose` after 8s, but ICP takes ~15s to load map — message is often dropped. ICP auto-initializes once LiDAR data flows, so this is usually non-blocking.
 
+## 2026-07-15 修改记录
+
+### 1. box_pick_node.py — CLI 导航 + 周期定位输出
+
+**问题**: 导航依赖 RViz 的 GoalTool，但工具栏有 GoalTool/SetGoal 两个按钮，容易选错导致 SetGoal 发布到无人订阅的 `/goal_pose`（桥已移除），导航不启动。
+
+**修复**:
+- 新增 `goto <x> <y> [yaw]` CLI 命令，通过 `navigate_to_pose` action 直接发给 bt_navigator，绕过 RViz 工具选择问题
+- 新增 `nav <x> <y> [yaw]` 作为 `goto` 的别名
+- 新增 `pos` 命令，立即打印当前定位
+- 新增每 0.5 秒定时器自动输出定位坐标（x, y, z, yaw, state）
+- `_nav_result_cb` 补全导航失败日志（之前只有成功才打印）
+- 启动 banner 改为提示 `goto` 命令
+
+### 2. launch_utils.py — `USE_TERMINAL = False`
+
+**问题**: `USE_TERMINAL = True` 每次启动弹 5 个 gnome-terminal 窗口，miniPC (Celeron N2940, 7.6G RAM) 上吃资源。
+
+**修复**: 改为 `False`，后台静默运行，日志仍写入 `logs/` 各子目录。想看实时输出用 `tail -f` 对应日志文件。
+
+---
+
 ## 2026-07-15 修复记录
 
 ### 1. Nav2 "Failed to make progress" — TF 树冲突

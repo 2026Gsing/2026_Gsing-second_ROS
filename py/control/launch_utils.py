@@ -59,7 +59,7 @@ _LOG_CATEGORIES = {
 # 可通过环境变量 GSING_RVIZ=1 或 GSING_RVIZ=0 临时覆盖
 _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
-USE_TERMINAL = True    # 是否用独立终端窗口显示每个节点输出
+USE_TERMINAL = False   # True=弹终端窗口, False=后台运行（miniPC 推荐）
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
 MAP_NAME = "map/PCD33"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 

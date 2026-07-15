@@ -3,7 +3,8 @@
 box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
 
 流程：
-  1. 在 RViz 中用 2D Nav Goal 导航到物资箱附近 (Terminal 3)
+  1. 在终端输入 goto <x> <y> [yaw] 导航到目标坐标
+     （或在 RViz 中用 2D Nav Goal 也可——注意选 GoalTool 而非 SetGoal）
   2. 机器人停稳后自动触发 → 启动 cube_detector.py 检测前方立方体+
   3. 用 catch.py 的坐标变换 + STM32 可达性判断：
      a. 机械臂可达 → 启动 catch.py 抓取
@@ -12,7 +13,7 @@ box_pick_node.py — 物资箱到达后自动检测 + 重规划 + 抓取
   5. 也可手动输入 arrived（自动检测未生效时备用）
 
 启动（自动拉起 LiDAR、ICP、Nav2、串口桥等前置节点）：
-  python3 py/control/box_pick_node.py
+  ./ros-run.sh py/control/box_pick_node.py
 """
 
 import rclpy
@@ -70,6 +71,9 @@ class BoxPickNode(Node):
         # ============ 发布器 ============
         self._vel_pub = self.create_publisher(Twist, "/vision_cmd_vel", 10)
 
+        # ============ 周期输出当前位置（每 0.5 秒） ============
+        self._pos_timer = self.create_timer(0.5, self._print_position)
+
         # ============ Nav2 Action Client ============
         self._nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
         self._nav_goal_handle = None
@@ -96,14 +100,32 @@ class BoxPickNode(Node):
         self._print_help()
 
     # ================================================================
+    # 周期输出当前位置
+    # ================================================================
+    def _print_position(self):
+        with self._lock:
+            loc = self._latest_localization
+            if loc is None:
+                return
+            p = loc.pose.pose.position
+            o = loc.pose.pose.orientation
+        yaw = quaternion_to_yaw(o)
+        self.get_logger().info(
+            f"[定位] x={p.x:.3f}  y={p.y:.3f}  z={p.z:.3f}  "
+            f"yaw={yaw:.3f}  状态={self._state}"
+        )
+
+    # ================================================================
     # CLI 帮助
     # ================================================================
     def _print_help(self):
         print("\n── 命令 ──────────────────────")
-        print("  arrived   → 手动确认到达（自动检测失效时备用）")
-        print("  status    → 显示当前状态")
-        print("  stop      → 停止所有子进程")
-        print("  quit      → 退出")
+        print("  goto <x> <y> [yaw]  → 导航到指定坐标")
+        print("  arrived             → 手动确认到达（自动检测失效时备用）")
+        print("  status              → 显示当前状态")
+        print("  pos                 → 显示当前定位坐标")
+        print("  stop                → 停止所有子进程")
+        print("  quit                → 退出")
         print("──────────────────────────────\n")
 
     # ================================================================
@@ -171,7 +193,14 @@ class BoxPickNode(Node):
         with self._lock:
             if result and result.status == 4:  # SUCCEEDED
                 self._nav_succeeded = True
-                self.get_logger().info("[NAV] 导航成功！")
+                self.get_logger().info("[NAV] ✅ 导航成功！")
+            else:
+                status_names = {
+                    0: "UNKNOWN", 1: "ACCEPTED", 2: "EXECUTING",
+                    3: "CANCELED", 4: "SUCCEEDED", 5: "FAILED",
+                }
+                s = status_names.get(result.status, f"???({result.status})")
+                self.get_logger().warn(f"[NAV] ❌ 导航结束: {s}")
             self._nav_goal_handle = None
 
     def _send_nav_goal(self, x, y, yaw):
@@ -526,6 +555,13 @@ class BoxPickNode(Node):
                 s += "  无立方体数据"
         self.get_logger().info(s)
 
+    def cmd_goto(self, x, y, yaw):
+        """CLI 命令：发送 Nav2 导航目标"""
+        with self._lock:
+            self._nav_goal_pos = (x, y)
+            self._arrival_triggered = False
+        self._send_nav_goal(x, y, yaw)
+
     def cmd_stop(self):
         self._cleanup_detection()
         self.get_logger().info("[命令] 已停止所有")
@@ -549,7 +585,8 @@ def main():
     print("\n" + "=" * 50)
     print("  BoxPickNode — 物资箱到达检测 + 抓取")
     print("=" * 50)
-    print("  1. 在 RViz 中用 2D Nav Goal 导航到物资箱")
+    print("  1. 输入  goto <x> <y> [yaw]  导航到目标坐标")
+    print("     （或 RViz 中用 2D Nav Goal 也可）")
     print("  2. 机器人停稳后 自动 启动 cube_detector 检测")
     print("     → 机械臂可达则抓取 / 不可达则靠近再检测")
     print("  3. 输入 arrived 可手动触发（自动检测未生效时备用）")
@@ -564,6 +601,20 @@ def main():
                     node.on_arrived()
                 elif cmd == "status":
                     node.cmd_status()
+                elif cmd == "pos":
+                    node._print_position()
+                elif cmd.startswith("goto") or cmd.startswith("nav"):
+                    parts = cmd.split()
+                    if len(parts) >= 3:
+                        try:
+                            x = float(parts[1])
+                            y = float(parts[2])
+                            yaw = float(parts[3]) if len(parts) >= 4 else 0.0
+                            node.cmd_goto(x, y, yaw)
+                        except ValueError:
+                            print("格式: goto <x> <y> [yaw]")
+                    else:
+                        print("格式: goto <x> <y> [yaw]")
                 elif cmd == "stop":
                     node.cmd_stop()
                 elif cmd == "quit":
