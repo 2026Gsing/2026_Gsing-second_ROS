@@ -82,7 +82,7 @@ LEG_DEBUG_FIELDS = [
     "fy_up_n",
     "fy_sag_n",
     "swing_unload_n",
-    "stance_takeoff_release",
+    "touchdown_prepare",
     "stance_entry_ramp",
     "stance_support_ramp",
     "sag_rescue",
@@ -424,6 +424,8 @@ class CmdVelChassisSerial(Node):
             text.append("LIM")
         if flags & 0x04:
             text.append("RES")
+        if flags & 0x20:
+            text.append("TDP")
         return "|".join(text)
 
     def _log_leg_debug_snapshot(self):
@@ -471,7 +473,7 @@ class CmdVelChassisSerial(Node):
                 f" ty/ay={v[3]:.1f}/{v[5]:.1f}"
                 f" ey={v[6]:+.1f}"
                 f" Fy={v[7]:+.0f}"
-                f" rel={v[11]:.2f}"
+                f" tdp={v[11]:.2f}"
                 f" sag={v[14]:.2f}"
                 f" xa={v[18]:.2f}"
                 f" tauK={v[15]:+.1f}"
