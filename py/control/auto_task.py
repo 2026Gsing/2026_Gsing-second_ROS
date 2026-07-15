@@ -11,7 +11,7 @@ auto_task.py — 全场自动任务（Nav2 导航版）
   6. 完成
 
 使用方式：
-  ./ros-run.sh py/control/auto_task.py
+./ros-run.sh py/control/auto_task.py
 
 运行时调参可通过 ros2 param（详见 __init__ 中的 declare_parameter）
 """
