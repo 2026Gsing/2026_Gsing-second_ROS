@@ -1,0 +1,3 @@
+1784127033.5627582 [INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-22-50-33-561026-gsing-KPADLU4-3558
+1784127033.5630870 [INFO] [launch]: Default logging verbosity is set to INFO
+1784127033.6379912 [INFO] [cmd_vel_chassis_serial.py-1]: process started with pid [3644]

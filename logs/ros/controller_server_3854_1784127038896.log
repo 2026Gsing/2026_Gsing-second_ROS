@@ -1,0 +1,46 @@
+[INFO] [1784127039.104779385] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784127039.248815948] [controller_server]: Creating controller server
+[INFO] [1784127039.352111831] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784127039.355898623] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784127039.464208858] [controller_server]: Configuring controller interface
+[INFO] [1784127039.467778714] [controller_server]: getting goal checker plugins..
+[INFO] [1784127039.468155025] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784127039.468216986] [local_costmap.local_costmap]: Configuring
+[INFO] [1784127039.492386633] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784127039.514032375] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784127039.516218623] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784127039.559568661] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784127039.566417259] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784127039.568033270] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784127039.573334406] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784127039.591371600] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784127040.449809554] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 125 X 89 at 0.050000 m/pix
+[INFO] [1784127040.577367768] [controller_server]: Activating
+[INFO] [1784127040.577433844] [local_costmap.local_costmap]: Activating
+[INFO] [1784127040.577455286] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784127040.577592096] [local_costmap.local_costmap]: start
+[INFO] [1784127040.727780945] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784127040.727884276] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784127042.553309611] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1784127042.553397481] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[INFO] [1784127043.603516627] [controller_server]: Passing new path to controller.
+[INFO] [1784127044.603526294] [controller_server]: Passing new path to controller.
+[INFO] [1784127045.654125724] [controller_server]: Passing new path to controller.
+[INFO] [1784127046.653513886] [controller_server]: Passing new path to controller.
+[INFO] [1784127047.704528318] [controller_server]: Passing new path to controller.
+[INFO] [1784127048.706243196] [controller_server]: Passing new path to controller.
+[INFO] [1784127049.753501066] [controller_server]: Passing new path to controller.
+[INFO] [1784127050.753519905] [controller_server]: Passing new path to controller.
+[INFO] [1784127051.804775412] [controller_server]: Passing new path to controller.
+[INFO] [1784127052.803520911] [controller_server]: Passing new path to controller.
+[INFO] [1784127053.853518658] [controller_server]: Passing new path to controller.
+[INFO] [1784127054.853971181] [controller_server]: Passing new path to controller.
+[INFO] [1784127055.855637387] [controller_server]: Passing new path to controller.
+[INFO] [1784127056.855281706] [controller_server]: Passing new path to controller.
+[INFO] [1784127057.904027458] [controller
