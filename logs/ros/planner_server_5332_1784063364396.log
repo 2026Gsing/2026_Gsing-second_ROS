@@ -1,0 +1,27 @@
+[INFO] [1784063364.741247904] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784063364.919946112] [planner_server]: Creating
+[INFO] [1784063365.254248945] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784063365.300358753] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784063366.595168224] [planner_server]: Configuring
+[INFO] [1784063366.598529616] [global_costmap.global_costmap]: Configuring
+[INFO] [1784063366.664678685] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784063366.719663118] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784063366.736980486] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[INFO] [1784063367.190061364] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[INFO] [1784063367.202282508] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[INFO] [1784063367.245589650] [planner_server]: Planner Server has GridBased  planners available.
+[INFO] [1784063371.379499623] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 60 X 43 at 0.050000 m/pix
+[INFO] [1784063371.783813665] [planner_server]: Activating
+[INFO] [1784063371.783934796] [global_costmap.global_costmap]: Activating
+[INFO] [1784063371.783981706] [global_costmap.global_costmap]: Checking transform
+[INFO] [1784063371.785247380] [global_costmap.global_costmap]: start
+[WARN] [1784063371.785982724] [nav2_costmap_2d]: Robot is out of bounds of the costmap
+[INFO] [1784063371.837060784] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[INFO] [1784063371.848155650] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[WARN] [1784063376.787122950] [nav2_costmap_2d]: Robot is out of bounds of the costmap
