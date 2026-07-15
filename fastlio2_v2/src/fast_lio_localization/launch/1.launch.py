@@ -109,8 +109,8 @@ def generate_launch_description():
     )
     declare_fov = DeclareLaunchArgument(
         "fov",
-        default_value="6.28319",
-        description="FOV 范围 (弧度)，2π=全向"
+        default_value="3.14159",
+        description="FOV 范围 (弧度)，π=前向180°（排除后方机器人自身点云干扰）"
     )
     declare_fov_far = DeclareLaunchArgument(
         "fov_far",

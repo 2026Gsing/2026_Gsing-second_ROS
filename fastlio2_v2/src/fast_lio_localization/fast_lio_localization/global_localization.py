@@ -27,7 +27,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion, TransformStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion, TransformStamped, Twist
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2, PointField
 from std_msgs.msg import Header
@@ -256,6 +256,10 @@ class FastLIOLocalization(Node):
         self.scan_buffer = []           # 多帧扫描累积缓存（提升 ICP 稳定性）
         self.initialized = False        # 是否已收到初始位姿
 
+        # ============ 静止冻结 ============
+        self.last_motion_time = None    # 最后收到非零 cmd_vel 的时刻
+        self.STATIONARY_TIMEOUT = 0.5   # 连续无运动超过此时长（秒）→ 冻结 ICP
+
         # ============ ROS2 参数 ============
         self.declare_parameters(
             namespace="",
@@ -294,6 +298,7 @@ class FastLIOLocalization(Node):
         self.create_subscription(PointCloud2, "/unilidar/cloud", self.cb_save_cur_scan, 10)
         self.create_subscription(Odometry, "/Odometry", self.cb_save_cur_odom, 10)
         self.create_subscription(PoseWithCovarianceStamped, "/initialpose", self.cb_initialize_pose, 10)
+        self.create_subscription(Twist, "/cmd_vel", self.cb_cmd_vel, 10)
 
         # ============ 定时器 ============
         self.timer_localisation = self.create_timer(
@@ -548,6 +553,18 @@ class FastLIOLocalization(Node):
         header.frame_id = "map"
         self.publish_point_cloud(self.pub_pc_in_map, header, pc)
 
+    def cb_cmd_vel(self, msg):
+        """检测底盘运动指令，更新最后运动时间"""
+        if abs(msg.linear.x) > 0.01 or abs(msg.angular.z) > 0.01:
+            self.last_motion_time = self.get_clock().now()
+
+    def _is_stationary(self):
+        """判断机器人是否已静止超过 STATIONARY_TIMEOUT 秒"""
+        if self.last_motion_time is None:
+            return False  # 还没收到过 cmd_vel，不冻结
+        elapsed = (self.get_clock().now() - self.last_motion_time).nanoseconds / 1e9
+        return elapsed > self.STATIONARY_TIMEOUT
+
     def initialize_global_map(self):
         """加载 PCD 全局地图并进行体素下采样"""
         path = self.get_parameter("pcd_map_path").value
@@ -631,6 +648,15 @@ class FastLIOLocalization(Node):
         """定时定位任务：持续执行 ICP 配准以维持定位精度"""
         if not self.initialized:
             self.get_logger().info("Waiting for initial pose...")
+            return
+
+        # 静止冻结：连续 3 秒无运动指令 → 不跑 ICP，仅维持上次位姿
+        if self._is_stationary():
+            self.get_logger().info(
+                "Robot stationary — ICP frozen, maintaining last pose",
+                throttle_duration_sec=5.0,
+            )
+            self.publish_odom(self.T_map_to_odom)
             return
 
         if self.cur_scan is not None:
