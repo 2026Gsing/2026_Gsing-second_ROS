@@ -37,7 +37,7 @@ sudo ip addr add 192.168.1.2/24 dev enp4s0
 cd ~/2026Gsing/2026_Gsing-second_ROS
 ./ros-run.sh py/tools/detect_hardware.py
 ```
-quit
+
 ## 一键启动
 ```bash
 cd ~/2026Gsing/2026_Gsing-second_ROS
