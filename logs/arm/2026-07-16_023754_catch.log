@@ -1,0 +1,7 @@
+[INFO] [1784140675.165284815] [arm_state_machine]: ============================================================
+[INFO] [1784140675.166086091] [arm_state_machine]: Arm State Machine Started (含自动任务状态机推进)
+[INFO] [1784140675.166767566] [arm_state_machine]: State: IDLE
+[INFO] [1784140675.167359233] [arm_state_machine]: ============================================================
+[INFO] [1784140680.133028422] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784140685.132828539] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784140690.132890813] [arm_state_machine]: [STATUS] State: IDLE

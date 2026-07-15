@@ -48,10 +48,10 @@ from launch_utils import launch, cleanup_all, _kill_existing, _clean_cyclone_shm
 # 参数（可被 --vx / --approach / --carry 覆盖）
 # ============================================================
 FORWARD_SPEED = 0.2        # 前进速度 (m/s)
-APPROACH_TIME = 10.0        # 第一次前进持续时间 (s)
+APPROACH_TIME = 8.0        # 第一次前进持续时间 (s)
 CARRY_TIME = 16.0           # 第二次前进持续时间 (s)
-GRAB_TIMEOUT = 20.0        # 抓取超时 (s)
-PLACE_TIMEOUT = 20.0       # 放置超时 (s)
+GRAB_TIMEOUT = 60.0        # 抓取超时 (s)
+PLACE_TIMEOUT = 60.0       # 放置超时 (s)
 
 # ============================================================
 # 串口协议常量（与 STM32 / catch.py / auto_task.py 一致）
@@ -114,8 +114,24 @@ class OpenLoopAutoNode(Node):
     # ──────────────────────────────────────────────────────────────
 
     def _cube_cb(self, msg):
-        """记录检测到的立方体（用于日志显示）"""
+        """记录检测到的立方体（首次检测或位置变化时输出日志）"""
+        was_none = self._detected_cube is None
         self._detected_cube = msg
+        if was_none:
+            # 首次检测到立方体
+            p = msg.pose.position
+            s = msg.scale
+            self.get_logger().info(
+                f"[检测] 🎯 首次检测到物资箱! "
+                f"位置: ({p.x:.3f}, {p.y:.3f}, {p.z:.3f}) "
+                f"尺寸: ({s.x:.3f}, {s.y:.3f}, {s.z:.3f})"
+            )
+        elif msg.header.stamp.sec % 2 == 0:
+            # 每 ~2s 输出一次当前检测状态（避免刷屏）
+            p = msg.pose.position
+            self.get_logger().info(
+                f"[检测] 📦 物资箱: x={p.x:.3f} y={p.y:.3f} z={p.z:.3f}"
+            )
 
     def _bg_spin(self):
         """后台 spin 线程"""
@@ -195,48 +211,80 @@ class OpenLoopAutoNode(Node):
         self.get_logger().info(f"[ARM] {name} flags={flags}")
 
     # ──────────────────────────────────────────────────────────────
-    # 子进程管理（与 auto_task.py 一致）
+    # 子进程管理（带日志实时转发）
     # ──────────────────────────────────────────────────────────────
 
+    def _start_subprocess_with_relay(self, script_relpath, log_dir, file_prefix, tag):
+        """
+        启动子进程，将 stdout 同时写入日志文件和转发到 ROS logger。
+
+        Args:
+            script_relpath: 脚本路径（相对于 _HERE）
+            log_dir: 日志目录（Path 对象）
+            file_prefix: 日志文件名前缀
+            tag: ROS logger 标签（如 "CUBE", "CATCH"）
+
+        Returns:
+            subprocess.Popen 对象，或 None（启动失败时）
+        """
+        log_dir = Path(log_dir)
+        log_dir.mkdir(parents=True, exist_ok=True)
+        logfile = str(log_dir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_{file_prefix}.log")
+
+        try:
+            proc = subprocess.Popen(
+                [sys.executable, str(_HERE / script_relpath)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,        # 行缓冲
+                text=True,        # 文本模式 → line 是 str
+            )
+        except Exception as e:
+            self.get_logger().error(f"[{tag}] 启动失败: {e}")
+            return None
+
+        def _relay():
+            """后台线程：逐行读取子进程 stdout，写文件 + 转发 ROS logger"""
+            try:
+                with open(logfile, "w") as f:
+                    for line in iter(proc.stdout.readline, ""):
+                        f.write(line)
+                        f.flush()
+                        line = line.rstrip("\n\r")
+                        if line:
+                            self.get_logger().info(f"[{tag}] {line}")
+            except Exception:
+                pass
+
+        thread = threading.Thread(target=_relay, daemon=True)
+        thread.start()
+
+        self.get_logger().info(f"[{tag}] PID={proc.pid} → {logfile}")
+        return proc
+
     def _start_cube_detector(self):
-        """启动 cube_detector.py 子进程"""
+        """启动 cube_detector.py 子进程（输出实时转发到终端）"""
         with self._subprocess_lock:
             if self._cube_proc is not None:
                 return
-            script = str(_HERE / "cube_detector.py")
-            logdir = _PROJECT / "logs" / "vision"
-            logdir.mkdir(parents=True, exist_ok=True)
-            logfile = str(logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_cube_detector.log")
-            try:
-                f = open(logfile, "w")
-                self._cube_proc = subprocess.Popen(
-                    [sys.executable, script],
-                    stdout=f, stderr=subprocess.STDOUT,
-                )
-                f.close()
-                self.get_logger().info(f"[CUBE] PID={self._cube_proc.pid} → {logfile}")
-            except Exception as e:
-                self.get_logger().error(f"[CUBE] 启动失败: {e}")
+            self._cube_proc = self._start_subprocess_with_relay(
+                "cube_detector.py",
+                _PROJECT / "logs" / "vision",
+                "cube_detector",
+                "CUBE",
+            )
 
     def _start_catch(self):
-        """启动 catch.py 子进程"""
+        """启动 catch.py 子进程（输出实时转发到终端）"""
         with self._subprocess_lock:
             if self._catch_proc is not None:
                 return
-            script = str(_HERE / "catch.py")
-            logdir = _PROJECT / "logs" / "arm"
-            logdir.mkdir(parents=True, exist_ok=True)
-            logfile = str(logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_catch.log")
-            try:
-                f = open(logfile, "w")
-                self._catch_proc = subprocess.Popen(
-                    [sys.executable, script],
-                    stdout=f, stderr=subprocess.STDOUT,
-                )
-                f.close()
-                self.get_logger().info(f"[CATCH] PID={self._catch_proc.pid} → {logfile}")
-            except Exception as e:
-                self.get_logger().error(f"[CATCH] 启动失败: {e}")
+            self._catch_proc = self._start_subprocess_with_relay(
+                "catch.py",
+                _PROJECT / "logs" / "arm",
+                "catch",
+                "CATCH",
+            )
 
     def _cleanup_subprocesses(self):
         """停止 cube_detector 和 catch 子进程"""
@@ -306,16 +354,53 @@ class OpenLoopAutoNode(Node):
                 f"[抓取] 等待 STM32 抓取完成 (PID={self._catch_proc.pid}) "
                 f"超时 {GRAB_TIMEOUT:.0f}s..."
             )
+
+            # 等待期间周期性输出检测状态
+            _wait_start = time.monotonic()
+            _last_report = 0.0
             try:
-                self._catch_proc.wait(timeout=GRAB_TIMEOUT)
-                self.get_logger().info("[抓取] ✅ STM32 抓取完成")
-            except subprocess.TimeoutExpired:
-                self.get_logger().warn(f"[抓取] ⏰ STM32 抓取超时 ({GRAB_TIMEOUT:.0f}s)")
-                try:
-                    self._catch_proc.kill()
-                    self._catch_proc.wait(timeout=3.0)
-                except Exception:
-                    pass
+                while True:
+                    # 非阻塞检查子进程是否退出
+                    try:
+                        self._catch_proc.wait(timeout=2.0)
+                        elapsed = time.monotonic() - _wait_start
+                        self.get_logger().info(
+                            f"[抓取] ✅ STM32 抓取完成 (耗时 {elapsed:.1f}s)"
+                        )
+                        break
+                    except subprocess.TimeoutExpired:
+                        pass
+
+                    # 每 4s 报告一次当前检测状态
+                    elapsed = time.monotonic() - _wait_start
+                    if elapsed - _last_report >= 4.0:
+                        _last_report = elapsed
+                        if self._detected_cube is not None:
+                            p = self._detected_cube.pose.position
+                            self.get_logger().info(
+                                f"[抓取] ⏳ 等待中 {elapsed:.0f}s/{GRAB_TIMEOUT:.0f}s "
+                                f"| 物资箱 @ x={p.x:.3f} y={p.y:.3f} z={p.z:.3f}"
+                            )
+                        else:
+                            self.get_logger().info(
+                                f"[抓取] ⏳ 等待中 {elapsed:.0f}s/{GRAB_TIMEOUT:.0f}s "
+                                f"| 未检测到物资箱..."
+                            )
+
+                    # 检查是否超时
+                    if elapsed > GRAB_TIMEOUT:
+                        self.get_logger().warn(
+                            f"[抓取] ⏰ STM32 抓取超时 ({GRAB_TIMEOUT:.0f}s)"
+                        )
+                        try:
+                            self._catch_proc.kill()
+                            self._catch_proc.wait(timeout=3.0)
+                        except Exception:
+                            pass
+                        break
+
+            except Exception as e:
+                self.get_logger().error(f"[抓取] 等待过程异常: {e}")
 
         # ── 清理 ──
         self._cleanup_subprocesses()
