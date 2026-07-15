@@ -955,10 +955,7 @@ class CmdVelChassisSerial(Node):
         """
         组装 0x10 串口协议帧
         格式：[0x55][0xAA][0x10][0x09][vx(4B)][wz(4B)][state(1B)][checksum(1B)]
-
-        注意：STM32 端 wz 方向与 ROS 约定相反，发送前取反。
         """
-        wz = -wz  # STM32 转向方向与 ROS 相反，取反后发送
         payload = struct.pack(PACKET_FMT, float(vx), float(wz), int(state) & 0xFF)
         frame_wo_checksum = bytes([HEAD1, HEAD2, CMD_CHASSIS_VEL, LEN_VEL_PAYLOAD]) + payload
         checksum = sum(frame_wo_checksum) & 0xFF
