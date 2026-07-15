@@ -249,11 +249,14 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     )
 
     # odometry→TF 桥
-    odom_bin = f"{fastlio_dir}/build/fast_lio/odometry_to_tf"
-    if os.path.isfile(odom_bin):
-        launch(f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && {odom_bin}", name="TF桥")
-    else:
-        print(f"  [TF桥] 未找到 {odom_bin}，跳过")
+    # ⚠️ 2026-07-16: 停用 odometry_to_tf。它广播 RAW FAST-LIO2 里程计位置的
+    #   camera_init→base_link，与 transform_fusion 发布的缩放后 map→base_link 冲突，
+    #   导致 Nav2 使用原始（未缩放）位置，进而与 /localization（缩放后）不一致。
+    #   去掉它后，Nav2 只从 transform_fusion 的 map→base_link 得知位置（受 scale_x 控制），
+    #   与 /localization 保持一致。
+    #odom_bin = f"{fastlio_dir}/build/fast_lio/odometry_to_tf"
+    #if os.path.isfile(odom_bin):
+    #    launch(...)
 
     # Nav2（按 GSING_RVIZ 决定是否开 RViz）
     launch(

@@ -42,14 +42,14 @@ _HERE = Path(__file__).resolve().parent
 _PROJECT = _HERE.parent.parent
 
 sys.path.insert(0, str(_HERE))
-from launch_utils import start_prerequisites, cleanup_all
+from launch_utils import launch, cleanup_all, _kill_existing, _clean_cyclone_shm
 
 # ============================================================
 # 参数（可被 --vx / --approach / --carry 覆盖）
 # ============================================================
 FORWARD_SPEED = 0.2        # 前进速度 (m/s)
-APPROACH_TIME = 3.0        # 第一次前进持续时间 (s)
-CARRY_TIME = 6.0           # 第二次前进持续时间 (s)
+APPROACH_TIME = 4.0        # 第一次前进持续时间 (s)
+CARRY_TIME = 8.0           # 第二次前进持续时间 (s)
 GRAB_TIMEOUT = 35.0        # 抓取超时 (s)
 PLACE_TIMEOUT = 25.0       # 放置超时 (s)
 
@@ -74,7 +74,7 @@ PLACE_Z = -0.35   # 臂向前伸
 class OpenLoopAutoNode(Node):
     """开环自动控制节点"""
 
-    def __init__(self, no_startup=False):
+    def __init__(self):
         super().__init__("open_loop_auto")
 
         # ==================== 发布器 ====================
@@ -101,8 +101,7 @@ class OpenLoopAutoNode(Node):
         threading.Thread(target=self._bg_spin, daemon=True).start()
 
         # ==================== 启动前置节点 ====================
-        if not no_startup:
-            self._startup()
+        # 不再在 __init__ 中启动，由 main() 调用 standalone startup()
 
         self.get_logger().info("=" * 60)
         self.get_logger().info("  开环自动控制脚本")
@@ -258,20 +257,6 @@ class OpenLoopAutoNode(Node):
                 setattr(self, attr, None)
 
     # ──────────────────────────────────────────────────────────────
-    # 启动前置节点
-    # ──────────────────────────────────────────────────────────────
-
-    def _startup(self):
-        """
-        启动 LiDAR + 串口桥（使用 launch_utils 的前置启动）。
-        start_prerequisites 会启动 LiDAR、ICP 定位、TF 桥、Nav2、串口桥。
-        虽然 ICP 和 Nav2 在开环控制中不必要，但启动它们不会影响运行。
-        如需只启动 LiDAR + 串口桥，使用 --no-startup 并在外部手动启动。
-        """
-        self.get_logger().info("[启动] 启动前置节点 (LiDAR / ICP / Nav2 / 串口桥)...")
-        start_prerequisites()
-
-    # ──────────────────────────────────────────────────────────────
     # 主流程步骤
     # ──────────────────────────────────────────────────────────────
 
@@ -301,52 +286,31 @@ class OpenLoopAutoNode(Node):
         self.get_logger().info("║  步骤 3/5: 检测并抓取物资箱         ║")
         self.get_logger().info("╚══════════════════════════════════════╝")
 
-        # 记录检测到的 cube 位置（供放置参考）
-        cube_pos = None
-
         # ── 启动 cube_detector（先启动，让它积累点云帧） ──
         self._start_cube_detector()
         self.get_logger().info("[抓取] 等待 cube_detector 初始化 (1.5s)...")
         time.sleep(1.5)
 
-        # ── 推进 STM32 状态机到 PICK ──
-        # catch.py 内部也会发送这些命令，但我们提前发一次确保状态正确
-        self.send_auto_cmd(AUTO_CMD_START)
-        time.sleep(0.2)
-        self.send_auto_cmd(AUTO_CMD_ARRIVED_BOX, target=1)
-        self.get_logger().info("[抓取] 等待 STM32 进入 PICK 状态 (0.6s)...")
-        time.sleep(0.6)
-
-        # ── 检测立方体（等待 /detected_cube 话题） ──
-        self.get_logger().info(f"[抓取] 等待 cube_detector 检测结果（最多 {GRAB_TIMEOUT:.0f}s）...")
-        deadline = time.monotonic() + GRAB_TIMEOUT
-        while time.monotonic() < deadline:
-            rclpy.spin_once(self, timeout_sec=0.1)
-            if self._detected_cube is not None:
-                cube_pos = self._detected_cube
-                cx, cy, cz = cube_pos.pose.position.x, cube_pos.pose.position.y, cube_pos.pose.position.z
-                self.get_logger().info(
-                    f"[抓取] ✅ 检测到立方体: x={cx:.3f}  y={cy:.3f}  z={cz:.3f}"
-                )
-                break
-
-        if cube_pos is None:
-            self.get_logger().warn("[抓取] ⚠ 未检测到立方体，仍启动 catch.py 尝试抓取")
-
-        # ── 启动 catch.py 执行抓取 ──
-        # catch.py 内部流程：稳定检测 → 推进 STM32 状态机(PICK) → 发坐标 → 等待 pick_done
+        # ── 启动 catch.py ──
+        # catch.py 内部完整流程：
+        #   订阅 /detected_cube → 稳定检测（滑动窗口标准差）
+        #   → 推进 STM32 状态机 (START → ARRIVED_BOX → PICK)
+        #   → 发 0x14 PICK_TO_BACK 机械臂坐标
+        #   → 等待 STM32 回传 ARM_EVENT pick_done 后退出
+        # 不需要外部预推状态机，完全由 catch.py 等检测稳定后再操作
         self._start_catch()
 
-        # ── 等待抓取完成 ──
+        # ── 等待抓取完成（catch.py 等到 pick_done 才退出） ──
         if self._catch_proc:
             self.get_logger().info(
-                f"[抓取] 等待 catch.py (PID={self._catch_proc.pid}) 完成..."
+                f"[抓取] 等待 STM32 抓取完成 (PID={self._catch_proc.pid}) "
+                f"超时 {GRAB_TIMEOUT:.0f}s..."
             )
             try:
                 self._catch_proc.wait(timeout=GRAB_TIMEOUT)
-                self.get_logger().info("[抓取] ✅ catch.py 正常退出（抓取完成）")
+                self.get_logger().info("[抓取] ✅ STM32 抓取完成")
             except subprocess.TimeoutExpired:
-                self.get_logger().warn(f"[抓取] ⏰ catch.py 超时 ({GRAB_TIMEOUT:.0f}s)")
+                self.get_logger().warn(f"[抓取] ⏰ STM32 抓取超时 ({GRAB_TIMEOUT:.0f}s)")
                 try:
                     self._catch_proc.kill()
                     self._catch_proc.wait(timeout=3.0)
@@ -355,7 +319,7 @@ class OpenLoopAutoNode(Node):
 
         # ── 清理 ──
         self._cleanup_subprocesses()
-        self.get_logger().info("[抓取] ✅ 抓取阶段完成")
+        self.get_logger().info("[抓取] ✅ 抓取阶段完成，继续前进")
 
     def step_carry(self):
         """[步骤 4] 前进指定时长携带物资箱到放置区"""
@@ -415,10 +379,122 @@ class OpenLoopAutoNode(Node):
 
 
 # ============================================================
+# 启动前置节点（参照 start_prerequisites 的写法）
+# ============================================================
+
+def _startup():
+    """启动 LiDAR 驱动 + 串口桥（开环控制不需要 ICP/Nav2）"""
+    # ── 启动日志文件 ──
+    _startup_logdir = _PROJECT / "logs" / "startup"
+    _startup_logdir.mkdir(parents=True, exist_ok=True)
+    _startup_log = _startup_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_open_loop_startup.log"
+
+    def _log(msg):
+        print(msg)
+        with open(_startup_log, "a") as f:
+            f.write(msg + "\n")
+
+    _log("[启动] 启动前置节点 (LiDAR + 串口桥)...")
+    _log(f"[启动] 日志 → {_startup_log}")
+
+    _kill_existing()
+    _clean_cyclone_shm()
+
+    # 硬件自动检测
+    _hw = {}
+    try:
+        sys.path.insert(0, str(_PROJECT / "py"))
+        from tools.detect_hardware import detect_all
+        _hw = detect_all(verbose=False)
+        sys.path.pop(0)
+        _log(f"[硬件] 串口={_hw.get('serial_port','?')}  LiDAR IP={_hw.get('lidar_ip','?')}")
+    except Exception as e:
+        _log(f"[硬件] 自动检测失败: {e}")
+
+    _lidar_ip = _hw.get("lidar_ip", "192.168.1.1")
+    _local_ip = _hw.get("local_ip", "192.168.1.2")
+    _serial_port = _hw.get("serial_port", "/dev/ttyACM0")
+
+    # 检测 ROS2 发行版
+    _ros_setup = None
+    for _d in ("jazzy", "humble"):
+        _p = f"/opt/ros/{_d}/setup.bash"
+        if os.path.isfile(_p):
+            _ros_setup = f"source {_p}"
+            _log(f"[启动] ROS2 发行版: {_d}")
+            break
+    if _ros_setup is None:
+        _ros_setup = "source /opt/ros/humble/setup.bash"
+        _log("[启动] ⚠️ 未检测到 ROS2，默认 humble")
+
+    _fastlio_dir = str(_PROJECT / "fastlio2_v2")
+    _nav2_dir = str(_PROJECT / "nav2_ws1")
+
+    # ── LiDAR 驱动 ──
+    _log("[启动] 启动 LiDAR 驱动...")
+    launch(
+        f"cd {_fastlio_dir} && {_ros_setup} && source install/setup.bash && "
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:=false "
+        f"lidar_ip:={_lidar_ip} local_ip:={_local_ip}",
+        name="LiDAR",
+    )
+
+    # 等待 LiDAR 初始化 + 话题就绪
+    _log("[启动] 等待 10s 让 LiDAR 驱动就绪...")
+    time.sleep(10)
+
+    # 验证 LiDAR 话题（同 start_prerequisites）
+    try:
+        result = subprocess.run(
+            ["bash", "-c", f"{_ros_setup} && ros2 topic list 2>/dev/null | grep -q unilidar/cloud"],
+            timeout=3, capture_output=True,
+        )
+        if result.returncode == 0:
+            _log("[启动] ✅ LiDAR 话题已就绪")
+        else:
+            _log("[启动] ⚠️ LiDAR 话题未检测到（但仍继续）")
+    except Exception:
+        _log("[启动] ⚠️ 话题检测失败（但仍继续）")
+
+    # ── 串口桥 ──
+    if os.path.exists(_serial_port):
+        _log(f"[启动] 启动串口桥 ({_serial_port})...")
+        _serial_logdir = _PROJECT / "logs" / "serial"
+        _serial_logdir.mkdir(parents=True, exist_ok=True)
+        _leg_csv = str(_serial_logdir / f"{time.strftime('%Y-%m-%d_%H%M%S')}_leg.csv")
+        launch(
+            f"cd {_nav2_dir} && {_ros_setup} && source install/setup.bash && "
+            f"ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py "
+            f"  serial_port:={_serial_port} baud_rate:=115200 "
+            f"  cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 "
+            f"  active_state:=1 idle_state:=0 "
+            f"  leg_debug_csv_path:={_leg_csv} "
+            f"  leg_debug_log_period_sec:=0.5",
+            name="串口桥",
+        )
+    else:
+        _log(f"[启动] {_serial_port} 不存在，跳过串口桥")
+
+    _log("[启动] ✅ 前置节点启动完成")
+
+
+# ============================================================
+# SIGINT 处理器（同 auto_task.py）
+# ============================================================
+def _sigint_handler(sig, frame):
+    print("\n[退出] 收到 Ctrl+C，正在关闭...")
+    cleanup_all()
+    rclpy.shutdown()
+
+
+# ============================================================
 # 入口
 # ============================================================
 
 def main():
+    signal.signal(signal.SIGINT, _sigint_handler)
+    os.environ.setdefault("ROS_LOG_DIR", str(_PROJECT / "logs" / "ros"))
+
     parser = argparse.ArgumentParser(description="开环自动控制脚本")
     parser.add_argument("--no-startup", action="store_true",
                         help="不启动前置节点（LiDAR/串口桥需已运行）")
@@ -430,7 +506,7 @@ def main():
                         help=f"第二次前进时长 s (默认 {CARRY_TIME})")
     args = parser.parse_args()
 
-    # 通过全局变量透传 CLI 参数（Node 用模块常量读取）
+    # 通过全局变量透传 CLI 参数
     global FORWARD_SPEED, APPROACH_TIME, CARRY_TIME
     FORWARD_SPEED = args.vx
     if args.approach is not None:
@@ -438,23 +514,34 @@ def main():
     if args.carry is not None:
         CARRY_TIME = args.carry
 
-    rclpy.init()
-    node = OpenLoopAutoNode(no_startup=args.no_startup)
+    print("╔══════════════════════════════════════════════╗")
+    print("║  开环自动控制                               ║")
+    print("║  流程: 开门 → 前进 → 抓取 → 前进 → 放置    ║")
+    print("╚══════════════════════════════════════════════╝")
 
+    # ── 启动前置节点（LiDAR + 串口桥），不含 ICP/Nav2 ──
+    if not args.no_startup:
+        _startup()
+
+    # ── ROS 初始化 ──
+    rclpy.init()
+    node = OpenLoopAutoNode()
+
+    # ── 等待 DDS 发现完成 ──
+    print(f"\n[启动] 等待 5s 让 ROS 节点就绪...")
+    time.sleep(5)
+
+    # ── 执行各步骤 ──
     try:
         node.step_open_gate()
         node.step_approach()
 
-        # 记录起始阶段耗时，供调整参考
         t0 = time.monotonic()
-
         node.step_grab()
-
         t_grab = time.monotonic() - t0
         node.get_logger().info(f"[耗时] 抓取阶段用时 {t_grab:.1f}s")
 
-        # 短暂停让机器人、机械臂稳定
-        time.sleep(1.0)
+        time.sleep(1.0)  # 短暂停让机械臂稳定
 
         node.step_carry()
         node.step_place()

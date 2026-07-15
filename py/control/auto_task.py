@@ -62,11 +62,14 @@ ARM_MISSION_HAS_PLACE = 0x04
 # ════════════════════════════════════════════════════════════════
 # 全局可调参数（直接改这里，也可以通过 ros2 param set）
 # ════════════════════════════════════════════════════════════════
-PICKUP_X = 1.4
+# SCALE_X 从环境变量读取（与 launch_utils.py 一致）
+_SCALE_X = float(os.environ.get("SCALE_X", "1.0"))
+# 物理坐标 → 缩放后坐标（Nav2 现在使用缩放后的 map→base_link）
+PICKUP_X = 1.4 * _SCALE_X
 PICKUP_Y = 0.0
 PICKUP_YAW = 0.0  # 朝向（弧度）
 
-DROP_X = 4.0
+DROP_X = 4.0 * _SCALE_X
 DROP_Y = 0.0
 DROP_YAW = 0.0
 
@@ -563,6 +566,7 @@ def main():
     print("╔══════════════════════════════════════════════╗")
     print("║  自动任务（Nav2 导航版）                    ║")
     print("║  流程: 导航到拾取点 → 抓取 → 导航到放置点   ║")
+    print(f"║  (scale_x={_SCALE_X}, PICKUP_X={PICKUP_X:.2f}, DROP_X={DROP_X:.2f})  ║")
     print("╚══════════════════════════════════════════════╝")
 
     # 启动前置节点（LiDAR / ICP / Nav2 / 串口桥）
