@@ -1,0 +1,50 @@
+[INFO] [1784143257.449219233] [open_loop_auto]: ============================================================
+[INFO] [1784143257.449682420] [open_loop_auto]:   开环自动控制脚本
+[INFO] [1784143257.450087648] [open_loop_auto]:   流程: 开门 → 前进 4s → 抓取 → 前进 10.0s → 放置
+[INFO] [1784143257.450463851] [open_loop_auto]: ============================================================
+[INFO] [1784143262.455971213] [open_loop_auto]: 
+[INFO] [1784143262.456401849] [open_loop_auto]: ╔══════════════════════════════════════╗
+[INFO] [1784143262.456779235] [open_loop_auto]: ║  步骤 1/5: 开门禁 (AUTO_CMD_START)  ║
+[INFO] [1784143262.457127691] [open_loop_auto]: ╚══════════════════════════════════════╝
+[INFO] [1784143262.457632977] [open_loop_auto]: [AUTO] START cmd=1 target=0 zone=0
+[INFO] [1784143262.758397554] [open_loop_auto]: [OK] 门禁已开
+[INFO] [1784143262.758811321] [open_loop_auto]: 
+[INFO] [1784143262.759184844] [open_loop_auto]: ╔══════════════════════════════════════╗
+[INFO] [1784143262.759546961] [open_loop_auto]: ║  步骤 2/5: 前进 4s 接近物资箱  ║
+[INFO] [1784143262.759904748] [open_loop_auto]: ╚══════════════════════════════════════╝
+[INFO] [1784143262.760275683] [open_loop_auto]: [MOVE] 前进 4.0s @ 0.40m/s
+[INFO] [1784143262.760733644] [open_loop_auto]: [VEL] vx=+0.40  wz=+0.00
+[INFO] [1784143266.785851742] [open_loop_auto]: [VEL] vx=+0.00  wz=+0.00
+[INFO] [1784143266.786506173] [open_loop_auto]: [VEL] 停止
+[INFO] [1784143266.786883516] [open_loop_auto]: [OK] 到达物资箱区域
+[INFO] [1784143266.787247712] [open_loop_auto]: 
+[INFO] [1784143266.787581773] [open_loop_auto]: ╔══════════════════════════════════════╗
+[INFO] [1784143266.787911322] [open_loop_auto]: ║  步骤 3/5: 检测并抓取物资箱         ║
+[INFO] [1784143266.788246779] [open_loop_auto]: ╚══════════════════════════════════════╝
+[INFO] [1784143266.789338336] [open_loop_auto]: [CUBE] PID=3895 → /home/gsing/2026_Gsing-second_ROS/logs/vision/2026-07-16_032106_cube_detector.log
+[INFO] [1784143266.789729732] [open_loop_auto]: [抓取] 等待 cube_detector 初始化 (1.5s)...
+[INFO] [1784143267.227493929] [open_loop_auto]: [CUBE] [INFO] [1784143267.226924296] [cube_detector]: ============================================================
+[INFO] [1784143267.227985714] [open_loop_auto]: [CUBE] [INFO] [1784143267.227386345] [cube_detector]: 3D OBB 立方体检测已启动
+[INFO] [1784143267.228360689] [open_loop_auto]: [CUBE] [INFO] [1784143267.227752038] [cube_detector]: 算法: 3D PCA → OBB包围盒 → 均值边长
+[INFO] [1784143267.228784368] [open_loop_auto]: [CUBE] [INFO] [1784143267.228123782] [cube_detector]: ============================================================
+[INFO] [1784143267.998138444] [open_loop_auto]: [CUBE] [INFO] [1784143267.997525294] [cube_detector]: [累积] 10帧合并为 45897 点
+[INFO] [1784143268.290458972] [open_loop_auto]: [CUBE] [INFO] [1784143268.289839156] [cube_detector]: [DBG] 原始45897→ROI4485→去地面2197→滤波1613点 → 1聚类(91噪点)
+[INFO] [1784143268.291454908] [open_loop_auto]: [抓取] 等待检测物资箱...
+[ERROR] [1784143268.291865365] [open_loop_auto]: [错误] generator already executing
+[ERROR] [1784143268.292707031] [open_loop_auto]: Traceback (most recent call last):
+  File "/home/gsing/2026_Gsing-second_ROS/py/control/open_loop_auto.py", line 740, in main
+    node.step_grab()
+  File "/home/gsing/2026_Gsing-second_ROS/py/control/open_loop_auto.py", line 437, in step_grab
+    rclpy.spin_once(self, timeout_sec=0.1)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 208, in spin_once
+    executor.spin_once(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 773, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 762, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 745, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+ValueError: generator already executing
+
+[INFO] [1784143268.293305255] [open_loop_auto]: [VEL] vx=+0.00  wz=+0.00
+[INFO] [1784143268.293696145] [open_loop_auto]: [VEL] 停止

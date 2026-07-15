@@ -16,7 +16,7 @@ open_loop_auto.py — 开环自动控制脚本（无 Nav2 定位）
   - 只需要 LiDAR + 串口桥
 
 使用方式:
-  ./ros-run.sh py/control/open_loop_auto.py
+./ros-run.sh py/control/open_loop_auto.py
   ./ros-run.sh py/control/open_loop_auto.py --no-startup   # 跳过前置节点启动
   ./ros-run.sh py/control/open_loop_auto.py --vx 0.4       # 更快前进
   ./ros-run.sh py/control/open_loop_auto.py --approach 5.0 --carry 8.0  # 自定义时长
@@ -186,7 +186,7 @@ class OpenLoopAutoNode(Node):
         self.set_vel(speed, 0.0)
         deadline = time.monotonic() + duration
         while time.monotonic() < deadline and rclpy.ok():
-            rclpy.spin_once(self, timeout_sec=0.05)
+            time.sleep(0.05)  # 由 _bg_spin 线程处理 spin
         self.stop()
 
     def _force_grab_prepare(self):
@@ -434,7 +434,7 @@ class OpenLoopAutoNode(Node):
         self.get_logger().info("[抓取] 等待检测物资箱...")
         _wait_deadline = time.monotonic() + 5.0
         while time.monotonic() < _wait_deadline and rclpy.ok() and self._detected_cube is None:
-            rclpy.spin_once(self, timeout_sec=0.1)
+            time.sleep(0.1)  # 由 _bg_spin 线程处理 spin
 
         # ── 检查距离，太远则用最远可达坐标（根据 catch.py 的工作空间限制） ──
         # cube_detector 已改为选最近的立方体发布
