@@ -215,7 +215,7 @@ MAP_NAME = "map/map"    # 地图文件名，同时用于 PCD 和 YAML
 
 ```python
 map_voxel_size:=0.08 scan_voxel_size:=0.08
-freq_localization:=2.0 localization_threshold:=0.85
+freq_localization:=2.0 localization_threshold:=0.85 scale_x:=1.0
 ```
 
 | 参数 | 值 | 说明 |
@@ -224,6 +224,9 @@ freq_localization:=2.0 localization_threshold:=0.85
 | `scan_voxel_size` | 0.08 m | 扫描下采样体素，与地图一致 |
 | `freq_localization` | 2.0 Hz | ICP 定位频率（每 0.5s） |
 | `localization_threshold` | 0.85 | ICP 内点率阈值（fitness > 0.85 接受） |
+| `scale_x` | 1.0 | X 方向增量缩放系数（0.6 试调中）。仅影响发布值，不影响 ICP 内部初值。运行时改：`ros2 param set /global_localization scale_x 0.6`，或启动前设环境变量：`SCALE_X=0.6 ./ros-run.sh py/control/auto_task.py` |
+
+注意：ICP 的 fitness 虽高（0.94~1.0），但在矩形场地上 fitness 对 x 方向滑移不敏感。**高 fitness ≠ 高 x 精度**，需靠 scale_x 修正比例尺误差。
 
 ICP 采用多尺度策略：coarse (scale=5, voxel×5, max_dist=2.5m) → fine (scale=1, voxel×1, max_dist=0.5m)。
 fitness = 内点数 / 源点总数（内点率 0~1），coarse 因搜索半径大因此 fitness 自然更高。
