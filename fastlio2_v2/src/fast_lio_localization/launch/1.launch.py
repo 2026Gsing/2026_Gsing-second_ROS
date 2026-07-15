@@ -117,6 +117,11 @@ def generate_launch_description():
         default_value="300",
         description="FOV 最远距离 (m)"
     )
+    declare_scale_x = DeclareLaunchArgument(
+        "scale_x",
+        default_value="1.0",
+        description="X 方向增量缩放系数（试调用）"
+    )
 
     # 1. Fast-LIO 定位节点（关键修改：添加重映射）
     fast_lio_node = Node(
@@ -150,6 +155,7 @@ def generate_launch_description():
             Parameter("localization_threshold", LaunchConfiguration("localization_threshold"), value_type=float),
             Parameter("fov", LaunchConfiguration("fov"), value_type=float),
             Parameter("fov_far", LaunchConfiguration("fov_far"), value_type=int),
+            Parameter("scale_x", LaunchConfiguration("scale_x"), value_type=float),
             {"pcd_map_path": pcd_map_path},
             {"pcd_map_topic": pcd_map_topic},
         ],

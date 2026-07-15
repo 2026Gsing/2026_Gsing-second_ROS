@@ -269,8 +269,11 @@ class FastLIOLocalization(Node):
                 ("fov_far", 300),                   # FOV 最远距离 (m)
                 ("pcd_map_topic", "/map"),          # 地图话题名
                 ("pcd_map_path", ""),               # PCD 地图文件路径（优先级高于话题）
+                ("scale_x", 1.0),                   # X 方向增量缩放（仅影响发布，不影响ICP初值）
             ],
         )
+        # 记录上一次发布的位姿（用于增量缩放）
+        self.last_published_xy = [0.0, 0.0]
 
         # ============ TF 监听 / 广播 ============
         self.tf_buffer = tf2_ros.Buffer()
@@ -587,10 +590,20 @@ class FastLIOLocalization(Node):
         xyz = transform[:3, 3]
         quat = tf_transformations.quaternion_from_matrix(transform)
 
+        # 增量缩放：只对 x 增量乘以 scale_x（0.6 试调），不影响 ICP 内部初值
+        scale_x = self.get_parameter("scale_x").value
+        if scale_x != 1.0:
+            dx = xyz[0] - self.last_published_xy[0]
+            dy = xyz[1] - self.last_published_xy[1]
+            pub_x = self.last_published_xy[0] + dx * scale_x
+            pub_y = self.last_published_xy[1] + dy * scale_x  # y 也同步缩放
+        else:
+            pub_x, pub_y = xyz[0], xyz[1]
+
         # ── 发布 /map_to_odom（供 transform_fusion 订阅） ──
         odom_msg = Odometry()
         odom_msg.pose.pose = Pose(
-            position=Point(x=xyz[0], y=xyz[1], z=xyz[2]),
+            position=Point(x=pub_x, y=pub_y, z=xyz[2]),
             orientation=Quaternion(x=quat[0], y=quat[1], z=quat[2], w=quat[3])
         )
         odom_msg.header.stamp = self.get_clock().now().to_msg()
@@ -598,21 +611,21 @@ class FastLIOLocalization(Node):
         self.pub_map_to_odom.publish(odom_msg)
 
         # ── 广播 map→base_link TF（供 Nav2 local_costmap 直接使用） ──
-        # 当无 FAST-LIO2 odometry 时，map→base_link ≈ map→odom。
-        # 这让 Nav2 不再依赖易碎的 odom→camera_init→base_link TF 链，
-        # 直接使用 ICP 的全局定位结果。
         t = TransformStamped()
         t.header.stamp = self.get_clock().now().to_msg()
         t.header.frame_id = "map"
         t.child_frame_id = "base_link"
-        t.transform.translation.x = xyz[0]
-        t.transform.translation.y = xyz[1]
+        t.transform.translation.x = pub_x
+        t.transform.translation.y = pub_y
         t.transform.translation.z = xyz[2]
         t.transform.rotation.x = quat[0]
         t.transform.rotation.y = quat[1]
         t.transform.rotation.z = quat[2]
         t.transform.rotation.w = quat[3]
         self.tf_br.sendTransform(t)
+
+        # 记录本次发布的位姿（用于下次增量计算）
+        self.last_published_xy = [pub_x, pub_y]
 
     def localisation_timer_callback(self):
         """定时定位任务：持续执行 ICP 配准以维持定位精度"""

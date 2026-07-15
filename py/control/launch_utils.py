@@ -59,6 +59,8 @@ _LOG_CATEGORIES = {
 # 可通过环境变量 GSING_RVIZ=1 或 GSING_RVIZ=0 临时覆盖
 _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
+# ICP X 方向增量缩放（试调用，默认 1.0 不缩放）
+SCALE_X = os.environ.get("SCALE_X", "1.0")
 USE_TERMINAL = False   # True=弹终端窗口, False=后台运行（miniPC 推荐）
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
 MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
@@ -244,7 +246,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         f"ros2 launch fast_lio_localization 1.launch.py "
         f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
         f"  map_voxel_size:=0.08 scan_voxel_size:=0.08 "
-        f"  freq_localization:=2.0 localization_threshold:=0.85",
+        f"  freq_localization:=2.0 localization_threshold:=0.85 scale_x:={SCALE_X}",
         name="ICP",
     )
 
