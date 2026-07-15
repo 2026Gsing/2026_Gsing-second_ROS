@@ -158,6 +158,35 @@ LEG_DEBUG_CONTROL_FIELDS = [
     "ctl_motion_gate_open",
 ]
 
+LEG_DEBUG_WHEEL_FIELDS = [
+    "wheel_cmd_rpm_rf",
+    "wheel_cmd_rpm_lf",
+    "wheel_cmd_rpm_lr",
+    "wheel_cmd_rpm_rr",
+    "wheel_actual_rpm_rf",
+    "wheel_actual_rpm_lf",
+    "wheel_actual_rpm_lr",
+    "wheel_actual_rpm_rr",
+    "wheel_cmd_current_a_rf",
+    "wheel_cmd_current_a_lf",
+    "wheel_cmd_current_a_lr",
+    "wheel_cmd_current_a_rr",
+    "wheel_actual_current_a_rf",
+    "wheel_actual_current_a_lf",
+    "wheel_actual_current_a_lr",
+    "wheel_actual_current_a_rr",
+    "wheel_torque_limit_nm",
+    "wheel_fdcan1_rx_count",
+    "wheel_fdcan2_rx_count",
+]
+
+LEG_DEBUG_WHEEL_STATUS_FIELDS = [
+    "wheel_feedback_ok_rf",
+    "wheel_feedback_ok_lf",
+    "wheel_feedback_ok_lr",
+    "wheel_feedback_ok_rr",
+]
+
 LEG_DEBUG_NAMES = {
     0: "leg0_12_LF",
     1: "leg1_78_RR",
@@ -320,6 +349,7 @@ class CmdVelChassisSerial(Node):
         self._leg_debug_latest_global = None
         self._leg_debug_latest_attitude = None
         self._leg_debug_latest_control = None
+        self._leg_debug_latest_wheel = None
         self._leg_debug_last_log_time = 0.0
         self._leg_debug_csv_file = None
         self._leg_debug_csv_writer = None
@@ -378,6 +408,8 @@ class CmdVelChassisSerial(Node):
                 *LEG_DEBUG_GLOBAL_FIELDS,
                 *LEG_DEBUG_ATTITUDE_FIELDS,
                 *LEG_DEBUG_CONTROL_FIELDS,
+                *LEG_DEBUG_WHEEL_FIELDS,
+                *LEG_DEBUG_WHEEL_STATUS_FIELDS,
             ]
             self._leg_debug_csv_file = open(path, "w", newline="", encoding="utf-8")
             self._leg_debug_csv_writer = csv.DictWriter(
@@ -415,6 +447,11 @@ class CmdVelChassisSerial(Node):
         elif frame_type == 4:
             for name, value in zip(LEG_DEBUG_CONTROL_FIELDS, values):
                 row[name] = value
+        elif frame_type == 5:
+            for name, value in zip(LEG_DEBUG_WHEEL_FIELDS, values):
+                row[name] = value
+            for motor_id, name in enumerate(LEG_DEBUG_WHEEL_STATUS_FIELDS):
+                row[name] = 1 if (flags & (1 << motor_id)) else 0
         self._leg_debug_csv_writer.writerow(row)
 
     @staticmethod
@@ -461,6 +498,19 @@ class CmdVelChassisSerial(Node):
                 f" gait={int(c[3])} zero={int(c[4])}"
                 f" age={c[11]:.0f}ms to={int(c[12])}"
             )
+        if self._leg_debug_latest_wheel is not None:
+            frame = self._leg_debug_latest_wheel
+            w = frame["values"]
+            flags = frame["flags"]
+            wheel_names = ("RF", "LF", "LR", "RR")
+            wheel_parts = []
+            for motor_id, name in enumerate(wheel_names):
+                fresh = 1 if (flags & (1 << motor_id)) else 0
+                wheel_parts.append(
+                    f"{name}={w[motor_id]:+.0f}/{w[4 + motor_id]:+.0f}rpm"
+                    f" I={w[8 + motor_id]:+.1f}/{w[12 + motor_id]:+.1f}A ok={fresh}"
+                )
+            global_text += " wheels[" + " ".join(wheel_parts) + "]"
 
         leg_parts = []
         for leg_id in range(4):
@@ -693,6 +743,8 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_latest_attitude = frame
         elif frame_type == 4:
             self._leg_debug_latest_control = frame
+        elif frame_type == 5:
+            self._leg_debug_latest_wheel = frame
 
         self._log_leg_debug_snapshot()
 
