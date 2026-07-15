@@ -1,5 +1,0 @@
-使用默认串口: /dev/ttyACM0
-正在监听 /dev/ttyACM0...
-按 Ctrl+C 退出
-
-错误: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0'
