@@ -1,0 +1,5 @@
+[INFO] [1784137367.625854688] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+translation: ('0.000000', '0.000000', '0.000000')
+rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+from 'camera_init' to 'odom'
+[INFO] [1784137396.374104660] [rclcpp]: signal_handler(SIGINT/SIGTERM)

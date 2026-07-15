@@ -198,8 +198,8 @@ class AutoTask(Node):
         goal.pose.pose.orientation.z = math.sin(yaw / 2.0)
         goal.pose.pose.orientation.w = math.cos(yaw / 2.0)
 
-        if not self._nav_client.wait_for_server(timeout_sec=1.0):
-            self.get_logger().error("[NAV] Nav2 action server 不可用")
+        if not self._nav_client.wait_for_server(timeout_sec=8.0):
+            self.get_logger().error("[NAV] Nav2 action server 不可用（等待 8s 超时）")
             return False
 
         with self._lock:
@@ -465,7 +465,10 @@ class AutoTask(Node):
         """
         self._phase_event.clear()
         self._set_phase(phase_name)
-        self._send_nav_goal(nav_x, nav_y, nav_yaw)
+        ok = self._send_nav_goal(nav_x, nav_y, nav_yaw)
+        if not ok:
+            self.get_logger().error(f"[阶段] Nav2 action server 不可用，阶段 {phase_name} 无法开始")
+            self._phase_event.set()  # 让 wait_phase 立即返回，不自旋等超时
 
     def wait_phase(self, timeout=180.0):
         """
@@ -563,6 +566,11 @@ def main():
     start_prerequisites()
 
     node = AutoTask()
+
+    print(f"\n[启动] 等待 8s 让节点就绪...")
+    time.sleep(8)
+    node.publish_initialpose(0, 0)
+    time.sleep(1)
 
     # ── 通知 STM32 自动任务开始 ──
     node.send_auto_cmd(AUTO_CMD_START)

@@ -1,0 +1,7 @@
+1784137503.6183281 [INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-16-01-45-03-615729-gsing-KPADLU4-4193
+1784137503.6185780 [INFO] [launch]: Default logging verbosity is set to INFO
+1784137503.7246892 [INFO] [fastlio_mapping-1]: process started with pid [4338]
+1784137503.7267680 [INFO] [env-2]: process started with pid [4340]
+1784137503.7270293 [INFO] [env-3]: process started with pid [4342]
+1784137503.7271740 [INFO] [pcd_to_pointcloud-4]: process started with pid [4344]
+1784137505.2388430 [ERROR] [env-3]: process has died [pid 4342, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/transform_fusion --ros-args -r __node:=transform_fusion'].
