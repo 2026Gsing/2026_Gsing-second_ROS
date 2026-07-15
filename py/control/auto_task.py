@@ -179,6 +179,9 @@ class AutoTask(Node):
             if result and result.status == 4:  # SUCCEEDED
                 self._nav_succeeded = True
                 self.get_logger().info("[NAV] ✅ 导航成功")
+                # 直接触发到达处理，不依赖 ICP 到达检测
+                # （ICP 位置与 Nav2 目标可能偏差 0.3-0.5m，导致自动到达检测永不触发）
+                self._on_arrived()
             else:
                 status_names = {
                     0: "UNKNOWN", 1: "ACCEPTED", 2: "EXECUTING",
