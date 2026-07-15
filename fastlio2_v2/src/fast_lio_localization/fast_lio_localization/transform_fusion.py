@@ -18,7 +18,7 @@ import time
 import numpy as np
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Pose, Point, Quaternion, Vector3
 from nav_msgs.msg import Odometry
 import rclpy.timer
 import tf_transformations
@@ -123,7 +123,7 @@ class TransformFusion(Node):
             header=Header(stamp=self._now_stamp(), frame_id="map"),
             child_frame_id="base_link",
             transform=Transform(
-                translation=Point(x=xyz[0], y=xyz[1], z=xyz[2]),
+                translation=Vector3(x=xyz[0], y=xyz[1], z=xyz[2]),
                 rotation=Quaternion(x=quat[0], y=quat[1], z=quat[2], w=quat[3]),
             ),
         )

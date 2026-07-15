@@ -1,0 +1,36 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-16-01-51-02-851865-gsing-KPADLU4-6135
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/gsing/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [6155]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2
+[unitree_lidar_ros2_node-1] 1784137911.172209 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.272216 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.272663 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.372275 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.472334 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.572397 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.672456 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.772678 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137911.974152 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137912.174209 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137912.574276 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137912.974531 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137913.774792 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137914.575119 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137916.175180 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137917.775240 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.172563 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.272627 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.272711 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.373014 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.473193 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.573255 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.673287 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.773356 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137919.973427 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137920.173510 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137927.272806 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137935.272865 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137943.272955 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137951.273057 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1
+[unitree_lidar_ros2_node-1] 1784137959.273117 [0]        tev: ddsi_udp_conn_write to udp/239.255.0.1:7400 failed with retcode -1

@@ -1,0 +1,6 @@
+[INFO] [1784137875.115789322] [fastlio_mapping]: p_pre->lidar_type 5
+[INFO] [1784137875.148441866] [fastlio_mapping]: Node init finished.
+[WARN] [1784137875.293256850] [fastlio_mapping]: No point, skip this scan!
+
+[INFO] [1784137875.379238820] [fastlio_mapping]: Initialize the map kdtree
+[INFO] [1784137960.542894493] [rclcpp]: signal_handler(SIGINT/SIGTERM)

@@ -1,0 +1,44 @@
+[INFO] [1784138761.972257472] [global_localization]: Waiting for global map...
+[INFO] [1784138761.972906806] [global_localization]: Loading map: /home/gsing/2026_Gsing-second_ROS/map/map.pcd, voxel_size=0.08
+[INFO] [1784138762.004831616] [global_localization]: Map loaded: raw=810074 pts
+[INFO] [1784138762.583289578] [global_localization]: Map downsampled: 5614 pts
+[INFO] [1784138762.584512834] [global_localization]: Global map received.
+[INFO] [1784138763.091970287] [global_localization]: Waiting for initial pose...
+[INFO] [1784138763.591095650] [global_localization]: Waiting for initial pose...
+[INFO] [1784138764.090418082] [global_localization]: Waiting for initial pose...
+[INFO] [1784138764.590721299] [global_localization]: Waiting for initial pose...
+[INFO] [1784138765.090746088] [global_localization]: Waiting for initial pose...
+[INFO] [1784138765.590355856] [global_localization]: Waiting for initial pose...
+[INFO] [1784138766.091669948] [global_localization]: Waiting for initial pose...
+[INFO] [1784138766.590639452] [global_localization]: Waiting for initial pose...
+[INFO] [1784138767.090512144] [global_localization]: Waiting for initial pose...
+[INFO] [1784138767.600731523] [global_localization]: Waiting for initial pose...
+[INFO] [1784138767.601443255] [global_localization]: _auto_init_if_needed: initialized=False cur_scan=✓
+[WARN] [1784138767.604724962] [global_localization]: No /initialpose received within 5s — auto-initializing at (0, 0) facing X+
+[INFO] [1784138767.617174828] [global_localization]: ICP input: scan=47836 pts, map_FOV=5614 pts
+[INFO] [1784138768.201271532] [global_localization]: ICP fitness: coarse=0.816, fine=0.922, threshold=0.85
+[INFO] [1784138768.204027158] [global_localization]: map→odom: x=0.359 y=0.016 z=-0.072
+[INFO] [1784138768.211386529] [global_localization]: ICP input: scan=4864 pts, map_FOV=5614 pts
+[INFO] [1784138768.232177196] [global_localization]: ICP fitness: coarse=0.898, fine=0.950, threshold=0.85
+[INFO] [1784138768.234014731] [global_localization]: map→odom: x=0.550 y=-0.134 z=-0.066
+[INFO] [1784138768.377342207] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[INFO] [1784138768.387992863] [global_localization]: ICP input: scan=23915 pts, map_FOV=5614 pts
+[INFO] [1784138768.534568178] [global_localization]: ICP fitness: coarse=0.899, fine=0.929, threshold=0.85
+[INFO] [1784138768.539704084] [global_localization]: map→odom: x=0.554 y=-0.066 z=-0.073
+[INFO] [1784138768.607205179] [global_localization]: ICP input: scan=4737 pts, map_FOV=5614 pts
+[INFO] [1784138768.634085300] [global_localization]: ICP fitness: coarse=0.945, fine=0.966, threshold=0.85
+[INFO] [1784138768.635287836] [global_localization]: map→odom: x=0.465 y=0.088 z=-0.093
+[INFO] [1784138769.103506496] [global_localization]: ICP input: scan=47681 pts, map_FOV=5614 pts
+[INFO] [1784138769.266990219] [global_localization]: ICP fitness: coarse=0.858, fine=0.927, threshold=0.85
+[INFO] [1784138769.268107353] [global_localization]: map→odom: x=0.455 y=0.085 z=-0.077
+[INFO] [1784138769.595042186] [global_localization]: ICP input: scan=28759 pts, map_FOV=5614 pts
+[INFO] [1784138769.668418422] [global_localization]: ICP fitness: coarse=0.875, fine=0.950, threshold=0.85
+[INFO] [1784138769.669313752] [global_localization]: map→odom: x=0.441 y=0.024 z=-0.080
+[INFO] [1784138770.094142925] [global_localization]: ICP input: scan=28926 pts, map_FOV=5614 pts
+[INFO] [1784138770.180735105] [global_localization]: ICP fitness: coarse=0.874, fine=0.944, threshold=0.85
+[INFO] [1784138770.182024076] [global_localization]: map→odom: x=0.448 y=0.023 z=-0.078
+[INFO] [1784138770.603940550] [global_localization]: ICP input: scan=28626 pts, map_FOV=5614 pts
+[INFO] [1784138770.706279093] [global_localization]: ICP fitness: coarse=0.922, fine=0.949, threshold=0.85
+[INFO] [1784138770.707021570] [global_localization]: map→odom: x=0.453 y=-0.048 z=-0.072
+[INFO] [1784138771.100084321] [global_localization]: ICP input: scan=28842 pts, map_FOV=5614 pts
+[INFO] [1784138771.257266616] [global_loca

@@ -1,0 +1,210 @@
+[INFO] [1784137875.687009228] [global_localization]: Waiting for global map...
+[INFO] [1784137875.687670877] [global_localization]: Loading map: /home/gsing/2026_Gsing-second_ROS/map/map.pcd, voxel_size=0.08
+[INFO] [1784137875.754313564] [global_localization]: Map loaded: raw=810074 pts
+[INFO] [1784137876.316649763] [global_localization]: Map downsampled: 5614 pts
+[INFO] [1784137876.317466884] [global_localization]: Global map received.
+[INFO] [1784137876.825065586] [global_localization]: Waiting for initial pose...
+[INFO] [1784137877.324753220] [global_localization]: Waiting for initial pose...
+[INFO] [1784137877.824721142] [global_localization]: Waiting for initial pose...
+[INFO] [1784137878.325024843] [global_localization]: Waiting for initial pose...
+[INFO] [1784137878.824850529] [global_localization]: Waiting for initial pose...
+[INFO] [1784137879.324856234] [global_localization]: Waiting for initial pose...
+[INFO] [1784137879.838975542] [global_localization]: Waiting for initial pose...
+[INFO] [1784137880.328914821] [global_localization]: Waiting for initial pose...
+[INFO] [1784137880.825953334] [global_localization]: Waiting for initial pose...
+[INFO] [1784137881.328052051] [global_localization]: Waiting for initial pose...
+[INFO] [1784137881.329882587] [global_localization]: _auto_init_if_needed: initialized=False cur_scan=✓
+[WARN] [1784137881.332248671] [global_localization]: No /initialpose received within 5s — auto-initializing at (0, 0) facing X+
+[INFO] [1784137881.343855221] [global_localization]: ICP input: scan=46854 pts, map_FOV=5614 pts
+[INFO] [1784137881.855080962] [global_localization]: ICP fitness: coarse=0.828, fine=0.895, threshold=0.85
+[INFO] [1784137881.855964465] [global_localization]: map→odom: x=0.403 y=0.078 z=-0.197
+[INFO] [1784137881.873558232] [global_localization]: ICP input: scan=4806 pts, map_FOV=5614 pts
+[INFO] [1784137881.917734265] [global_localization]: ICP fitness: coarse=0.949, fine=0.952, threshold=0.85
+[INFO] [1784137881.919142229] [global_localization]: map→odom: x=0.469 y=0.017 z=-0.210
+[INFO] [1784137881.936796402] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[INFO] [1784137881.940980968] [global_localization]: ICP input: scan=4631 pts, map_FOV=5614 pts
+[INFO] [1784137881.988745678] [global_localization]: ICP fitness: coarse=0.989, fine=0.970, threshold=0.85
+[INFO] [1784137881.989845695] [global_localization]: map→odom: x=0.210 y=-0.061 z=-0.217
+[INFO] [1784137882.331014226] [global_localization]: ICP input: scan=46872 pts, map_FOV=5614 pts
+[INFO] [1784137882.408526628] [global_localization]: ICP fitness: coarse=0.846, fine=0.906, threshold=0.85
+[INFO] [1784137882.409632549] [global_localization]: map→odom: x=0.492 y=0.101 z=-0.199
+[INFO] [1784137882.828367882] [global_localization]: ICP input: scan=27928 pts, map_FOV=5614 pts
+[INFO] [1784137882.914830421] [global_localization]: ICP fitness: coarse=0.847, fine=0.914, threshold=0.85
+[INFO] [1784137882.916800827] [global_localization]: map→odom: x=0.567 y=0.094 z=-0.204
+[INFO] [1784137883.332447046] [global_localization]: ICP input: scan=28038 pts, map_FOV=5614 pts
+[INFO] [1784137883.497821976] [global_localization]: ICP fitness: coarse=0.931, fine=0.928, threshold=0.85
+[INFO] [1784137883.498622741] [global_localization]: map→odom: x=0.709 y=0.172 z=-0.199
+[INFO] [1784137883.826970266] [global_localization]: ICP input: scan=28219 pts, map_FOV=5614 pts
+[INFO] [1784137883.898806379] [global_localization]: ICP fitness: coarse=0.908, fine=0.934, threshold=0.85
+[INFO] [1784137883.900738204] [global_localization]: map→odom: x=0.799 y=0.014 z=-0.201
+[INFO] [1784137884.327687585] [global_localization]: ICP input: scan=28088 pts, map_FOV=5614 pts
+[INFO] [1784137884.387972329] [global_localization]: ICP fitness: coarse=0.859, fine=0.920, threshold=0.85
+[INFO] [1784137884.395679290] [global_localization]: map→odom: x=0.804 y=0.042 z=-0.200
+[INFO] [1784137884.828189751] [global_localization]: ICP input: scan=27926 pts, map_FOV=5614 pts
+[INFO] [1784137884.905635748] [global_localization]: ICP fitness: coarse=0.874, fine=0.919, threshold=0.85
+[INFO] [1784137884.907371752] [global_localization]: map→odom: x=0.821 y=0.105 z=-0.202
+[INFO] [1784137885.327492382] [global_localization]: ICP input: scan=28010 pts, map_FOV=5614 pts
+[INFO] [1784137885.403220984] [global_localization]: ICP fitness: coarse=0.900, fine=0.927, threshold=0.85
+[INFO] [1784137885.403897268] [global_localization]: map→odom: x=0.848 y=0.103 z=-0.201
+[INFO] [1784137885.830069456] [global_localization]: ICP input: scan=27959 pts, map_FOV=5614 pts
+[INFO] [1784137885.915337161] [global_localization]: ICP fitness: coarse=0.822, fine=0.923, threshold=0.85
+[INFO] [1784137885.918418935] [global_localization]: map→odom: x=0.825 y=0.180 z=-0.200
+[INFO] [1784137886.328273373] [global_localization]: ICP input: scan=28088 pts, map_FOV=5614 pts
+[INFO] [1784137886.381322140] [global_localization]: ICP fitness: coarse=0.881, fine=0.935, threshold=0.85
+[INFO] [1784137886.382874795] [global_localization]: map→odom: x=0.910 y=0.321 z=-0.191
+[INFO] [1784137886.385358402] [global_localization]: _auto_init_if_needed: initialized=True cur_scan=✓
+[INFO] [1784137886.828264980] [global_localization]: ICP input: scan=28238 pts, map_FOV=5614 pts
+[INFO] [1784137886.895842864] [global_localization]: ICP fitness: coarse=0.924, fine=0.944, threshold=0.85
+[INFO] [1784137886.897147942] [global_localization]: map→odom: x=0.977 y=0.425 z=-0.197
+[INFO] [1784137887.344140816] [global_localization]: ICP input: scan=28175 pts, map_FOV=5614 pts
+[INFO] [1784137887.454061681] [global_localization]: ICP fitness: coarse=0.914, fine=0.956, threshold=0.85
+[INFO] [1784137887.455930406] [global_localization]: map→odom: x=1.067 y=0.436 z=-0.197
+[INFO] [1784137887.828790664] [global_localization]: ICP input: scan=28188 pts, map_FOV=5614 pts
+[INFO] [1784137887.919904431] [global_localization]: ICP fitness: coarse=0.951, fine=0.961, threshold=0.85
+[INFO] [1784137887.920575767] [global_localization]: map→odom: x=1.151 y=0.451 z=-0.197
+[INFO] [1784137888.333129650] [global_localization]: ICP input: scan=28264 pts, map_FOV=5614 pts
+[INFO] [1784137888.378422906] [global_localization]: ICP fitness: coarse=0.962, fine=0.966, threshold=0.85
+[INFO] [1784137888.379087389] [global_localization]: map→odom: x=1.214 y=0.351 z=-0.198
+[INFO] [1784137888.827482131] [global_localization]: ICP input: scan=28125 pts, map_FOV=5614 pts
+[INFO] [1784137888.881117955] [global_localization]: ICP fitness: coarse=0.971, fine=0.969, threshold=0.85
+[INFO] [1784137888.881809045] [global_localization]: map→odom: x=1.267 y=0.275 z=-0.198
+[INFO] [1784137889.327493796] [global_localization]: ICP input: scan=28364 pts, map_FOV=5614 pts
+[INFO] [1784137889.386067704] [global_localization]: ICP fitness: coarse=0.977, fine=0.971, threshold=0.85
+[INFO] [1784137889.386904302] [global_localization]: map→odom: x=1.324 y=0.177 z=-0.200
+[INFO] [1784137889.828413360] [global_localization]: ICP input: scan=28495 pts, map_FOV=5614 pts
+[INFO] [1784137889.886710665] [global_localization]: ICP fitness: coarse=1.000, fine=0.979, threshold=0.85
+[INFO] [1784137889.887392013] [global_localization]: map→odom: x=1.374 y=0.049 z=-0.193
+[INFO] [1784137890.327769553] [global_localization]: ICP input: scan=28314 pts, map_FOV=5614 pts
+[INFO] [1784137890.387020473] [global_localization]: ICP fitness: coarse=0.977, fine=0.965, threshold=0.85
+[INFO] [1784137890.388323168] [global_localization]: map→odom: x=1.454 y=-0.051 z=-0.189
+[INFO] [1784137890.828601016] [global_localization]: ICP input: scan=28485 pts, map_FOV=5614 pts
+[INFO] [1784137890.902729007] [global_localization]: ICP fitness: coarse=0.976, fine=0.971, threshold=0.85
+[INFO] [1784137890.904032057] [global_localization]: map→odom: x=1.656 y=-0.089 z=-0.185
+[INFO] [1784137891.328127262] [global_localization]: ICP input: scan=28427 pts, map_FOV=5614 pts
+[INFO] [1784137891.382022758] [global_localization]: ICP fitness: coarse=0.992, fine=0.974, threshold=0.85
+[INFO] [1784137891.382820556] [global_localization]: map→odom: x=1.634 y=-0.135 z=-0.184
+[INFO] [1784137891.827942743] [global_localization]: ICP input: scan=28471 pts, map_FOV=5614 pts
+[INFO] [1784137891.879346109] [global_localization]: ICP fitness: coarse=1.000, fine=0.977, threshold=0.85
+[INFO] [1784137891.881390400] [global_localization]: map→odom: x=1.619 y=-0.162 z=-0.180
+[INFO] [1784137892.330830261] [global_localization]: ICP input: scan=28618 pts, map_FOV=5614 pts
+[INFO] [1784137892.387723451] [global_localization]: ICP fitness: coarse=0.977, fine=0.982, threshold=0.85
+[INFO] [1784137892.388853614] [global_localization]: map→odom: x=1.649 y=-0.196 z=-0.181
+[INFO] [1784137892.830048956] [global_localization]: ICP input: scan=28451 pts, map_FOV=5614 pts
+[INFO] [1784137892.885448240] [global_localization]: ICP fitness: coarse=0.984, fine=0.975, threshold=0.85
+[INFO] [1784137892.886108390] [global_localization]: map→odom: x=1.688 y=-0.223 z=-0.182
+[INFO] [1784137893.329350503] [global_localization]: ICP input: scan=28260 pts, map_FOV=5614 pts
+[INFO] [1784137893.384619383] [global_localization]: ICP fitness: coarse=0.954, fine=0.984, threshold=0.85
+[INFO] [1784137893.386537804] [global_localization]: map→odom: x=1.790 y=-0.269 z=-0.171
+[INFO] [1784137893.828247990] [global_localization]: ICP input: scan=27083 pts, map_FOV=5614 pts
+[INFO] [1784137893.876265669] [global_localization]: ICP fitness: coarse=0.912, fine=0.986, threshold=0.85
+[INFO] [1784137893.876906900] [global_localization]: map→odom: x=1.991 y=-0.322 z=-0.147
+[INFO] [1784137894.330454155] [global_localization]: ICP input: scan=27107 pts, map_FOV=5614 pts
+[INFO] [1784137894.399319673] [global_localization]: ICP fitness: coarse=0.931, fine=0.995, threshold=0.85
+[INFO] [1784137894.400138812] [global_localization]: map→odom: x=2.080 y=-0.310 z=-0.043
+[INFO] [1784137894.831918273] [global_localization]: ICP input: scan=28688 pts, map_FOV=5614 pts
+[INFO] [1784137894.914478665] [global_localization]: ICP fitness: coarse=0.892, fine=0.968, threshold=0.85
+[INFO] [1784137894.915282942] [global_localization]: map→odom: x=2.321 y=-0.054 z=0.120
+[INFO] [1784137895.330271529] [global_localization]: ICP input: scan=27976 pts, map_FOV=5614 pts
+[INFO] [1784137895.393948866] [global_localization]: ICP fitness: coarse=0.727, fine=0.881, threshold=0.85
+[INFO] [1784137895.394691290] [global_localization]: map→odom: x=2.533 y=-0.079 z=0.161
+[INFO] [1784137895.832237695] [global_localization]: ICP input: scan=27615 pts, map_FOV=5614 pts
+[INFO] [1784137896.025249914] [global_localization]: ICP fitness: coarse=0.696, fine=0.919, threshold=0.85
+[INFO] [1784137896.026877474] [global_localization]: map→odom: x=2.977 y=-0.154 z=0.132
+[INFO] [1784137896.327060550] [global_localization]: ICP input: scan=27723 pts, map_FOV=5614 pts
+[INFO] [1784137896.436046914] [global_localization]: ICP fitness: coarse=0.708, fine=0.900, threshold=0.85
+[INFO] [1784137896.437407905] [global_localization]: map→odom: x=3.000 y=-0.238 z=0.147
+[INFO] [1784137896.828566360] [global_localization]: ICP input: scan=27573 pts, map_FOV=5614 pts
+[INFO] [1784137896.931674415] [global_localization]: ICP fitness: coarse=0.637, fine=0.858, threshold=0.85
+[INFO] [1784137896.933942347] [global_localization]: map→odom: x=4.426 y=0.519 z=0.181
+[WARN] [1784137896.934745268] [global_localization]: ICP jump too large (1.43, 0.76, 0.03), rejecting
+[INFO] [1784137897.328079832] [global_localization]: ICP input: scan=28470 pts, map_FOV=5614 pts
+[INFO] [1784137897.434673471] [global_localization]: ICP fitness: coarse=0.688, fine=0.874, threshold=0.85
+[INFO] [1784137897.435754946] [global_localization]: map→odom: x=2.798 y=0.094 z=0.275
+[INFO] [1784137897.840706742] [global_localization]: ICP input: scan=28932 pts, map_FOV=5614 pts
+[INFO] [1784137897.928701934] [global_localization]: ICP fitness: coarse=0.787, fine=0.912, threshold=0.85
+[INFO] [1784137897.930177589] [global_localization]: map→odom: x=2.518 y=0.055 z=0.259
+[INFO] [1784137898.328666441] [global_localization]: ICP input: scan=28941 pts, map_FOV=5614 pts
+[INFO] [1784137898.443906190] [global_localization]: ICP fitness: coarse=0.939, fine=0.924, threshold=0.85
+[INFO] [1784137898.445445048] [global_localization]: map→odom: x=1.908 y=0.222 z=0.207
+[INFO] [1784137898.835189458] [global_localization]: ICP input: scan=28957 pts, map_FOV=5614 pts
+[INFO] [1784137899.014310057] [global_localization]: ICP fitness: coarse=0.961, fine=0.928, threshold=0.85
+[INFO] [1784137899.015041846] [global_localization]: map→odom: x=1.483 y=0.417 z=0.186
+[INFO] [1784137899.342547903] [global_localization]: ICP input: scan=28889 pts, map_FOV=5614 pts
+[INFO] [1784137899.451815162] [global_localization]: ICP fitness: coarse=0.997, fine=0.939, threshold=0.85
+[INFO] [1784137899.452622649] [global_localization]: map→odom: x=1.283 y=0.366 z=0.191
+[INFO] [1784137899.830352288] [global_localization]: ICP input: scan=28746 pts, map_FOV=5614 pts
+[INFO] [1784137899.948214930] [global_localization]: ICP fitness: coarse=0.993, fine=0.953, threshold=0.85
+[INFO] [1784137899.948815825] [global_localization]: map→odom: x=1.177 y=0.259 z=0.178
+[INFO] [1784137900.328219361] [global_localization]: ICP input: scan=28833 pts, map_FOV=5614 pts
+[INFO] [1784137900.505954493] [global_localization]: ICP fitness: coarse=1.000, fine=0.997, threshold=0.85
+[INFO] [1784137900.506616789] [global_localization]: map→odom: x=0.981 y=0.083 z=0.082
+[INFO] [1784137900.830533783] [global_localization]: ICP input: scan=28992 pts, map_FOV=5614 pts
+[INFO] [1784137900.957416470] [global_localization]: ICP fitness: coarse=0.987, fine=0.975, threshold=0.85
+[INFO] [1784137900.959233413] [global_localization]: map→odom: x=0.916 y=-0.014 z=0.129
+[INFO] [1784137901.336024091] [global_localization]: ICP input: scan=28902 pts, map_FOV=5614 pts
+[INFO] [1784137901.524205763] [global_localization]: ICP fitness: coarse=0.991, fine=0.953, threshold=0.85
+[INFO] [1784137901.524812729] [global_localization]: map→odom: x=0.797 y=-0.142 z=0.172
+[INFO] [1784137901.848767115] [global_localization]: ICP input: scan=28827 pts, map_FOV=5614 pts
+[INFO] [1784137901.960998595] [global_localization]: ICP fitness: coarse=0.997, fine=0.945, threshold=0.85
+[INFO] [1784137901.961682667] [global_localization]: map→odom: x=0.715 y=-0.161 z=0.194
+[INFO] [1784137902.336208868] [global_localization]: ICP input: scan=29057 pts, map_FOV=5614 pts
+[INFO] [1784137902.459245095] [global_localization]: ICP fitness: coarse=0.991, fine=0.946, threshold=0.85
+[INFO] [1784137902.460024657] [global_localization]: map→odom: x=0.653 y=-0.193 z=0.187
+[INFO] [1784137902.834827864] [global_localization]: ICP input: scan=28689 pts, map_FOV=5614 pts
+[INFO] [1784137902.995615712] [global_localization]: ICP fitness: coarse=0.991, fine=0.967, threshold=0.85
+[INFO] [1784137902.996313626] [global_localization]: map→odom: x=0.732 y=-0.183 z=0.172
+[INFO] [1784137903.327941515] [global_localization]: ICP input: scan=28873 pts, map_FOV=5614 pts
+[INFO] [1784137903.420206652] [global_localization]: ICP fitness: coarse=0.983, fine=0.932, threshold=0.85
+[INFO] [1784137903.421198032] [global_localization]: map→odom: x=0.634 y=-0.172 z=0.197
+[INFO] [1784137903.832835463] [global_localization]: ICP input: scan=29159 pts, map_FOV=5614 pts
+[INFO] [1784137903.924152239] [global_localization]: ICP fitness: coarse=0.991, fine=0.944, threshold=0.85
+[INFO] [1784137903.925103947] [global_localization]: map→odom: x=0.608 y=-0.200 z=0.192
+[INFO] [1784137904.333041777] [global_localization]: ICP input: scan=28791 pts, map_FOV=5614 pts
+[INFO] [1784137904.521584424] [global_localization]: ICP fitness: coarse=0.980, fine=0.929, threshold=0.85
+[INFO] [1784137904.522358340] [global_localization]: map→odom: x=0.624 y=-0.311 z=0.187
+[INFO] [1784137904.826477023] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137904.858154339] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137904.858832396] [global_localization]: map→odom: x=0.552 y=-0.341 z=0.051
+[INFO] [1784137905.336939218] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137905.439496269] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137905.442456056] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137905.826960729] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137905.864493776] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137905.865091272] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137906.326417221] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137906.361747623] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137906.362885279] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137906.826443677] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137906.863125136] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137906.863774509] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137907.328648675] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137907.365878334] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137907.366581345] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137907.826489040] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137907.865810741] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137907.867279527] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137908.326469659] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137908.365828735] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137908.366489873] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137908.826358069] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137908.863736965] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137908.864447963] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137909.326456646] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137909.363693362] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137909.364416252] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137909.827233120] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137909.865543179] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137909.866277515] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137910.328058759] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137910.368109970] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137910.370747500] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137910.826700415] [global_localization]: ICP input: scan=4830 pts, map_FOV=5614 pts
+[INFO] [1784137910.866674900] [global_localization]: ICP fitness: coarse=0.991, fine=0.988, threshold=0.85
+[INFO] [1784137910.867353907] [global_localization]: map→odom: x=0.538 y=-0.341 z=0.051
+[INFO] [1784137911.324891541] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137916.324910342] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137921.325284550] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137926.824948515] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137932.324917200] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137937.324960796] [global_localization]: Robot stationary — ICP frozen, maintaining last pose
+[INFO] [1784137942.824906238] [global_localization]: Robot stationary — ICP frozen, maintaining la
