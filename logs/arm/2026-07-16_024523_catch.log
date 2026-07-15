@@ -1,0 +1,26 @@
+[INFO] [1784141124.095911845] [arm_state_machine]: ============================================================
+[INFO] [1784141124.096582332] [arm_state_machine]: Arm State Machine Started (含自动任务状态机推进)
+[INFO] [1784141124.097118777] [arm_state_machine]: State: IDLE
+[INFO] [1784141124.097647264] [arm_state_machine]: ============================================================
+[INFO] [1784141129.065296895] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141134.065188076] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141139.065291082] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141144.065378265] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141149.065292509] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141154.065341381] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141157.540896102] [arm_state_machine]: 缓存 #1/10: 原始(0.156, 0.156, 0.242) → 最终(-0.227, 0.156, -0.406)
+[INFO] [1784141159.065332602] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141160.644511805] [arm_state_machine]: 缓存 #2/10: 原始(0.166, 0.156, 0.243) → 最终(-0.228, 0.156, -0.416)
+[ERROR] [1784141163.291314372] [arm_state_machine]: ⚠️ 目标超限（X=-0.231m 超限 [-0.23, 0.42]），清除缓存重新采集
+  坐标: (-0.231, 0.151, -0.417) 原始: (0.167, 0.151, 0.246)
+[INFO] [1784141164.065243228] [arm_state_machine]: [STATUS] State: IDLE
+[ERROR] [1784141166.134794081] [arm_state_machine]: ⚠️ 目标超限（X=-0.241m 超限 [-0.23, 0.42]），清除缓存重新采集
+  坐标: (-0.241, 0.134, -0.419) 原始: (0.169, 0.134, 0.256)
+[INFO] [1784141169.065282788] [arm_state_machine]: [STATUS] State: IDLE
+[ERROR] [1784141171.544642459] [arm_state_machine]: ⚠️ 目标超限（X=-0.234m 超限 [-0.23, 0.42]），清除缓存重新采集
+  坐标: (-0.234, 0.148, -0.422) 原始: (0.172, 0.148, 0.249)
+[INFO] [1784141174.065208971] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784141177.995494641] [arm_state_machine]: 缓存 #1/10: 原始(0.164, 0.140, 0.244) → 最终(-0.229, 0.140, -0.414)
+[INFO] [1784141179.065233486] [arm_state_machine]: [STATUS] State: IDLE
+[ERROR] [1784141181.329416882] [arm_state_machine]: ⚠️ 目标超限（X=-0.232m 超限 [-0.23, 0.42]），清除缓存重新采集
+  坐标: (-0.232, 0.132, -0.403) 原始: (0.153, 0.132, 0.247)

@@ -24,6 +24,7 @@ open_loop_auto.py — 开环自动控制脚本（无 Nav2 定位）
 
 import argparse
 import json
+import math
 import os
 import signal
 import subprocess
@@ -43,15 +44,23 @@ _PROJECT = _HERE.parent.parent
 
 sys.path.insert(0, str(_HERE))
 from launch_utils import launch, cleanup_all, _kill_existing, _clean_cyclone_shm
+import catch as _catch  # 坐标变换 + 工作空间验证（force-grab 用）
 
 # ============================================================
 # 参数（可被 --vx / --approach / --carry 覆盖）
 # ============================================================
-FORWARD_SPEED = 0.2        # 前进速度 (m/s)
-APPROACH_TIME = 8.0        # 第一次前进持续时间 (s)
-CARRY_TIME = 16.0           # 第二次前进持续时间 (s)
-GRAB_TIMEOUT = 60.0        # 抓取超时 (s)
+FORWARD_SPEED = 0.4        # 前进速度 (m/s)
+APPROACH_TIME = 4        # 第一次前进持续时间 (s)
+CARRY_TIME = 10.0           # 第二次前进持续时间 (s)
+GRAB_TIMEOUT = 100.0        # 抓取超时 (s)
 PLACE_TIMEOUT = 60.0       # 放置超时 (s)
+
+# ============================================================
+# 距离阈值 + 机械臂最远可达坐标（雷达系）
+# ============================================================
+DISTANCE_THRESHOLD = 0.35  # 若 cube x > 此值，认为太远需夹爪坐标 (m)
+ARM_MAX_REACH_X = 0.35     # 雷达系 x 最远可达（前向，m）
+ARM_MAX_REACH_Y = 0.15     # 雷达系 |y| 最远可达（侧向，m）
 
 # ============================================================
 # 串口协议常量（与 STM32 / catch.py / auto_task.py 一致）
@@ -179,6 +188,88 @@ class OpenLoopAutoNode(Node):
         while time.monotonic() < deadline and rclpy.ok():
             rclpy.spin_once(self, timeout_sec=0.05)
         self.stop()
+
+    def _force_grab_prepare(self):
+        """
+        停止 cube_detector 并发布夹爪坐标。
+
+        用 catch.py 的坐标变换（雷达系→机械臂系），若超出工作空间则
+        按比例缩小 arm_z 和 arm_y（保持 arm_x 高度不变），使方向不变
+        但距离缩至机械臂可达范围。
+        最后逆变换回雷达系发布，catch.py 能直接接受。
+        """
+        p = self._detected_cube.pose.position
+        rx, ry, rz = p.x, p.y, p.z
+
+        # 1) 雷达系 → 机械臂系
+        arm_x, arm_y, arm_z, _ = _catch.transform_and_offset(rx, ry, rz)
+        arm_x += _catch.HALF_BOX_HEIGHT  # 中心 → 顶面
+
+        orig_arm = (arm_x, arm_y, arm_z)
+
+        # 2) 若 dist 超限，按比例缩小 arm_z 和 arm_y（保持 arm_x 高度）
+        dist = math.sqrt(arm_x * arm_x + arm_y * arm_y + arm_z * arm_z)
+        if dist > _catch.ARM_DIST_MAX:
+            # 高度不变，缩小水平分量
+            h2 = arm_y * arm_y + arm_z * arm_z           # 水平分量平方
+            max_h2 = _catch.ARM_DIST_MAX * _catch.ARM_DIST_MAX - arm_x * arm_x
+            if max_h2 > 0 and h2 > 0:
+                scale = math.sqrt(max_h2 / h2)
+                arm_y *= scale
+                arm_z *= scale
+
+        # 3) 各轴限幅（保险）
+        arm_x = max(_catch.ARM_TARGET_X_MIN, min(arm_x, _catch.ARM_TARGET_X_MAX))
+        arm_y = max(_catch.ARM_TARGET_Y_MIN, min(arm_y, _catch.ARM_TARGET_Y_MAX))
+        arm_z = max(_catch.ARM_TARGET_Z_MIN, min(arm_z, _catch.ARM_TARGET_Z_MAX))
+
+        # 4) 最终验证
+        valid, reason = _catch.validate_arm_target(arm_x, arm_y, arm_z)
+        stm32_ok, stm32_reason = _catch.stm32_will_accept(arm_x, arm_y, arm_z)
+        if not (valid and stm32_ok):
+            self.get_logger().error(
+                f"[强制抓取] ❌ 修正后仍无法通过验证: {reason} / {stm32_reason}"
+            )
+            return  # 放弃强制抓取，后续 catch.py 会收到原始坐标
+
+        # 5) 逆变换回雷达系（catch.py 读了会用同一套变换算出上面的 arm 坐标）
+        clamped_rx = -arm_z - _catch.OFFSET_Z
+        clamped_ry = arm_y
+        clamped_rz = -arm_x - _catch.OFFSET_X + _catch.HALF_BOX_HEIGHT
+
+        self.get_logger().info(
+            f"[强制抓取] 🔧 雷达 ({rx:.3f},{ry:.3f},{rz:.3f}) "
+            f"→ arm ({orig_arm[0]:.3f},{orig_arm[1]:.3f},{orig_arm[2]:.3f}) "
+            f"→ 修正 ({arm_x:.3f},{arm_y:.3f},{arm_z:.3f}) "
+            f"→ 雷达 ({clamped_rx:.3f},{clamped_ry:.3f},{clamped_rz:.3f})"
+        )
+
+        # 停止 cube_detector（避免原始坐标干扰 catch.py 的稳定检测）
+        with self._subprocess_lock:
+            if self._cube_proc is not None:
+                try:
+                    self._cube_proc.send_signal(signal.SIGINT)
+                    self._cube_proc.wait(timeout=3.0)
+                except Exception:
+                    try:
+                        self._cube_proc.kill()
+                        self._cube_proc.wait()
+                    except Exception:
+                        pass
+                self._cube_proc = None
+
+        # 修改检测坐标为逆变换后的最远可达值
+        self._detected_cube.pose.position.x = clamped_rx
+        self._detected_cube.pose.position.y = clamped_ry
+        self._detected_cube.pose.position.z = clamped_rz
+
+        # 持续发布修正坐标（catch.py 的 cube_callback 需要连续稳定帧）
+        self._override_pub = self.create_publisher(Marker, "/detected_cube", 10)
+        self._override_timer = self.create_timer(0.1, self._publish_override_cube)
+
+    def _publish_override_cube(self):
+        """定时器回调：持续发布修正后的 marker（直至 catch.py 完成抓取）"""
+        self._override_pub.publish(self._detected_cube)
 
     # ──────────────────────────────────────────────────────────────
     # 串口指令
@@ -328,7 +419,7 @@ class OpenLoopAutoNode(Node):
         self.get_logger().info("[OK] 到达物资箱区域")
 
     def step_grab(self):
-        """[步骤 3] 启动 cube_detector + catch 检测并抓取"""
+        """[步骤 3] 检测并抓取物资箱（太远时用最远可达坐标）"""
         self.get_logger().info("")
         self.get_logger().info("╔══════════════════════════════════════╗")
         self.get_logger().info("║  步骤 3/5: 检测并抓取物资箱         ║")
@@ -339,13 +430,33 @@ class OpenLoopAutoNode(Node):
         self.get_logger().info("[抓取] 等待 cube_detector 初始化 (1.5s)...")
         time.sleep(1.5)
 
+        # ── 等待检测到物资箱（5s 超时） ──
+        self.get_logger().info("[抓取] 等待检测物资箱...")
+        _wait_deadline = time.monotonic() + 5.0
+        while time.monotonic() < _wait_deadline and rclpy.ok() and self._detected_cube is None:
+            rclpy.spin_once(self, timeout_sec=0.1)
+
+        # ── 检查距离，太远则用最远可达坐标（根据 catch.py 的工作空间限制） ──
+        # cube_detector 已改为选最近的立方体发布
+        if self._detected_cube is not None:
+            cube_x = self._detected_cube.pose.position.x
+            self.get_logger().info(f"[抓取] 📦 物资箱 x 距离: {cube_x:.3f}m")
+
+            if cube_x > DISTANCE_THRESHOLD:
+                self.get_logger().info(
+                    f"[抓取] 🔧 太远 (x={cube_x:.3f}m > {DISTANCE_THRESHOLD}m)，"
+                    f"使用最远可达坐标 (z不变)"
+                )
+                self._force_grab_prepare()
+        else:
+            self.get_logger().warn("[抓取] ⚠️ 未检测到物资箱，直接启动 catch.py")
+
         # ── 启动 catch.py ──
         # catch.py 内部完整流程：
         #   订阅 /detected_cube → 稳定检测（滑动窗口标准差）
         #   → 推进 STM32 状态机 (START → ARRIVED_BOX → PICK)
         #   → 发 0x14 PICK_TO_BACK 机械臂坐标
         #   → 等待 STM32 回传 ARM_EVENT pick_done 后退出
-        # 不需要外部预推状态机，完全由 catch.py 等检测稳定后再操作
         self._start_catch()
 
         # ── 等待抓取完成（catch.py 等到 pick_done 才退出） ──
@@ -403,6 +514,9 @@ class OpenLoopAutoNode(Node):
                 self.get_logger().error(f"[抓取] 等待过程异常: {e}")
 
         # ── 清理 ──
+        if hasattr(self, '_override_timer') and self._override_timer is not None:
+            self._override_timer.cancel()
+            self._override_timer = None
         self._cleanup_subprocesses()
         self.get_logger().info("[抓取] ✅ 抓取阶段完成，继续前进")
 

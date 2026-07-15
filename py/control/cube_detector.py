@@ -48,7 +48,7 @@ class CubeDetector(Node):
         self.marker_pub = self.create_publisher(Marker, '/detected_cube', 10)
 
         # ============ 点云预处理参数 ============
-        self.x_range = (0, 0.35)    # X 范围（雷达前方 0~80cm）
+        self.x_range = (0, 0.8)    # X 范围（雷达前方 0~80cm）
         self.y_range = (-0.5, 0.5)    # Y 范围（左右 ±80cm）
         self.z_range = (0, 0.4)       # Z 范围（高度 0~60cm）
         self.voxel_size = 0.008       # 体素下采样大小（8mm）
@@ -170,9 +170,9 @@ class CubeDetector(Node):
                         f"ratio={c['_ratio']:.2f} xy_dist={xy_dist:.3f}"
                     )
 
-                # ========== 选择最接近25cm的立方体发布 ==========
-                # 优先选边长最接近25cm的，同等条件下选离中线最近（Y绝对值最小）的
-                best = min(cubes, key=lambda x: abs(x['edge'] - self.edge_target) + abs(x['y']) * 0.05)
+                # ========== 选择最近的立方体发布 ==========
+                # 有多个立方体时，只管最近的那个（x 最小 = 雷达系前向最近）
+                best = min(cubes, key=lambda c: c['x'])
 
                 marker = Marker()
                 marker.header.frame_id = "unilidar_lidar"
