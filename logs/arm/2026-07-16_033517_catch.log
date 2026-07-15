@@ -1,0 +1,23 @@
+[INFO] [1784144118.274334369] [arm_state_machine]: ============================================================
+[INFO] [1784144118.276063173] [arm_state_machine]: Arm State Machine Started (含自动任务状态机推进)
+[INFO] [1784144118.276577626] [arm_state_machine]: State: IDLE
+[INFO] [1784144118.277042083] [arm_state_machine]: ============================================================
+[INFO] [1784144123.241464730] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144128.241282588] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144133.241242031] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144138.241296042] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144143.241273074] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144148.241158927] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144153.241441623] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144158.241259994] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144163.241197096] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144168.241217880] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144173.241226699] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144178.241413402] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144183.241252025] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144188.241367564] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144193.241201715] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144198.241355477] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144203.241334051] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144208.241256247] [arm_state_machine]: [STATUS] State: IDLE
+[INFO] [1784144213.241212035] [arm_state_machine]: [STATUS] State: IDLE
