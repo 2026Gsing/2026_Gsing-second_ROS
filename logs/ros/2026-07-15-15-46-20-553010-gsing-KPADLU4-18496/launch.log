@@ -1,0 +1,6 @@
+1784101580.5552144 [INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-46-20-553010-gsing-KPADLU4-18496
+1784101580.5556633 [INFO] [launch]: Default logging verbosity is set to INFO
+1784101580.6769361 [INFO] [fastlio_mapping-1]: process started with pid [18585]
+1784101580.6775439 [INFO] [env-2]: process started with pid [18587]
+1784101580.6778369 [INFO] [env-3]: process started with pid [18589]
+1784101580.6780996 [INFO] [pcd_to_pointcloud-4]: process started with pid [18591]

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-ROS2 Jazzy robot navigation + vision-based auto-task system for **ROBOCON 2026** 仿生足式机器人挑战赛（任务赛）。
+ROS2 Humble robot navigation + vision-based auto-task system for **ROBOCON 2026** 仿生足式机器人挑战赛（任务赛）。
 
 Robot: Unitree Go2/B2 wheel-leg quadruped with STM32H723VGTX bare-metal firmware.
 
@@ -12,13 +12,13 @@ Robot: Unitree Go2/B2 wheel-leg quadruped with STM32H723VGTX bare-metal firmware
 
 ## ⚠️ Python 环境陷阱
 
-**默认 `python3` 解析到 conda 3.14.x，无法 import rclpy**（ROS2 的 C 扩展编译为 Python 3.12 ABI）。
+**默认 `python3` 解析到 conda 3.14.x，无法 import rclpy**（ROS2 的 C 扩展编译为 Python 3.10 ABI）。
 
 | 方式 | 用什么 Python | 能否跑 ROS2 |
 |------|:---:|:---:|
 | `python3 script.py` | conda 3.14 | ❌ |
 | `./ros-run.sh script.py` | `/usr/bin/python3` + 自动 source | ✅ |
-| `/usr/bin/python3 script.py` | system 3.12 | ✅（需手动 source） |
+| `/usr/bin/python3 script.py` | system 3.10 | ✅（需手动 source） |
 
 `ros-run.sh` 已包含自动 source + RMW 设置，推荐使用：
 ```bash
@@ -42,12 +42,12 @@ Robot: Unitree Go2/B2 wheel-leg quadruped with STM32H723VGTX bare-metal firmware
 
 ```bash
 # 1. Source ROS2 + workspaces（每个新终端）
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 source fastlio2_v2/install/setup.bash
 source nav2_ws1/install/setup.bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
-# 2. 一键启动
+# 2. 一键启动（推荐用 ros-run.sh）
 ./ros-run.sh py/control/box_pick_node.py         # 物资箱检测抓取
 ./ros-run.sh py/control/auto_task.py field_id:=1  # 全场自动任务
 ./ros-run.sh py/tools/map_scan.py                 # 建图
@@ -59,7 +59,7 @@ export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ```bash
 # FAST-LIO2 workspace (C++: SLAM, PCD→PGM, LiDAR driver)
 cd fastlio2_v2
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
 bash src/fast_lio_localization/scripts/hook_fix.sh
@@ -82,7 +82,7 @@ sudo nmcli device set enp129s0 managed no     # miniPC 网卡名可能不同
 sudo ip addr add 192.168.1.2/24 dev enp129s0
 
 # 验证 LiDAR 连接
-source /opt/ros/jazzy/setup.bash && export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+source /opt/ros/humble/setup.bash && export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ros2 topic echo /unilidar/cloud --once
 
 # 串口权限
@@ -112,26 +112,54 @@ GSING_RVIZ=0 ./ros-run.sh py/control/box_pick_node.py # 强制关 Nav2 RViz
 │   │   ├── auto_task.py          ← 全场自动状态机
 │   │   ├── box_pick_node.py      ← 到达→检测→抓取/重规划
 │   │   ├── catch.py              ← 机械臂坐标变换 + STM32 可达性验证
-│   │   └── cube_detector.py      ← DBSCAN+PCA 3D OBB 检测
-│   └── tools/                    ← 工具脚本
+│   │   ├── cube_detector.py      ← DBSCAN+PCA 3D OBB 检测
+│   │   ├── arrival_detector.py   ← /localization → 到达判断
+│   │   └── init_pose.py          ← 发布 /initialpose（ICP 初始化）
+│   └── tools/                    ← 独立工具
 │       ├── map_scan.py           ← 一键建图（SLAM→PCD→PGM）
-│       ├── test_move.py          ← 底盘运动测试
+│       ├── test_move.py          ← 底盘运动测试（支持 --auto 序列）
+│       ├── test_interactive.py   ← 交互式测试
 │       ├── listen_serial.py      ← 串口十六进制监听
 │       └── pointcloud_x_filter.py ← LiDAR 点云 x>0 过滤
 ├── fastlio2_v2/                  ← FAST-LIO2 SLAM 工作空间（C++）
 │   └── src/
-│       ├── fast_lio/             ← FAST-LIO2 核心
-│       ├── fast_lio_localization/ ← ICP 全局定位 + transform_fusion
+│       ├── unilidar_fastlio_ros2-ros2/ ← FAST-LIO2 核心（建图+里程计）
+│       ├── fast_lio_localization/    ← ICP 全局定位 + transform_fusion
+│       │   ├── global_localization.py ← numpy/scipy ICP 配准
+│       │   ├── transform_fusion.py    ← TF 融合
+│       │   └── publish_initial_pose.py ← 初始位姿发布
 │       ├── pcd2pgm/              ← PCD → 栅格地图
-│       └── unitree_lidar_ros2/   ← LiDAR 驱动（launch.py 已改支持 start_rviz 参数）
+│       ├── unitree_lidar_ros2/   ← LiDAR 驱动
+│       └── my_odom_tf_pkg/       ← odometry→TF 桥接
 ├── nav2_ws1/                     ← Nav2 工作空间
 │   └── src/dog_nav2_bringup/
-│       ├── launch/               ← launch 文件
-│       ├── scripts/              ← cmd_vel → STM32 串口桥
-│       ├── params/               ← Nav2 调参 YAML
-│       └── maps/                 ← 预存栅格地图
-├── vision/                       ← YOLO 权重 (task3.pt, math12.pt)
-├── map/                          ← 建图输出 (PCD + PGM + YAML)
+│       ├── launch/
+│       │   ├── nav2_fastlio_static_map.launch.py  ← 静态地图（竞赛主用）
+│       │   ├── nav2_fastlio_bringup.launch.py      ← 动态建图
+│       │   └── chassis_serial_bridge.launch.py     ← 串口桥
+│       ├── scripts/
+│       │   ├── cmd_vel_chassis_serial.py  ← /cmd_vel → STM32 串口
+│       │   ├── nav2_task_launch.py        ← AMCL 版 Nav2 启动（备选）
+│       │   ├── goal_pose_to_nav2.py       ←（已停用，保留供参考）
+│       │   ├── costmap_to_grid.py         ← costmap → RViz 显示
+│       │   ├── task_field_competition.sh  ← 竞赛一键启动
+│       │   ├── generate_standard_map.sh   ← 6m×4m 标准地图
+│       │   └── start_nav2.sh / start_nav2_full.sh
+│       ├── params/
+│       │   ├── nav2_fastlio_static_map_params.yaml  ← 竞赛导航参数
+│       │   └── nav2_fastlio_params.yaml             ← 建图导航参数
+│       └── maps/                    ← 预存 2D 栅格地图
+├── vision/                       ← YOLO 视觉模块
+│   ├── src/
+│   │   ├── predict.py             ← YOLO 检测主脚本
+│   │   ├── slot_roi.py            ← ROI 槽位分配
+│   │   └── MATH.PY                ← 数学符号识别
+│   ├── config/                    ← IPC JSON（slots_roi, decision_state, nav_target）
+│   └── weights/
+│       ├── task3.pt               ← 4 类物资检测 (tool/device/food/remedy)
+│       └── math12.pt              ← 数学符号检测
+├── config/competition.yaml       ← 比赛配置
+├── map/                          ← 建图输出（PCD + PGM + YAML）
 ├── logs/                         ← 运行日志（gitignored）
 └── ros-run.sh                    ← helper: source + system Python 启动
 ```
@@ -147,14 +175,14 @@ LiDAR L2 → /unilidar/cloud → pointcloud_x_filter → /unilidar/cloud_filtere
   → cmd_vel_chassis_serial.py (0x10 frame with state) → STM32
 ```
 
-**TF tree (2026-07-15 修正):**
+**TF tree:**
 ```
 map ← (ICP / transform_fusion) ← camera_init ← (odometry_to_tf, dynamic) ← body ← (static) ← base_link
                                    └── (static identity) ← odom  (local costmap 用)
 ```
-- `camera_init→body` 由 FAST-LIO2 的 `odometry_to_tf` 动态发布（反映机器人运动）
+- `camera_init→body` 由 FAST-LIO2 的 `odometry_to_tf` 动态发布
 - `body→base_link` 是静态恒等变换
-- **不发布 `camera_init→base_link` 静态恒等** — 这会与上述动态链冲突，导致 Nav2 的 SimpleProgressChecker 读取到 base_link 始终在 (0,0)
+- **不发布 `camera_init→base_link` 静态恒等** — 会与动态链冲突
 - `map→camera_init` 由 `transform_fusion.py` 以 ICP 结果发布
 
 **Vision auto task:**
@@ -169,7 +197,7 @@ YOLO detection → JSON files (IPC) → auto_task.py (state machine)
 
 Both `auto_task.py` and `box_pick_node.py` share `start_prerequisites()`.
 
-**Startup order:** LiDAR → ICP localization → TF bridge → Nav2 → Serial bridge
+**Startup order:** LiDAR → wait 10s → ICP localization → TF bridge → Nav2 → Serial bridge
 
 **Startup cleanup:** Before launching, automatically kills stale ROS processes (`pkill -f`) and cleans CycloneDDS shared memory (`/dev/shm/*cyclone*`).
 
@@ -178,12 +206,12 @@ Both `auto_task.py` and `box_pick_node.py` share `start_prerequisites()`.
 Top-level switches:
 ```python
 ENABLE_RVIZ = True      # GSING_RVIZ env var overrides; hostname-based default
-USE_TERMINAL = True     # gnome-terminal per node (vs background)
+USE_TERMINAL = False    # False = 后台静默运行（日志写文件），True = gnome-terminal
 SERIAL_PORT = "/dev/ttyACM0"
-MAP_NAME = "map/PCD21"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/map"    # 地图文件名，同时用于 PCD 和 YAML
 ```
 
-### ICP 定位参数 (`launch_utils.py:207-210`)
+### ICP 定位参数 (`launch_utils.py:244-247`)
 
 ```python
 map_voxel_size:=0.08 scan_voxel_size:=0.08
@@ -192,17 +220,20 @@ freq_localization:=2.0 localization_threshold:=0.85
 
 | 参数 | 值 | 说明 |
 |------|-----|------|
-| `map_voxel_size` | 0.08 m | 地图下采样体素（2026-07-15 从 0.008 放宽到 0.08） |
-| `scan_voxel_size` | 0.08 m | 扫描下采样体素（2026-07-15 从 0.02 放宽到 0.08） |
-| `freq_localization` | 2.0 Hz | ICP 定位频率 |
-| `localization_threshold` | 0.85 | ICP 配准 fitness 阈值（2026-07-15 从 0.9 降低） |
+| `map_voxel_size` | 0.08 m | 地图下采样体素，~4K 点 |
+| `scan_voxel_size` | 0.08 m | 扫描下采样体素，与地图一致 |
+| `freq_localization` | 2.0 Hz | ICP 定位频率（每 0.5s） |
+| `localization_threshold` | 0.85 | ICP 内点率阈值（fitness > 0.85 接受） |
+
+ICP 采用多尺度策略：coarse (scale=5, voxel×5, max_dist=2.5m) → fine (scale=1, voxel×1, max_dist=0.5m)。
+fitness = 内点数 / 源点总数（内点率 0~1），coarse 因搜索半径大因此 fitness 自然更高。
 
 ### 底盘状态码推导 (`cmd_vel_chassis_serial.py:derive_robot_state()`)
 
 Serial bridge 从 `(vx, wz)` 速度推导 `state` 字节（0x10 帧的第9字节）：
 
 ```python
-# vx 非零 → FORWARD(1) 或 BACKWARD(2)，即使 wz > vx（前进中转弯）
+# vx 非零 → FORWARD(1) 或 BACKWARD(2)
 # vx 为零且 wz 非零 → LEFT(3) 或 RIGHT(4)（纯旋转）
 # 全部零 → IDLE(0)
 ```
@@ -221,29 +252,35 @@ Frame: `[0x55][0xAA][func_id][len][payload...][checksum]`
 | `0x14` | ARM_MISSION | `mode(u8)+flags(u8)+pick/back/place` | ROS→STM32 | auto_task.py |
 | `0x15` | AUTO_TASK | `cmd(u8)+target(u8)+zone(u8)` = 3B | ROS→STM32 | auto_task.py |
 | `0x22` | ARM_EVENT | `event+mode+slot+side+xyz` = 16B | STM32→ROS | serial bridge |
+| `0x31` | LEG_DEBUG | 72B 腿部调试帧 | STM32→ROS | serial bridge |
 
-## Navigation: ComputePathToPose Timeout — duplicate goal preemption
+AUTO_CMD: 1=START, 2=ARRIVED_BOX, 3=PICK_DONE, 4=ARRIVED_ZONE, 5=PLACE_DONE, 6=NEXT, 7=FINISH, 8=ESTOP
 
-**Problem**: bt_navigator logs "Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose", navigation fails within ~22ms.
+**注意 (2026-07-15)**: `0x10` 帧的 `wz` 在 `cmd_vel_chassis_serial.py:_build_packet()` 中取反后发送。原因是 STM32 端转向方向与 ROS 约定相反（ROS 左转为正，STM32 右转为正），取反后双方行为一致。
 
-**Root Cause**: RViz Nav2 plugin (nav2_rviz_plugins/GoalTool) sends a NavigateToPose action goal directly to bt_navigator. Simultaneously, rviz_default_plugins/SetGoal (also in the RViz toolbar) publishes to /goal_pose, which was subscribed by goal_pose_to_nav2.py bridge — causing a **second** NavigateToPose goal that preempts the first.
+## Navigation: best practices
 
-The preemption cancels the first BT execution while ComputePathToPose's action client is mid-DDS-discovery (wait_for_action_server). The second BT creates a fresh client, but on this slow CPU (Celeron N2940) discovery hasn't completed in ~22ms → wait_for_action_server returns "server not found" → entire navigation fails.
+- 使用 **GoalTool**（`nav2_rviz_plugins/GoalTool`）发导航目标，**不要用** SetGoal（`rviz_default_plugins/SetGoal`）— 后者发 `/goal_pose` 已无订阅者
+- 目标点必须在地图的 free 区域内，否则 planner 会失败
+- `box_pick_node.py` 支持 CLI 命令：`goto <x> <y> [yaw]` / `nav <x> <y> [yaw]` / `pos`
 
-Note: `server_timeout="5.0"` on the ComputePathToPose BT node does NOT fix this — it controls the timeout for the action **result**, but the failure is at the **goal acknowledgment** stage before the server processes the request.
+## cube_detector.py — 3D OBB 立方体检测
 
-**Fix** (2026-07-15):
-- **Removed** `goal_pose_to_nav2.py` bridge from `nav2_fastlio_static_map.launch.py` — GoalTool already sends NavigateToPose directly, the bridge was redundant
-- Custom BT XML (`custom_navigate_to_pose_w_replanning_and_recovery.xml` with `server_timeout="5.0"`) retained as safety net
+| 步骤 | 方法 | 参数 |
+|------|------|------|
+| 空间裁剪 | 雷达前方 0~0.8m | `x_range=(−0.2, 0.8)` |
+| 去地面 | 移除 z 最低 5% 分位 | `z_keep_percent=2` |
+| 半径滤波 | BallTree 邻域点数过滤 | `radius=0.04, min_neighbors=5` |
+| 体素下采样 | 重心下采样 | `voxel_size=0.008` (8mm) |
+| DBSCAN 聚类 | 密度聚类分离物体 | `eps=0.04, min_samples=20` |
+| 3D PCA | 协方差 → OBB 主轴 + 边长 | — |
+| 边长校验 | 25cm ± 5cm | `edge_target=0.25, edge_tol=0.05` |
 
-**RViz Tools** in `nav2_fastlio_static_map.rviz`:
-```yaml
-Tools:
-  - Class: nav2_rviz_plugins/GoalTool       # ← sends NavigateToPose action (USE THIS)
-  - Class: rviz_default_plugins/SetGoal     # ← publishes /goal_pose only, no subscriber anymore
-    Topic: goal_pose
-```
-SetGoal still appears in the toolbar but has no subscriber — harmless. Always select GoalTool for navigation.
+## 速度仲裁
+
+底盘速度优先级：`/vision_cmd_vel` (500ms 超时) > `/cmd_vel` Nav2 (80ms 超时) > 停止
+
+到达检测：订阅 `/localization`，参数 `arrival_pos_threshold=0.25m`, `arrival_angle_threshold=0.30rad`, `settle_frames=5`。
 
 ## Common Pitfalls
 
@@ -254,61 +291,5 @@ SetGoal still appears in the toolbar but has no subscriber — harmless. Always 
 - **DDS participant exhaustion**: Script auto-cleans `/dev/shm/*cyclone*` on startup and exit
 - **conda Python**: Always use `./ros-run.sh` or explicit `/usr/bin/python3`, never bare `python3`
 - **Serial port**: `sudo chmod 666 /dev/ttyACM0`
-- **ICP not initialized**: `box_pick_node.py` publishes `/initialpose` after 8s, but ICP takes ~15s to load map — message is often dropped. ICP auto-initializes once LiDAR data flows, so this is usually non-blocking.
-
-## 2026-07-15 修改记录
-
-### 1. box_pick_node.py — CLI 导航 + 周期定位输出
-
-**问题**: 导航依赖 RViz 的 GoalTool，但工具栏有 GoalTool/SetGoal 两个按钮，容易选错导致 SetGoal 发布到无人订阅的 `/goal_pose`（桥已移除），导航不启动。
-
-**修复**:
-- 新增 `goto <x> <y> [yaw]` CLI 命令，通过 `navigate_to_pose` action 直接发给 bt_navigator，绕过 RViz 工具选择问题
-- 新增 `nav <x> <y> [yaw]` 作为 `goto` 的别名
-- 新增 `pos` 命令，立即打印当前定位
-- 新增每 0.5 秒定时器自动输出定位坐标（x, y, z, yaw, state）
-- `_nav_result_cb` 补全导航失败日志（之前只有成功才打印）
-- 启动 banner 改为提示 `goto` 命令
-
-### 2. launch_utils.py — `USE_TERMINAL = False`
-
-**问题**: `USE_TERMINAL = True` 每次启动弹 5 个 gnome-terminal 窗口，miniPC (Celeron N2940, 7.6G RAM) 上吃资源。
-
-**修复**: 改为 `False`，后台静默运行，日志仍写入 `logs/` 各子目录。想看实时输出用 `tail -f` 对应日志文件。
-
----
-
-## 2026-07-15 修复记录
-
-### 1. Nav2 "Failed to make progress" — TF 树冲突
-
-**问题**: `nav2_fastlio_static_map.launch.py` 发布了 `camera_init→base_link` 静态恒等变换，与 FAST-LIO2 `odometry_to_tf` 发布的动态 `camera_init→body→base_link` 链冲突。Nav2 的 SimpleProgressChecker 查找 `odom→base_link` 时解析到静态恒等，始终读到 (0,0)，10 秒后触发失败。
-
-**修复**: 删除了 `static_tf_camerainit_baselink` 节点。动态 TF 链已提供正确的 `camera_init→base_link`。
-
-### 2. Nav2 "Failed to make progress" — 底盘状态码错误
-
-**问题**: `cmd_vel_chassis_serial.py` 的 `derive_robot_state()` 中，当 `abs(wz) > abs(vx)` 时返回 `LEFT(3)`。导航时 Nav2 发出 `vx=0.10, wz=0.15~0.29`，状态码为 LEFT，STM32 优先执行转向步态，实际前进速度仅 0.013 m/s（指令的 1/8）。
-
-**修复**: 改为先判 vx，非零则直接返回 FORWARD(1)/BACKWARD(2)。wz 仅用于纯旋转。
-
-### 3. Nav2 参数调整
-
-| 参数 | 文件 | 旧值 | 新值 |
-|------|------|------|------|
-| `required_movement_radius` | `nav2_fastlio_static_map_params.yaml` | 0.5 | 0.3 |
-| `movement_time_allowance` | ↑ | 10.0 | 30.0 |
-| `lookahead_dist` | ↑ | 0.5 | 0.4 |
-| `max_lookahead_dist` | ↑ | 0.8 | 0.6 |
-| `min_approach_linear_velocity` | ↑ | 0.35 | 0.10 |
-| `local_costmap.rolling_window` | ↑ | false | true |
-
-### 4. ICP 定位参数优化
-
-`launch_utils.py` 中 ICP 启动参数：
-
-| 参数 | 旧值 | 新值 | 原因 |
-|------|------|------|------|
-| `map_voxel_size` | 0.008 | 0.08 | 10x 放宽，地图点从 11万→约 3000-5000，首次匹配 18.5s→<2s |
-| `scan_voxel_size` | 0.02 | 0.08 | 与地图一致 |
-| `localization_threshold` | 0.9 | 0.85 | 体素变粗后 fitness 自然稍低 |
+- **ICP not initialized**: When LiDAR data doesn't reach ICP (`cur_scan=✗`), TF 树断裂导致 Nav2 无法启动。通常在快速重启场景出现。确认 LiDAR 网络连通后重试。
+- **Robot tilting severely (pitch > 15°)**：导航速度过快会导致机器人前倾，使 LiDAR 倾斜 → ICP 匹配不稳定 → 定位漂移 → Nav2 路径规划失败。建议降低 `max_linear_vel` 或检查场地平整度。

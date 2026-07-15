@@ -8,12 +8,12 @@
 
 ```bash
 # 安装 CycloneDDS（仅一次）
-sudo apt install -y ros-jazzy-rmw-cyclonedds-cpp
+sudo apt install -y ros-humble-rmw-cyclonedds-cpp
 ros2 daemon stop && ros2 daemon start
 
 # 构建 FAST-LIO2 全部组件
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
 bash src/fast_lio_localization/scripts/hook_fix.sh
@@ -51,7 +51,7 @@ sudo ip addr add 192.168.1.2/24 dev enp129s0
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
 ```
 
@@ -60,7 +60,7 @@ ros2 launch unitree_lidar_ros2 launch.py
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 bash auto_map_save.sh
 ```
 
@@ -68,7 +68,7 @@ bash auto_map_save.sh
 
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 source /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/install/setup.bash
 rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_config.rviz
 ```
@@ -78,7 +78,7 @@ rviz2 -d /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2/src/fast_lio_conf
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch pcd2pgm pcd2pgm_launch.py \
   pcd_file:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd
 # 输出: map/map.yaml + map/map.pgm（文件名与 PCD 相同，目录与 PCD 相同）
@@ -102,7 +102,7 @@ pcl_viewer /home/hyper/program/2026_Gsing-second_ROS/map/map.pcd
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch unitree_lidar_ros2 launch.py
 ```
 
@@ -111,9 +111,9 @@ ros2 launch unitree_lidar_ros2 launch.py
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/fastlio2_v2
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 export AMENT_PREFIX_PATH="$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH"
-export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages
+export PYTHONPATH=$PYTHONPATH:$HOME/.local/lib/python3.10/site-packages
 ros2 launch fast_lio_localization 1.launch.py \
   map:=/home/hyper/program/2026_Gsing-second_ROS/map/map.pcd \
   config_file:=unilidar_l2.yaml rviz:=true \
@@ -128,7 +128,7 @@ ros2 launch fast_lio_localization 1.launch.py \
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
   map:=/home/hyper/program/2026_Gsing-second_ROS/map/pgm_map.yaml
 ```
@@ -138,7 +138,7 @@ ros2 launch dog_nav2_bringup nav2_fastlio_static_map.launch.py \
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 cd /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1
-source /opt/ros/jazzy/setup.bash && source install/setup.bash
+source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
   serial_port:=/dev/ttyACM0 baud_rate:=115200 \
   cmd_vel_topic:=/cmd_vel send_rate_hz:=50.0 \
@@ -149,7 +149,7 @@ ros2 launch dog_nav2_bringup chassis_serial_bridge.launch.py \
 
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 source /home/hyper/program/2026_Gsing-second_ROS/nav2_ws1/install/setup.bash
 python3 /home/hyper/program/2026_Gsing-second_ROS/py/control/auto_task.py
 ```

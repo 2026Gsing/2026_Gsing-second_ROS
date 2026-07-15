@@ -26,7 +26,16 @@ sleep 2
 
 # 配置ROS环境（避免conda冲突）
 unset PYTHONPATH
-source /opt/ros/jazzy/setup.bash
+# 自动检测可用 ROS2 发行版
+_DETECTED_ROS=""
+for _d in jazzy humble; do
+    if [ -f "/opt/ros/$_d/setup.bash" ]; then
+        _DETECTED_ROS="$_d"
+        break
+    fi
+done
+[ -n "$_DETECTED_ROS" ] || { echo "❌ 未检测到 ROS2" >&2; exit 1; }
+source "/opt/ros/$_DETECTED_ROS/setup.bash"
 
 # 创建目录（确保存在）
 mkdir -p $NAV2_DIR/maps/

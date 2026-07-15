@@ -1,0 +1,5 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-44-06-103328-gsing-KPADLU4-17599
+[INFO] [launch]: Default logging verbosity is set to INFO
+rviz_config_file = /home/gsing/2026_Gsing-second_ROS/fastlio2_v2/install/unitree_lidar_ros2/share/unitree_lidar_ros2/view.rviz
+[INFO] [unitree_lidar_ros2_node-1]: process started with pid [17621]
+[unitree_lidar_ros2_node-1] initialize_type_ = 2

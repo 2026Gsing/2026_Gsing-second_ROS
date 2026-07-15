@@ -1,0 +1,14 @@
+1784101457.2213333 [INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-44-17-219465-gsing-KPADLU4-17685
+1784101457.2216284 [INFO] [launch]: Default logging verbosity is set to INFO
+1784101457.4255273 [INFO] [static_transform_publisher-1]: process started with pid [17784]
+1784101457.4258614 [INFO] [static_transform_publisher-2]: process started with pid [17786]
+1784101457.4260221 [INFO] [static_transform_publisher-3]: process started with pid [17788]
+1784101457.4373891 [INFO] [map_server-4]: process started with pid [17790]
+1784101457.4391758 [INFO] [rviz2-5]: process started with pid [17792]
+1784101462.4958959 [INFO] [controller_server-6]: process started with pid [17955]
+1784101462.4986279 [INFO] [planner_server-7]: process started with pid [17957]
+1784101462.4988394 [INFO] [behavior_server-8]: process started with pid [17959]
+1784101462.4989946 [INFO] [bt_navigator-9]: process started with pid [17961]
+1784101462.5154321 [INFO] [waypoint_follower-10]: process started with pid [17963]
+1784101462.5165200 [INFO] [lifecycle_manager-11]: process started with pid [17965]
+1784101462.5171788 [INFO] [costmap_to_grid-12]: process started with pid [17967]

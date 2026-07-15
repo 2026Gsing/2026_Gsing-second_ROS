@@ -1,0 +1,46 @@
+[INFO] [1784109836.151901806] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784109836.298829483] [controller_server]: Creating controller server
+[INFO] [1784109836.452620274] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784109836.478128669] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784109836.645437178] [controller_server]: Configuring controller interface
+[INFO] [1784109836.647004237] [controller_server]: getting goal checker plugins..
+[INFO] [1784109836.649772204] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784109836.649869446] [local_costmap.local_costmap]: Configuring
+[INFO] [1784109836.679475360] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784109836.709505409] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784109836.714733258] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784109836.766016842] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784109836.774860845] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784109836.775276354] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784109836.779396577] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784109836.814003583] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784109837.805764234] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 125 X 89 at 0.050000 m/pix
+[INFO] [1784109837.933197921] [controller_server]: Activating
+[INFO] [1784109837.933268091] [local_costmap.local_costmap]: Activating
+[INFO] [1784109837.933294321] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784109837.933470692] [local_costmap.local_costmap]: start
+[INFO] [1784109837.983783175] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784109837.983861392] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784109916.286219917] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1784109916.286321384] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[INFO] [1784109917.337284991] [controller_server]: Passing new path to controller.
+[INFO] [1784109918.336684101] [controller_server]: Passing new path to controller.
+[INFO] [1784109919.386447801] [controller_server]: Passing new path to controller.
+[INFO] [1784109920.386519742] [controller_server]: Passing new path to controller.
+[INFO] [1784109921.436601712] [controller_server]: Passing new path to controller.
+[INFO] [1784109922.437205356] [controller_server]: Passing new path to controller.
+[INFO] [1784109923.488066545] [controller_server]: Passing new path to controller.
+[INFO] [1784109924.486633808] [controller_server]: Passing new path to controller.
+[INFO] [1784109925.536990711] [controller_server]: Passing new path to controller.
+[INFO] [1784109926.536661668] [controller_server]: Passing new path to controller.
+[INFO] [1784109927.536610066] [controller_server]: Passing new path to controller.
+[INFO] [1784109928.586639268] [controller_server]: Passing new path to controller.
+[INFO] [1784109929.196345083] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784109929.196490515] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[INFO] [1784109929.196

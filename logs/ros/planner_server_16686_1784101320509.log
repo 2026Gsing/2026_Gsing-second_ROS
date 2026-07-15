@@ -1,0 +1,19 @@
+[INFO] [1784101320.791170908] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101320.845671903] [planner_server]: Creating
+[INFO] [1784101321.059060969] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101321.059879940] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784101321.528316510] [planner_server]: Configuring
+[INFO] [1784101321.528388971] [global_costmap.global_costmap]: Configuring
+[INFO] [1784101321.570231084] [global_costmap.global_costmap]: Using plugin "static_layer"
+[INFO] [1784101321.600885352] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784101321.610512131] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[FATAL] [1784101321.652632494] [planner_server]: Failed to create global planner. Exception: According to the loaded plugin descriptions the class nav2_navfn_planner::NavfnPlanner with base class type nav2_core::GlobalPlanner does not exist. Declared types are  nav2_navfn_planner/NavfnPlanner nav2_smac_planner/SmacPlanner2D nav2_smac_planner/SmacPlannerHybrid nav2_smac_planner/SmacPlannerLattice nav2_theta_star_planner/ThetaStarPlanner
+[INFO] [1784101393.421344256] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101393.421479946] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784101393.436476855] [planner_server]: Destroying bond (planner_server) to lifecycle manager.

@@ -1,6 +1,6 @@
 # Python 依赖
 # ROS2 包来自系统 apt（不需要 pip）：
-#   sudo apt install ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
+#   sudo apt install ros-humble-nav2-bringup ros-humble-nav2-msgs
 
 # YOLO 视觉
 ultralytics>=8.3.0
@@ -22,4 +22,4 @@ open3d>=0.17.0
 tf-transformations>=1.0.2
 
 # ROS2 传感器消息 Python 绑定
-# sudo apt install ros-jazzy-sensor-msgs-py
+# sudo apt install ros-humble-sensor-msgs-py

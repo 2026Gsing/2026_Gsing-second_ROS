@@ -32,7 +32,15 @@ _PROJECT = _HERE.parent.parent                   # 2026_Gsing-second_ROS
 _LOG_DIR = _PROJECT / "logs"
 _FASTLIO_DIR = str(_PROJECT / "fastlio2_v2")
 _MAP_DIR = str(_PROJECT / "map")
-_ROS_SETUP = "source /opt/ros/jazzy/setup.bash"
+# 自动检测可用 ROS2 发行版（支持 jazzy / humble）
+_ROS_SETUP = None
+for _d in ("jazzy", "humble"):
+    _p = f"/opt/ros/{_d}/setup.bash"
+    if os.path.isfile(_p):
+        _ROS_SETUP = f"source {_p}"
+        break
+if _ROS_SETUP is None:
+    _ROS_SETUP = "source /opt/ros/jazzy/setup.bash"
 
 _PROCS = []  # 子进程列表
 _LOG_PATHS = {}  # name → logfile path

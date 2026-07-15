@@ -171,7 +171,15 @@ class MoveTestNode(Node):
     # ================================================================
     def _launch_serial_bridge(self):
         nav2_dir = os.path.join(_PROJECT_ROOT, "nav2_ws1")
-        ros_setup = "source /opt/ros/jazzy/setup.bash"
+        # 自动检测可用 ROS2 发行版
+        ros_setup = None
+        for _d in ("jazzy", "humble"):
+            _p = f"/opt/ros/{_d}/setup.bash"
+            if os.path.isfile(_p):
+                ros_setup = f"source {_p}"
+                break
+        if ros_setup is None:
+            ros_setup = "source /opt/ros/jazzy/setup.bash"
 
         # 使用自动检测的串口，失败则回退
         port = _DETECTED_SERIAL or "/dev/ttyACM0"

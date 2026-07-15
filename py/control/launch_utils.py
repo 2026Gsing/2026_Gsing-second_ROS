@@ -61,15 +61,16 @@ _HOST_RVIZ_DEFAULT = "0" if platform.node().lower() == "gsing" else "1"
 ENABLE_RVIZ = os.environ.get("GSING_RVIZ", _HOST_RVIZ_DEFAULT).lower() not in ("0", "false", "off")
 USE_TERMINAL = False   # True=弹终端窗口, False=后台运行（miniPC 推荐）
 SERIAL_PORT = "/dev/ttyACM0"   # STM32 串口设备路径（被下方自动检测覆盖）
-MAP_NAME = "map/PCD33"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
+MAP_NAME = "map/map"  # 地图文件名（不含扩展名），同时用于 PCD 和 YAML。标准比赛地图
 
 # ============ 硬件自动检测 ============
+_hw = {}  # 默认空 dict，防止检测异常时 NameError
 try:
     sys.path.insert(0, str(_PROJECT / "py"))
     from tools.detect_hardware import detect_all
     _hw = detect_all(verbose=False)
     sys.path.pop(0)
-    if _hw["serial_port"]:
+    if _hw.get("serial_port"):
         print(f"  [硬件] 自动检测到 STM32 串口: {_hw['serial_port']}")
         SERIAL_PORT = _hw["serial_port"]
     if _hw["lidar_iface"]:
@@ -181,7 +182,23 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     if map_yaml is None:
         map_yaml = str(_PROJECT / f"{MAP_NAME}.yaml")
 
-    ros_setup = "source /opt/ros/jazzy/setup.bash"
+    # 自动检测可用 ROS2 发行版（支持 jazzy / humble）
+    _ros_setup = None
+    for _d in ("jazzy", "humble"):
+        _p = f"/opt/ros/{_d}/setup.bash"
+        if os.path.isfile(_p):
+            _ros_setup = f"source {_p}"
+            _ROS_DISTRO = _d
+            break
+    if _ros_setup is None:
+        print("  [启动] ⚠️ 未检测到 ROS2，默认用 humble")
+        ros_setup = "source /opt/ros/humble/setup.bash"
+        _ROS_DISTRO = "humble"
+    else:
+        ros_setup = _ros_setup
+
+    # Python site-packages 路径自动适配发行版
+    _PY_VER = "3.12" if _ROS_DISTRO == "jazzy" else "3.10"
 
     print("╔══════════════════════════════════════════════╗")
     print("║  启动前置 ROS 节点                            ║")
@@ -192,10 +209,13 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     # Nav2 的 RViz 受 GSING_RVIZ 环境变量控制（默认 miniPC 关，主机开）
     nav2_rviz_arg = "true" if ENABLE_RVIZ else "false"
 
-    # LiDAR 驱动
+    # LiDAR 驱动（lidar_ip/local_ip 由自动检测提供）
+    _lidar_ip = _hw.get("lidar_ip", "192.168.1.1")
+    _local_ip = _hw.get("local_ip", "192.168.1.2")
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
-        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg}",
+        f"ros2 launch unitree_lidar_ros2 launch.py start_rviz:={rviz_arg} "
+        f"lidar_ip:={_lidar_ip} local_ip:={_local_ip}",
         name="LiDAR",
     )
 
@@ -220,10 +240,10 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
     launch(
         f"cd {fastlio_dir} && {ros_setup} && source install/setup.bash && "
         f"export AMENT_PREFIX_PATH=\"$PWD/install/fast_lio_localization:$AMENT_PREFIX_PATH\" && "
-        f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
+        f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python{_PY_VER}/site-packages\" && "
         f"ros2 launch fast_lio_localization 1.launch.py "
         f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
-        f"  map_voxel_size:=0.01 scan_voxel_size:=0.02 "
+        f"  map_voxel_size:=0.08 scan_voxel_size:=0.08 "
         f"  freq_localization:=2.0 localization_threshold:=0.85",
         name="ICP",
     )

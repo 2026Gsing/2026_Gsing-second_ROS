@@ -1,0 +1,83 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-36-58-611977-gsing-KPADLU4-12858
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [12967]
+[INFO] [static_transform_publisher-2]: process started with pid [12969]
+[INFO] [static_transform_publisher-3]: process started with pid [12971]
+[INFO] [map_server-4]: process started with pid [12973]
+[INFO] [rviz2-5]: process started with pid [12975]
+[static_transform_publisher-1] [INFO] [1784101018.850996191] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-3] [INFO] [1784101018.879864447] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'unilidar_lidar'
+[static_transform_publisher-2] [INFO] [1784101018.944228208] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'body'
+[rviz2-5] Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+[map_server-4] [INFO] [1784101019.053438994] [map_server]: 
+[map_server-4] 	map_server lifecycle node launched. 
+[map_server-4] 	Waiting on external lifecycle transitions to activate
+[map_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-4] [INFO] [1784101019.053620509] [map_server]: Creating
+[rviz2-5] [INFO] [1784101019.730300468] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-5] [INFO] [1784101019.731168960] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-5] [INFO] [1784101019.776153293] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-6]: process started with pid [13132]
+[INFO] [planner_server-7]: process started with pid [13134]
+[INFO] [behavior_server-8]: process started with pid [13136]
+[INFO] [bt_navigator-9]: process started with pid [13138]
+[INFO] [waypoint_follower-10]: process started with pid [13140]
+[INFO] [lifecycle_manager-11]: process started with pid [13142]
+[INFO] [costmap_to_grid-12]: process started with pid [13144]
+[controller_server-6] [INFO] [1784101024.056137895] [controller_server]: 
+[controller_server-6] 	controller_server lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-10] [INFO] [1784101024.077727736] [waypoint_follower]: 
+[waypoint_follower-10] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-10] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-10] [INFO] [1784101024.089388551] [waypoint_follower]: Creating
+[bt_navigator-9] [INFO] [1784101024.096927979] [bt_navigator]: 
+[bt_navigator-9] 	bt_navigator lifecycle node launched. 
+[bt_navigator-9] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-9] [INFO] [1784101024.106012673] [bt_navigator]: Creating
+[planner_server-7] [INFO] [1784101024.136752396] [planner_server]: 
+[planner_server-7] 	planner_server lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-7] [INFO] [1784101024.170531073] [planner_server]: Creating
+[lifecycle_manager-11] [INFO] [1784101024.202897524] [lifecycle_manager_navigation]: Creating
+[planner_server-7] [INFO] [1784101024.225060452] [global_costmap.global_costmap]: 
+[planner_server-7] 	global_costmap lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1784101024.228976249] [controller_server]: Creating controller server
+[planner_server-7] [INFO] [1784101024.229108580] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-11] [INFO] [1784101024.245872583] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[behavior_server-8] [INFO] [1784101024.249713220] [behavior_server]: 
+[behavior_server-8] 	behavior_server lifecycle node launched. 
+[behavior_server-8] 	Waiting on external lifecycle transitions to activate
+[behavior_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-11] [INFO] [1784101024.309767950] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-11] [INFO] [1784101024.309843948] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[map_server-4] [INFO] [1784101024.310202968] [map_server]: Configuring
+[map_server-4] [INFO] [1784101024.310300495] [map_io]: Loading yaml file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[map_server-4] [ERROR] [1784101024.310473615] [map_io]: Failed processing YAML file /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml at position (-1:-1) for reason: bad file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[map_server-4] [ERROR] [1784101024.310543286] [map_server]: Caught exception in callback for transition 10
+[map_server-4] [ERROR] [1784101024.310565903] [map_server]: Original error: Failed to load map yaml file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[map_server-4] [WARN] [1784101024.310598339] [map_server]: Callback returned ERROR during the transition: configure
+[map_server-4] [FATAL] [1784101024.310618161] [map_server]: Lifecycle node map_server does not have error state implemented
+[controller_server-6] [INFO] [1784101024.313147692] [local_costmap.local_costmap]: 
+[controller_server-6] 	local_costmap lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1784101024.313822763] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-11] [ERROR] [1784101024.322534707] [lifecycle_manager_navigation]: Failed to change state for node: map_server
+[lifecycle_manager-11] [ERROR] [1784101024.322595289] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[costmap_to_grid-12] [INFO] [1784101024.986403688] [costmap_to_grid]: Publishing /global_costmap_grid and /local_costmap_grid for RViz

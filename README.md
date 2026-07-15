@@ -1,6 +1,6 @@
-# 2026 Gsing 二队 — ROS2 Jazzy 导航 + 视觉自动任务系统
+# 2026 Gsing 二队 — ROS2 Humble 导航 + 视觉自动任务系统
 
-基于 **ROS2 Jazzy** 的机器人导航与视觉自动任务系统，集成 **FAST-LIO2 SLAM**（建图与定位）、**Nav2**（路径规划与运动控制）、**YOLO 视觉**（物资识别 + 数学题识别）和 **STM32 串口通信**（底盘 + 机械臂），用于竞赛任务场景。
+基于 **ROS2 Humble** 的机器人导航与视觉自动任务系统，集成 **FAST-LIO2 SLAM**（建图与定位）、**Nav2**（路径规划与运动控制）、**YOLO 视觉**（物资识别 + 数学题识别）和 **STM32 串口通信**（底盘 + 机械臂），用于竞赛任务场景。
 
 ---
 
@@ -140,9 +140,9 @@
 
 | 组件 | 版本 |
 |------|------|
-| OS | Ubuntu 24.04 |
-| ROS2 | Jazzy |
-| Python | 3.12 |
+| OS | Ubuntu 22.04 |
+| ROS2 | Humble |
+| Python | 3.10 |
 | 激光雷达 | Unitree LiDAR (L2) |
 | 底盘 | STM32 串口控制 |
 | 建图 | FAST-LIO2 |
@@ -176,7 +176,7 @@ sudo ip addr add 192.168.1.2/24 dev enp129s0
 
 ```bash
 # 安装系统依赖（首次）
-sudo apt install -y ros-jazzy-nav2-bringup ros-jazzy-nav2-msgs
+sudo apt install -y ros-humble-nav2-bringup ros-humble-nav2-msgs
 pip install tf_transformations
 
 # 克隆 pcd2pgm（首次）
@@ -189,7 +189,7 @@ find ../nav2_ws1/src/dog_nav2_bringup/scripts -name "*.py" -exec chmod +x {} +
 
 # 编译 FAST-LIO2 工作空间
 cd fastlio2_v2
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 colcon build --symlink-install --packages-select unitree_lidar_ros2 fast_lio pcd2pgm fast_lio_localization
 
 # 修复 am ent_python 包的索引
@@ -200,7 +200,7 @@ source install/setup.bash
 # 编译 Nav2 工作空间
 cd ../nav2_ws1
 rm -rf build/ install/
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 colcon build --symlink-install
 source install/setup.bash
 ```

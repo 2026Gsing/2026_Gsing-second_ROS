@@ -1,0 +1,15 @@
+[INFO] [1784101019.053438994] [map_server]: 
+	map_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101019.053620509] [map_server]: Creating
+[INFO] [1784101024.310202968] [map_server]: Configuring
+[INFO] [1784101024.310300495] [map_io]: Loading yaml file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[ERROR] [1784101024.310473615] [map_io]: Failed processing YAML file /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml at position (-1:-1) for reason: bad file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[ERROR] [1784101024.310543286] [map_server]: Caught exception in callback for transition 10
+[ERROR] [1784101024.310565903] [map_server]: Original error: Failed to load map yaml file: /home/gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[WARN] [1784101024.310598339] [map_server]: Callback returned ERROR during the transition: configure
+[FATAL] [1784101024.310618161] [map_server]: Lifecycle node map_server does not have error state implemented
+[INFO] [1784101067.912059639] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101067.912265186] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[INFO] [1784101067.912349469] [map_server]: Destroying bond (map_server) to lifecycle manager.

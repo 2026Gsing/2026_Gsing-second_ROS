@@ -1,0 +1,44 @@
+[INFO] [1784112831.249331450] [global_localization]: Waiting for global map...
+[INFO] [1784112831.250113766] [global_localization]: Loading map: /home/gsing/2026_Gsing-second_ROS/map/map.pcd, voxel_size=0.01
+[INFO] [1784112831.326766363] [global_localization]: Map loaded: raw=810074 pts
+[INFO] [1784112831.961141830] [global_localization]: Map downsampled: 347150 pts
+[INFO] [1784112831.962095565] [global_localization]: Global map received.
+[INFO] [1784112832.465077953] [global_localization]: Waiting for initial pose...
+[INFO] [1784112832.964872457] [global_localization]: Waiting for initial pose...
+[INFO] [1784112833.465039197] [global_localization]: Waiting for initial pose...
+[INFO] [1784112833.965564113] [global_localization]: Waiting for initial pose...
+[INFO] [1784112834.465124105] [global_localization]: Waiting for initial pose...
+[INFO] [1784112834.965750088] [global_localization]: Waiting for initial pose...
+[INFO] [1784112835.470003078] [global_localization]: Waiting for initial pose...
+[INFO] [1784112835.968373895] [global_localization]: Waiting for initial pose...
+[INFO] [1784112836.466843897] [global_localization]: Waiting for initial pose...
+[INFO] [1784112836.984090624] [global_localization]: Waiting for initial pose...
+[INFO] [1784112836.984799576] [global_localization]: _auto_init_if_needed: initialized=False cur_scan=✓
+[WARN] [1784112836.990195314] [global_localization]: No /initialpose received within 5s — auto-initializing at (0, 0) facing X+
+[INFO] [1784112837.156634707] [global_localization]: ICP input: scan=46506 pts, map_FOV=347150 pts
+[INFO] [1784112840.932813184] [global_localization]: ICP fitness: coarse=0.982, fine=0.989, threshold=0.85
+[INFO] [1784112840.934108923] [global_localization]: map→odom: x=0.240 y=0.007 z=-0.094
+[INFO] [1784112841.157999195] [global_localization]: ICP input: scan=4499 pts, map_FOV=347150 pts
+[INFO] [1784112842.168720114] [global_localization]: ICP fitness: coarse=0.995, fine=0.996, threshold=0.85
+[INFO] [1784112842.169350076] [global_localization]: map→odom: x=0.307 y=0.035 z=-0.137
+[INFO] [1784112842.183444510] [global_localization]: Initial pose received, converted map→base_link → map→odom
+[INFO] [1784112842.300328475] [global_localization]: ICP input: scan=4658 pts, map_FOV=347150 pts
+[INFO] [1784112843.429596358] [global_localization]: ICP fitness: coarse=0.985, fine=0.993, threshold=0.85
+[INFO] [1784112843.430225136] [global_localization]: map→odom: x=0.042 y=0.028 z=-0.104
+[INFO] [1784112843.657175143] [global_localization]: ICP input: scan=4658 pts, map_FOV=347150 pts
+[INFO] [1784112844.559116333] [global_localization]: ICP fitness: coarse=0.985, fine=0.993, threshold=0.85
+[INFO] [1784112844.560118277] [global_localization]: map→odom: x=0.133 y=0.037 z=-0.101
+[INFO] [1784112844.563658254] [global_localization]: _auto_init_if_needed: initialized=True cur_scan=✓
+[INFO] [1784112844.650049350] [global_localization]: ICP input: scan=4771 pts, map_FOV=347150 pts
+[INFO] [1784112845.646177646] [global_localization]: ICP fitness: coarse=0.993, fine=0.992, threshold=0.85
+[INFO] [1784112845.646851511] [global_localization]: map→odom: x=0.262 y=0.028 z=-0.081
+[INFO] [1784112845.773083490] [global_localization]: ICP input: scan=4735 pts, map_FOV=347150 pts
+[INFO] [1784112847.018939871] [global_localization]: ICP fitness: coarse=0.991, fine=0.989, threshold=0.85
+[INFO] [1784112847.019812708] [global_localization]: map→odom: x=0.412 y=0.026 z=-0.097
+[INFO] [1784112847.176652363] [global_localization]: ICP input: scan=4540 pts, map_FOV=347150 pts
+[INFO] [1784112848.336177985] [global_localization]: ICP fitness: coarse=0.996, fine=0.989, threshold=0.85
+[INFO] [1784112848.339750861] [global_localization]: map→odom: x=0.493 y=-0.038 z=-0.119
+[INFO] [1784112848.473663494] [global_localization]: ICP input: scan=4625 pts, map_FOV=347150 pts
+[INFO] [1784112849.169891015] [global_localization]: ICP fitness: coarse=1.000, fine=0.983, threshold=0.85
+[INFO] [1784112849.170704958] [global_localization]: map→odom: x=0.549 y=-0.152 z=-0.088
+[INFO] [1784112849.265

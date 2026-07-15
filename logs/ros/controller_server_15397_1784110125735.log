@@ -1,0 +1,43 @@
+[INFO] [1784110125.975316363] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784110126.012287618] [controller_server]: Creating controller server
+[INFO] [1784110126.461018952] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784110126.504598206] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784110126.992244607] [controller_server]: Configuring controller interface
+[INFO] [1784110126.992583532] [controller_server]: getting goal checker plugins..
+[INFO] [1784110126.992789804] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784110126.992858487] [local_costmap.local_costmap]: Configuring
+[INFO] [1784110127.015523181] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784110127.037872866] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784110127.041759737] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784110127.097423911] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784110127.101499657] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784110127.102070596] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784110127.104660688] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784110127.121761146] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784110128.273436984] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 125 X 89 at 0.050000 m/pix
+[INFO] [1784110128.394074504] [controller_server]: Activating
+[INFO] [1784110128.394160732] [local_costmap.local_costmap]: Activating
+[INFO] [1784110128.394188545] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784110128.394377758] [local_costmap.local_costmap]: start
+[INFO] [1784110128.444553098] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784110128.444640826] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784110143.990301484] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1784110143.990624038] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[INFO] [1784110145.041069488] [controller_server]: Passing new path to controller.
+[INFO] [1784110146.091219968] [controller_server]: Passing new path to controller.
+[INFO] [1784110147.090828812] [controller_server]: Passing new path to controller.
+[INFO] [1784110148.140827862] [controller_server]: Passing new path to controller.
+[INFO] [1784110149.142542753] [controller_server]: Passing new path to controller.
+[INFO] [1784110149.305593125] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784110149.305727518] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[INFO] [1784110149.305833295] [controller_server]: Deactivating
+[WARN] [1784110149.305867846] [controller_server]: [follow_path] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[WARN] [1784110149.314641915] [controller_server]: [follow_path] [ActionServer] Stopping the thread per request.
+[WARN] [1784110149.314714066] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[INFO] [1784110149.358880353] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controlle

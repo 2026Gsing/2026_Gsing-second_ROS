@@ -1,0 +1,13 @@
+[INFO] [1784101024.136752396] [planner_server]: 
+	planner_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101024.170531073] [planner_server]: Creating
+[INFO] [1784101024.225060452] [global_costmap.global_costmap]: 
+	global_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101024.229108580] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [1784101067.961546419] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101067.961837109] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[INFO] [1784101067.961933988] [planner_server]: Destroying bond (planner_server) to lifecycle manager.

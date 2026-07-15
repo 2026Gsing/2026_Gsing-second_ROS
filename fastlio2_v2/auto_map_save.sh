@@ -3,7 +3,19 @@
 # 用法：bash auto_map_save.sh
 # 每次保存为 ../map/PCD1.pcd, PCD2.pcd, ... 顺序编号，不覆盖已有文件
 
-source /opt/ros/jazzy/setup.bash
+# 自动检测可用 ROS2 发行版
+_ROS_SETUP=""
+for _d in jazzy humble; do
+    if [ -f "/opt/ros/$_d/setup.bash" ]; then
+        _ROS_SETUP="/opt/ros/$_d/setup.bash"
+        break
+    fi
+done
+if [ -z "$_ROS_SETUP" ]; then
+    echo "❌ 未检测到 ROS2 (尝试过 jazzy, humble)" >&2
+    exit 1
+fi
+source "$_ROS_SETUP"
 source install/setup.bash
 
 # 自动编号：找到下一个可用的 PCD 编号

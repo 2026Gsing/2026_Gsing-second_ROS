@@ -1,0 +1,3 @@
+[INFO] [1784101017.328561143] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784101017.332399570] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784101025.344610631] [box_pick_node]: ✅ Published /initialpose: (0,0,0) facing X+ (inline)

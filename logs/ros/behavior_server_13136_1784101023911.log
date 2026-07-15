@@ -1,0 +1,7 @@
+[INFO] [1784101024.249713220] [behavior_server]: 
+	behavior_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101067.913839627] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101067.913991507] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[INFO] [1784101067.926877094] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.

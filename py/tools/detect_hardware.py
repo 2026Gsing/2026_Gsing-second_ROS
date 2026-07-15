@@ -320,10 +320,14 @@ def check_ros_env():
     print(_bold("  ROS2 环境检查"))
     print(_bold("═" * 50))
 
-    if os.path.isdir("/opt/ros/jazzy"):
-        print(f"  {_green('✓')} ROS2 Jazzy 已安装")
-    else:
-        print(f"  {_red('✗')} ROS2 Jazzy 未安装在 /opt/ros/jazzy")
+    _detected_ros = None
+    for _d in ("jazzy", "humble"):
+        if os.path.isdir(f"/opt/ros/{_d}"):
+            _detected_ros = _d
+            print(f"  {_green('✓')} ROS2 {_d.title()} 已安装")
+            break
+    if _detected_ros is None:
+        print(f"  {_red('✗')} ROS2 未安装（尝试过 jazzy, humble）")
 
     rmw = os.environ.get("RMW_IMPLEMENTATION", "")
     if rmw == "rmw_cyclonedds_cpp":
@@ -331,11 +335,15 @@ def check_ros_env():
     else:
         print(f"  {_yellow('!')} RMW_IMPLEMENTATION={rmw or '(未设置)'}  ← 应为 rmw_cyclonedds_cpp")
 
-    rc, out, _ = _run("dpkg -l ros-jazzy-rmw-cyclonedds-cpp 2>/dev/null | grep -c '^ii'")
-    if out.strip() == "1":
-        print(f"  {_green('✓')} ros-jazzy-rmw-cyclonedds-cpp 已安装")
-    else:
-        print(f"  {_red('✗')} ros-jazzy-rmw-cyclonedds-cpp 未安装")
+    _cyclone_ok = False
+    for _d in ("jazzy", "humble"):
+        rc, out, _ = _run(f"dpkg -l ros-{_d}-rmw-cyclonedds-cpp 2>/dev/null | grep -c '^ii'")
+        if out.strip() == "1":
+            print(f"  {_green('✓')} ros-{_d}-rmw-cyclonedds-cpp 已安装")
+            _cyclone_ok = True
+            break
+    if not _cyclone_ok:
+        print(f"  {_red('✗')} ros-*-rmw-cyclonedds-cpp 未安装")
 
     HERE = Path(__file__).resolve().parent.parent
     for ws in ["fastlio2_v2", "nav2_ws1"]:

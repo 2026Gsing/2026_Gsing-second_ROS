@@ -1,0 +1,45 @@
+[INFO] [1784110433.905096913] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784110433.961715831] [controller_server]: Creating controller server
+[INFO] [1784110434.100676527] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784110434.104067919] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784110434.130995250] [controller_server]: Configuring controller interface
+[INFO] [1784110434.131218940] [controller_server]: getting goal checker plugins..
+[INFO] [1784110434.131407267] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784110434.131463587] [local_costmap.local_costmap]: Configuring
+[INFO] [1784110434.155255778] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784110434.179836149] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784110434.188562626] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784110434.251042540] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784110434.256721852] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784110434.262772314] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784110434.263788244] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784110434.316319333] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784110435.294765010] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 125 X 89 at 0.050000 m/pix
+[INFO] [1784110435.408433540] [controller_server]: Activating
+[INFO] [1784110435.408517197] [local_costmap.local_costmap]: Activating
+[INFO] [1784110435.408546842] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784110435.408749628] [local_costmap.local_costmap]: start
+[INFO] [1784110435.461190386] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784110435.461292146] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784110457.864721167] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1784110457.864861057] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[INFO] [1784110458.915175186] [controller_server]: Passing new path to controller.
+[INFO] [1784110459.915077208] [controller_server]: Passing new path to controller.
+[INFO] [1784110460.921710423] [controller_server]: Passing new path to controller.
+[INFO] [1784110461.965399091] [controller_server]: Passing new path to controller.
+[INFO] [1784110462.964994596] [controller_server]: Passing new path to controller.
+[INFO] [1784110464.015115252] [controller_server]: Passing new path to controller.
+[INFO] [1784110465.015028237] [controller_server]: Passing new path to controller.
+[INFO] [1784110466.065009021] [controller_server]: Passing new path to controller.
+[INFO] [1784110467.065014833] [controller_server]: Passing new path to controller.
+[INFO] [1784110467.309334217] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784110467.309456253] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[INFO] [1784110467.309556703] [controller_server]: Deactivating
+[WARN] [1784110467.309588104] [controller_server]: [follow_path] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[WARN

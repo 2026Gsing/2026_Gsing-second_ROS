@@ -11,7 +11,16 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 unset PYTHONPATH
-source /opt/ros/jazzy/setup.bash
+# 自动检测可用 ROS2 发行版
+_DETECTED_ROS=""
+for _d in jazzy humble; do
+    if [ -f "/opt/ros/$_d/setup.bash" ]; then
+        _DETECTED_ROS="$_d"
+        break
+    fi
+done
+[ -n "$_DETECTED_ROS" ] || { echo "❌ 未检测到 ROS2" >&2; exit 1; }
+source "/opt/ros/$_DETECTED_ROS/setup.bash"
 
 # 步骤1：启动地图服务器（后台运行）
 echo "启动地图服务器..."

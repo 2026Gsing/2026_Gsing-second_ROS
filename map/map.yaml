@@ -1,4 +1,4 @@
-image: PCD13.pgm
+image: map.pgm
 mode: trinary
 resolution: 0.050
 origin: [-0.131, -2.121, 0]

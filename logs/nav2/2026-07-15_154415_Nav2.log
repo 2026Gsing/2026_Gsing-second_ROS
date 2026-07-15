@@ -1,0 +1,99 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-44-17-219465-gsing-KPADLU4-17685
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [17784]
+[INFO] [static_transform_publisher-2]: process started with pid [17786]
+[INFO] [static_transform_publisher-3]: process started with pid [17788]
+[INFO] [map_server-4]: process started with pid [17790]
+[INFO] [rviz2-5]: process started with pid [17792]
+[static_transform_publisher-2] [INFO] [1784101457.507548155] [static_tf_body_baselink]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'body'
+[static_transform_publisher-1] [INFO] [1784101457.520358240] [static_tf_caminit_odom]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'camera_init' to 'odom'
+[static_transform_publisher-3] [INFO] [1784101457.536081470] [static_tf_baselink_lidar]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'base_link' to 'unilidar_lidar'
+[rviz2-5] Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+[map_server-4] [INFO] [1784101457.618801288] [map_server]: 
+[map_server-4] 	map_server lifecycle node launched. 
+[map_server-4] 	Waiting on external lifecycle transitions to activate
+[map_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-4] [INFO] [1784101457.619000431] [map_server]: Creating
+[rviz2-5] [INFO] [1784101458.372135394] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-5] [INFO] [1784101458.372902777] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-5] [INFO] [1784101458.417367425] [rviz2]: Stereo is NOT SUPPORTED
+[INFO] [controller_server-6]: process started with pid [17955]
+[INFO] [planner_server-7]: process started with pid [17957]
+[INFO] [behavior_server-8]: process started with pid [17959]
+[INFO] [bt_navigator-9]: process started with pid [17961]
+[INFO] [waypoint_follower-10]: process started with pid [17963]
+[INFO] [lifecycle_manager-11]: process started with pid [17965]
+[INFO] [costmap_to_grid-12]: process started with pid [17967]
+[controller_server-6] [INFO] [1784101462.558281736] [controller_server]: 
+[controller_server-6] 	controller_server lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1784101462.566755836] [controller_server]: Creating controller server
+[planner_server-7] [INFO] [1784101462.625811789] [planner_server]: 
+[planner_server-7] 	planner_server lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-7] [INFO] [1784101462.651754046] [planner_server]: Creating
+[controller_server-6] [INFO] [1784101462.668270038] [local_costmap.local_costmap]: 
+[controller_server-6] 	local_costmap lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1784101462.671647743] [local_costmap.local_costmap]: Creating Costmap
+[bt_navigator-9] [INFO] [1784101462.733332017] [bt_navigator]: 
+[bt_navigator-9] 	bt_navigator lifecycle node launched. 
+[bt_navigator-9] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-9] [INFO] [1784101462.733541336] [bt_navigator]: Creating
+[lifecycle_manager-11] [INFO] [1784101462.733371813] [lifecycle_manager_navigation]: Creating
+[behavior_server-8] [INFO] [1784101462.760224929] [behavior_server]: 
+[behavior_server-8] 	behavior_server lifecycle node launched. 
+[behavior_server-8] 	Waiting on external lifecycle transitions to activate
+[behavior_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-11] [INFO] [1784101462.768265184] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-7] [INFO] [1784101462.844627559] [global_costmap.global_costmap]: 
+[planner_server-7] 	global_costmap lifecycle node launched. 
+[planner_server-7] 	Waiting on external lifecycle transitions to activate
+[planner_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-7] [INFO] [1784101462.845502847] [global_costmap.global_costmap]: Creating Costmap
+[waypoint_follower-10] [INFO] [1784101463.057302275] [waypoint_follower]: 
+[waypoint_follower-10] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-10] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-10] [INFO] [1784101463.071846952] [waypoint_follower]: Creating
+[lifecycle_manager-11] [INFO] [1784101463.095371573] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-11] [INFO] [1784101463.095467392] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[map_server-4] [INFO] [1784101463.099952529] [map_server]: Configuring
+[map_server-4] [INFO] [1784101463.100109706] [map_io]: Loading yaml file: /home/gsing/2026_Gsing-second_ROS/map/map.yaml
+[map_server-4] [INFO] [1784101463.100900234] [map_io]: resolution: 0.05
+[map_server-4] [INFO] [1784101463.100922827] [map_io]: origin[0]: -0.131
+[map_server-4] [INFO] [1784101463.100933452] [map_io]: origin[1]: -2.121
+[map_server-4] [INFO] [1784101463.101091047] [map_io]: origin[2]: 0
+[map_server-4] [INFO] [1784101463.101342979] [map_io]: free_thresh: 0.196
+[map_server-4] [INFO] [1784101463.101355443] [map_io]: occupied_thresh: 0.65
+[map_server-4] [INFO] [1784101463.101367167] [map_io]: mode: trinary
+[map_server-4] [INFO] [1784101463.101867665] [map_io]: negate: 0
+[map_server-4] [INFO] [1784101463.102941758] [map_io]: Loading image_file: /home/gsing/2026_Gsing-second_ROS/map/map.pgm
+[map_server-4] [INFO] [1784101463.107421562] [map_io]: Read map /home/gsing/2026_Gsing-second_ROS/map/map.pgm: 125 X 89 map @ 0.05 m/cell
+[lifecycle_manager-11] [INFO] [1784101463.153595270] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-6] [INFO] [1784101463.157660193] [controller_server]: Configuring controller interface
+[controller_server-6] [INFO] [1784101463.161610624] [controller_server]: getting goal checker plugins..
+[controller_server-6] [INFO] [1784101463.161833059] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-6] [INFO] [1784101463.161899708] [local_costmap.local_costmap]: Configuring
+[controller_server-6] [INFO] [1784101463.189330276] [local_costmap.local_costmap]: Using plugin "static_layer"
+[controller_server-6] [ERROR] [1784101463.189595331] [local_costmap.local_costmap]: Caught exception in callback for transition 10
+[controller_server-6] [ERROR] [1784101463.189631226] [local_costmap.local_costmap]: Original error: According to the loaded plugin descriptions the class nav2_costmap_2d/StaticLayer with base class type nav2_costmap_2d::Layer does not exist. Declared types are  nav2_costmap_2d::BinaryFilter nav2_costmap_2d::DenoiseLayer nav2_costmap_2d::InflationLayer nav2_costmap_2d::KeepoutFilter nav2_costmap_2d::ObstacleLayer nav2_costmap_2d::OrderLayer nav2_costmap_2d::RangeSensorLayer nav2_costmap_2d::SpeedFilter nav2_costmap_2d::StaticLayer nav2_costmap_2d::VoxelLayer
+[controller_server-6] [WARN] [1784101463.189683471] [local_costmap.local_costmap]: Callback returned ERROR during the transition: configure
+[controller_server-6] [FATAL] [1784101463.189708049] [local_costmap.local_costmap]: Lifecycle node local_costmap does not have error state implemented
+[controller_server-6] [FATAL] [1784101463.189915904] [controller_server]: Failed to create progress_checker. Exception: According to the loaded plugin descriptions the class nav2_controller/SimpleProgressChecker with base class type nav2_core::ProgressChecker does not exist. Declared types are  nav2_controller::PoseProgressChecker nav2_controller::SimpleProgressChecker
+[lifecycle_manager-11] [ERROR] [1784101463.195286668] [lifecycle_manager_navigation]: Failed to change state for node: controller_server
+[lifecycle_manager-11] [ERROR] [1784101463.196972741] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[costmap_to_grid-12] [INFO] [1784101463.991742345] [costmap_to_grid]: Publishing /global_costmap_grid and /local_costmap_grid for RViz

@@ -1,0 +1,48 @@
+[INFO] [launch]: All log files can be found below /home/gsing/2026_Gsing-second_ROS/logs/ros/2026-07-15-15-36-58-424266-gsing-KPADLU4-12849
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [fastlio_mapping-1]: process started with pid [12939]
+[INFO] [env-2]: process started with pid [12941]
+[INFO] [env-3]: process started with pid [12943]
+[INFO] [pcd_to_pointcloud-4]: process started with pid [12945]
+[pcd_to_pointcloud-4] [pcl::PCDReader::read] Could not find file '/home/gsing/2026_Gsing-second_ROS/map/PCD33.pcd'.
+[pcd_to_pointcloud-4] [ERROR] [1784101018.697998978] [map_publisher]: failed to open PCD file
+[pcd_to_pointcloud-4] terminate called after throwing an instance of 'std::runtime_error'
+[pcd_to_pointcloud-4]   what():  could not open pcd file
+[fastlio_mapping-1] [INFO] [1784101018.740155616] [fastlio_mapping]: p_pre->lidar_type 5
+[fastlio_mapping-1] Multi thread started 
+[fastlio_mapping-1] ~~~~/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/src/unilidar_fastlio_ros2-ros2/ file opened
+[fastlio_mapping-1] [INFO] [1784101018.762110437] [fastlio_mapping]: Node init finished.
+[fastlio_mapping-1] IMU Initial Done
+[fastlio_mapping-1] [WARN] [1784101018.860164964] [fastlio_mapping]: No point, skip this scan!
+[fastlio_mapping-1] 
+[fastlio_mapping-1] [INFO] [1784101018.942321762] [fastlio_mapping]: Initialize the map kdtree
+[env-2] [INFO] [1784101019.677150699] [global_localization]: Waiting for global map...
+[env-2] [INFO] [1784101019.679319716] [global_localization]: Loading map: /home/gsing/2026_Gsing-second_ROS/map/PCD33.pcd, voxel_size=0.01
+[env-2] Traceback (most recent call last):
+[env-2]   File "/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization", line 33, in <module>
+[env-2]     sys.exit(load_entry_point('fast-lio-localization', 'console_scripts', 'global_localization')())
+[env-2]   File "/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 645, in main
+[env-2]     node = FastLIOLocalization()
+[env-2]   File "/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 287, in __init__
+[env-2]     self.initialize_global_map()
+[env-2]   File "/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 554, in initialize_global_map
+[env-2]     pcd = read_pcd(path)
+[env-2]   File "/home/gsing/2026_Gsing-second_ROS/fastlio2_v2/build/fast_lio_localization/fast_lio_localization/global_localization.py", line 60, in read_pcd
+[env-2]     with open(path, "rb") as f:
+[env-2] FileNotFoundError: [Errno 2] No such file or directory: '/home/gsing/2026_Gsing-second_ROS/map/PCD33.pcd'
+[ERROR] [pcd_to_pointcloud-4]: process has died [pid 12945, exit code -6, cmd '/opt/ros/humble/lib/pcl_ros/pcd_to_pointcloud --ros-args -r __node:=map_publisher --params-file /tmp/launch_params_hrify8g8 -r cloud_pcd:=/cloud_pcd'].
+[ERROR] [env-2]: process has died [pid 12941, exit code 1, cmd 'env PATH=/usr/bin:/bin:/usr/sbin:/sbin /home/gsing/2026_Gsing-second_ROS/fastlio2_v2/install/fast_lio_localization/lib/fast_lio_localization/global_localization --ros-args -r __node:=global_localization -p map_voxel_size:=0.01
+...
+ -p scan_voxel_size:=0.02
+...
+ -p freq_localization:=2.0
+...
+ -p freq_global_map:=0.25
+...
+ -p localization_threshold:=0.85
+...
+ -p fov:=6.28319
+...
+ -p fov_far:=300
+...
+ --params-file /tmp/launch_params_v8f6i_5u --params-file /tmp/launch_params_rkgtd1hg'].

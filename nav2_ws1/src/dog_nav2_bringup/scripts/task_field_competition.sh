@@ -15,12 +15,22 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAV2_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+# 自动检测可用 ROS2 发行版
+_DETECTED_ROS2=""
+for _d in jazzy humble; do
+    if [ -f "/opt/ros/$_d/setup.bash" ]; then
+        _DETECTED_ROS2="$_d"
+        break
+    fi
+done
+[ -n "$_DETECTED_ROS2" ] || { echo "❌ 未检测到 ROS2" >&2; exit 1; }
+
 # ====================== 第一步：环境准备 ======================
 echo -e "\033[32m【1/7】环境准备中...\033[0m"
 # 安装必备依赖
 if ! command -v convert &> /dev/null; then
     echo -e "\033[33m⚠️  未安装imagemagick，开始安装...\033[0m"
-    sudo apt update && sudo apt install -y imagemagick ros-jazzy-nav2-map-server ros-jazzy-nav2-bringup ros-jazzy-rviz2 > /dev/null 2>&1
+    sudo apt update && sudo apt install -y imagemagick ros-${_DETECTED_ROS2}-nav2-map-server ros-${_DETECTED_ROS2}-nav2-bringup ros-${_DETECTED_ROS2}-rviz2 > /dev/null 2>&1
 fi
 
 # 终止旧进程
@@ -205,7 +215,7 @@ EOF_CONFIG
 # ====================== 第六步：启动地图服务器 ======================
 echo -e "\033[32m【5/7】启动地图服务器...\033[0m"
 unset PYTHONPATH
-source /opt/ros/jazzy/setup.bash
+source "/opt/ros/$_DETECTED_ROS2/setup.bash"
 
 # 启动地图服务器
 ros2 run nav2_map_server map_server --ros-args \

@@ -1,0 +1,46 @@
+[INFO] [1784112835.407167699] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784112835.568068523] [controller_server]: Creating controller server
+[INFO] [1784112835.630502173] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784112835.642849603] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784112835.814260559] [controller_server]: Configuring controller interface
+[INFO] [1784112835.814635076] [controller_server]: getting goal checker plugins..
+[INFO] [1784112835.815556035] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784112835.815656812] [local_costmap.local_costmap]: Configuring
+[INFO] [1784112835.837166519] [local_costmap.local_costmap]: Using plugin "static_layer"
+[INFO] [1784112835.866081006] [local_costmap.local_costmap]: Subscribing to the map topic (/map) with transient local durability
+[INFO] [1784112835.869981817] [local_costmap.local_costmap]: Initialized plugin "static_layer"
+[INFO] [1784112835.916538833] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[INFO] [1784112835.922917215] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[INFO] [1784112835.931406798] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[INFO] [1784112835.943632798] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784112835.969403363] [controller_server]: Controller Server has FollowPath  controllers available.
+[INFO] [1784112836.777562831] [local_costmap.local_costmap]: StaticLayer: Resizing static layer to 125 X 89 at 0.050000 m/pix
+[INFO] [1784112836.901446624] [controller_server]: Activating
+[INFO] [1784112836.901508699] [local_costmap.local_costmap]: Activating
+[INFO] [1784112836.901531438] [local_costmap.local_costmap]: Checking transform
+[INFO] [1784112836.901834890] [local_costmap.local_costmap]: start
+[INFO] [1784112836.952957119] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[INFO] [1784112836.953022983] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[INFO] [1784112838.864536748] [controller_server]: Received a goal, begin computing control effort.
+[WARN] [1784112838.864620164] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[INFO] [1784112839.914789028] [controller_server]: Passing new path to controller.
+[INFO] [1784112840.914719716] [controller_server]: Passing new path to controller.
+[INFO] [1784112841.964699156] [controller_server]: Passing new path to controller.
+[INFO] [1784112842.964742382] [controller_server]: Passing new path to controller.
+[INFO] [1784112844.014843841] [controller_server]: Passing new path to controller.
+[INFO] [1784112845.014735131] [controller_server]: Passing new path to controller.
+[INFO] [1784112846.014942384] [controller_server]: Passing new path to controller.
+[INFO] [1784112847.064788094] [controller_server]: Passing new path to controller.
+[INFO] [1784112848.065086152] [controller_server]: Passing new path to controller.
+[INFO] [1784112849.114735600] [controller_server]: Passing new path to controller.
+[INFO] [1784112850.165211412] [controller_server]: Passing new path to controller.
+[INFO] [1784112851.164732995] [controller_server]: Passing new path to controller.
+[INFO] [1784112852.214688611] [controller_server]: Passing new path to controller.
+[INFO] [1784112853.457558702] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[INFO] [17

@@ -1,0 +1,8 @@
+[INFO] [1784101024.202897524] [lifecycle_manager_navigation]: Creating
+[INFO] [1784101024.245872583] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [1784101024.309767950] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[INFO] [1784101024.309843948] [lifecycle_manager_navigation]: [34m[1mConfiguring map_server[0m[0m
+[ERROR] [1784101024.322534707] [lifecycle_manager_navigation]: Failed to change state for node: map_server
+[ERROR] [1784101024.322595289] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[INFO] [1784101067.904382377] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101067.904487569] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)

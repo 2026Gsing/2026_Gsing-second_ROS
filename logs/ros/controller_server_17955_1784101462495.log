@@ -1,0 +1,23 @@
+[INFO] [1784101462.558281736] [controller_server]: 
+	controller_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101462.566755836] [controller_server]: Creating controller server
+[INFO] [1784101462.668270038] [local_costmap.local_costmap]: 
+	local_costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784101462.671647743] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [1784101463.157660193] [controller_server]: Configuring controller interface
+[INFO] [1784101463.161610624] [controller_server]: getting goal checker plugins..
+[INFO] [1784101463.161833059] [controller_server]: Controller frequency set to 20.0000Hz
+[INFO] [1784101463.161899708] [local_costmap.local_costmap]: Configuring
+[INFO] [1784101463.189330276] [local_costmap.local_costmap]: Using plugin "static_layer"
+[ERROR] [1784101463.189595331] [local_costmap.local_costmap]: Caught exception in callback for transition 10
+[ERROR] [1784101463.189631226] [local_costmap.local_costmap]: Original error: According to the loaded plugin descriptions the class nav2_costmap_2d/StaticLayer with base class type nav2_costmap_2d::Layer does not exist. Declared types are  nav2_costmap_2d::BinaryFilter nav2_costmap_2d::DenoiseLayer nav2_costmap_2d::InflationLayer nav2_costmap_2d::KeepoutFilter nav2_costmap_2d::ObstacleLayer nav2_costmap_2d::OrderLayer nav2_costmap_2d::RangeSensorLayer nav2_costmap_2d::SpeedFilter nav2_costmap_2d::StaticLayer nav2_costmap_2d::VoxelLayer
+[WARN] [1784101463.189683471] [local_costmap.local_costmap]: Callback returned ERROR during the transition: configure
+[FATAL] [1784101463.189708049] [local_costmap.local_costmap]: Lifecycle node local_costmap does not have error state implemented
+[FATAL] [1784101463.189915904] [controller_server]: Failed to create progress_checker. Exception: According to the loaded plugin descriptions the class nav2_controller/SimpleProgressChecker with base class type nav2_core::ProgressChecker does not exist. Declared types are  nav2_controller::PoseProgressChecker nav2_controller::SimpleProgressChecker
+[INFO] [1784101523.254873727] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784101523.254963613] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[INFO] [1784101523.255045784] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
