@@ -1,0 +1,10 @@
+[INFO] [1784087103.049441986] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784087103.059652742] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784087111.075303436] [box_pick_node]: ✅ Published /initialpose: (0,0,0) facing X+ (inline)
+[INFO] [1784087123.172916027] [box_pick_node]: [NAV] 发送目标: (1.00, 0.00, 0.00)
+[INFO] [1784087123.211451710] [box_pick_node]: [NAV] 目标已接受
+[INFO] [1784087125.584710434] [box_pick_node]: [NAV] ✅ 导航成功！
+[INFO] [1784087148.544232758] [box_pick_node]: 状态: IDLE  busy=否  无立方体数据
+[INFO] [1784087177.122539983] [box_pick_node]: [NAV] 目标已接受
+[INFO] [1784087177.160470146] [box_pick_node]: [NAV] 发送目标: (1.00, 0.00, 0.00)
+[INFO] [1784087177.180131493] [box_pick_node]: [NAV] ✅ 导航成功！

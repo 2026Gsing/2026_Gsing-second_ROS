@@ -1,0 +1,2 @@
+[INFO] [1784086995.734058419] [map_publisher]: Publishing data with 532258 points (x y z normal_x normal_y normal_z intensity curvature) on topic /cloud_pcd in frame map.
+[INFO] [1784087076.402437973] [rclcpp]: signal_handler(SIGINT/SIGTERM)

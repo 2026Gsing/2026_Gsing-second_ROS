@@ -1,0 +1,16 @@
+[INFO] [1784087115.879598945] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784087115.891594896] [bt_navigator]: Creating
+[INFO] [1784087117.991787660] [bt_navigator]: Configuring
+[INFO] [1784087118.116634256] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784087118.228789232] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784087119.079039090] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784087120.258124598] [bt_navigator]: Activating
+[INFO] [1784087120.813679128] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[INFO] [1784087123.162089212] [bt_navigator]: Begin navigating from current location (0.44, -0.05) to (1.00, 0.00)
+[INFO] [1784087125.577889515] [bt_navigator]: Goal succeeded
+[INFO] [1784087177.116749758] [bt_navigator]: Begin navigating from current location (0.93, 0.00) to (1.00, 0.00)
+[INFO] [1784087177.147651263] [bt_navigator]: Goal succeeded

@@ -1,0 +1,26 @@
+[INFO] [1784086987.216972680] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784086987.231127332] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784086995.255399784] [box_pick_node]: ✅ Published /initialpose: (0,0,0) facing X+ (inline)
+[INFO] [1784087015.615922607] [box_pick_node]: [NAV] 发送目标: (0.80, 0.00, 0.00)
+[INFO] [1784087015.643130365] [box_pick_node]: [NAV] 目标已接受
+[INFO] [1784087018.167346146] [box_pick_node]: [NAV] ✅ 导航成功！
+[INFO] [1784087027.614555343] [box_pick_node]: [自动到达] 到达目标 (0.80, 0.00) 当前位置 (0.691, 0.035) 距离=0.114m
+[INFO] [1784087027.617099753] [box_pick_node]: ============================================================
+[INFO] [1784087027.621247357] [box_pick_node]: [开始] 状态: DETECTING → DETECTING，启动 cube_detector.py
+[INFO] [1784087027.627970444] [box_pick_node]: ============================================================
+[INFO] [1784087027.635829056] [box_pick_node]: [停止] 已发送停止指令
+[INFO] [1784087027.657926458] [box_pick_node]: [CUBE] cube_detector PID=5333 → /home/gsing/2026Gsing/2026_Gsing-second_ROS/logs/vision/2026-07-15_114347_cube_detector.log
+[INFO] [1784087027.691308459] [box_pick_node]: [检测] 等待 cube_detector 数据（最多 15 秒）...
+[INFO] [1784087032.722760890] [box_pick_node]: [检测] 等待中...(5s)
+[INFO] [1784087037.761896001] [box_pick_node]: [检测] 等待中...(10s)
+[INFO] [1784087042.801672255] [box_pick_node]: [检测] 等待中...(15s)
+[WARN] [1784087042.837309333] [box_pick_node]: [检测] ⏰ 超时: 15 秒未检测到立方体
+[INFO] [1784087043.665291161] [box_pick_node]: [CUBE] 已停止
+[INFO] [1784087043.684094492] [box_pick_node]: 
+──────────────────────────────────────────────────
+[INFO] [1784087043.713077684] [box_pick_node]: [结束] ✅ 已回到 IDLE，可开始下一箱
+[INFO] [1784087043.753663623] [box_pick_node]: [提示] 靠近列1(x=0.5)，试试: goto 0.5 1.0
+[INFO] [1784087043.769177883] [box_pick_node]: ──────────────────────────────────────────────────
+[INFO] [1784087060.046648505] [box_pick_node]: [NAV] 发送目标: (1.00, 0.00, 0.00)
+[INFO] [1784087060.055917972] [box_pick_node]: [NAV] 目标已接受
+[INFO] [1784087060.106325380] [box_pick_node]: [NAV] ✅ 导航成功！
