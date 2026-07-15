@@ -48,10 +48,10 @@ from launch_utils import launch, cleanup_all, _kill_existing, _clean_cyclone_shm
 # 参数（可被 --vx / --approach / --carry 覆盖）
 # ============================================================
 FORWARD_SPEED = 0.2        # 前进速度 (m/s)
-APPROACH_TIME = 4.0        # 第一次前进持续时间 (s)
-CARRY_TIME = 8.0           # 第二次前进持续时间 (s)
-GRAB_TIMEOUT = 35.0        # 抓取超时 (s)
-PLACE_TIMEOUT = 25.0       # 放置超时 (s)
+APPROACH_TIME = 10.0        # 第一次前进持续时间 (s)
+CARRY_TIME = 16.0           # 第二次前进持续时间 (s)
+GRAB_TIMEOUT = 20.0        # 抓取超时 (s)
+PLACE_TIMEOUT = 20.0       # 放置超时 (s)
 
 # ============================================================
 # 串口协议常量（与 STM32 / catch.py / auto_task.py 一致）
@@ -495,6 +495,8 @@ def main():
     signal.signal(signal.SIGINT, _sigint_handler)
     os.environ.setdefault("ROS_LOG_DIR", str(_PROJECT / "logs" / "ros"))
 
+    global FORWARD_SPEED, APPROACH_TIME, CARRY_TIME
+
     parser = argparse.ArgumentParser(description="开环自动控制脚本")
     parser.add_argument("--no-startup", action="store_true",
                         help="不启动前置节点（LiDAR/串口桥需已运行）")
@@ -507,7 +509,6 @@ def main():
     args = parser.parse_args()
 
     # 通过全局变量透传 CLI 参数
-    global FORWARD_SPEED, APPROACH_TIME, CARRY_TIME
     FORWARD_SPEED = args.vx
     if args.approach is not None:
         APPROACH_TIME = args.approach
