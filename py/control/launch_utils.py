@@ -223,7 +223,7 @@ def start_prerequisites(map_pcd=None, map_yaml=None):
         f"export PYTHONPATH=\"$PYTHONPATH:$HOME/.local/lib/python3.12/site-packages\" && "
         f"ros2 launch fast_lio_localization 1.launch.py "
         f"  map:={map_pcd} config_file:=unilidar_l2.yaml rviz:={rviz_arg} "
-        f"  map_voxel_size:=0.08 scan_voxel_size:=0.08 "
+        f"  map_voxel_size:=0.01 scan_voxel_size:=0.02 "
         f"  freq_localization:=2.0 localization_threshold:=0.85",
         name="ICP",
     )
