@@ -118,6 +118,17 @@ class TransformFusion(Node):
         localization.child_frame_id = "camera_init"
         self.pub_localization.publish(localization)
 
+        # ── 广播 map→base_link TF（让 Nav2 直接从 TF 拿到 ICP 位置，规避 FAST-LIO2 漂移） ──
+        tf_map_to_baselink = tf2_ros.TransformStamped(
+            header=Header(stamp=self._now_stamp(), frame_id="map"),
+            child_frame_id="base_link",
+            transform=Transform(
+                translation=Point(x=xyz[0], y=xyz[1], z=xyz[2]),
+                rotation=Quaternion(x=quat[0], y=quat[1], z=quat[2], w=quat[3]),
+            ),
+        )
+        self.tf_broadcaster.sendTransform(tf_map_to_baselink)
+
 
     def cb_save_cur_odom(self, msg):
         """保存 FAST-LIO2 里程计"""

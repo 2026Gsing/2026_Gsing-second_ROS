@@ -563,11 +563,6 @@ def main():
 
     node = AutoTask()
 
-    print(f"\n[启动] 等待 8s 让节点就绪...")
-    time.sleep(8)
-    node.publish_initialpose(0, 0)
-    time.sleep(1)
-
     # ── 通知 STM32 自动任务开始 ──
     node.send_auto_cmd(AUTO_CMD_START)
     time.sleep(0.5)
