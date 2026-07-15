@@ -170,6 +170,8 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'default_bt_xml_filename': custom_bt_xml,
         }],
+        # 禁止 bt_navigator 内置的 /goal_pose 订阅器（避免与 GoalTool 的 NavigateToPose action 冲突）
+        remappings=[('/goal_pose', '/goal_pose_disabled')],
     )
 
     # waypoint_follower: 多航点连续导航
