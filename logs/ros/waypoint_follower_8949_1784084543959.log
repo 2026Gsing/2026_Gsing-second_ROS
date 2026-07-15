@@ -6,3 +6,7 @@
 [INFO] [1784084547.545513117] [waypoint_follower]: Configuring
 [INFO] [1784084547.683670834] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
 [INFO] [1784084547.690008563] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[INFO] [1784084601.422115548] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784084601.425462605] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[INFO] [1784084601.425665466] [waypoint_follower]: Cleaning up
+[INFO] [1784084601.683383923] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.

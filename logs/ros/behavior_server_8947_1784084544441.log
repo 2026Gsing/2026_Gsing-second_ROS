@@ -11,3 +11,7 @@
 [INFO] [1784084546.462948096] [behavior_server]: Configuring backup
 [INFO] [1784084546.506767518] [behavior_server]: Configuring drive_on_heading
 [INFO] [1784084546.565321087] [behavior_server]: Configuring wait
+[INFO] [1784084601.422726483] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784084601.422971339] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[INFO] [1784084601.423153161] [behavior_server]: Cleaning up
+[INFO] [1784084601.497183492] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.

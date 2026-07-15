@@ -17,3 +17,9 @@
 [INFO] [1784084545.071745370] [map_io]: Read map /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD33.pgm: 95 X 56 map @ 0.05 m/cell
 [INFO] [1784084547.694641191] [map_server]: Activating
 [INFO] [1784084547.695000287] [map_server]: Creating bond (map_server) to lifecycle manager.
+[INFO] [1784084601.420916864] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784084601.421217593] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[INFO] [1784084601.421436552] [map_server]: Deactivating
+[INFO] [1784084601.421516116] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[INFO] [1784084601.449759325] [map_server]: Cleaning up
+[INFO] [1784084601.449882035] [map_server]: Destroying bond (map_server) to lifecycle manager.
