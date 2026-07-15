@@ -230,7 +230,8 @@ def generate_launch_description():
     ld.add_action(declare_freq_global_map)
     ld.add_action(declare_fov)
     ld.add_action(declare_fov_far)
-    
+    ld.add_action(declare_scale_x)
+
     # 添加节点
     ld.add_action(fast_lio_node)
     ld.add_action(rviz_node)

@@ -276,8 +276,9 @@ class FastLIOLocalization(Node):
                 ("scale_x", 1.0),                   # X 方向增量缩放（仅影响发布，不影响ICP初值）
             ],
         )
-        # 记录上一次发布的位姿（用于增量缩放）
+        # 记录上一次发布的位姿和原始 ICP 位姿（用于增量缩放）
         self.last_published_xy = [0.0, 0.0]
+        self.last_raw_xy = [0.0, 0.0]
 
         # ============ TF 监听 / 广播 ============
         self.tf_buffer = tf2_ros.Buffer()
@@ -607,11 +608,12 @@ class FastLIOLocalization(Node):
         xyz = transform[:3, 3]
         quat = tf_transformations.quaternion_from_matrix(transform)
 
-        # 增量缩放：只对 x 增量乘以 scale_x（0.6 试调），不影响 ICP 内部初值
+        # 增量缩放：用 raw ICP 增量 × scale_x 代替 EMA 式衰减
+        # 原实现（bug）用 last_published_xy 作参考，导致 scale_x 变成指数平滑而非缩放
         scale_x = self.get_parameter("scale_x").value
         if scale_x != 1.0:
-            dx = xyz[0] - self.last_published_xy[0]
-            dy = xyz[1] - self.last_published_xy[1]
+            dx = xyz[0] - self.last_raw_xy[0]
+            dy = xyz[1] - self.last_raw_xy[1]
             pub_x = self.last_published_xy[0] + dx * scale_x
             pub_y = self.last_published_xy[1] + dy * scale_x  # y 也同步缩放
         else:
@@ -641,8 +643,9 @@ class FastLIOLocalization(Node):
         t.transform.rotation.w = quat[3]
         self.tf_br.sendTransform(t)
 
-        # 记录本次发布的位姿（用于下次增量计算）
+        # 记录本次发布的位姿和原始 ICP 位姿（用于下次增量计算）
         self.last_published_xy = [pub_x, pub_y]
+        self.last_raw_xy = [xyz[0], xyz[1]]
 
     def localisation_timer_callback(self):
         """定时定位任务：持续执行 ICP 配准以维持定位精度"""
