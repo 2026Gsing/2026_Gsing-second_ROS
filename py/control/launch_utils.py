@@ -158,10 +158,8 @@ def cleanup_all():
 
 
 def _register_cleanup():
-    """注册退出清理"""
+    """注册退出清理（仅 atexit，不设信号处理器 — 由调用方负责）"""
     atexit.register(cleanup_all)
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        signal.signal(sig, lambda *_: cleanup_all())
 
 
 def start_prerequisites(map_pcd=None, map_yaml=None):

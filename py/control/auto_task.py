@@ -545,6 +545,7 @@ class AutoTask(Node):
 
 def _sigint_handler(sig, frame):
     print("\n[退出] 收到 Ctrl+C，正在关闭...")
+    cleanup_all()
     rclpy.shutdown()
 
 
