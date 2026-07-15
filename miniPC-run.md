@@ -44,6 +44,7 @@ cd ~/2026Gsing/2026_Gsing-second_ROS
 ./ros-run.sh py/control/auto_task.py
 ./ros-run.sh py/control/box_pick_node.py
 ./ros-run.sh py/control/catch.py
+./ros-run.sh py/control/cube_detector.py
 ./ros-run.sh py/tools/map_scan.py --no-rviz
 ./ros-run.sh py/tools/test_move.py
 ```
