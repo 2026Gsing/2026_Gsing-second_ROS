@@ -1,0 +1,11 @@
+[INFO] [1784084544.344029401] [bt_navigator]: 
+	bt_navigator lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784084544.379546157] [bt_navigator]: Creating
+[INFO] [1784084546.616040592] [bt_navigator]: Configuring
+[INFO] [1784084546.666186762] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[WARN] [1784084546.698155243] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+Make sure these match your BT and there are not other sources of error codes youreported to your application
+[INFO] [1784084547.355322567] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[INFO] [1784084582.518077069] [bt_navigator]: Action server is inactive. Rejecting the goal.

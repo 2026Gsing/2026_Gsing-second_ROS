@@ -1,0 +1,5 @@
+[INFO] [1784084533.555034848] [box_pick_node]: BoxPickNode 已启动
+[INFO] [1784084533.558923931] [box_pick_node]: ⏳ 等待 8 秒让节点就绪...
+[INFO] [1784084541.568367264] [box_pick_node]: ✅ Published /initialpose: (0,0,0) facing X+ (inline)
+[INFO] [1784084582.527293494] [box_pick_node]: [NAV] 发送目标: (1.00, 0.00, 0.00)
+[WARN] [1784084582.530519947] [box_pick_node]: [NAV] 目标被拒绝

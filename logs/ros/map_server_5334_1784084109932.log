@@ -1,0 +1,25 @@
+[INFO] [1784084110.181255333] [map_server]: 
+	map_server lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1784084110.187246407] [map_server]: Creating
+[INFO] [1784084115.729724038] [map_server]: Configuring
+[INFO] [1784084115.729901564] [map_io]: Loading yaml file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD33.yaml
+[INFO] [1784084115.733228654] [map_io]: resolution: 0.05
+[INFO] [1784084115.733341793] [map_io]: origin[0]: -0.061
+[INFO] [1784084115.733393029] [map_io]: origin[1]: -1.391
+[INFO] [1784084115.733466079] [map_io]: origin[2]: 0
+[INFO] [1784084115.733505255] [map_io]: free_thresh: 0.196
+[INFO] [1784084115.733530849] [map_io]: occupied_thresh: 0.65
+[INFO] [1784084115.733559803] [map_io]: mode: trinary
+[INFO] [1784084115.733586969] [map_io]: negate: 0
+[INFO] [1784084115.779044053] [map_io]: Loading image_file: /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD33.pgm
+[INFO] [1784084115.796030101] [map_io]: Read map /home/gsing/2026Gsing/2026_Gsing-second_ROS/map/PCD33.pgm: 95 X 56 map @ 0.05 m/cell
+[INFO] [1784084118.607593713] [map_server]: Activating
+[INFO] [1784084118.607945262] [map_server]: Creating bond (map_server) to lifecycle manager.
+[INFO] [1784084127.493077574] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1784084127.493322647] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[INFO] [1784084127.493497776] [map_server]: Deactivating
+[INFO] [1784084127.493573251] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[INFO] [1784084127.514672802] [map_server]: Cleaning up
+[INFO] [1784084127.514900476] [map_server]: Destroying bond (map_server) to lifecycle manager.

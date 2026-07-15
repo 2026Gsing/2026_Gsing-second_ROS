@@ -34,6 +34,7 @@ import sys
 import time
 import threading
 from pathlib import Path
+import yaml
 
 _HERE = Path(__file__).resolve().parent          # py/control/
 
@@ -71,8 +72,11 @@ class BoxPickNode(Node):
         # ============ 发布器 ============
         self._vel_pub = self.create_publisher(Twist, "/vision_cmd_vel", 10)
 
-        # ============ 周期输出当前位置（每 0.5 秒） ============
-        self._pos_timer = self.create_timer(0.5, self._print_position)
+        # ============ 周期输出当前位置（非 IDLE 时每 3 秒刷新） ============
+        self._pos_timer = self.create_timer(3.0, self._print_position_if_busy)
+
+        # ============ 场地坐标参考 ============
+        self._field_coords = self._load_field_coords()
 
         # ============ Nav2 Action Client ============
         self._nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -100,7 +104,35 @@ class BoxPickNode(Node):
         self._print_help()
 
     # ================================================================
-    # 周期输出当前位置
+    # 加载场地坐标
+    # ================================================================
+    def _load_field_coords(self):
+        """从 competition.yaml 加载箱体/归位区坐标"""
+        cfg_path = _HERE.parent.parent / "config" / "competition.yaml"
+        if not cfg_path.exists():
+            self.get_logger().warn(f"找不到配置文件: {cfg_path}")
+            return None
+        try:
+            with open(cfg_path) as f:
+                cfg = yaml.safe_load(f)
+            coords = cfg.get("coordinates", {})
+            box_col_x = coords.get("box_col_x", [])
+            outer_y = coords.get("box_outer_y", 1.0)
+            inner_y = coords.get("box_inner_y", 1.5)
+            # 构造箱体坐标列表
+            boxes = []
+            for col, x in enumerate(box_col_x):
+                boxes.append({"col": col + 1, "x": x, "y_outer": outer_y, "y_inner": inner_y})
+            zone_x = coords.get("zone_x", [])
+            zone_y = coords.get("zone_y", 5.0)
+            zones = [{"zone": i + 1, "x": x, "y": zone_y} for i, x in enumerate(zone_x)]
+            return {"boxes": boxes, "zones": zones}
+        except Exception as e:
+            self.get_logger().warn(f"读取配置失败: {e}")
+            return None
+
+    # ================================================================
+    # 当前位置显示，普通 print（不用 ANSI，避免和 input() 冲突）
     # ================================================================
     def _print_position(self):
         with self._lock:
@@ -109,11 +141,16 @@ class BoxPickNode(Node):
                 return
             p = loc.pose.pose.position
             o = loc.pose.pose.orientation
+            state = self._state
         yaw = quaternion_to_yaw(o)
-        self.get_logger().info(
-            f"[定位] x={p.x:.3f}  y={p.y:.3f}  z={p.z:.3f}  "
-            f"yaw={yaw:.3f}  状态={self._state}"
-        )
+        print(f"📍 x={p.x:>7.3f}  y={p.y:>7.3f}  yaw={yaw:>6.2f}  [{state}]")
+
+    def _print_position_if_busy(self):
+        """非 IDLE 时自动刷新位置（IDLE 时由 CLI 提示符前显示一次）"""
+        with self._lock:
+            if self._state == "IDLE":
+                return
+        self._print_position()
 
     # ================================================================
     # CLI 帮助
@@ -124,6 +161,7 @@ class BoxPickNode(Node):
         print("  arrived             → 手动确认到达（自动检测失效时备用）")
         print("  status              → 显示当前状态")
         print("  pos                 → 显示当前定位坐标")
+        print("  field               → 显示场地箱体/归位区坐标参考")
         print("  stop                → 停止所有子进程")
         print("  quit                → 退出")
         print("──────────────────────────────\n")
@@ -539,7 +577,18 @@ class BoxPickNode(Node):
             self._nav_succeeded = False
             self._latest_cube = None
             self._arrival_triggered = False  # 允许下次自动到达检测
-        self.get_logger().info("[结束] 已回到 IDLE，可开始下一箱")
+        self.get_logger().info("\n" + "─" * 50)
+        self.get_logger().info("[结束] ✅ 已回到 IDLE，可开始下一箱")
+        # 如果当前有已知坐标，提示附近最近的箱体位置
+        if self._latest_localization and self._field_coords:
+            p = self._latest_localization.pose.pose.position
+            boxes = self._field_coords["boxes"]
+            nearest = min(boxes, key=lambda b: abs(p.x - b["x"]))
+            self.get_logger().info(
+                f"[提示] 靠近列{nearest['col']}(x={nearest['x']})，"
+                f"试试: goto {nearest['x']} {nearest['y_outer']}"
+            )
+        self.get_logger().info("─" * 50)
 
     # ================================================================
     # CLI 命令
@@ -566,6 +615,32 @@ class BoxPickNode(Node):
         self._cleanup_detection()
         self.get_logger().info("[命令] 已停止所有")
 
+    def cmd_field(self):
+        """显示场地参考坐标"""
+        if not self._field_coords:
+            print("⚠️  未加载场地坐标（检查 config/competition.yaml）")
+            return
+        fc = self._field_coords
+        print("\n" + "═" * 60)
+        print("  场地坐标参考 (competition.yaml)")
+        print("═" * 60)
+        print("  箱体列坐标：")
+        for b in fc["boxes"]:
+            print(f"    列 {b['col']}  │ x={b['x']:.2f}  │ 外排 y={b['y_outer']:.2f}  内排 y={b['y_inner']:.2f}")
+        print()
+        for b in fc["boxes"]:
+            print(f"    goto {b['x']} {b['y_outer']}    ← 列{b['col']} 外排")
+            print(f"    goto {b['x']} {b['y_inner']}    ← 列{b['col']} 内排")
+        print()
+        zs = fc["zones"]
+        print("  归位区坐标：")
+        for z in zs:
+            print(f"    区 {z['zone']}  │ x={z['x']:.2f}  │ y={z['y']:.2f}")
+        print()
+        for z in zs:
+            print(f"    goto {z['x']} {z['y']} 3.14    ← 区{z['zone']} (朝 Y- 方向)")
+        print("═" * 60 + "\n")
+
 
 # ================================================================
 # 入口
@@ -582,21 +657,21 @@ def main():
     rclpy.init()
     node = BoxPickNode()
 
-    print("\n" + "=" * 50)
-    print("  BoxPickNode — 物资箱到达检测 + 抓取")
-    print("=" * 50)
-    print("  1. 输入  goto <x> <y> [yaw]  导航到目标坐标")
-    print("     （或 RViz 中用 2D Nav Goal 也可）")
-    print("  2. 机器人停稳后 自动 启动 cube_detector 检测")
-    print("     → 机械臂可达则抓取 / 不可达则靠近再检测")
-    print("  3. 输入 arrived 可手动触发（自动检测未生效时备用）")
-    print("=" * 50 + "\n")
+    print("\n" + "=" * 58)
+    print("  BoxPickNode — 物资箱到达检测 + 抓取（单箱模式）")
+    print("=" * 58)
+    print("  流程: 输入 goto → 导航到达 → 自动检测 → 抓取/靠近 → IDLE")
+    print("  ※ 每处理完一个箱就回到 IDLE，需要手动输入下一箱的 goto")
+    print("  ※ 输入 field 查看场地坐标参考")
+    print("  ※ 自动全场任务请用: auto_task.py")
+    print("=" * 58 + "\n")
 
     # CLI 输入线程
     def cli_thread():
         while rclpy.ok():
             try:
-                cmd = input().strip().lower()
+                node._print_position()
+                cmd = input("> ").strip().lower()
                 if cmd == "arrived":
                     node.on_arrived()
                 elif cmd == "status":
@@ -617,6 +692,8 @@ def main():
                         print("格式: goto <x> <y> [yaw]")
                 elif cmd == "stop":
                     node.cmd_stop()
+                elif cmd == "field":
+                    node.cmd_field()
                 elif cmd == "quit":
                     rclpy.shutdown()
                     break
