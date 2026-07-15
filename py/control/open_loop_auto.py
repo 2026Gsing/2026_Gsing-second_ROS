@@ -17,9 +17,6 @@ open_loop_auto.py — 开环自动控制脚本（无 Nav2 定位）
 
 使用方式:
 ./ros-run.sh py/control/open_loop_auto.py
-  ./ros-run.sh py/control/open_loop_auto.py --no-startup   # 跳过前置节点启动
-  ./ros-run.sh py/control/open_loop_auto.py --vx 0.4       # 更快前进
-  ./ros-run.sh py/control/open_loop_auto.py --approach 5.0 --carry 8.0  # 自定义时长
 """
 
 import argparse
@@ -49,9 +46,9 @@ import catch as _catch  # 坐标变换 + 工作空间验证（force-grab 用）
 # ============================================================
 # 参数（可被 --vx / --approach / --carry 覆盖）
 # ============================================================
-FORWARD_SPEED = 0.4        # 前进速度 (m/s)
-APPROACH_TIME = 4        # 第一次前进持续时间 (s)
-CARRY_TIME = 10.0           # 第二次前进持续时间 (s)
+FORWARD_SPEED = 0.2        # 前进速度 (m/s)
+APPROACH_TIME = 10        # 第一次前进持续时间 (s)
+CARRY_TIME = 20.0           # 第二次前进持续时间 (s)
 GRAB_TIMEOUT = 100.0        # 抓取超时 (s)
 PLACE_TIMEOUT = 60.0       # 放置超时 (s)
 
