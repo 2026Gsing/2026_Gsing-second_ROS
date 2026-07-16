@@ -56,6 +56,11 @@ def generate_launch_description():
                 description="Optional CSV path for STM32 leg support debug frames",
             ),
             DeclareLaunchArgument(
+                "arm_debug_csv_path",
+                default_value="",
+                description="Optional CSV path for STM32 arm telemetry frames",
+            ),
+            DeclareLaunchArgument(
                 "leg_debug_log_period_sec",
                 default_value="1.0",
                 description="Console print interval for decoded leg debug snapshots",
@@ -93,6 +98,7 @@ def generate_launch_description():
                         )
                     },
                     {"leg_debug_csv_path": LaunchConfiguration("leg_debug_csv_path")},
+                    {"arm_debug_csv_path": LaunchConfiguration("arm_debug_csv_path")},
                     {
                         "leg_debug_log_period_sec": ParameterValue(
                             LaunchConfiguration("leg_debug_log_period_sec"),

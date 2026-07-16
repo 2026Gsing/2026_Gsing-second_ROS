@@ -55,6 +55,7 @@ CMD_ARM_MISSION = 0x14 # 功能码：机械臂多段任务（pick/back/place）
 CMD_AUTO_TASK   = 0x15 # 功能码：自动任务事件
 CMD_ARM_EVENT   = 0x22 # STM32 -> vision: arm mission event
 CMD_LEG_DEBUG   = 0x31 # STM32 -> upper: wheel-leg support debug
+CMD_ARM_DEBUG   = 0x32 # STM32 -> upper: arm telemetry
 LEN_VEL_PAYLOAD = 9    # 载荷长度：vx(4) + wz(4) + state(1) = 9
 LEN_AUTO_PAYLOAD = 3   # 载荷长度：cmd(1) + target(1) + zone(1) = 3
 LEN_ARM_EVENT_PAYLOAD = 17
@@ -68,6 +69,8 @@ ARM_BACK_SIDE_RIGHT = 0x02
 ARM_BACK_SIDE_CENTER = 0x03
 LEG_DEBUG_FMT = "<IBBBB19f"
 LEN_LEG_DEBUG_PAYLOAD = struct.calcsize(LEG_DEBUG_FMT)
+ARM_DEBUG_FMT = "<IBBBB16f"
+LEN_ARM_DEBUG_PAYLOAD = struct.calcsize(ARM_DEBUG_FMT)
 PACKET_FMT = "<2fB"    # 打包格式（小端）：float32(vx), float32(wz), uint8(state)
 
 LEG_DEBUG_FIELDS = [
@@ -223,6 +226,43 @@ LEG_DEBUG_NAMES = {
     3: "leg3_34_RF",
 }
 
+ARM_DEBUG_FIELDS = {
+    1: [
+        "actual_x_m", "actual_y_m", "actual_z_m",
+        "cmd_x_m", "cmd_y_m", "cmd_z_m",
+        "target_x_m", "target_y_m", "target_z_m",
+        "cmd_lead_m", "ik_status", "path_wp_index", "path_wp_count",
+        "auto_task_state", "reject_reason", "pending",
+    ],
+    2: [
+        "cmd_m1_rad", "actual_m1_rad", "cmd_m2_rad", "actual_m2_rad",
+        "cmd_m3_rad", "actual_m3_rad", "cmd_m4_rad", "actual_m4_rad",
+        "error_m1_rad", "error_m2_rad", "error_m3_rad", "error_m4_rad",
+        "payload_kg", "transport_alpha_rad", "transport_beta_rad", "transport_omega_rad",
+    ],
+    3: [
+        "q1_rad", "q2_rad", "tau_calc_m2_nm", "tau_calc_m3_nm",
+        "tau_calc_m4_nm", "tau_gravity_m2_nm", "tau_gravity_m3_nm", "tau_gravity_m4_nm",
+        "err_i_m1", "err_i_m2", "err_i_m3", "err_i_m4",
+        "tau_ff_m1_nm", "tau_ff_m2_nm", "tau_ff_m3_nm", "tau_ff_m4_nm",
+    ],
+    4: [
+        "task_control_count", "accept_count", "reject_count", "pending",
+        "dm_rx_count", "dm_rx_m1", "dm_rx_m2", "dm_rx_m3", "dm_rx_m4",
+        "dm_tx_ok", "dm_tx_fail", "dm_bus_off", "dm_recovery_request",
+        "dm_recovery_success", "dm_recovery_fail", "dm_tx_fifo_free",
+    ],
+}
+ARM_DEBUG_FRAME_NAMES = {
+    1: "cartesian",
+    2: "joint",
+    3: "dynamics",
+    4: "communication",
+}
+ARM_DEBUG_CSV_FIELDS = [
+    field for frame_fields in ARM_DEBUG_FIELDS.values() for field in frame_fields
+]
+
 ARM_EVENT_PICK_DONE = 0x01
 ARM_EVENT_PLACE_DONE = 0x02
 ARM_EVENT_MISSION_FAILED = 0x03
@@ -300,7 +340,9 @@ class CmdVelChassisSerial(Node):
         self.declare_parameter("gait_cmd_topic", "/vision/gait_cmd")
         self.declare_parameter("arm_mission_topic", "/vision/arm_mission")
         self.declare_parameter("arm_event_topic", "/vision/arm_event")
+        self.declare_parameter("arm_debug_topic", "/vision/arm_debug")
         self.declare_parameter("leg_debug_csv_path", "")
+        self.declare_parameter("arm_debug_csv_path", "")
         self.declare_parameter("leg_debug_log_period_sec", 1.0)
         self.declare_parameter("leg_debug_log_to_screen", True)
         self.declare_parameter("send_rate_hz", 50.0)
@@ -324,7 +366,14 @@ class CmdVelChassisSerial(Node):
         gait_topic = self.get_parameter("gait_cmd_topic").get_parameter_value().string_value
         arm_mission_topic = self.get_parameter("arm_mission_topic").get_parameter_value().string_value
         arm_event_topic = self.get_parameter("arm_event_topic").get_parameter_value().string_value
+        arm_debug_topic = self.get_parameter("arm_debug_topic").get_parameter_value().string_value
         leg_debug_csv_path = self.get_parameter("leg_debug_csv_path").get_parameter_value().string_value
+        arm_debug_csv_path = self.get_parameter("arm_debug_csv_path").get_parameter_value().string_value
+        if not arm_debug_csv_path and leg_debug_csv_path:
+            root, extension = os.path.splitext(leg_debug_csv_path)
+            if root.endswith("_leg"):
+                root = root[:-4]
+            arm_debug_csv_path = f"{root}_arm{extension or '.csv'}"
         self._leg_debug_log_period = max(
             0.1,
             self.get_parameter("leg_debug_log_period_sec").get_parameter_value().double_value,
@@ -380,10 +429,14 @@ class CmdVelChassisSerial(Node):
         self._leg_debug_latest_control = None
         self._leg_debug_latest_wheel = None
         self._leg_debug_latest_wheel_can = None
+        self._arm_debug_latest = {}
         self._leg_debug_last_log_time = 0.0
         self._leg_debug_csv_file = None
         self._leg_debug_csv_writer = None
+        self._arm_debug_csv_file = None
+        self._arm_debug_csv_writer = None
         self._open_leg_debug_csv(leg_debug_csv_path)
+        self._open_arm_debug_csv(arm_debug_csv_path)
 
         # ============ 打开串口 ============
         try:
@@ -411,7 +464,9 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(UInt8, gait_topic, self._gait_cb, _qos)
         self.create_subscription(String, arm_mission_topic, self._arm_mission_cb, _qos)
         self.arm_event_pub = self.create_publisher(String, arm_event_topic, 10)
+        self.arm_debug_pub = self.create_publisher(String, arm_debug_topic, 10)
         self.get_logger().info(f"Publishing STM32 arm events on {arm_event_topic}")
+        self.get_logger().info(f"Publishing STM32 arm telemetry on {arm_debug_topic}")
 
         self._rx_thread = threading.Thread(target=self._serial_rx_loop, daemon=True)
         self._rx_thread.start()
@@ -455,6 +510,29 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_csv_writer = None
             self.get_logger().error(f"Cannot open leg debug CSV '{path}': {exc}")
 
+    def _open_arm_debug_csv(self, path: str):
+        if not path:
+            return
+        try:
+            folder = os.path.dirname(os.path.abspath(path))
+            if folder:
+                os.makedirs(folder, exist_ok=True)
+            fields = [
+                "host_time_s", "time_us", "seq", "frame_type", "frame_name",
+                "task_state", "flags", *ARM_DEBUG_CSV_FIELDS,
+            ]
+            self._arm_debug_csv_file = open(path, "w", newline="", encoding="utf-8")
+            self._arm_debug_csv_writer = csv.DictWriter(
+                self._arm_debug_csv_file,
+                fieldnames=fields,
+            )
+            self._arm_debug_csv_writer.writeheader()
+            self.get_logger().info(f"Arm debug CSV logging enabled: {path}")
+        except OSError as exc:
+            self._arm_debug_csv_file = None
+            self._arm_debug_csv_writer = None
+            self.get_logger().error(f"Cannot open arm debug CSV '{path}': {exc}")
+
     def _write_leg_debug_csv(self, frame_type: int, leg_id: int, flags: int,
                              seq: int, time_us: int, values):
         if self._leg_debug_csv_writer is None:
@@ -490,6 +568,25 @@ class CmdVelChassisSerial(Node):
             for flag_id, name in enumerate(LEG_DEBUG_WHEEL_CAN_STATUS_FIELDS):
                 row[name] = 1 if (flags & (1 << flag_id)) else 0
         self._leg_debug_csv_writer.writerow(row)
+
+    def _write_arm_debug_csv(self, frame_type: int, task_state: int, flags: int,
+                             seq: int, time_us: int, values):
+        if self._arm_debug_csv_writer is None:
+            return
+        fields = ARM_DEBUG_FIELDS.get(frame_type)
+        if fields is None:
+            return
+        row = {
+            "host_time_s": f"{time.time():.3f}",
+            "time_us": time_us,
+            "seq": seq,
+            "frame_type": frame_type,
+            "frame_name": ARM_DEBUG_FRAME_NAMES.get(frame_type, "unknown"),
+            "task_state": task_state,
+            "flags": flags,
+        }
+        row.update(dict(zip(fields, values)))
+        self._arm_debug_csv_writer.writerow(row)
 
     @staticmethod
     def _leg_debug_flag_text(flags: int) -> str:
@@ -578,6 +675,8 @@ class CmdVelChassisSerial(Node):
         self.get_logger().info("[LEG_DEBUG]" + global_text + " | " + " ; ".join(leg_parts))
         if self._leg_debug_csv_file is not None:
             self._leg_debug_csv_file.flush()
+        if self._arm_debug_csv_file is not None:
+            self._arm_debug_csv_file.flush()
 
     def _open_serial_port(self):
         return serial.Serial(
@@ -756,6 +855,8 @@ class CmdVelChassisSerial(Node):
             self._handle_arm_event(payload)
         elif func == CMD_LEG_DEBUG:
             self._handle_leg_debug(payload)
+        elif func == CMD_ARM_DEBUG:
+            self._handle_arm_debug(payload)
 
     def _handle_leg_debug(self, payload: bytes):
         if len(payload) != LEN_LEG_DEBUG_PAYLOAD:
@@ -796,6 +897,37 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_latest_wheel_can = frame
 
         self._log_leg_debug_snapshot()
+
+    def _handle_arm_debug(self, payload: bytes):
+        if len(payload) != LEN_ARM_DEBUG_PAYLOAD:
+            self.get_logger().warn(
+                f"Drop arm debug: len={len(payload)} expected={LEN_ARM_DEBUG_PAYLOAD}"
+            )
+            return
+
+        unpacked = struct.unpack(ARM_DEBUG_FMT, payload)
+        time_us, frame_type, task_state, flags, seq = unpacked[:5]
+        values = list(unpacked[5:])
+        fields = ARM_DEBUG_FIELDS.get(frame_type)
+        if fields is None:
+            self.get_logger().warn(f"Drop arm debug: unknown frame_type={frame_type}")
+            return
+
+        frame = {
+            "time_us": time_us,
+            "frame_type": frame_type,
+            "frame_name": ARM_DEBUG_FRAME_NAMES[frame_type],
+            "task_state": task_state,
+            "flags": flags,
+            "seq": seq,
+            "values": dict(zip(fields, values)),
+        }
+        self._arm_debug_latest[frame_type] = frame
+        self._write_arm_debug_csv(frame_type, task_state, flags, seq, time_us, values)
+
+        msg = String()
+        msg.data = json.dumps(frame, separators=(",", ":"))
+        self.arm_debug_pub.publish(msg)
 
     def _handle_arm_event(self, payload: bytes):
         if len(payload) != LEN_ARM_EVENT_PAYLOAD:
@@ -1102,6 +1234,11 @@ class CmdVelChassisSerial(Node):
         if self._leg_debug_csv_file is not None:
             try:
                 self._leg_debug_csv_file.close()
+            except Exception:
+                pass
+        if self._arm_debug_csv_file is not None:
+            try:
+                self._arm_debug_csv_file.close()
             except Exception:
                 pass
         super().destroy_node()
