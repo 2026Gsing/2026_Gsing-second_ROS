@@ -465,8 +465,10 @@ class CmdVelChassisSerial(Node):
         self.create_subscription(String, arm_mission_topic, self._arm_mission_cb, _qos)
         self.arm_event_pub = self.create_publisher(String, arm_event_topic, 10)
         self.arm_debug_pub = self.create_publisher(String, arm_debug_topic, 10)
+        self.stm32_state_pub = self.create_publisher(String, "/vision/stm32_state", 10)
         self.get_logger().info(f"Publishing STM32 arm events on {arm_event_topic}")
         self.get_logger().info(f"Publishing STM32 arm telemetry on {arm_debug_topic}")
+        self.get_logger().info("Publishing STM32 control state on /vision/stm32_state")
 
         self._rx_thread = threading.Thread(target=self._serial_rx_loop, daemon=True)
         self._rx_thread.start()
@@ -891,6 +893,12 @@ class CmdVelChassisSerial(Node):
             self._leg_debug_latest_attitude = frame
         elif frame_type == 4:
             self._leg_debug_latest_control = frame
+            state_msg = String()
+            state_msg.data = json.dumps({
+                "ctl_auto_task_state": int(values[16]),
+                "ctl_current_state": int(values[2]),
+            }, separators=(",", ":"))
+            self.stm32_state_pub.publish(state_msg)
         elif frame_type == 5:
             self._leg_debug_latest_wheel = frame
         elif frame_type == 6:
